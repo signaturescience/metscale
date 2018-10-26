@@ -5,19 +5,24 @@ Objective: A Snakemake workflow to assemble quality trimmed reads using SPAdes a
 Date: 2018-06-11
 Documentation: docs/workflow_assembly.md
 '''
-from utils import container_image_is_external, container_image_name
+
+from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
+import pdb
 
 
 ############################################
 # Assembly: default config
 
 data_dir = config['data_dir']
+sing_dir = config['sing_dir']
+image_dir = 'images/read'
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
 assembly = config['assembly']
 readfilt = config['read_filtering']
+
 
 
 ###################################
@@ -37,6 +42,7 @@ readfilt = config['read_filtering']
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
 assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_metaspades_input_pattern_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'])
 
 assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
@@ -49,13 +55,28 @@ assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
             qual='{qual}'
 )
 
+assembly_metaspades_input_fwd_sing = assembly_metaspades_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_metaspades_input_rev_sing = assembly_metaspades_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+
+
 assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['metaspades_pattern'])
 assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
+assembly_metaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['metaspades_pattern'])
 
 assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
 
 spades_image = container_image_name(biocontainers, 'metaspades')
+
 
 rule assembly_metaspades:
     """
@@ -66,11 +87,15 @@ rule assembly_metaspades:
         rev = assembly_metaspades_input_rev
     output:
         assembly_metaspades_output
+    params:
+        fwd_sing = assembly_metaspades_input_fwd_sing,
+        rev_sing = assembly_metaspades_input_rev_sing,
+        metaspades_output_expanded = assembly_metaspades_output_sing
     message: 
          '--- Assembling quality trimmed reads with SPAdes'
     singularity: 
         spades_image
-    threads: 32 
+    threads: 8    #TODO: hard coded values? 
     log: 
         assembly_metaspades_logfile
     benchmark:
@@ -78,17 +103,21 @@ rule assembly_metaspades:
     shell:
         'metaspades.py -t {threads} '
         '-m 240 '
-        '-1 /{input.fwd} '
-        '-2 /{input.rev} '
-        '-o /{data_dir} '
+        '-k 55 ' #TODO: remove, used for testing
+#        '-1 /{input.fwd} '
+#        '-2 /{input.rev} '
+         '-1 {params.fwd_sing} '
+         '-2 {params.rev_sing} '
+        '-o /{sing_dir} '
         '&& '
-        'mv /{data_dir}/contigs.fasta /{output} '
+        'mv /{sing_dir}/contigs.fasta /{params.metaspades_output_expanded} '
 
 
 ###################################
 # Assembly: megahit
 
 assembly_megahit_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_megahit_input_pattern_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'])
 
 assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
@@ -101,7 +130,17 @@ assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
             qual='{qual}'
 )
 
-# just the name
+assembly_megahit_input_fwd_sing = assembly_megahit_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_megahit_input_rev_sing = assembly_megahit_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
 assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
 assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 
@@ -119,43 +158,49 @@ rule assembly_megahit:
     """
     input:
         fwd = assembly_megahit_input_fwd,
-        rev = assembly_megahit_input_rev
+        rev = assembly_megahit_input_rev,
     output:
         assembly_megahit_output
     message: 
         '''--- Assembling quality trimmed reads with Megahit'''
     singularity:
         megahit_image
-    threads: 8
+    threads: 8  #TODO: hard coded values
     log:
         assembly_megahit_logfile
     benchmark:
         assembly_megahit_benchfile
     params:
-        assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub
+        assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub,
+        fwd_sing = assembly_megahit_input_fwd_sing,
+        rev_sing = assembly_megahit_input_rev_sing,
     shell:
-        'rm -rf {data_dir}/{params.assembly_megahit_outprefix_wc} '
+        'rm -rf /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
-        'megahit -t {threads} '
-        '--memory 0.20 '
-        '-1 /{input.fwd} '
-        '-2 /{input.rev} '
+        'megahit -t 8 '  #TODO: {threads} only shows 1
+     #   '--memory 0.20 '
+     #   '-m 1654561219 '
+        '-1 {params.fwd_sing} '
+        '-2 {params.rev_sing} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '
-        '-o /{data_dir}/{params.assembly_megahit_outprefix_wc} '
+        '-o /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
         'mv '
-        '/{data_dir}/{params.assembly_megahit_outprefix_wc}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
-        '/{data_dir}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
+        '/{sing_dir}/{params.assembly_megahit_outprefix_wc}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
+        '/{sing_dir}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
 
 
 ###################################
 # Assembly: quast statistics
 
 assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_quast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
 
 assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'])
+assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_pattern'])
 
 quast_image = container_image_name(biocontainers, 'quast')
+
 
 rule assembly_statistics_quast:
     """
@@ -170,7 +215,7 @@ rule assembly_statistics_quast:
     singularity:
         quast_image
     shell:
-        'quast.py {input} -o {output}'
+        'quast.py {assembly_quast_input_sing} -o {assembly_quast_output_sing}'
 
 
 
@@ -178,7 +223,7 @@ rule assembly_statistics_quast:
 # Assembly: multiqc statistics
 
 assembly_multiqc_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
-
+assembly_multiqc_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
 assembly_multiqc_output = join(data_dir, assembly['assembly_patterns']['multiqc_pattern'])
 
 multiqc_image = container_image_name(biocontainers, 'multiqc')
@@ -196,7 +241,7 @@ rule assembly_statistics_multiqc:
     singularity:
         multiqc_image
     shell:
-        'multiqc {input}'
+        'multiqc {assembly_multiqc_input_sing}'
 
 
 

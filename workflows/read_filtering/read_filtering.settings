@@ -9,6 +9,7 @@ from snakemake.utils import update_config
 # since utils.py prepends docker://
 config_default = {
     "data_dir" : "data",
+   # "sing_dir" : "tmp", Doesn't seem like we need this file?
     "biocontainers" : {
         "trimmomatic" : {
             "use_local" : False,

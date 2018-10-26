@@ -6,7 +6,7 @@ Date: 2018-06-08
 Documentation: docs/workflow_taxclass.md
 '''
 
-from utils import container_image_is_external, container_image_name
+from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
@@ -40,7 +40,6 @@ download_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbttar'])
 unpack_sourmash_sbt_input = download_sourmash_sbt_output
 unpack_sourmash_sbt_output = join(data_dir,taxclass['sourmash']['sbtunpack'])
 
-
 def unpack_sourmash_sbt_tar(wildcards):
     """Perform wildcard substitution to obtain name of sourmash SBT tar files."""
     # input/output can have {variables} in them, but we need to do
@@ -65,6 +64,7 @@ rule download_sourmash_sbts:
         '''
         wget -O {params.tar_wc} {input}
         '''
+  
 
 
 rule unpack_sourmash_sbts:
@@ -103,6 +103,7 @@ gather_unassigned = join(data_dir, taxclass['sourmash']['gather_unassigned_out']
 gather_matches    = join(data_dir, taxclass['sourmash']['gather_matches_out'])
 
 sourmash_image = container_image_name(biocontainers, 'sourmash')
+
 
 def gather_csv_wc_f(wildcards):
     return gather_csv.format(**wildcards)
@@ -147,8 +148,12 @@ rule gather_compare_signatures:
 kaiju_dmp1   = join(data_dir, taxclass['kaiju']['dmp1'])
 kaiju_dmp2   = join(data_dir, taxclass['kaiju']['dmp2'])
 kaiju_fmi    = join(data_dir, taxclass['kaiju']['fmi'])
+kaiju_dmp1_sing   = join(sing_dir, taxclass['kaiju']['dmp1'])
+kaiju_dmp2_sing   = join(sing_dir, taxclass['kaiju']['dmp2'])
+kaiju_fmi_sing    = join(sing_dir, taxclass['kaiju']['fmi'])
 
 kaiju_target = join(data_dir, taxclass['kaiju']['tar'])
+kaiju_target_sing = join(sing_dir, taxclass['kaiju']['tar'])
 
 kaiju_tar    = taxclass['kaiju']['tar']
 kaiju_url    = taxclass['kaiju']['url']
@@ -156,6 +161,7 @@ kaiju_url    = taxclass['kaiju']['url']
 unpack_kaiju_input = HTTP.remote(kaiju_url,allow_redirects=True)
 #unpack_kaiju_input = HTTP.remote(kaiju_url+"/"+kaiju_tar, allow_redirects=True)
 unpack_kaiju_output = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+
 
 rule download_kaijudb:
     """
@@ -170,7 +176,7 @@ rule download_kaijudb:
         '''--- Downloading kaiju database.'''
     shell:
         '''
-        wget -O {kaiju_target} "{kaiju_url}/{kaiju_tar}"
+        wget -O {kaiju_target_sing} "{kaiju_url}/{kaiju_tar}"
         '''
 
 rule unpack_kaijudb:
@@ -185,7 +191,7 @@ rule unpack_kaijudb:
         '''--- Unpacking kaiju database.'''
     shell:
         '''
-        tar -xzf {kaiju_target} -C {data_dir} && rm -f {kaiju_target}
+        tar -xzf {kaiju_target_sing} -C {data_dir} #&& rm -f {kaiju_target_sing}  TODO: commented out for now
         '''
 
 
@@ -201,25 +207,36 @@ fq_rev = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].forma
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['reverse']))
 
+fq_fwd_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                sample = '{sample}',
+                qual = '{qual}',
+                direction = readfilt['direction_labels']['forward']))
+fq_rev_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                sample = '{sample}',
+                qual = '{qual}',
+                direction = readfilt['direction_labels']['reverse']))
+
 run_kaiju_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 run_kaiju_input_files += [fq_fwd, fq_rev]
 run_kaiju_output_file = join(data_dir, taxclass['kaiju']['out'])
+run_kaiju_output_file_sing = join(sing_dir, taxclass['kaiju']['out'])
 
 kaiju_image = container_image_name(biocontainers, 'kaiju')
 
+
 def run_kaiju_fq_fwd(wildcards):
     # Get forward fq files
-    fq_fwd_wc = fq_fwd.format(**wildcards)
+    fq_fwd_wc = fq_fwd_sing.format(**wildcards)
     return fq_fwd_wc
 
 def run_kaiju_fq_rev(wildcards):
     # Get reverse fq files
-    fq_rev_wc = fq_rev.format(**wildcards)
+    fq_rev_wc = fq_rev_sing.format(**wildcards)
     return fq_rev_wc
 
 def run_kaiju_output(wildcards):
     # Get output
-    run_kaiju_output_file_wc = run_kaiju_output_file.format(**wildcards)
+    run_kaiju_output_file_wc = run_kaiju_output_file_sing.format(**wildcards)
     return run_kaiju_output_file_wc
 
 
@@ -243,8 +260,8 @@ rule run_kaiju:
         'kaiju '
         '-x '
         '-v '
-        '-t /{kaiju_dmp1} '
-        '-f /{kaiju_fmi} '
+        '-t /{kaiju_dmp1_sing} '
+        '-f /{kaiju_fmi_sing} '
         '-i /{params.fq_fwd_wc} '
         '-j /{params.fq_rev_wc} '
         '-o /{params.run_kaiju_output_file_wc} '
@@ -294,8 +311,8 @@ rule kaiju2krona:
     shell:
         'kaiju2krona '
         '-v '
-        '-t /{kaiju_dmp1} '
-        '-n /{kaiju_dmp2} '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
         '-i /{params.kaiju2krona_input_wc} '
         '-o /{params.kaiju2krona_output_wc} '
 
@@ -341,8 +358,8 @@ rule add_taxon_names:
         taxon_names_output_file_wc = taxon_names_output_file_sub
     shell:
         'addTaxonNames '
-        '-t /{kaiju_dmp1} '
-        '-n /{kaiju_dmp2} '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
         '-u '
         '-p '
         '-I {params.taxon_names_input_file_wc} '
@@ -353,16 +370,18 @@ rule add_taxon_names:
 # Taxonomic Classification: kaiju report
 
 kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+
 kaiju_report_output_file = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file)
+kaiju_report_output_file_sing = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file_sing)
 
 tax_rank = taxclass['kaiju_report']['taxonomic_rank']
 
 def kaiju_report_input_name(wildcards):
-    kaiju_report_in = run_kaiju_output_file.format(**wildcards)
+    kaiju_report_in = run_kaiju_output_file_sing.format(**wildcards)
     return kaiju_report_in
 
 def kaiju_report_output_name(wildcards):
-    kaiju_report_out = kaiju_report_output_file.format(**wildcards)
+    kaiju_report_out = kaiju_report_output_file_sing.format(**wildcards)
     return kaiju_report_out
 
 rule kaiju_report:
@@ -383,8 +402,8 @@ rule kaiju_report:
     shell:
         'kaijuReport '
         '-v '
-        '-t /{kaiju_dmp1} '
-        '-n /{kaiju_dmp2} '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
         '-i /{params.kaiju_report_input_wc} '
         '-r {tax_rank} '
         '-o /{params.kaiju_report_output_wc} '
@@ -401,13 +420,14 @@ kaiju_filtered_report_suffix = '.kaiju_out_krona.filtered{pct}_total.summary'.fo
 
 kaiju_filtered_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 kaiju_filtered_report_output_file = re.sub(r'\.out',kaiju_filtered_report_suffix,run_kaiju_output_file)
+kaiju_filtered_report_output_file_sing = re.sub(r'\.out',kaiju_filtered_report_suffix,run_kaiju_output_file_sing)
 
 def kaiju_filtered_report_input_name(wildcards):
-    kaiju_filtered_report_in = run_kaiju_output_file.format(**wildcards)
+    kaiju_filtered_report_in = run_kaiju_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_in
 
 def kaiju_filtered_report_output_name(wildcards):
-    kaiju_filtered_report_out = kaiju_filtered_report_output_file.format(**wildcards)
+    kaiju_filtered_report_out = kaiju_filtered_report_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
 
 
@@ -430,8 +450,8 @@ rule kaiju_filtered_report:
     shell:
         'kaijuReport '
         '-v '
-        '-t /{kaiju_dmp1} '
-        '-n /{kaiju_dmp2} '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
         '-i /{params.kaiju_filtered_report_input_wc} '
         '-r {tax_rank} '
         '-m {filter_taxa_pct} '
@@ -446,13 +466,14 @@ kaiju_filteredclass_report_suffix = '.kaiju_out_krona.filtered{pct}_classified.s
 
 kaiju_filteredclass_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 kaiju_filteredclass_report_output_file = re.sub(r'\.out',kaiju_filteredclass_report_suffix,run_kaiju_output_file)
+kaiju_filteredclass_report_output_file_sing = re.sub(r'\.out',kaiju_filteredclass_report_suffix,run_kaiju_output_file_sing)
 
 def kaiju_filteredclass_report_input_name(wildcards):
-    kaiju_filteredclass_report_in = run_kaiju_output_file.format(**wildcards)
+    kaiju_filteredclass_report_in = run_kaiju_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_in
 
 def kaiju_filteredclass_report_output_name(wildcards):
-    kaiju_filteredclass_report_out = kaiju_filteredclass_report_output_file.format(**wildcards)
+    kaiju_filteredclass_report_out = kaiju_filteredclass_report_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_out
 
 
@@ -475,8 +496,8 @@ rule kaiju_filteredclass_report:
     shell:
         'kaijuReport '
         '-v '
-        '-t /{kaiju_dmp1} '
-        '-n /{kaiju_dmp2} '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
         '-i /{params.kaiju_filteredclass_report_input_wc} '
         '-r {tax_rank} '
         '-m {filter_taxa_pct} '

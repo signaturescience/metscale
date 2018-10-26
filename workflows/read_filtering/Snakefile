@@ -6,9 +6,11 @@ Date: 2018-06-08
 Documentation: docs/workflow_readfilt.md
 '''
 
-from utils import container_image_is_external, container_image_name
+#from utils import container_image_is_external, container_image_name
+from common.utils  import container_image_is_external, container_image_name 
 from os.path import join, isfile, dirname
 import os, re
+import pdb
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 
@@ -18,6 +20,7 @@ HTTP = HTTPRemoteProvider()
 # Read Filtering: default config
 
 data_dir = config['data_dir']
+sing_dir = config['sing_dir']
 biocontainers = config['biocontainers']
 taxclass = config['taxonomic_classification']
 assembly = config['assembly']
@@ -104,7 +107,17 @@ fq_fwd_pre_trimmed = join(data_dir, readfilt['read_patterns']['pre_trimming_patt
 fq_rev_pre_trimmed = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
-
+                        
+fq_fwd_pre_trimmed_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}'))
+fq_rev_pre_trimmed_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}'))
+                     
+pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing, 
+                        fq_rev_pre_trimmed_sing]
+                        
 pre_trimming_inputs = [ fq_fwd_pre_trimmed, 
                         fq_rev_pre_trimmed]
 
@@ -112,17 +125,24 @@ target_suffix = readfilt['quality_assessment']['fastqc_suffix']
 target_ext = "_%s.zip"%(target_suffix)
 
 pre_trimming_output_fwd = re.sub('\.fq\.gz', target_ext, fq_fwd_pre_trimmed)
-pre_trimming_output_rev = re.sub('\.fq\.gz', target_ext, fq_rev_pre_trimmed) 
+pre_trimming_output_rev = re.sub('\.fq\.gz', target_ext, fq_rev_pre_trimmed)
+
+pre_trimming_output_fwd_sing = re.sub('\.fq\.gz', target_ext, fq_fwd_pre_trimmed_sing)
+pre_trimming_output_rev_sing = re.sub('\.fq\.gz', target_ext, fq_rev_pre_trimmed_sing)
 
 pre_trimming_outputs = [pre_trimming_output_fwd,
                         pre_trimming_output_rev]
 
+pre_trimming_outputs_sing = [pre_trimming_output_fwd_sing,
+                        pre_trimming_output_rev_sing]
+
+
 fastqc_image = container_image_name(biocontainers, 'fastqc')
 
 def pre_trimming_qa_inputs(wildcards):
-
+ 
     # input already includes data/ prefix
-    pre_inputs_wc = [x.format(**wildcards) for x in pre_trimming_inputs]
+    pre_inputs_wc = [x.format(**wildcards) for x in pre_trimming_inputs_sing]
 
     # for containers, turn prefix data/ into /data/
     pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
@@ -130,9 +150,9 @@ def pre_trimming_qa_inputs(wildcards):
     return pre_inputs_wc
 
 def pre_trimming_qa_outputs(wildcards):
-
+    
     # output already includes data/ prefix
-    pre_outputs_wc = [x.format(**wildcards) for x in pre_trimming_outputs]
+    pre_outputs_wc = [x.format(**wildcards) for x in pre_trimming_outputs_sing]
 
     # for containers, turn prefix data/ into /data/
     pre_outputs_wc = ["/%s"%(x) for x in pre_outputs_wc]
@@ -151,6 +171,7 @@ rule pre_trimming_quality_assessment:
     message: 
         '''--- Pre-trim quality check of trimmed data with fastqc.'''
     singularity: 
+        #'file:../container_images/fastqc:0.11.7--pl5.22.0_2'
         fastqc_image
     threads: 2
     params:
@@ -159,12 +180,13 @@ rule pre_trimming_quality_assessment:
     shell:
         'fastqc -t {threads} '
         '/{params.pre_trimming_input_wc} '
-        '-o /{data_dir} '
+        '-o /{sing_dir} '
 
 
 
 ###################################
 # Read Filtering: post trimming
+
 
 fq_fwd_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
                             direction=readfilt['direction_labels']['forward'],
@@ -174,7 +196,18 @@ fq_rev_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pa
                             direction=readfilt['direction_labels']['reverse'],
                             sample='{sample}',
                             qual='{qual}'))
+                            
+fq_fwd_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                            direction=readfilt['direction_labels']['forward'],
+                            sample='{sample}',
+                            qual='{qual}'))
+fq_rev_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                            direction=readfilt['direction_labels']['reverse'],
+                            sample='{sample}',
+                            qual='{qual}'))
+                        
 
+post_trimming_inputs_sing = [fq_fwd_post_trimmed_sing, fq_rev_post_trimmed_sing]
 post_trimming_inputs = [fq_fwd_post_trimmed, fq_rev_post_trimmed]
 
 target_suffix = readfilt['quality_assessment']['fastqc_suffix']
@@ -188,10 +221,11 @@ post_trimming_outputs = [post_trimming_output_fwd,
 
 fastqc_image = container_image_name(biocontainers, 'fastqc')
 
-def post_trimming_qa_inputs(wildcards):
+
+def post_trimming_qa_inputs_sing(wildcards):
 
     # input already includes data/ prefix
-    post_inputs_wc = [x.format(**wildcards) for x in post_trimming_inputs]
+    post_inputs_wc = [x.format(**wildcards) for x in post_trimming_inputs_sing]
 
     # for containers, turn prefix data/ into /data/
     post_inputs_wc = ["/%s"%(x) for x in post_inputs_wc]
@@ -225,11 +259,11 @@ rule post_trimming_quality_assessment:
     threads: 2 
     params:
         post_trimming_outputs_wc = post_trimming_qa_outputs,
-        post_trimming_inputs_wc = post_trimming_qa_inputs
+        post_trimming_inputs_wc = post_trimming_qa_inputs_sing
     shell:
         'fastqc -t {threads} '
         '{params.post_trimming_inputs_wc} '
-        '-o /{data_dir} '
+        '-o /{sing_dir} '
 
 
 ###################################
@@ -245,20 +279,37 @@ fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
+fq_fwd_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}',
+                        qual='{qual}'))
+fq_rev_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}',
+                        qual='{qual}'))
+
 fq_interleave  = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['interleaving']['interleave_suffix'],
+                        sample='{sample}',
+                        qual='{qual}'))
+fq_interleave_sing  = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
                         direction=readfilt['interleaving']['interleave_suffix'],
                         sample='{sample}',
                         qual='{qual}'))
 
 interleave_input = [fq_fwd_trimmed, fq_rev_trimmed]
+interleave_input_sing = [fq_fwd_trimmed_sing, fq_rev_trimmed_sing]
 interleave_output = fq_interleave
+interleave_output_sing = fq_interleave_sing
+
 khmer_image = container_image_name(biocontainers,'khmer')
+
 quality_log = join(data_dir,'interleave_{sample}_trim{qual}.log')
 
 def interleave_reads_inputs(wildcards):
     # inputs should include the data directory prefix
     # do wildcard substitution
-    interleave_input_wc = [x.format(**wildcards) for x in interleave_input]
+    interleave_input_wc = [x.format(**wildcards) for x in interleave_input_sing]
 
     # for docker container, turn prefix 'data/' into '/data/'
     interleave_input_wc = ["/%s"%(x) for x in interleave_input_wc]
@@ -267,7 +318,7 @@ def interleave_reads_inputs(wildcards):
 
 def interleave_reads_output(wildcards):
     # wildcard substitution
-    return interleave_output.format(**wildcards)
+    return interleave_output_sing.format(**wildcards)
 
 def interleave_reads_logfile(wildcards):
     # wildcard substitution
@@ -301,22 +352,40 @@ rule interleave_reads:
 
 ###################################
 # Read Filtering: quality trimming
-
+#sing_dir='tmp'
 # If you only want to substitute a subset of wildcards,
 # you can leave a wildcard untouched by substituting
 # the string {variable} for {variable}.
 # 
 # We use this trick several times in these rules.
 # 
+
 fq_fwd = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
                     direction=readfilt['direction_labels']['forward'],
                     sample='{sample}'))
 fq_rev = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
                     direction=readfilt['direction_labels']['reverse'],
                     sample='{sample}'))
+                    
+fq_fwd_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+                    direction=readfilt['direction_labels']['forward'],
+                    sample='{sample}'))
+fq_rev_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+                    direction=readfilt['direction_labels']['reverse'],
+                    sample='{sample}'))
 
 quality_input = [fq_fwd, fq_rev]
+quality_input_sing = [fq_fwd_sing, fq_rev_sing]
 
+fq_fwd_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}',
+                        qual='{qual}'))
+fq_rev_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}',
+                        qual='{qual}'))
+                        
 fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
@@ -325,19 +394,30 @@ fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
-
+                      
 trim_target_ext = readfilt['quality_trimming']['trim_suffix']
+
 
 fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
 fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
 
+
+fq_fwd_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed_sing)
+fq_rev_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed_sing)
+
 quality_output = [fq_fwd_trimmed, fq_fwd_se,
                   fq_rev_trimmed, fq_rev_se]
 
+quality_output_sing = [fq_fwd_trimmed_sing, fq_fwd_se_sing,
+                  fq_rev_trimmed_sing, fq_rev_se_sing]
+                  
 adapter_file = join(data_dir, readfilt['adapter_file']['name'])
+adapter_file_sing = join(sing_dir, readfilt['adapter_file']['name'])
 
 quality_log = join(data_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
+
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
+
 
 def quality_trimming_quality_log(wildcards):
     """Get the log file for this quality trimming param set"""
@@ -354,7 +434,7 @@ def quality_trimming_quality_input(wildcards):
     """
 
     # input already includes data/ prefix
-    quality_input_wc = [x.format(**wildcards) for x in quality_input]
+    quality_input_wc = [x.format(**wildcards) for x in quality_input_sing]
 
     # for containers, turn prefix data/ into /data/
     quality_input_wc = ["/%s"%(x) for x in quality_input_wc]
@@ -367,7 +447,7 @@ def quality_trimming_quality_output(wildcards):
     Absolute path for container: data/ becomes /data/
     """
     # input includes data/ prefix
-    quality_output_wc = [x.format(**wildcards) for x in quality_output]
+    quality_output_wc = [x.format(**wildcards) for x in quality_output_sing]
 
     # for containers, turn prefix data/ into /data/
     quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
@@ -398,7 +478,7 @@ rule quality_trimming:
         'trimmomatic PE '
         '{params.quality_input_wc} '
         '{params.quality_output_wc} '
-        'ILLUMINACLIP:/{adapter_file}:2:40:15 '
+        'ILLUMINACLIP:/{adapter_file_sing}:2:40:15 '
         'LEADING:{params.qual} '
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
@@ -491,4 +571,3 @@ rule read_filtering_posttrim_workflow:
                 qual      = workflows['read_filtering_posttrim_workflow']['qual'],
                 direction = directions, 
         )
-

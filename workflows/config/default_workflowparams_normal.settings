@@ -1,5 +1,5 @@
 from snakemake.utils import update_config
-#This is for airgapped systems or other systems that need to use only local biocontainers.
+
 # Note: don"t include http:// or https://
 config_default = {
 
@@ -9,35 +9,25 @@ config_default = {
     "assembly_dir" : "assembly",
 
     "biocontainers" : {
-        "megahit" : {
-            "use_local" : True,
-            "filename" : "megahit-1.1.2--py35_0.simg",
-            "location" : "../container_images/",
-            "version" : "1.1.2--py35_0"
-        },
-        "metaspades" : {
-            "use_local" : True,
-            "filename" : "spades-3.11.1--py27_zlib1.2.8_0.simg",
-            "location" : "../container_images/",
-            "version" : "3.11.1--py27_zlib1.2.8_0"
-        },
-        "trimmomatic" : {
-            "use_local" : True,
-            "filename" : "trimmomatic-0.36--5.simg",
-            "location" : "../container_images/",
-            "version" : "0.36--5"
-        },
         "sourmash" : {
-            "use_local" : True,
-            "filename" : "sourmash-2.0.0a3--py36_0.simg",
-            "location" : "../container_images/",
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/sourmash",
             "version" : "2.0.0a3--py36_0"
         },
         "sourmash_compare" : {
-            "use_local" : True,
-            "filename" : "sourmash-2.0.0a3--py36_0.simg",
-            "location" : "../container_images/",
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/sourmash",
             "version" : "2.0.0a3--py36_0"
+        },
+        "trimmomatic" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/trimmomatic",
+            "version" : "0.36--5"
+        },
+        "fastqc" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/fastqc",
+            "version" : "0.11.7--pl5.22.0_2"
         },
         "khmer" : {
             "use_local" : False,
@@ -54,6 +44,16 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
         },
+        "metaspades" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/spades",
+            "version" : "3.11.1--py27_zlib1.2.8_0"
+        },
+        "megahit" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/biocontainers/megahit",
+            "version" : "1.1.2--py35_0"
+        },
         "quast" : {
             "use_local" : False,
             "quayurl" : "quay.io/biocontainers/quast",
@@ -68,12 +68,6 @@ config_default = {
             "use_local" : False,
             "quayurl" : "quay.io/centerforopenscience/osf",
             "version" : "master"
-        },
-        "fastqc" : {
-            "use_local" : True,
-            "filename" : "fastqc-0.11.7--pl5.22.0_2.simg",
-            "location" : "../container_images/",
-            "version" : "00.11.7--pl5.22.0_2"
         }
     },
 

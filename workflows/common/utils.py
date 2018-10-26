@@ -14,18 +14,12 @@ def container_image_is_external(biocontainers, app):
             return True
 
     except KeyError:
-        # This is where things get complicated.
-        # Snakemake maintains separation between
-        # parameter validation and knowing what rules
-        # we are actually running.
+        # No "biocontainers" key specified in params.
         # 
-        # This makes it impossible to validate parameters
-        # except to do it entirely in the dark about what 
-        # we're going to be doing..
+        # We can either crash here,
+        # or hope the user knows what
+        # they're doing.
         # 
-        # Solution? 
-        # Ditch parameter validation.
-        # Hope the user knows what they're doing. 
         return True 
 
 
@@ -43,6 +37,7 @@ def container_image_name(biocontainers, app):
             qurl  = biocontainers[app]['quayurl']
             qvers = biocontainers[app]['version']
             quayurl = "docker://" + qurl + ":" + qvers
+            print(quayurl)
             return quayurl
         except KeyError:
             err = "Error: quay.io URL for %s biocontainer "%(app)
@@ -51,7 +46,11 @@ def container_image_name(biocontainers, app):
 
     else:
         try:
-            return biocontainers[app]['local']
+            dir_loc = biocontainers[app]['location']
+            file_name =  biocontainers[app]['filename']
+            full_path = "file:"+dir_loc+file_name
+            print(full_path)
+            return full_path
         except KeyError:
             err = "Error: the parameters provided specify a local "
             err += "container image should be used for %s, but none "%(app)

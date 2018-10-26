@@ -7,7 +7,7 @@ Date: 2018-06-14
 Documentation: docs/workflow_comparison.md
 '''
 
-from utils import container_image_is_external, container_image_name
+from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
@@ -52,6 +52,18 @@ read_sig_input_rev = join(data_dir, readfilt['read_patterns']['post_trimming_pat
 read_sig_inputs  = [read_sig_input_fwd,
                     read_sig_input_rev]
 
+read_sig_input_fwd_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                direction = readfilt['direction_labels']['forward']))
+read_sig_input_rev_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                direction = readfilt['direction_labels']['reverse']))
+
+
+
+
 # signature file output replaces .fq.gz with sig_suffix variable
 # (also remove direction)
 read_base_output_name = re.sub('_{direction}', '', 
@@ -61,6 +73,8 @@ read_sig_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['sig_suffix'],
                               read_base_output_name)
 read_sig_output = join(data_dir, read_sig_output_name)
+read_sig_output_sing = join(sing_dir, read_sig_output_name)
+
 
 read_merge_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['merge_suffix'],
@@ -72,13 +86,21 @@ read_sig_scale = "%s"%(comparison['compute_read_signatures']['scale'])
 
 read_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_read_signatures']['kvalues']])
 
+
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
+
 def compute_read_signatures_sig_name(wildcards):
-    return read_sig_output.format(**wildcards)
+    return read_sig_output_sing.format(**wildcards)
 
 def compute_read_signatures_merge_name(wildcards):
     return read_merge_output.format(**wildcards)
+
+def compute_signature_inputs_fwd(wildcards):
+    return read_sig_input_fwd_sing.format(**wildcards)
+
+def compute_signature_inputs_rev(wildcards):
+    return read_sig_input_rev_sing.format(**wildcards)
 
 
 rule compute_read_signatures:
@@ -93,15 +115,19 @@ rule compute_read_signatures:
         sourmash_compute_image
     params:
         read_sig_name = compute_read_signatures_sig_name,
-        read_merge_name = compute_read_signatures_merge_name
+        read_merge_name = compute_read_signatures_merge_name,
+        read_sig_inputs_sing_fwd = compute_signature_inputs_fwd,
+        read_sig_inputs_sing_rev = compute_signature_inputs_rev
     shell:
         'sourmash compute '
         '--merge /{params.read_merge_name} '
         '--track-abundance '
         '--scaled {read_sig_scale} '
         '-k {read_sig_kvalues_cmd} '
-        '/{input[0]} '
-        '/{input[1]} '
+ #       '/{input[0]} '
+ #       '/{input[1]} '
+        '/{params.read_sig_inputs_sing_fwd} '
+        '/{params.read_sig_inputs_sing_rev} '
         '-o /{params.read_sig_name}'
 
 
@@ -113,12 +139,15 @@ rule compute_read_signatures:
 # input is the output of the assembly workflow
 assembly_sig_input_prefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['assembly_pattern'])
 assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_sig_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+
 
 # output replaces .contigs.fa with sig_suffix variable
 assembly_sig_output_name = re.sub(r'\.contigs\.fa',
                                   comparison['compute_assembly_signatures']['sig_suffix'],
                                   assembly['assembly_patterns']['assembly_pattern'])
 assembly_sig_output = join(data_dir, assembly_sig_output_name)
+assembly_sig_output_sing = join(sing_dir, assembly_sig_output_name)
 
 # scale, for command line
 assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
@@ -137,14 +166,17 @@ rule compute_assembly_signatures:
         assembly_sig_input
     output:
         assembly_sig_output
+    params:
+        input_files = assembly_sig_input_sing,
+        output_files = assembly_sig_output_sing
     singularity:
         sourmash_compute_image
     shell:
         'sourmash compute '
         '-k {assembly_sig_kvalues_cmd} '
         '--scaled {assembly_sig_scale} '
-        '/{input} '
-        '-o /{output} '
+        '/{params.input_files} '
+        '-o /{params.output_files} '
 
 
 ##################################################
@@ -159,11 +191,14 @@ compare_read_sigs_input_names = expand(
 
 # Turn filename X into data/X
 compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_names]
+compare_read_sigs_inputs_sing = [join(sing_dir,k) for k in compare_read_sigs_input_names]
+
 
 # User specifies CSV output file.
 # This name is used verbatim.
 compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
 compare_read_sigs_output = join(data_dir, compare_read_sigs_output_name)
+compare_read_sigs_output_sing = join(sing_dir, compare_read_sigs_output_name)
 
 sourmash_compare_image = container_image_name(biocontainers, 'sourmash_compare')
 
@@ -172,7 +207,7 @@ def compare_read_sigs_output_wc(wildcards):
     """
     Perform wildcard substitution for the output file name
     """
-    out_wc = compare_read_sigs_output.format(**wildcards)
+    out_wc = compare_read_sigs_output_sing.format(**wildcards)
     return out_wc
 
 def compare_read_sigs_inputs_wc(wildcards):
@@ -181,7 +216,7 @@ def compare_read_sigs_inputs_wc(wildcards):
     add absolute container path, and join all input
     file names together into a single string.
     """
-    in_wc = [x.format(**wildcards) for x in compare_read_sigs_inputs]
+    in_wc = [x.format(**wildcards) for x in compare_read_sigs_inputs_sing]
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
@@ -218,18 +253,21 @@ compare_assembly_sigs_input_names = expand(
 
 # Turn filename X into data/assembly/X
 compare_assembly_sigs_inputs = [join(data_dir, k) for k in compare_assembly_sigs_input_names]
+compare_assembly_sigs_inputs_sing = [join(sing_dir, k) for k in compare_assembly_sigs_input_names]
 
 # User specifies CSV output file.
 # This name is used verbatim.
 compare_assembly_sigs_output_name = comparison['compare_assembly_signatures']['csv_out']
 compare_assembly_sigs_output = join(data_dir, compare_assembly_sigs_output_name)
+compare_assembly_sigs_output_sing = join(sing_dir, compare_assembly_sigs_output_name)
+
 
 
 def compare_assembly_sigs_output_wc(wildcards):
     """
     Perform wildcard substitution for the output file name
     """
-    out_wc = compare_assembly_sigs_output.format(**wildcards)
+    out_wc = compare_assembly_sigs_output_sing.format(**wildcards)
     return out_wc
 
 def compare_assembly_sigs_inputs_wc(wildcards):
@@ -238,7 +276,7 @@ def compare_assembly_sigs_inputs_wc(wildcards):
     add absolute container path, and join all input
     file names together into a single string.
     """
-    in_wc = [x.format(**wildcards) for x in compare_assembly_sigs_inputs]
+    in_wc = [x.format(**wildcards) for x in compare_assembly_sigs_inputs_sing]
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
@@ -280,18 +318,21 @@ compare_ra_read_sigs_input_names = expand(
 )
 compare_ra_sigs_inputs =  [join(data_dir, k) for k in compare_ra_read_sigs_input_names]
 compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_input_names]
+compare_ra_sigs_inputs_sing =  [join(sing_dir, k) for k in compare_ra_read_sigs_input_names]
+compare_ra_sigs_inputs_sing += [join(sing_dir, k) for k in compare_ra_assembly_sigs_input_names]
 
 # User specifies CSV output file.
 # This name is used verbatim.
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
 compare_ra_sigs_output = join(data_dir, compare_ra_sigs_output_name)
+compare_ra_sigs_output_sing = join(sing_dir, compare_ra_sigs_output_name)
 
 
 def compare_ra_sigs_output_wc(wildcards):
     """
     Perform wildcard substitution for the output file name
     """
-    out_wc = compare_ra_sigs_output.format(**wildcards)
+    out_wc = compare_ra_sigs_output_sing.format(**wildcards)
     return out_wc
 
 def compare_ra_sigs_inputs_wc(wildcards):
@@ -300,7 +341,7 @@ def compare_ra_sigs_inputs_wc(wildcards):
     add absolute container path, and join all input
     file names together into a single string.
     """
-    in_wc = [x.format(**wildcards) for x in compare_ra_sigs_inputs]
+    in_wc = [x.format(**wildcards) for x in compare_ra_sigs_inputs_sing]
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
