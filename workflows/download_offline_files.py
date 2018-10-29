@@ -5,8 +5,22 @@ import os
 import sys
 import argparse
 
-
 selections=['read_filtering', 'test_files', 'all']  #keep all at the end of the list
+
+def download_file(selection):
+    if selection in data.keys():
+        for file_name,url in data[selection].items():
+            file_type = url.partition(":")[0] 
+            if (file_type == 'https' or file_type == 'http'):
+                print("Downloading " +file_name)
+                urllib.request.urlretrieve(url, install_dir+"/"+file_name)
+            elif (file_type == 'docker'):
+                print("Downloading singularity image " +file_name)
+                sing_command = "singularity pull "+url
+                subprocess.run([sing_command], shell=True)
+                os.rename(file_name, "../container_images/"+file_name)    
+    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software")
@@ -22,19 +36,19 @@ if __name__ == '__main__':
     except IOError:
         print("Error: config/offline_downloads.json is missing. Exiting")
         sys.exit(1)
+        
     
+    try:
+        if not os.path.isdir("data"):
+            os.mkdir("data")
+    except IOError:
+        print("Error: can't create data directory")
+        
     if (user_input == 'all'):
         user_input = selections[0:-1]
-    for selection in user_input:     
-        if selection in data.keys():
-            for file_name,url in data[selection].items():
-                file_type = url.partition(":")[0] 
-                if (file_type == 'https' or file_type == 'http'):
-                    print("Downloading " +file_name)
-                    urllib.request.urlretrieve(url, install_dir+"/"+file_name)
-                elif (file_type == 'docker'):
-                    print("Downloading singularity image " +file_name)
-                    sing_command = "singularity pull "+url
-                    subprocess.run([sing_command], shell=True)
-                    os.rename(file_name, "../container_images/"+file_name)
+        for selection in user_input:     
+            download_file(selection)
+    else:
+        download_file(user_input)
+
 
