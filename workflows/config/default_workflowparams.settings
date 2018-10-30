@@ -15,11 +15,11 @@ config_default = {
             "location" : "../container_images/",
             "version" : "1.1.2--py35_0"
         },
-        "metaspades" : {
+        "spades" : {
             "use_local" : True,
-            "filename" : "spades-3.11.1--py27_zlib1.2.8_0.simg",
+            "filename" : "spades-3.11.1--py36_zlib1.2.8_0.simg",
             "location" : "../container_images/",
-            "version" : "3.11.1--py27_zlib1.2.8_0"
+            "version" : "3.11.1--py36_zlib1.2.8_0"
         },
         "trimmomatic" : {
             "use_local" : True,

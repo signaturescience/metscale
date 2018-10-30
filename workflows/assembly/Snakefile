@@ -75,7 +75,7 @@ assembly_metaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['
 assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
 
-spades_image = container_image_name(biocontainers, 'metaspades')
+spades_image = container_image_name(biocontainers, 'spades')
 
 
 rule assembly_metaspades:

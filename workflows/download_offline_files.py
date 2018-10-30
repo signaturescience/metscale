@@ -5,7 +5,7 @@ import os
 import sys
 import argparse
 
-selections=['read_filtering', 'test_files', 'all']  #keep all at the end of the list
+selections=['read_filtering', 'test_files', 'assembly', 'all']  #keep all at the end of the list
 
 def download_file(selection):
     if selection in data.keys():
