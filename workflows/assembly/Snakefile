@@ -103,7 +103,6 @@ rule assembly_metaspades:
     shell:
         'metaspades.py -t {threads} '
         '-m 240 '
-        '-k 55 ' #TODO: remove, used for testing
 #        '-1 /{input.fwd} '
 #        '-2 /{input.rev} '
          '-1 {params.fwd_sing} '
