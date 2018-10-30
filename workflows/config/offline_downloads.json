@@ -11,8 +11,12 @@
     },
 
     "assembly": {
-        "megahit-1.1.2--py35_0.simg": "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
+        "megahit-1.1.2--py35_0.simg" : "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
         "spades-3.11.1--py36_zlib1.2.8_0.simg" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0"
+    },
+
+    "comparison": {
+    	"sourmash-2.0.0a3--py36_0.simg" :"docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
     }
 
 }
