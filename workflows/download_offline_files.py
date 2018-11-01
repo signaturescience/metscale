@@ -48,9 +48,9 @@ def download_file(workflow):
                 file_type = url.partition(":")[0] 
                 if (file_type == 'https' or file_type == 'http'):
                     if not (os.path.isfile(install_dir+"/"+file_name)):
-                        print("Downloading " +file_name + "from " + url)
+                        print("Downloading " +file_name + " from " + url)
                         try:
-                            urllib.request.urlretrieve(url, install_dir+ "/"+file_name)
+                            urllib.request.urlretrieve(url, install_dir+ "/"+file_name, reporthook)
                         except SocketError as e:
                             print("Error downloading file " + file_name + " Retry script.")
                             print(e)
