@@ -9,6 +9,7 @@ from socket import error as SocketError
 from snakemake.io import expand
 
 workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'classification', 'all']  #keep all at the end of the list
+
 def reporthook(count, block_size, total_size):
     global start_time
     if count == 0:
@@ -67,7 +68,7 @@ def download_file(workflow):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software")
+    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
     parser.add_argument("--workflow", help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
     parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
     args = parser.parse_args()
@@ -80,14 +81,12 @@ if __name__ == '__main__':
     except IOError:
         print("Error: config/offline_downloads.json is missing. Exiting")
         sys.exit(1)
-        
-    
+         
     try:
         if not os.path.isdir("data"):
             os.mkdir("data")
     except IOError:
-        print("Error: can't create data directory")
-        
+        print("Error: can't create data directory")     
     if (user_input == 'all'):
         user_input = workflows[0:-1]
         for workflow in user_input:     
