@@ -45,13 +45,15 @@ config_default = {
             "version" : "2.1.2--py35_0"
         },
         "kaiju" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/biocontainers/kaiju",
+            "use_local" : True,
+            "filename" : "kaiju-1.6.1--pl5.22.0_0.simg",
+            "location" : "../container_images/",
             "version" : "1.6.1--pl5.22.0_0"
         },
         "krona" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/biocontainers/krona",
+            "use_local" : True,
+            "filename" : "krona-2.7--pl5.22.0_1.simg",
+            "location" : "../container_images/",
             "version" : "2.7--pl5.22.0_1"
         },
         "quast" : {
