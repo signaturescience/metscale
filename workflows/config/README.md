@@ -1,7 +1,7 @@
 # Workflow Configuration
 
 The `workflows/config/` directory contains files used to set 
-key-value pairs in the configuration dictionary used by Snakemake.
+key-value pairs in the configuration dictionary used by Snakemake in the Dahak workflows.
 
 ## Data Files, Workflow Config, and Parameters
 
