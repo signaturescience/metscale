@@ -6,11 +6,6 @@ When analyzing metagenomic data, different workflows
 are broken down into atomic operations. Each directory here
 corresponds to an atomic operation (a workflow component).
 
-A flowchart illustrating how each workflow component fits 
-together with tools into the overall process is included below:
-
-<img width="500px" src="/resources/WorkflowFlowchartOriginal.png" />
-
 Each workflow has its own Snakefile. The Snakefile is composed of a 
 list of simple rules that specify how an input file is turned into 
 an output file. 
