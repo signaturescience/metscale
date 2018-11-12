@@ -1,3 +1,5 @@
+These are instructions from the Dahak project that are not currently used by the workflows in this repository.
+
 # Workflows and Workflow Components
 
 When analyzing metagenomic data, different workflows
