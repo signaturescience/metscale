@@ -22,8 +22,6 @@ The following workflows are required deliverables:
 
 ## Workflow Descriptions
 
-For coverage of workflows, see [Workflows.md](/workflows/Workflows.md).
-
 For coverage of workflow components, see [WorkflowComponents.md](/workflows/WorkflowComponents.md).
 
 ## Running Workflows
