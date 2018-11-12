@@ -1,5 +1,7 @@
 # Assembly with MEGAHIT
 
+## These are recipes used in development work of the Dahak project.
+
 ## install
 
 ```
