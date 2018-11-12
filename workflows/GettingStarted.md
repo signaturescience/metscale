@@ -1,3 +1,5 @@
+These are getting started instructions from the Dahak project that are not currently used by the workflows in this repository.
+
 # Getting Started
 
 The instructions that follow will help you get started running the workflows
