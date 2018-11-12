@@ -1,3 +1,5 @@
+#### These are instructions from the Dahak project that describe how to create the subsampled Shakya et al. test datasets.
+
 #### Install the [SRA toolkit](https://www.ncbi.nlm.nih.gov/books/NBK158900/) from NCBI:
 ```
 wget --output-document sratoolkit.tar.gz http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz 
