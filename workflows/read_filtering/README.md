@@ -1,1 +1,1 @@
-#### Read assessement and filtering with Trimmomatic and FastQC
+#### Illumina read assessement and filtering with Trimmomatic and FastQC
