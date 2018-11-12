@@ -1,3 +1,5 @@
+These are workflow components from the Dahak project that are not all relevant to the code in this repository.
+ 
 # Workflow Components
 
 Each directory here represents a different atomic operation in Dahak workflows.
