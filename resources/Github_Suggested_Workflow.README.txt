@@ -1,4 +1,4 @@
-#This is a file detailing the suggested Github workflow in the Dahak repo
+#This is a file detailing the suggested GitHub workflow in the Dahak repo. These are general guidelines that could be applied to working in other repos.
 
 #To download the repo on your local machine
 git clone "https://github.com/dahak-metagenomics/dahak"
