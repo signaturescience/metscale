@@ -11,13 +11,13 @@ The [wiki](https://github.com/signaturescience/metagenomics/wiki) for this proje
 
 ## Prerequisites
 
-Currently, it is assumed that all workflow steps will be run on CentOS.
+It is currently assumed that all workflow steps will be run on CentOS, but other operating systems will be tested in the future.
 
 ## Data 
 
 Currently, the workflows have been tested with full and subsampled data from this publication:
 
-<sup>*</sup>[Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
+[Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
  
 ## Contributing
 
