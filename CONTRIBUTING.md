@@ -9,8 +9,10 @@ Have you written a patch to fix a bug?
 Thank you! Please open a new GitHub pull request that includes your patch. Clearly describe the problem and solution in your pull request description, and if applicable, include a relevant issue number.
 
 Do you intend to add a new feature or change an existing one?
-Before submitting a pull request with new features or significant modifications to the existing code base, please start a discussion about your ideas and intended contributions by emailing git@signaturescience.com. Once you have received positive feedback from Signature Science, you should create a fork of the original repository, make changes to your fork, and submit a new GitHub pull request with your changes. Include a clear list of what you have done along with informative commit log messages. The pull request will be reviewed by Signature Science before it is merged into the code base. Do you have questions about the source code?
-Questions about SIANN can be emailed to git@signaturescience.com, and subsequent clarifications will be made by Signature Science to the readme file or code as needed.
+Before submitting a pull request with new features or significant modifications to the existing code base, please start a discussion about your ideas and intended contributions by emailing git@signaturescience.com. Once you have received positive feedback from Signature Science, you should create a fork of the original repository, make changes to your fork, and submit a new GitHub pull request with your changes. Include a clear list of what you have done along with informative commit log messages. The pull request will be reviewed by Signature Science before it is merged into the code base. 
+
+Do you have questions about the source code?
+Questions can be emailed to git@signaturescience.com, and subsequent clarifications will be made by Signature Science to the readme file or code as needed.
 
 # Code of Conduct #
 
