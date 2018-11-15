@@ -24,6 +24,8 @@ The subsampled datasets used for testing can be downloaded here:
 [SRR606249_subset10_1.fq.gz](https://osf.io/xwk7m/)
 
 [SRR606249_subset10_2.fq.gz](https://osf.io/6dmh5/)
+
+More information about how the datasets were generated can be found [here](https://github.com/signaturescience/metagenomics/tree/master/workflows/dataset_construction).
  
 ## Contributing
 
