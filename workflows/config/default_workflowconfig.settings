@@ -59,7 +59,7 @@ config_default = {
             # the assembly workflow will be run on.
             # (metaspades assembler only).
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
@@ -69,7 +69,7 @@ config_default = {
             # the assembly workflow will be run on
             # (megahit assembler only).
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
@@ -79,8 +79,21 @@ config_default = {
             # the assembly workflow will be run on
             # (all assemblers).
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
+        },
+
+        "assembly_workflow_quast" : {
+            "assembler" : ["megahit","metaspades"],
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+
+        },
+
+        "assembly_workflow_multiqc" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+
         },
 
         "comparison_workflow_reads": {

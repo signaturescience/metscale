@@ -37,7 +37,7 @@ def container_image_name(biocontainers, app):
             qurl  = biocontainers[app]['quayurl']
             qvers = biocontainers[app]['version']
             quayurl = "docker://" + qurl + ":" + qvers
-            print(quayurl)
+           # print(quayurl)
             return quayurl
         except KeyError:
             err = "Error: quay.io URL for %s biocontainer "%(app)
@@ -49,7 +49,7 @@ def container_image_name(biocontainers, app):
             dir_loc = biocontainers[app]['location']
             file_name =  biocontainers[app]['filename']
             full_path = "file:"+dir_loc+file_name
-            print(full_path)
+         #   print(full_path)
             return full_path
         except KeyError:
             err = "Error: the parameters provided specify a local "
