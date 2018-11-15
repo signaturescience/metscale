@@ -1,9 +1,9 @@
 
 # Open Source Metagenomics Workflows
 
-These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is Illumina FASTQ files, and the current outputs include filtered reads, FASTQC reports, assembled contigs, and metagenome comparison estimates. 
+These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is Illumina FASTQ files, and the current outputs include filtered reads, FastQC reports, assembled contigs, and metagenome comparison estimates. 
 
-Future outputs will include taxonomic classifications and visualizations, functional predictions, and alignments. We are actively developing these workflows - please stay tuned for updates!
+Future outputs will include taxonomic classifications and visualizations, functional predictions, and alignments. We are actively developing these workflows, so please stay tuned for updates!
 
 ## Getting Started
 
@@ -15,7 +15,7 @@ It is currently assumed that all workflow steps will be run on CentOS, but other
 
 ## Data 
 
-Currently, the workflows have been tested with full and subsampled data from this publication:
+The workflows have been tested with full and subsampled data from this publication:
 
 [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
  
