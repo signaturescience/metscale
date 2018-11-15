@@ -20,7 +20,9 @@ The workflows have been tested with subsampled data from this publication:
 [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
  
 The subsampled datasets used for testing can be downloaded here:
+
 [SRR606249_subset10_1.fq.gz](https://osf.io/xwk7m/)
+
 [SRR606249_subset10_2.fq.gz](https://osf.io/6dmh5/)
  
 ## Contributing
