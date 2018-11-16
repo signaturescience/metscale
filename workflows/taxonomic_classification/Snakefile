@@ -176,7 +176,7 @@ rule download_kaijudb:
         '''--- Downloading kaiju database.'''
     shell:
         '''
-        wget -O {kaiju_target_sing} "{kaiju_url}/{kaiju_tar}"
+        wget -O {kaiju_target} "{kaiju_url}/{kaiju_tar}"
         '''
 
 rule unpack_kaijudb:
@@ -191,7 +191,7 @@ rule unpack_kaijudb:
         '''--- Unpacking kaiju database.'''
     shell:
         '''
-        tar -xzf {kaiju_target_sing} -C {data_dir} #&& rm -f {kaiju_target_sing}  TODO: commented out for now
+        tar -xzf {kaiju_target} -C {data_dir} && rm -f {kaiju_target}
         '''
 
 
