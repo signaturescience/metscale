@@ -33,8 +33,8 @@ Please read [CONTRIBUTING.md](https://github.com/signaturescience/metagenomics/b
 
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE](https://github.com/signaturescience/metagenomics/blob/master/LICENSE) file for details.
+This software is licensed under the [BSD 3-Clause License](https://github.com/signaturescience/metagenomics/blob/master/LICENSE).
 
 ## Acknowledgments
 
-This project builds off work that began in the [Dahak project](https://github.com/dahak-metagenomics/dahak). For more information about the tools that are used within these workflows, please see DEPENDENCY_LICENSES.txt. 
+This project builds off work that began in the [Dahak project](https://github.com/dahak-metagenomics/dahak). More information about the tools used in the workflows is available in the [DEPENDENCY_LICENSES](https://github.com/signaturescience/metagenomics/blob/master/DEPENDENCY_LICENSES) file. 
