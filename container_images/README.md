@@ -1,4 +1,4 @@
-This directory contains recipes for building local, custom container images for
+This directory contains recipes from the Dahak project for building local, custom container images for
 both Singularity and Docker.
 
 # Motivation

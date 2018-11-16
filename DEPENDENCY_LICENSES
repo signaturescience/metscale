@@ -1,0 +1,71 @@
+COPYRIGHT AND LICENSE
+
+Copyright 2018 Signature Science, LLC
+
+This software is distributed under the BSD 3-Clause License. 
+
+PURPOSE
+These open source metagenomics workflows were constructed to analyze the biological contents of complex environmental samples.
+
+ACKNOWLEDGMENTS
+This project builds off open source work that began in the Dahak project.
+
+-Dahak
+	-https://github.com/dahak-metagenomics/dahak
+	-Copyright © 2017, The Regents of the University of California
+	-BSD 3-Clause License
+
+DEPENDENCIES
+The metagenomics workflows use the following tools:
+
+-Singularity
+	-https://www.sylabs.io/docs/
+	-Copyright © 2018 Singularity
+	-BSD 3-Clause License
+
+-Snakemake
+	-https://github.com/snakemake-workflows/docs
+	-Copyright © 2016 Johannes Köstert
+	-MIT License
+
+-Open Science Framework (OSF)
+	-https://osf.io/
+	-Copyright © 2011-2018 Center for Open Science 
+	-Apache 2.0 License
+
+-Python
+	-https://www.python.org
+	-Copyright © 2001-2018 Python Software Foundation
+	-Python Software Foundation License
+
+-Conda
+	-https://conda.io/docs/
+	-Copyright © 2017, Anaconda, Inc.
+	-Licensed under BSD 3-Clause and terms in https://conda.io/docs/license.html
+	
+-Biocontainers
+	-https://biocontainers.pro/
+	-Apache 2.0 License
+
+-These are the tools used within Biocontainers in the current workflows:
+
+	-Trimmomatic version 0.36--5
+		-https://github.com/timflutre/trimmomatic
+		-GNU General Public License v3
+
+	-FastQC version 0.11.7--p15.22.0_2
+		-https://github.com/s-andrews/FastQC
+		-GNU General Public License v2
+
+	-metaSPAdes version 3.11--py27_zlibl.2.8_0
+		-http://cab.spbu.ru/software/spades
+		-GNU General Public License v2
+ 
+	-MEGAHIT version 1.1.2--py35_0
+		-https://github.com/voutcn/megahit
+		-GNU General Public License v3.0
+
+	-Sourmash version 2.0.0a3--py36_0
+		-https://github.com/dib-lab/sourmash
+		-Copyright © 2016 The Regents of the University of California
+		-BSD-3-Clause License
