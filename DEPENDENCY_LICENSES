@@ -33,11 +33,16 @@ The metagenomics workflows use the following tools:
 	-Copyright © 2011-2018 Center for Open Science 
 	-Apache 2.0 License
 
--Python 2.7
+-Python
 	-https://www.python.org
 	-Copyright © 2001-2018 Python Software Foundation
 	-Python Software Foundation License
 
+-Conda
+	-https://conda.io/docs/
+	-Copyright © 2017, Anaconda, Inc.
+	-Licensed under BSD 3-Clause and terms in https://conda.io/docs/license.html
+	
 -Biocontainers
 	-https://biocontainers.pro/
 	-Apache 2.0 License
