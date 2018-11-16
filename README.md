@@ -37,4 +37,4 @@ This software is licensed under the [BSD 3-Clause License](https://github.com/si
 
 ## Acknowledgments
 
-This project builds off work that began in the [Dahak project](https://github.com/dahak-metagenomics/dahak). More information about the tools used in the workflows is available in the [DEPENDENCY_LICENSES](https://github.com/signaturescience/metagenomics/blob/master/DEPENDENCY_LICENSES) file. 
+This project builds off work that began in the [Dahak project](https://github.com/dahak-metagenomics/dahak). A variety of open source tools are used within the workflows, and more information about those tools is available in the [DEPENDENCY_LICENSES](https://github.com/signaturescience/metagenomics/blob/master/DEPENDENCY_LICENSES) file. 
