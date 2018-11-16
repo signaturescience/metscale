@@ -3,6 +3,8 @@
 
 These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is Illumina FASTQ files, and the current outputs include filtered reads, FastQC reports, assembled contigs, and metagenome comparison estimates. 
 
+![](https://github.com/signaturescience/metagenomics/blob/master/workflows/Overview_Flowchart.png)
+
 Future outputs will include taxonomic classifications and visualizations, functional predictions, and alignments. We are actively developing these workflows, so please stay tuned for updates!
 
 ## Getting Started
