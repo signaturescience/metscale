@@ -28,6 +28,12 @@
         "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
         "databases" : ["genbank","refseq"],
         "kvalue"    : ["21","31","51"]
+    },
+
+    "inference" : {
+        "prokka-1.12.simg" : "docker://ummidock/prokka:1.12",
+        "abricate.simg" : "docker://thanhleviet/abricate",
+        "srst2.simg" : "docker://brooksph/srst2"
     }
 
 }

@@ -76,6 +76,24 @@ config_default = {
             "filename" : "fastqc-0.11.7--pl5.22.0_2.simg",
             "location" : "../container_images/",
             "version" : "00.11.7--pl5.22.0_2"
+        },
+        "prokka" : {
+            "use_local" : True,
+            "filename" : "prokka-1.12.simg",
+            "location" : "../container_images/",
+            "version" : "1.12"        
+        },
+        "abricate" : {
+            "use_local" : True,
+            "filename" : "abricate.simg",
+            "location" : "../container_images/",
+            "version" : "latest"         
+        },
+        "srst2" : {
+            "use_local" : True,
+            "filename" : "srst2.simg",
+            "location" : "../container_images/",
+            "version" : "latest"
         }
     },
 
@@ -267,6 +285,14 @@ config_default = {
             # name and URL for the sequencer adapter file
             "name" : "TruSeq2-PE.fa",
             "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+        }
+    },
+
+    "functional_inference" : {
+        #params for functional inference workflow
+        "prokka_with_megahit" : {
+            "outdir_pattern" : "{sample}_prokka_annotation",
+            "prefix_pattern" : "podar_metaG"
         }
     }
 }
