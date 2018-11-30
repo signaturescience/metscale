@@ -291,8 +291,14 @@ config_default = {
     "functional_inference" : {
         #params for functional inference workflow
         "prokka_with_megahit" : {
-            "outdir_pattern" : "{sample}_prokka_annotation",
-            "prefix_pattern" : "podar_metaG"
+            "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
+            "prefix_pattern" : "podar_metaG",
+            "input_pattern" : "{sample}.trim{qual}_megahit.contigs.fa"
+        },
+        "prokka_with_metaspades" : {
+            "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
+            "prefix_pattern" : "podar_metaG_sbu",
+            "input_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa"
         }
     }
 }

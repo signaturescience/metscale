@@ -1,0 +1,115 @@
+'''
+Author: Chris Grahlmann
+Affiliation: Signature Science
+Objective: A Snakemake workflow to annotate prokaryotic genomes and screen for genes of interest
+Date: Nov 28, 2018
+Documentation: docs/workflow_assembly.md
+'''
+
+from common.utils  import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+import pdb
+
+
+############################################
+# Inference: default config
+
+data_dir = config['data_dir']
+sing_dir = config['sing_dir']
+image_dir = 'images/read'
+biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
+assembly = config['assembly']
+readfilt = config['read_filtering']
+inference = config['functional_inference']
+
+
+prokka_image = container_image_name(biocontainers, 'prokka')
+#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+prokka_with_megahit_output_dir = join(data_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("OUTPUT: " + str(prokka_with_megahit_output_dir))
+prokka_with_megahit_output_dir_sing = join(sing_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("INPUT: " + str(prokka_with_megahit_input_dir))
+prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
+
+
+
+rule prokka_with_megahit:
+	input:
+		prokka_with_megahit_input_dir
+	output:
+		directory(prokka_with_megahit_output_dir)
+	params:
+		input_files = prokka_with_megahit_input_dir_sing,
+		output_dir = prokka_with_megahit_output_dir_sing
+	singularity:
+		prokka_image
+	shell:
+		'prokka '
+		'{params.input_files} '
+		'--outdir {params.output_dir} '
+		'--prefix {prefix_dir} '
+
+
+
+#prokka_image = container_image_name(biocontainers, 'prokka')
+
+#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+prokka_with_metaspades_output_dir = join(data_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("OUTPUT: " + str(prokka_with_metaspades_output_dir))
+prokka_with_metaspades_output_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_input_dir = join(data_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("INPUT: " + str(prokka_with_metaspades_input_dir))
+prefix_dir = inference['prokka_with_metaspades']['prefix_pattern']
+
+
+rule prokka_with_metaspades:
+	input:
+		prokka_with_metaspades_input_dir
+	output:
+		directory(prokka_with_metaspades_output_dir)
+	params:
+		input_files = prokka_with_metaspades_input_dir_sing,
+		output_dir = prokka_with_metaspades_output_dir_sing
+	singularity:
+		prokka_image
+	shell:
+		'prokka '
+		'{params.input_files} '
+		'--outdir {params.output_dir} '
+		'--prefix {prefix_dir} '
+
+rule functional_inference_prokka_with_megahit:
+    """
+    Run prokka with MEGAHIT contigs
+    """
+    input:
+        expand( prokka_with_megahit_output_dir,
+                sample = workflows['prokka_with_megahit_output_dir']['sample'],
+                qual = workflows['prokka_with_megahit_output_dir']['qual']
+        )
+
+
+rule functional_inference_prokka_with_metaspades:
+    """
+    Run prokka with metaspades contigs
+    """
+    input:
+        expand( prokka_with_metaspades_output_dir,
+                sample = workflows['prokka_with_metaspades_output_dir']['sample'],
+                qual = workflows['prokka_with_metaspades_output_dir']['qual']
+        )
