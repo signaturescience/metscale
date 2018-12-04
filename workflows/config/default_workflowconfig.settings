@@ -39,18 +39,33 @@ config_default = {
         },
 
         "taxonomic_classification_kaijureport_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_filtered_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_filteredclass_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_add_taxonnames_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_kaiju_species_summary_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
         },
 
         "assembly_workflow_metaspades" : {
