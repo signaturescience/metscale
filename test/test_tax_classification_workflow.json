@@ -1,0 +1,75 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+
+    },
+
+    "workflows" : {
+        "taxonomic_classification_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_signatures_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_gather_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+            "kvalues" : ["21","31","51"]
+        },
+
+        "taxonomic_classification_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_kaijureport_filteredclass_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+        }
+    },
+
+    "taxonomic_classification" : {
+
+        "filter_taxa" : {
+            "pct_threshold" : 1
+        },
+
+        "kaiju" : {
+            "dmp1" : "nodes.dmp",
+            "dmp2" : "names.dmp",
+            "fmi"  : "kaiju_db_nr_euk.fmi",
+            "tar"  : "kaiju_index_nr_euk.tgz",
+            "url"  : "http://kaiju.binf.ku.dk/database",
+            "out"  : "{sample}.kaiju_output.trim{qual}.out"
+        },
+
+        "kaiju_report" : {
+            "taxonomic_rank" : "genus",
+            "pct_threshold"  : 1
+        },
+
+        "sourmash" : { 
+            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
+            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
+            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
+            "databases" : ["genbank","refseq"],
+            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
+        },
+
+        "visualize_krona" : {
+            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
+        }
+    },
+}
