@@ -11,27 +11,26 @@ class TestAssembly(unittest.TestCase):
     
     def setUp(self):
         os.chdir("../workflows/")
-        SING_PATH = 'export SINGULARITY_BINDPATH="data:/tmp"' 
-        subprocess.run([SING_PATH], shell=True)
+        os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
      
-    def test_assembly_workflow_metaspades(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_workflow_metaspades"
+    def test_1_assembly_workflow_metaspades(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_workflow_metaspades"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SSRR606249_subset10.trim2_metaspades.contigs.fa")
         filename_2 = os.path.join(dirname, "data/SRR606249_subset10.trim30_metaspades.contigs.fa")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
              
-    def test_assembly_workflow_megahit(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_workflow_megahit"
+    def test_2_assembly_workflow_megahit(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_workflow_megahit"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SSRR606249_subset10.trim2_megahit.contigs.fa")
         filename_2 = os.path.join(dirname, "data/SRR606249_subset10.trim30_megahit.contigs.fa")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))    
         
-    def test_assembly_workflow_all(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_workflow_all"
+    def test_3_assembly_workflow_all(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_workflow_all"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SSRR606249_subset10.trim2_megahit.contigs.fa")

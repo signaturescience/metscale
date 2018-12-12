@@ -15,20 +15,19 @@ class TestTaxonomicClassification(unittest.TestCase):
     
     def setUp(self):
         os.chdir("../workflows/")
-        SING_PATH = 'export SINGULARITY_BINDPATH="data:/tmp"' 
-        subprocess.run([SING_PATH], shell=True)
+        os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
         
-    def test_taxonomic_classification_signatures_workflow(self):
+    def test_1_taxonomic_classification_signatures_workflow(self):
         #Note: This runs the comparison/compute_read_signatures rule
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_taxonomic_classification_workflow.json taxonomic_classification_signatures_workflow"
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_taxonomic_classification_workflow.json taxonomic_classification_signatures_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/data/SRR606249_subset10.trim2_scaled10k.k21_31_51.sig")
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10.trim30_scaled10k.k21_31_51.sig")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
         
-    def test_taxonomic_classification_gather_workflow(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_taxonomic_classification_workflow.json taxonomic_classification_gather_workflow"
+    def test_2_taxonomic_classification_gather_workflow(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_taxonomic_classification_workflow.json taxonomic_classification_gather_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10-k21.trim2.gather_matches.csv")
@@ -54,4 +53,6 @@ class TestTaxonomicClassification(unittest.TestCase):
                         os.path.isfile(filename_9) and os.path.isfile(filename_10) and os.path.isfile(filename_11) and os.path.isfile(filename_12) and
                         os.path.isfile(filename_13) and os.path.isfile(filename_14) and os.path.isfile(filename_15) and os.path.isfile(filename_16) and
                         os.path.isfile(filename_17) and os.path.isfile(filename_18))
-     
+        
+if __name__ == '__main__':
+    unittest.main()

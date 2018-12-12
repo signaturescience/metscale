@@ -11,11 +11,10 @@ class TestAssembly(unittest.TestCase):
     
     def setUp(self):
         os.chdir("../workflows/")
-        SING_PATH = 'export SINGULARITY_BINDPATH="data:/tmp"' 
-        subprocess.run([SING_PATH], shell=True)
+        os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
     
-    def test_comparison_workflow_reads(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_workflow_reads"
+    def test_1_comparison_workflow_reads(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_workflow_reads"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249allsamples_trim2and30_read_comparison.k31.csv")
@@ -23,8 +22,8 @@ class TestAssembly(unittest.TestCase):
         filename_3 = os.path.join(dirname, "data/SRR606249allsamples_trim2and30_read_comparison.k51.csv")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
         
-    def test_comparison_workflow_assembly(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_workflow_assembly"
+    def test_2_comparison_workflow_assembly(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_workflow_assembly"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_trim2and30_assembly_comparison.k31.csv")
@@ -32,8 +31,8 @@ class TestAssembly(unittest.TestCase):
         filename_3 = os.path.join(dirname, "data/SRR606249_trim2and30_assembly_comparison.k51.csv")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
         
-    def test_comparison_workflow_reads_assembly(self):
-        snakemake_command = "snakemake -p --verbose --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_workflow_reads_assembly"
+    def test_3_comparison_workflow_reads_assembly(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_workflow_reads_assembly"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_trim2and30_ra_comparison.k21.csv")
