@@ -6,4 +6,10 @@ python test_all_workflows.py
 
 There is also a docker file with a Centos OS to duplicate our clients environment 
 docker build -t "centos" .
+
+
 docker run -t --privileged "centos"
+or maybe 
+docker run --entrypoint "python" centos test_all_workflow.py
+or
+sudo docker run -it --privileged "centos" /bin/bash

@@ -23,7 +23,7 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
     
-def download_file(workflow):
+def download_file(workflow, data):
     if workflow in data.keys():
         for file_name, url in data[workflow].items():
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
@@ -65,21 +65,12 @@ def download_file(workflow):
                         subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
                         os.rename(file_name, "../container_images/"+file_name)    
     
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
-    parser.add_argument("--workflow", help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
-    parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
-    args = parser.parse_args()
-    install_dir = args.data_dir
-    user_input = args.workflow
-    
+def main(user_input, file_list='config/offline_downloads.json'):   
     try:
-        with open('config/offline_downloads.json')as f:
+        with open(file_list)as f:
             data = json.load(f)
     except IOError:
-        print("Error: config/offline_downloads.json is missing. Exiting")
+        print("Error: offline_downloads.json is missing. Exiting")
         sys.exit(1)
          
     try:
@@ -90,8 +81,20 @@ if __name__ == '__main__':
     if (user_input == 'all'):
         user_input = workflows[0:-1]
         for workflow in user_input:     
-            download_file(workflow)
+            download_file(workflow, data)
     else:
-        download_file(user_input)
+        download_file(user_input, data)
+        
+        
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
+    parser.add_argument("--workflow", help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
+    parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
+    args = parser.parse_args()
+    install_dir = args.data_dir
+    user_input = args.workflow
+    main(user_input)
+    
+
 
 
