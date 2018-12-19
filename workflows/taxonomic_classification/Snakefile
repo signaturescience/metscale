@@ -438,8 +438,7 @@ rule kaiju_report:
     Generate a kaiju report from kaiju results
     """
     input:
-        #kaiju_report_input_files
-        kaiju_summary_input_files
+        kaiju_report_input_files
     output:
         kaiju_report_output_file
     message: 
