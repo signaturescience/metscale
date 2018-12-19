@@ -97,6 +97,7 @@ all_unpacked_sbts = expand(taxclass['sourmash']['sbtunpack'],
                             kvalue = '{kvalue}',
                             database = taxclass['sourmash']['databases'])
 all_unpacked_sbts = [join(data_dir, j) for j in all_unpacked_sbts]
+print("###all_unpacked_sbts: "+ str(all_unpacked_sbts))
 
 gather_csv        = join(data_dir, taxclass['sourmash']['gather_csv_out'])
 gather_unassigned = join(data_dir, taxclass['sourmash']['gather_unassigned_out'])
@@ -325,11 +326,8 @@ rule kaiju2krona:
 
 taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 taxon_names_output_file = re.sub(r'\.out', '.names.out', run_kaiju_output_file)
-
-
 taxon_names_output_file_sing = re.sub(r'\.out', '.names.out', run_kaiju_output_file_sing)
-print("TI: "+str(taxon_names_input_files))
-print("TO " + str(taxon_names_output_file))
+
 
 def taxon_names_input_file_sub(wildcards):
     """
@@ -381,8 +379,8 @@ kaiju_summary_output_file = re.sub(r'\.out', '.kaiju_out_specied.summary', run_k
 
 
 kaiju_summary_output_file_sing = re.sub(r'\.out', '.kaiju_out_specied.summary', run_kaiju_output_file_sing)
-print("TI: "+str(kaiju_summary_input_files))
-print("TO " + str(kaiju_summary_output_file))
+print("kaiju_summary_input_files: "+str(kaiju_summary_input_files))
+print("kaiju_summary_output_file " + str(kaiju_summary_output_file))
 
 def kaiju_species_input_file_sub(wildcards):
     """
@@ -428,12 +426,15 @@ rule kaiju_species_summary_report:
 # Taxonomic Classification: kaiju report
 
 kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+print("kaiju_report_input_files: "+str(kaiju_report_input_files))
+
+
 
 kaiju_report_output_file = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file)
 kaiju_report_output_file_sing = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file_sing)
 
 tax_rank = taxclass['kaiju_report']['taxonomic_rank']
-
+print("kaiju_report_output_file: "+str(kaiju_report_output_file))
 def kaiju_report_input_name(wildcards):
     kaiju_report_in = run_kaiju_output_file_sing.format(**wildcards)
     return kaiju_report_in
@@ -447,7 +448,8 @@ rule kaiju_report:
     Generate a kaiju report from kaiju results
     """
     input:
-        kaiju_report_input_files
+        #kaiju_report_input_files
+        kaiju_summary_input_files
     output:
         kaiju_report_output_file
     message: 
@@ -567,33 +569,37 @@ rule kaiju_filteredclass_report:
 ############################################
 # Taxonomic Classification: generate krona HTML using all results
 
+
 visualize_krona_input_file = kaiju_report_output_file
-visualize_krona_output_file = re.sub(
-    r'\.summary', '.html', visualize_krona_input_file
-)
+visualize_krona_input_file_sing = kaiju_report_output_file_sing
+visualize_krona_output_file = re.sub( r'\.summary', '.html', visualize_krona_input_file)
+visualize_krona_output_file_sing = re.sub( r'\.summary', '.html', visualize_krona_input_file_sing)
 
 krona_image = container_image_name(biocontainers, 'krona')
 
-def visualize_krona_input_func(wildcard):
-    return visualize_krona_input_file.format(**wildcards)
 
-def visualize_krona_output_func(wildcard):
-    return visualize_krona_output_file.format(**wildcards)
+def visualize_krona_input_func_sing(wildcards):
+    return visualize_krona_input_file_sing.format(**wildcards)
+
+def visualize_krona_output_func_sing(wildcards):
+    return visualize_krona_output_file_sing.format(**wildcards)
+
 
 print("visualize_krona_input_file: " + str(visualize_krona_input_file))
+
 rule visualize_krona:
     """
     Visualize all kaiju results using krona
     """
     input:
-        visualize_krona_input_file
+       visualize_krona_input_file
     output:
         visualize_krona_output_file
     message:
         '''--- Creating krona report from all kaiju results.'''
     params:
-        visualize_krona_input_wc = visualize_krona_input_func,
-        visualize_krona_output_wc = visualize_krona_output_func,
+        visualize_krona_input_wc = visualize_krona_input_func_sing,
+        visualize_krona_output_wc = visualize_krona_output_func_sing,
     singularity:
         krona_image
     shell:
@@ -608,15 +614,14 @@ rule visualize_krona:
 # Taxonomic Classification: generate krona HTML using all >1% filter
 
 visualize_krona_filtered_input_file = kaiju_filtered_report_output_file
-print("visualize_krona_filtered_input_file: " + str(visualize_krona_filtered_input_file))
 visualize_krona_filtered_output_file = re.sub(
     r'\.summary', '.html', visualize_krona_filtered_input_file
 )
 
-def visualize_krona_filtered_input_func(wildcard):
-    return visualize_krona_fitered_input_file.format(**wildcards)
+def visualize_krona_filtered_input_func(wildcards):
+    return visualize_krona_filtered_input_file.format(**wildcards)
 
-def visualize_krona_filtered_output_func(wildcard):
+def visualize_krona_filtered_output_func(wildcards):
     return visualize_krona_filtered_output_file.format(**wildcards)
 
 
@@ -650,13 +655,12 @@ visualize_krona_filteredclass_output_file = re.sub(
     r'\.summary', '.html', visualize_krona_filteredclass_input_file
 )
 
-def visualize_krona_filteredclass_input_func(wildcard):
-    return visualize_krona_fitered_input_file.format(**wildcards)
+def visualize_krona_filteredclass_input_func(wildcards):
+    return visualize_krona_filtered_input_file.format(**wildcards)
 
-def visualize_krona_filteredclass_output_func(wildcard):
+def visualize_krona_filteredclass_output_func(wildcards):
     return visualize_krona_filteredclass_output_file.format(**wildcards)
 
-print("visualize_krona_filteredclass_input_file: " + str(visualize_krona_filteredclass_input_file))
 rule visualize_krona_filteredclass:
     """
     Visualize classified, filtered (>X%) kaiju results using krona
@@ -689,6 +693,7 @@ directions = [readfilt['direction_labels']['forward'],
 rule taxonomic_classification_signatures_workflow:
     """
     Build rule: trigger calculation of signatures from reads.
+    Note:This runs the comparison/compute_read_signatures_rule
     """
     input:
         expand(read_sig_output,
@@ -748,6 +753,7 @@ rule taxonomic_classification_add_taxonnames_workflow:
     """
     What do I do?
     Add taxon names to kaiju output file
+    Runs def run_kaiju -> def add_taxon_names
     """
     input:
         expand( taxon_names_output_file,
@@ -759,6 +765,7 @@ rule taxonomic_classification_convert_kaiju_to_krona_workflow:
     """
     What do I do?
     Create a krona file out of the kaiju results
+    Runs def run_kaiju -> def kaiju2krona
     """
     input:
         expand( kaiju2krona_output_file,
@@ -770,9 +777,30 @@ rule taxonomic_classification_kaiju_species_summary_workflow:
     """
     What do I do?
     Create a kaiju species summary results file
+    Runs def run_kaiju -> def kaiju_species_summary_report
     """
     input:
         expand( kaiju_summary_output_file,
                 sample = workflows['taxonomic_classification_kaiju_species_summary_workflow']['sample'],
                 qual = workflows['taxonomic_classification_kaiju_species_summary_workflow']['qual']
+        )
+
+rule taxonomic_classification_visualize_krona_kaijureport_workflow:
+    '''
+    what do I do?
+    '''
+    input:
+        expand( visualize_krona_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_workflow']['qual']
+        )
+
+rule taxonomic_classification_krona_kaijureport_filtered_workflow:
+    '''
+    what do I do?
+    '''
+    input:
+        expand( visualize_krona_filtered_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['qual']
         )

@@ -53,6 +53,14 @@ class TestTaxonomicClassification(unittest.TestCase):
                         os.path.isfile(filename_9) and os.path.isfile(filename_10) and os.path.isfile(filename_11) and os.path.isfile(filename_12) and
                         os.path.isfile(filename_13) and os.path.isfile(filename_14) and os.path.isfile(filename_15) and os.path.isfile(filename_16) and
                         os.path.isfile(filename_17) and os.path.isfile(filename_18))
-        
+    
+    def test_3_taxonomic_classification_kaijureport_workflow(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_taxonomic_classification_workflow.json taxonomic_classification_kaijureport_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10.kaiju_output.trim2.kaiju_out_krona.summary")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10.kaiju_output.trim30.kaiju_out_krona.summary")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+           
 if __name__ == '__main__':
     unittest.main()

@@ -68,6 +68,16 @@ config_default = {
             "qual" : ["2","30"],        
         },
 
+        "taxonomic_classification_visualize_krona_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
         "assembly_workflow_metaspades" : {
             #
             # these parameters determine which samples
