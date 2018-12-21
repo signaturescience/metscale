@@ -30,14 +30,14 @@ prokka_image = container_image_name(biocontainers, 'prokka')
 #prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
 prokka_with_megahit_output_dir = join(data_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-print("OUTPUT: " + str(prokka_with_megahit_output_dir))
+print("OUTPUT/prokka_with_megahit_output_dir: " + str(prokka_with_megahit_output_dir))
 prokka_with_megahit_output_dir_sing = join(sing_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-print("INPUT: " + str(prokka_with_megahit_input_dir))
+print("INPUT/prokka_with_megahit_input_dir: " + str(prokka_with_megahit_input_dir))
 prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
 
 
@@ -93,6 +93,75 @@ rule prokka_with_metaspades:
 		'--outdir {params.output_dir} '
 		'--prefix {prefix_dir} '
 
+
+
+abricate_image = container_image_name(biocontainers, 'abricate')
+#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+abricate_with_megahit_output = join(data_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("OUTPUT/abricate_with_megahit_output: " + str(abricate_with_megahit_output))
+abricate_with_megahit_output_sing = join(sing_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("INPUT/abricate_with_megahit_input: " + str(abricate_with_megahit_input))
+
+
+
+rule abricate_with_megahit:
+	input:
+		abricate_with_megahit_input
+	output:
+		abricate_with_megahit_output
+	params:
+		input_files = abricate_with_megahit_input_sing,
+		output_files = abricate_with_megahit_output_sing
+	singularity:
+		abricate_image
+	shell:
+		'abricate --csv '
+		'{params.input_files}>'
+		'{params.output_files} '
+
+
+
+abricate_with_metaspades_output = join(data_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("OUTPUT/abricate_with_metaspades_output: " + str(abricate_with_metaspades_output))
+abricate_with_metaspades_output_sing = join(sing_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+print("INPUT/abricate_with_metaspades_input: " + str(abricate_with_metaspades_input))
+
+
+
+rule abricate_with_metaspades:
+	input:
+		abricate_with_metaspades_input
+	output:
+		abricate_with_metaspades_output
+	params:
+		input_files = abricate_with_metaspades_input_sing,
+		output_files = abricate_with_metaspades_output_sing
+	singularity:
+		abricate_image
+	shell:
+		'abricate --csv '
+		'{params.input_files}>'
+		'{params.output_files} '
+
+
+
+###################################
+# Functional Inference: build rules
+
+
 rule functional_inference_prokka_with_megahit:
     """
     Run prokka with MEGAHIT contigs
@@ -113,3 +182,24 @@ rule functional_inference_prokka_with_metaspades:
                 sample = workflows['prokka_with_metaspades_output_dir']['sample'],
                 qual = workflows['prokka_with_metaspades_output_dir']['qual']
         )
+
+rule functional_inference_abricate_with_megahit:
+	"""
+	Run abricate with assembled megahit contigs as input
+	"""
+    input:
+        expand( abricate_with_megahit_output,
+                sample = workflows['abricate_with_megahit_output']['sample'],
+                qual = workflows['abricate_with_megahit_output']['qual']
+        )
+
+rule functional_inference_abricate_with_metaspades:
+	"""
+	Run abricate with assembled metaspades contigs as input
+	"""
+    input:
+        expand( abricate_with_metaspades_output,
+                sample = workflows['abricate_with_metaspades_output']['sample'],
+                qual = workflows['abricate_with_metaspades_output']['qual']
+        )
+

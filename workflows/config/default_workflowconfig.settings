@@ -109,7 +109,7 @@ config_default = {
 
         "prokka_with_megahit_output_dir" : {
             #
-            # these parameters determine which contif samples 
+            # these parameters determine which contig samples 
             # from megahit to run prokka on
             #
             "sample"    : ["SRR606249_subset10"],
@@ -117,12 +117,28 @@ config_default = {
         },
         "prokka_with_metaspades_output_dir" : {
             #
-            # these parameters determine which contif samples 
-            # from megahit to run prokka on
+            # these parameters determine which contig samples 
+            # from metaspades to run prokka on
             #
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
-        }
+        },
+        "abricate_with_megahit_output" : {
+            #
+            # these parameters determine which contig samples 
+            # from megahit to run abricate on
+            #
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+        },
+        "abricate_with_metaspades_output" : {
+            #
+            # these parameters determine which contig samples 
+            # from metaspades to run abricate on
+            #
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+        },
     }
 }
 

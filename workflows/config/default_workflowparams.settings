@@ -299,7 +299,16 @@ config_default = {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "prefix_pattern" : "podar_metaG_sbu",
             "input_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa"
+        },
+        "abricate_with_metaspades" : {
+            "output_pattern" : "{sample}_trim{qual}_metaspades_abricate.csv",
+            "input_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa"
+        },
+        "abricate_with_megahit" : {
+            "output_pattern" : "{sample}_trim{qual}_megahit_abricate.csv",
+            "input_pattern" : "{sample}.trim{qual}_megahit.contigs.fa"
         }
+
     }
 }
 
