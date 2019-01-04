@@ -1,4 +1,6 @@
-## Taxonomic classification using [sourmash](http://sourmash.readthedocs.io/en/latest/) and [kaiju](http://kaiju.binf.ku.dk) 
+## Taxonomic classification using [Sourmash](http://sourmash.readthedocs.io/en/latest/) and [Kaiju](http://kaiju.binf.ku.dk) 
+
+The tools within this workflow perform taxonomic classifications of Illumina filtered reads or assembled contigs. For more information, please see the [taxonomic classification wiki page](https://github.com/signaturescience/metagenomics/wiki/6.-Taxonomic-Classification).
 
 ![](https://github.com/signaturescience/metagenomics/blob/master/workflows/taxonomic_classification/Tax_Class_Flowchart.png)
 
