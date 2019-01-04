@@ -17,6 +17,11 @@ config_default = {
             "qual"   : ["2","30"]
         },
 
+        "read_filtering_workflow_multiqc" : {
+            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "qual"   : ["2","30"]
+        },
+
         "taxonomic_classification_workflow" : {
             #
             # These parameters determine which samples

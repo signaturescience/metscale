@@ -156,16 +156,16 @@ config_default = {
             # filename pattern for megahit output
             "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
             #
-            # general assembler output filename pattern
+            # general assembler output filename pattern/input for quast
             "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
+            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/",
             #
             # multiqc output dir pattern
-            "multiqc_pattern_report" : "{sample}_{direction}.trim{qual}_multiqc_fastqc_report",
-            # multiqc input file pattern
-            "multiqc_input_pattern" : "{sample}_{direction}.trim{qual}",
+            "multiqc_pattern_report" : "{sample}.trim{qual}_{assembler}_quast_multiqc",
+            #multiqc input file. Taken from quast output file.
+            "multiqc_input_file" : "report.tsv",
         }
     },
 
@@ -264,7 +264,13 @@ config_default = {
             "interleave_suffix" : "pe"
         },
 
-        #
+        "multiqc" :{
+            # multiqc output dir pattern
+            "multiqc_pattern_report" : "{sample}_{direction}.trim{qual}_read_filtering_multiqc_fastqc_report",
+            # multiqc input file pattern
+            "multiqc_input_pattern" : "{sample}_{direction}.trim{qual}_fastqc.zip",
+        }, 
+
         # Set the read adapter file
         "adapter_file" : {
             # 

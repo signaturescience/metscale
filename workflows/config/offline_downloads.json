@@ -7,7 +7,8 @@
     "read_filtering": {
         "fastqc-0.11.7--pl5.22.0_2.simg" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
         "trimmomatic-0.36--5.simg" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
-        "TruSeq2-PE.fa" : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+        "TruSeq2-PE.fa" : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa",
+        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
     },
 
     "assembly": {
