@@ -265,8 +265,8 @@ config_default = {
         "adapter_file" : {
             # 
             # name and URL for the sequencer adapter file
-            "name" : "TruSeq2-PE.fa",
-            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+            "name" : "illumina-adapters.fa",
+            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip"
         }
     }
 }

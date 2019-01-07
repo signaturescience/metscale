@@ -1,5 +1,7 @@
 import json
+import zipfile
 import subprocess
+import shutil
 import urllib.request
 import os
 import sys
@@ -47,17 +49,31 @@ def download_file(workflow, data):
             elif (':' in url):      #Normal files to DL
                 file_type = url.partition(":")[0] 
                 if (file_type == 'https' or file_type == 'http'):
-                    if not (os.path.isfile(install_dir+"/"+file_name)):
+                    if not (os.path.isfile(os.path.join(install_dir, file_name))):
                         print("Downloading " +file_name + " from " + url)
-                        try:
-                            urllib.request.urlretrieve(url, install_dir+ "/"+file_name, reporthook)
-                        except SocketError as e:
-                            print("Error downloading file " + file_name + " Retry script.")
-                            print(e)
+                        if (os.path.splitext(url)[1] == '.zip'):
+                            full_file_name = os.path.basename(url)
+                            print("Unzipping files "+file_name)
+                            urllib.request.urlretrieve(url, os.path.join(install_dir, full_file_name), reporthook)
+                            with zipfile.ZipFile(os.path.join(install_dir, full_file_name), "r") as zip_file:
+                                for item in zip_file.namelist():
+                                    zip_filename = os.path.basename(item)
+                                    if not zip_filename:
+                                        continue
+                                    source = zip_file.open(item)
+                                    with open(os.path.join(install_dir,zip_filename), "wb") as target:
+                                        shutil.copyfileobj(source, target)        
+                                os.remove(install_dir+ "/"+full_file_name)
+                        else:
                             try:
-                                os.remove(install_dir+ "/"+file_name)
-                            except OSError:
-                                pass
+                                urllib.request.urlretrieve(url, install_dir+ "/"+file_name, reporthook)
+                            except SocketError as e:
+                                print("Error downloading file " + file_name + " Retry script.")
+                                print(e)
+                                try:
+                                    os.remove(install_dir+ "/"+file_name)
+                                except OSError:
+                                    pass
                 elif (file_type == 'docker'):
                     if not (os.path.isfile("../container_images/"+file_name)):
                         print("Downloading singularity image " +file_name)
