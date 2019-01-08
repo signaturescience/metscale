@@ -107,7 +107,7 @@ config_default = {
             "kvalue"    : ["21","31","51"],
         },
 
-        "prokka_with_megahit_output_dir" : {
+        "prokka_with_megahit_workflow" : {
             #
             # these parameters determine which contig samples 
             # from megahit to run prokka on
@@ -115,7 +115,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "prokka_with_metaspades_output_dir" : {
+        "prokka_with_metaspades_workflow" : {
             #
             # these parameters determine which contig samples 
             # from metaspades to run prokka on
@@ -123,7 +123,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "abricate_with_megahit_output" : {
+        "abricate_with_megahit_workflow" : {
             #
             # these parameters determine which contig samples 
             # from megahit to run abricate on
@@ -131,7 +131,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "abricate_with_metaspades_output" : {
+        "abricate_with_metaspades_workflow" : {
             #
             # these parameters determine which contig samples 
             # from metaspades to run abricate on
@@ -139,6 +139,13 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
+        "functional_inference_srst2_workflow" : {
+            #
+            # these paramters determine srst2 input
+            #
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+        }
     }
 }
 

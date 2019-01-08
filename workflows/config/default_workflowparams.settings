@@ -307,7 +307,11 @@ config_default = {
         "abricate_with_megahit" : {
             "output_pattern" : "{sample}_trim{qual}_megahit_abricate.csv",
             "input_pattern" : "{sample}.trim{qual}_megahit.contigs.fa"
-        }
+        },
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
 
     }
 }

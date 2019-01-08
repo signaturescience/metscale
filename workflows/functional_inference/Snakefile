@@ -37,26 +37,28 @@ prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['
                             qual='{qual}'))
 prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-print("INPUT/prokka_with_megahit_input_dir: " + str(prokka_with_megahit_input_dir))
+print("INPUT/prokka_with_megahit_input_dir2: " + str(prokka_with_megahit_input_dir))
+print("type prokka_with_megahit_input_dir2: " + str(type(prokka_with_megahit_input_dir)))
 prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
 
-
+#"data/{sample}.pe.trim{qual}.fq.gz"
+#"data/{sample}.trim{qual}_megahit.contigs.fa"
 
 rule prokka_with_megahit:
-	input:
-		prokka_with_megahit_input_dir
-	output:
-		directory(prokka_with_megahit_output_dir)
-	params:
-		input_files = prokka_with_megahit_input_dir_sing,
-		output_dir = prokka_with_megahit_output_dir_sing
-	singularity:
-		prokka_image
-	shell:
-		'prokka '
-		'{params.input_files} '
-		'--outdir {params.output_dir} '
-		'--prefix {prefix_dir} '
+    input:
+        prokka_with_megahit_input_dir
+    output:
+        directory(prokka_with_megahit_output_dir)
+    params:
+        input_files = prokka_with_megahit_input_dir_sing,
+        output_dir = prokka_with_megahit_output_dir_sing
+    singularity:
+        prokka_image
+    shell:
+        'prokka '
+        '{params.input_files} '
+        '--outdir {params.output_dir} '
+        '--prefix {prefix_dir} '
 
 
 
@@ -78,20 +80,20 @@ prefix_dir = inference['prokka_with_metaspades']['prefix_pattern']
 
 
 rule prokka_with_metaspades:
-	input:
-		prokka_with_metaspades_input_dir
-	output:
-		directory(prokka_with_metaspades_output_dir)
-	params:
-		input_files = prokka_with_metaspades_input_dir_sing,
-		output_dir = prokka_with_metaspades_output_dir_sing
-	singularity:
-		prokka_image
-	shell:
-		'prokka '
-		'{params.input_files} '
-		'--outdir {params.output_dir} '
-		'--prefix {prefix_dir} '
+    input:
+        prokka_with_metaspades_input_dir
+    output:
+        directory(prokka_with_metaspades_output_dir)
+    params:
+        input_files = prokka_with_metaspades_input_dir_sing,
+        output_dir = prokka_with_metaspades_output_dir_sing
+    singularity:
+        prokka_image
+    shell:
+        'prokka '
+        '{params.input_files} '
+        '--outdir {params.output_dir} '
+        '--prefix {prefix_dir} '
 
 
 
@@ -112,19 +114,20 @@ print("INPUT/abricate_with_megahit_input: " + str(abricate_with_megahit_input))
 
 
 rule abricate_with_megahit:
-	input:
-		abricate_with_megahit_input
-	output:
-		abricate_with_megahit_output
-	params:
-		input_files = abricate_with_megahit_input_sing,
-		output_files = abricate_with_megahit_output_sing
-	singularity:
-		abricate_image
-	shell:
-		'abricate --csv '
-		'{params.input_files}>'
-		'{params.output_files} '
+    input:
+        abricate_with_megahit_input
+        #"/tmp/SRR606249_subset10.pe.trim30.fq.gz"
+    output:
+        abricate_with_megahit_output
+    params:
+        input_files = abricate_with_megahit_input_sing,
+        output_files = abricate_with_megahit_output_sing
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '{params.input_files}>'
+        '{params.output_files} '
 
 
 
@@ -142,24 +145,32 @@ print("INPUT/abricate_with_metaspades_input: " + str(abricate_with_metaspades_in
 
 
 rule abricate_with_metaspades:
-	input:
-		abricate_with_metaspades_input
-	output:
-		abricate_with_metaspades_output
-	params:
-		input_files = abricate_with_metaspades_input_sing,
-		output_files = abricate_with_metaspades_output_sing
-	singularity:
-		abricate_image
-	shell:
-		'abricate --csv '
-		'{params.input_files}>'
-		'{params.output_files} '
+    input:
+        abricate_with_metaspades_input
+        #"/tmp/SRR606249_subset10.pe.trim30.fq.gz"
+    output:
+        abricate_with_metaspades_output
+    params:
+        input_files = abricate_with_metaspades_input_sing,
+        output_files = abricate_with_metaspades_output_sing
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '{params.input_files}>'
+        '{params.output_files} '
 
 
+
+
+        '--log --gene_db {params.srst2_db}'
 
 ###################################
 # Functional Inference: build rules
+
+workflows = config['workflows']
+directions = [inference['direction_labels']['forward'],
+              inference['direction_labels']['reverse']]
 
 
 rule functional_inference_prokka_with_megahit:
@@ -168,8 +179,8 @@ rule functional_inference_prokka_with_megahit:
     """
     input:
         expand( prokka_with_megahit_output_dir,
-                sample = workflows['prokka_with_megahit_output_dir']['sample'],
-                qual = workflows['prokka_with_megahit_output_dir']['qual']
+                sample = workflows['prokka_with_megahit_workflow']['sample'],
+                qual = workflows['prokka_with_megahit_workflow']['qual']
         )
 
 
@@ -179,27 +190,27 @@ rule functional_inference_prokka_with_metaspades:
     """
     input:
         expand( prokka_with_metaspades_output_dir,
-                sample = workflows['prokka_with_metaspades_output_dir']['sample'],
-                qual = workflows['prokka_with_metaspades_output_dir']['qual']
+                sample = workflows['prokka_with_metaspades_workflow']['sample'],
+                qual = workflows['prokka_with_metaspades_workflow']['qual']
         )
 
 rule functional_inference_abricate_with_megahit:
-	"""
-	Run abricate with assembled megahit contigs as input
-	"""
+    """
+    Run abricate with assembled megahit contigs as input
+    """
     input:
         expand( abricate_with_megahit_output,
-                sample = workflows['abricate_with_megahit_output']['sample'],
-                qual = workflows['abricate_with_megahit_output']['qual']
+                sample = workflows['abricate_with_megahit_workflow']['sample'],
+                qual = workflows['abricate_with_megahit_workflow']['qual']
         )
 
 rule functional_inference_abricate_with_metaspades:
-	"""
-	Run abricate with assembled metaspades contigs as input
-	"""
+    """
+    Run abricate with assembled metaspades contigs as input
+    """
     input:
         expand( abricate_with_metaspades_output,
-                sample = workflows['abricate_with_metaspades_output']['sample'],
-                qual = workflows['abricate_with_metaspades_output']['qual']
+                sample = workflows['abricate_with_metaspades_workflow']['sample'],
+                qual = workflows['abricate_with_metaspades_workflow']['qual']
         )
 
