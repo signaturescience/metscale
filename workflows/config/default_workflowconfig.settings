@@ -9,11 +9,11 @@ config_default = {
             # These parameters determine which samples
             # the read filtering workflow will be run on.
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"]
+            "sample"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_posttrim_workflow" : {
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
@@ -27,17 +27,17 @@ config_default = {
             # the taxonomic classification workflow 
             # will be run on.
             # 
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_signatures_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_gather_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "kvalues" : ["21","31","51"]
         },

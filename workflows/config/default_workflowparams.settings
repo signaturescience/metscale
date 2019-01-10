@@ -101,7 +101,7 @@ config_default = {
         "compare_read_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples" : ["SRR606249_subset10","SRR606249_subset25"],
+            "samples" : ["SRR606249_subset10"],
             # 
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
@@ -124,7 +124,7 @@ config_default = {
         "compare_assembly_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
+            "samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
