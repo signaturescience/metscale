@@ -163,9 +163,11 @@ config_default = {
             "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/",
             #
             # multiqc output dir pattern
-            "multiqc_pattern_report" : "{sample}.trim{qual}_{assembler}_quast_multiqc",
+            "assembly_multiqc_pattern_report" : "{sample}_{assembler}_multiqc_report",
             #multiqc input file. Taken from quast output file.
             "multiqc_input_file" : "report.tsv",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}_{assembler}_multiqc_fastqc_report"
         }
     },
 
@@ -266,9 +268,12 @@ config_default = {
 
         "multiqc" :{
             # multiqc output dir pattern
-            "multiqc_pattern_report" : "{sample}_{direction}.trim{qual}_read_filtering_multiqc_fastqc_report",
+            "multiqc_pattern_report" : "{sample}_multiqc_fastqc_report_data",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}_multiqc_fastqc_report",
             # multiqc input file pattern
             "multiqc_input_pattern" : "{sample}_{direction}.trim{qual}_fastqc.zip",
+
         }, 
 
         # Set the read adapter file
