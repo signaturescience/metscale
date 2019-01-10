@@ -7,12 +7,15 @@
     "read_filtering": {
         "fastqc-0.11.7--pl5.22.0_2.simg" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
         "trimmomatic-0.36--5.simg" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
-        "illumina-adapters.fa": "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip"
+        "illumina-adapters.fa": "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
+        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
     },
 
     "assembly": {
         "megahit-1.1.2--py35_0.simg" : "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
-        "spades-3.11.1--py36_zlib1.2.8_0.simg" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0"
+        "spades-3.11.1--py36_zlib1.2.8_0.simg" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0",
+        "quast-4.5--boost1.61_1.simg": "docker://quay.io/biocontainers/quast:4.5--boost1.61_1",
+        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
     },
 
     "comparison": {

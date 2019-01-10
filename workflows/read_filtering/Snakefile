@@ -270,7 +270,6 @@ rule post_trimming_quality_assessment:
 # Read Filtering: interleave
 
 # These are strings containing templates of .fq.gz file names.
-# R
 fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
@@ -485,6 +484,74 @@ rule quality_trimming:
         'MINLEN:25 '
 
 
+###################################
+#read filtering: multiqc statistics
+
+read_filtering_multiqc_output_file_sing = join(sing_dir, readfilt['multiqc']['multiqc_pattern_report_file'])
+read_filtering_multiqc_output_dir = join(data_dir, readfilt['multiqc']['multiqc_pattern_report'])
+read_filtering_multiqc_output_dir_sing = join(sing_dir, readfilt['multiqc']['multiqc_pattern_report'])
+    
+multiqc_image = container_image_name(biocontainers, 'multiqc')
+
+def read_filtering_expand_multiqc_input(wildcards):
+    """
+    Return the expanded list from fastqc files
+    """
+    multiqc_input_pattern_fwd = join(data_dir, readfilt['multiqc']['multiqc_input_pattern'].format(
+                                   direction=readfilt['direction_labels']['forward'], 
+                                   sample='{sample}', qual='{qual}'))
+    multiqc_input_pattern_rev = join(data_dir, readfilt['multiqc']['multiqc_input_pattern'].format(
+                                   direction=readfilt['direction_labels']['reverse'], 
+                                   sample='{sample}', qual='{qual}'))
+    wildcards.qual = workflows['read_filtering_posttrim_workflow']['qual']
+    read_filtering_multiqc_input_pattern_fwd = expand(multiqc_input_pattern_fwd, sample = wildcards.sample, qual=wildcards.qual)
+    read_filtering_multiqc_input_pattern_rev = expand(multiqc_input_pattern_rev, sample = wildcards.sample, qual=wildcards.qual)
+    original_reads = expand(pre_trimming_outputs, sample = wildcards.sample)
+    read_filtering_inputs_sing = [read_filtering_multiqc_input_pattern_fwd, read_filtering_multiqc_input_pattern_rev]  
+    multiqc_inputs = read_filtering_multiqc_input_pattern_fwd + read_filtering_multiqc_input_pattern_rev + original_reads
+    return multiqc_inputs
+
+
+def read_filtering_expand_multiqc_input_sing(wildcards):
+    """
+    Return the expanded list from fastqc files inside sing image
+    """
+   
+    multiqc_input_pattern_fwd = join(sing_dir, readfilt['multiqc']['multiqc_input_pattern'].format(
+                                   direction=readfilt['direction_labels']['forward'], 
+                                   sample='{sample}', qual='{qual}'))
+    multiqc_input_pattern_rev = join(sing_dir, readfilt['multiqc']['multiqc_input_pattern'].format(
+                                   direction=readfilt['direction_labels']['reverse'], 
+                                   sample='{sample}', qual='{qual}'))
+    
+    wildcards.qual = workflows['read_filtering_posttrim_workflow']['qual']
+    read_filtering_multiqc_input_pattern_fwd = expand(multiqc_input_pattern_fwd, sample = wildcards.sample, qual=wildcards.qual)
+    read_filtering_multiqc_input_pattern_rev = expand(multiqc_input_pattern_rev, sample = wildcards.sample, qual=wildcards.qual)
+    read_filtering_inputs_sing = [read_filtering_multiqc_input_pattern_fwd, read_filtering_multiqc_input_pattern_rev]
+    original_reads = pre_trimming_qa_outputs(wildcards)  #calling from read_filtering pretrim    
+    original_reads_list = list(original_reads.split(" "))    
+    multiqc_inputs = read_filtering_multiqc_input_pattern_fwd + read_filtering_multiqc_input_pattern_rev + original_reads_list
+    return multiqc_inputs
+    
+
+rule read_filtering_statistics_multiqc:
+    """
+    Compute read filtering statistics with multiqc
+    """
+    input:
+        read_filtering_expand_multiqc_input
+    output:
+        directory(read_filtering_multiqc_output_dir)
+    params:
+        input_files = read_filtering_expand_multiqc_input_sing,
+        output_files = read_filtering_multiqc_output_file_sing,
+        output_dir = read_filtering_multiqc_output_dir_sing
+    message: 
+        '--- Compiling read filtering statistics with multiqc'
+    singularity:
+        multiqc_image
+    shell:
+        'multiqc {params.input_files} -n {params.output_files} -o {params.output_dir}'
 
 ### ############################################
 ### # Read Filtering: bypass trimming, download trimmed data directly
@@ -570,4 +637,11 @@ rule read_filtering_posttrim_workflow:
                 sample    = workflows['read_filtering_posttrim_workflow']['sample'],
                 qual      = workflows['read_filtering_posttrim_workflow']['qual'],
                 direction = directions, 
+        )
+
+
+rule read_filtering_multiqc_workflow:
+    input:
+        expand( read_filtering_multiqc_output_dir,
+                sample    = workflows['read_filtering_workflow_multiqc']['sample'],
         )

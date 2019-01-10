@@ -194,7 +194,6 @@ rule assembly_megahit:
 
 assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 assembly_quast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
-
 assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'])
 assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_pattern'])
 
@@ -208,39 +207,72 @@ rule assembly_statistics_quast:
     input:
         assembly_quast_input
     output:
-        assembly_quast_output
+        directory(assembly_quast_output)
+    params:
+        quast_input_sing = assembly_quast_input_sing,
+        quast_output_sing = assembly_quast_output_sing
     message: 
         '--- Calculating assembly statistics with quast'
     singularity:
         quast_image
     shell:
-        'quast.py {assembly_quast_input_sing} -o {assembly_quast_output_sing}'
+        'quast.py {params.quast_input_sing} -o {params.quast_output_sing}'
 
 
 
 ###################################
 # Assembly: multiqc statistics
 
-assembly_multiqc_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
-assembly_multiqc_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
-assembly_multiqc_output = join(data_dir, assembly['assembly_patterns']['multiqc_pattern'])
+assembly_multiqc_input_pattern = assembly_quast_output + assembly['assembly_patterns']['multiqc_input_file']
+assembly_multiqc_input_pattern_sing = assembly_quast_output_sing + assembly['assembly_patterns']['multiqc_input_file']
+assembly_multiqc_output_dir = join(data_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
+assembly_multiqc_output_dir = assembly_multiqc_output_dir + '_data'
+assembly_multiqc_output_dir_sing = join(sing_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
+assembly_multiqc_output_file_sing = join(sing_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
 
 multiqc_image = container_image_name(biocontainers, 'multiqc')
+
+def assembly_expand_multiqc_input(wildcards):
+    """
+    Return input list for multiqc input
+    """
+    wildcards.qual = workflows['assembly_workflow_all']['qual']
+    multiqc_input = expand(assembly_multiqc_input_pattern, sample = wildcards.sample, qual=wildcards.qual, assembler = wildcards.assembler)
+    return multiqc_input
+
+
+def expand_assembly_multiqc_input_sing(wildcards):
+    """
+    Return input list for multiqc input for sing image
+    """
+    wildcards.qual = workflows['assembly_workflow_all']['qual']
+    multiqc_input = expand(assembly_multiqc_input_pattern_sing, sample = wildcards.sample, qual=wildcards.qual, assembler = wildcards.assembler)
+    return multiqc_input
+
+
+def expand_assembly_multiqc_output_file_sing(wildcards):
+    output_file = expand(assembly_multiqc_output_file_sing, sample = wildcards.sample, assembler = wildcards.assembler)
+    return output_file
+
 
 rule assembly_statistics_multiqc:
     """
     Compute assembly statistics with multiqc
     """
     input:
-        assembly_multiqc_input
+        assembly_expand_multiqc_input 
     output:
-        assembly_multiqc_output
+        directory(assembly_multiqc_output_dir)
+    params:
+        input_files = expand_assembly_multiqc_input_sing,
+        output_files = expand_assembly_multiqc_output_file_sing,
+        output_dir = assembly_multiqc_output_dir_sing
     message: 
         '--- Compiling assembly statistics with multiqc'
     singularity:
         multiqc_image
     shell:
-        'multiqc {assembly_multiqc_input_sing}'
+        'multiqc {params.input_files} -n {params.output_files} -o {params.output_dir}'
 
 
 
@@ -291,4 +323,17 @@ rule assembly_workflow_all:
                 direction = directions,
         )
 
+rule assembly_workflow_quast:
+    input:
+        expand( assembly_quast_output,
+                sample    = workflows['assembly_workflow_quast']['sample'],
+                qual      = workflows['assembly_workflow_quast']['qual'],
+                assembler = workflows['assembly_workflow_quast']['assembler'],
+        )
 
+rule assembly_workflow_multiqc:
+    input:
+        expand( assembly_multiqc_output_dir,
+                sample    = workflows['assembly_workflow_multiqc']['sample'],
+                assembler = workflows['assembly_workflow_multiqc']['multiqc_assembler'],
+        )
