@@ -57,7 +57,7 @@ The metagenomics workflows use the following tools:
 		-https://github.com/s-andrews/FastQC
 		-GNU General Public License v2
 
-	-MultiQC version 1.4--py35_0.simg
+	-MultiQC version 1.4--py35_0
 		-https://multiqc.info/
 		-GNU General Public License v3
 	
@@ -67,9 +67,9 @@ The metagenomics workflows use the following tools:
  
 	-MEGAHIT version 1.1.2--py35_0
 		-https://github.com/voutcn/megahit
-		-GNU General Public License v3.0
+		-GNU General Public License v3
 
-	-QUAST version 4.5--boost1.61_1.simg
+	-QUAST version 4.5--boost1.61_1
 		-http://quast.sourceforge.net/
 		-GNU General Public License v2
 
@@ -78,11 +78,11 @@ The metagenomics workflows use the following tools:
 		-Copyright © 2016 The Regents of the University of California
 		-BSD-3-Clause License
 
-	-Kaiju version 1.6.1--pl5.22.0_0.simg
+	-Kaiju version 1.6.1--pl5.22.0_0
 		-http://kaiju.binf.ku.dk/
 		-GNU General Public License v3
 
-	-Krona version 2.7--pl5.22.0_1.simg
+	-Krona version 2.7--pl5.22.0_1
 		-https://github.com/marbl/Krona
 		-Copyright © 2011, Battelle National Biodefense Institute (BNBI)
 		-BSD 2-clause “Simplified” License
