@@ -194,9 +194,8 @@ rule assembly_megahit:
 
 assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 assembly_quast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
-assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'])
+assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
 assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_pattern'])
-
 quast_image = container_image_name(biocontainers, 'quast')
 
 
@@ -207,7 +206,7 @@ rule assembly_statistics_quast:
     input:
         assembly_quast_input
     output:
-        directory(assembly_quast_output)
+        assembly_quast_output
     params:
         quast_input_sing = assembly_quast_input_sing,
         quast_output_sing = assembly_quast_output_sing
@@ -223,8 +222,8 @@ rule assembly_statistics_quast:
 ###################################
 # Assembly: multiqc statistics
 
-assembly_multiqc_input_pattern = assembly_quast_output + assembly['assembly_patterns']['multiqc_input_file']
-assembly_multiqc_input_pattern_sing = assembly_quast_output_sing + assembly['assembly_patterns']['multiqc_input_file']
+assembly_multiqc_input_pattern = assembly_quast_output
+assembly_multiqc_input_pattern_sing = assembly_quast_output_sing
 assembly_multiqc_output_dir = join(data_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
 assembly_multiqc_output_dir = assembly_multiqc_output_dir + '_data'
 assembly_multiqc_output_dir_sing = join(sing_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
@@ -253,7 +252,7 @@ def expand_assembly_multiqc_input_sing(wildcards):
 def expand_assembly_multiqc_output_file_sing(wildcards):
     output_file = expand(assembly_multiqc_output_file_sing, sample = wildcards.sample, assembler = wildcards.assembler)
     return output_file
-
+    
 
 rule assembly_statistics_multiqc:
     """

@@ -165,7 +165,7 @@ config_default = {
             # multiqc output dir pattern
             "assembly_multiqc_pattern_report" : "{sample}_{assembler}_multiqc_report",
             #multiqc input file. Taken from quast output file.
-            "multiqc_input_file" : "report.tsv",
+            "quast_output_multiqc_input_file" : "report.tsv",
             #multiqc output file
             "multiqc_pattern_report_file" : "{sample}_{assembler}_multiqc_fastqc_report"
         }
