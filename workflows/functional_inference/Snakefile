@@ -26,8 +26,11 @@ inference = config['functional_inference']
 
 
 prokka_image = container_image_name(biocontainers, 'prokka')
+print("PK:  "+str(prokka_image))
 #assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 #prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+print("prokka with megahit input: "+ assembly_metaspades_output)
+
 prokka_with_megahit_output_dir = join(data_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 print("OUTPUT/prokka_with_megahit_output_dir: " + str(prokka_with_megahit_output_dir))
@@ -55,6 +58,8 @@ rule prokka_with_megahit:
     singularity:
         prokka_image
     shell:
+    	'export LC_ALL=C '
+    	'&& '
         'prokka '
         '{params.input_files} '
         '--outdir {params.output_dir} '
@@ -90,6 +95,8 @@ rule prokka_with_metaspades:
     singularity:
         prokka_image
     shell:
+    	'export LC_ALL=C '
+    	'&& '
         'prokka '
         '{params.input_files} '
         '--outdir {params.output_dir} '
@@ -163,7 +170,7 @@ rule abricate_with_metaspades:
 
 
 
-        '--log --gene_db {params.srst2_db}'
+  
 
 ###################################
 # Functional Inference: build rules
