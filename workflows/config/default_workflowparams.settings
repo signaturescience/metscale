@@ -79,9 +79,9 @@ config_default = {
         },
         "prokka" : {
             "use_local" : True,
-            "filename" : "prokka-1.12.simg",
+            "filename" : "prokka-1.13.3-01.simg",
             "location" : "../container_images/",
-            "version" : "1.12"        
+            "version" : "1.13.3-01"        
         },
         "abricate" : {
             "use_local" : True,
