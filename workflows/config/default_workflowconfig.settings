@@ -9,12 +9,16 @@ config_default = {
             # These parameters determine which samples
             # the read filtering workflow will be run on.
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"]
+            "sample"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_posttrim_workflow" : {
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
+        },
+
+        "read_filtering_workflow_multiqc" : {
+            "sample"    : ["SRR606249_subset10"]
         },
 
         "taxonomic_classification_workflow" : {
@@ -23,34 +27,64 @@ config_default = {
             # the taxonomic classification workflow 
             # will be run on.
             # 
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_signatures_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_gather_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "kvalues" : ["21","31","51"]
         },
 
         "taxonomic_classification_kaijureport_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_filtered_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_filteredclass_workflow" : {
-            "sample"  : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
+        },
+
+        "taxonomic_classification_add_taxonnames_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_kaiju_species_summary_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
         },
 
         "assembly_workflow_metaspades" : {
@@ -59,7 +93,7 @@ config_default = {
             # the assembly workflow will be run on.
             # (metaspades assembler only).
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
@@ -69,7 +103,7 @@ config_default = {
             # the assembly workflow will be run on
             # (megahit assembler only).
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
@@ -79,8 +113,24 @@ config_default = {
             # the assembly workflow will be run on
             # (all assemblers).
             # 
-            "sample"    : ["SRR606249_subset10","SRR606249_subset25"],
+            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
+        },
+
+        "assembly_workflow_quast" : {
+            "assembler" : ["megahit","metaspades"],
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+
+        },
+
+        "assembly_workflow_multiqc" : {
+            #
+            # wgich samples to run on
+            # #which assembler to get input from
+            #
+            "sample"    : ["SRR606249_subset10"],              
+            "multiqc_assembler" :  ["megahit","metaspades"],
         },
 
         "comparison_workflow_reads": {

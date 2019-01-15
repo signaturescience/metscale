@@ -1,0 +1,68 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+    },
+
+
+
+    "workflows" : {
+        "comparison_workflow_reads": {
+            #
+            # these parameters determine which reads
+            # the comparison workflow will be run on
+            # 
+            "kvalue"    : ["21","31","51"],
+        },
+
+        "comparison_workflow_assembly" : {
+            #
+            # these parameters determine which assembled reads
+            # the comparison workflow will be run on
+            # 
+            "kvalue"    : ["21","31","51"],
+        },
+
+        "comparison_workflow_reads_assembly" : {
+            #
+            # these parameters determine which reads and assembled 
+            # reads the comparison workflow will be run on
+            # 
+            "kvalue"    : ["21","31","51"],
+        }
+    },
+
+  
+
+    "comparison" : {
+        "compute_read_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_read_signatures" : {
+            "samples" : ["SRR606249_subset10"],
+            "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+        },
+        "compute_assembly_signatures" : {
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            "sig_suffix" : "_scaled10k.k21_31_51.sig",
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_assembly_signatures" : {
+            "samples"   : ["SRR606249_subset10"],
+            "assembler" : ["megahit","metaspades"],
+            "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
+        },
+        "compare_read_assembly_signatures" : {
+            "samples"   : ["SRR606249_subset10"],
+            "assembler" : ["megahit","metaspades"],
+            "kvalues"   : [21, 31, 51],
+            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
+        }
+    },
+}

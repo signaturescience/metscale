@@ -1,5 +1,7 @@
 import json
+import zipfile
 import subprocess
+import shutil
 import urllib.request
 import os
 import sys
@@ -23,7 +25,7 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
     
-def download_file(workflow):
+def download_file(workflow, data):
     if workflow in data.keys():
         for file_name, url in data[workflow].items():
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
@@ -47,17 +49,31 @@ def download_file(workflow):
             elif (':' in url):      #Normal files to DL
                 file_type = url.partition(":")[0] 
                 if (file_type == 'https' or file_type == 'http'):
-                    if not (os.path.isfile(install_dir+"/"+file_name)):
+                    if not (os.path.isfile(os.path.join(install_dir, file_name))):
                         print("Downloading " +file_name + " from " + url)
-                        try:
-                            urllib.request.urlretrieve(url, install_dir+ "/"+file_name, reporthook)
-                        except SocketError as e:
-                            print("Error downloading file " + file_name + " Retry script.")
-                            print(e)
+                        if (os.path.splitext(url)[1] == '.zip'):
+                            full_file_name = os.path.basename(url)
+                            print("Unzipping files "+file_name)
+                            urllib.request.urlretrieve(url, os.path.join(install_dir, full_file_name), reporthook)
+                            with zipfile.ZipFile(os.path.join(install_dir, full_file_name), "r") as zip_file:
+                                for item in zip_file.namelist():
+                                    zip_filename = os.path.basename(item)
+                                    if not zip_filename:
+                                        continue
+                                    source = zip_file.open(item)
+                                    with open(os.path.join(install_dir,zip_filename), "wb") as target:
+                                        shutil.copyfileobj(source, target)        
+                                os.remove(install_dir+ "/"+full_file_name)
+                        else:
                             try:
-                                os.remove(install_dir+ "/"+file_name)
-                            except OSError:
-                                pass
+                                urllib.request.urlretrieve(url, install_dir+ "/"+file_name, reporthook)
+                            except SocketError as e:
+                                print("Error downloading file " + file_name + " Retry script.")
+                                print(e)
+                                try:
+                                    os.remove(install_dir+ "/"+file_name)
+                                except OSError:
+                                    pass
                 elif (file_type == 'docker'):
                     if not (os.path.isfile("../container_images/"+file_name)):
                         print("Downloading singularity image " +file_name)
@@ -65,21 +81,12 @@ def download_file(workflow):
                         subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
                         os.rename(file_name, "../container_images/"+file_name)    
     
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
-    parser.add_argument("--workflow", help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
-    parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
-    args = parser.parse_args()
-    install_dir = args.data_dir
-    user_input = args.workflow
-    
+def main(user_input, file_list='config/offline_downloads.json'):   
     try:
-        with open('config/offline_downloads.json')as f:
+        with open(file_list)as f:
             data = json.load(f)
     except IOError:
-        print("Error: config/offline_downloads.json is missing. Exiting")
+        print("Error: offline_downloads.json is missing. Exiting")
         sys.exit(1)
          
     try:
@@ -90,8 +97,20 @@ if __name__ == '__main__':
     if (user_input == 'all'):
         user_input = workflows[0:-1]
         for workflow in user_input:     
-            download_file(workflow)
+            download_file(workflow, data)
     else:
-        download_file(user_input)
+        download_file(user_input, data)
+        
+        
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
+    parser.add_argument("--workflow", help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
+    parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
+    args = parser.parse_args()
+    install_dir = args.data_dir
+    user_input = args.workflow
+    main(user_input)
+    
+
 
 

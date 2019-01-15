@@ -57,13 +57,15 @@ config_default = {
             "version" : "2.7--pl5.22.0_1"
         },
         "quast" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/biocontainers/quast",
+            "use_local" : True,
+            "filename" : "quast-4.5--boost1.61_1.simg",
+            "location" : "../container_images/",
             "version" : "4.5--boost1.61_1"
         },
         "multiqc" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/biocontainers/multiqc",
+            "use_local" : True,
+            "filename" : "multiqc-1.4--py35_0.simg",
+            "location" : "../container_images/",
             "version" : "1.4--py35_0"
         },
         "osf" : {
@@ -117,7 +119,7 @@ config_default = {
         "compare_read_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples" : ["SRR606249_subset10","SRR606249_subset25"],
+            "samples" : ["SRR606249_subset10"],
             # 
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
@@ -140,7 +142,7 @@ config_default = {
         "compare_assembly_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
+            "samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
@@ -172,14 +174,18 @@ config_default = {
             # filename pattern for megahit output
             "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
             #
-            # general assembler output filename pattern
+            # general assembler output filename pattern/input for quast
             "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
+            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/",
             #
-            # multiqc output filename pattern
-            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
+            # multiqc output dir pattern
+            "assembly_multiqc_pattern_report" : "{sample}_{assembler}_multiqc_report",
+            #multiqc input file. Taken from quast output file.
+            "quast_output_multiqc_input_file" : "report.tsv",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}_{assembler}_multiqc_fastqc_report"
         }
     },
 
@@ -278,13 +284,22 @@ config_default = {
             "interleave_suffix" : "pe"
         },
 
-        #
+        "multiqc" :{
+            # multiqc output dir pattern
+            "multiqc_pattern_report" : "{sample}_multiqc_fastqc_report_data",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}_multiqc_fastqc_report",
+            # multiqc input file pattern
+            "multiqc_input_pattern" : "{sample}_{direction}.trim{qual}_fastqc.zip",
+
+        }, 
+
         # Set the read adapter file
         "adapter_file" : {
             # 
             # name and URL for the sequencer adapter file
-            "name" : "TruSeq2-PE.fa",
-            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+            "name" : "illumina-adapters.fa",
+            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip"
         }
     },
 
