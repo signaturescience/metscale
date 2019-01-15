@@ -169,23 +169,23 @@ config_default = {
         "assembly_patterns" : {
             # 
             # filename pattern for metaspades output
-            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
+            "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             #
             # filename pattern for megahit output
-            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
+            "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             #
             # general assembler output filename pattern/input for quast
-            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/",
+            "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
             #
             # multiqc output dir pattern
-            "assembly_multiqc_pattern_report" : "{sample}_{assembler}_multiqc_report",
+            "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
             #multiqc input file. Taken from quast output file.
             "quast_output_multiqc_input_file" : "report.tsv",
             #multiqc output file
-            "multiqc_pattern_report_file" : "{sample}_{assembler}_multiqc_fastqc_report"
+            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
         }
     },
 
@@ -258,7 +258,7 @@ config_default = {
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             #
             # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
+            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}.fq.gz",
         },
 
         "direction_labels" : {
