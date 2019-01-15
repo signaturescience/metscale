@@ -284,7 +284,7 @@ directions = [readfilt['direction_labels']['forward'],
               readfilt['direction_labels']['reverse']]
 
 
-rule assembly_workflow_metaspades:
+rule assembly_metaspades_workflow:
     """
     Build rule: trigger the metaspades assembly step.
     """
@@ -295,7 +295,7 @@ rule assembly_workflow_metaspades:
                 direction = directions,
         )
 
-rule assembly_workflow_megahit:
+rule assembly_megahit_workflow:
     """
     Build rule: trigger the megahit assembly step.
     """
@@ -306,7 +306,7 @@ rule assembly_workflow_megahit:
                 direction = directions,
         )
 
-rule assembly_workflow_all:
+rule assembly_all_workflow:
     """
     Build rule: trigger the assembly step with all assemblers.
     """
@@ -322,7 +322,7 @@ rule assembly_workflow_all:
                 direction = directions,
         )
 
-rule assembly_workflow_quast:
+rule assembly_quast_workflow:
     input:
         expand( assembly_quast_output,
                 sample    = workflows['assembly_workflow_quast']['sample'],
@@ -330,7 +330,7 @@ rule assembly_workflow_quast:
                 assembler = workflows['assembly_workflow_quast']['assembler'],
         )
 
-rule assembly_workflow_multiqc:
+rule assembly_multiqc_workflow:
     input:
         expand( assembly_multiqc_output_dir,
                 sample    = workflows['assembly_workflow_multiqc']['sample'],

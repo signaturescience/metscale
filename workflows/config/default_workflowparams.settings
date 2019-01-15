@@ -286,11 +286,11 @@ config_default = {
 
         "multiqc" :{
             # multiqc output dir pattern
-            "multiqc_pattern_report" : "{sample}_multiqc_fastqc_report_data",
+            "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
             #multiqc output file
-            "multiqc_pattern_report_file" : "{sample}_multiqc_fastqc_report",
+            "multiqc_pattern_report_file" : "{sample}_fastqc_multiqc_report",
             # multiqc input file pattern
-            "multiqc_input_pattern" : "{sample}_{direction}.trim{qual}_fastqc.zip",
+            "multiqc_input_pattern" : "{sample}_trim{qual}_{direction}_fastqc.zip",
 
         }, 
 
