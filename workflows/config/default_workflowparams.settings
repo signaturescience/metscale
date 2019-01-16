@@ -227,7 +227,7 @@ config_default = {
             "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
             #
             # name of SBT file when unpacked
-            "sbtunpack" : "{database}_k{kvalue}.sbt.json",
+            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
             #
             # names of valid databases
             "databases" : ["genbank","refseq"],
