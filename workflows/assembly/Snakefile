@@ -290,8 +290,8 @@ rule assembly_metaspades_workflow:
     """
     input:
         expand( assembly_metaspades_output,
-                sample    = workflows['assembly_workflow_metaspades']['sample'],
-                qual      = workflows['assembly_workflow_metaspades']['qual'],
+                sample    = workflows['assembly_metaspades_workflow']['sample'],
+                qual      = workflows['assembly_metaspades_workflow']['qual'],
                 direction = directions,
         )
 
@@ -301,8 +301,8 @@ rule assembly_megahit_workflow:
     """
     input:
         expand( assembly_megahit_output,
-                sample    = workflows['assembly_workflow_megahit']['sample'],
-                qual      = workflows['assembly_workflow_megahit']['qual'],
+                sample    = workflows['assembly_megahit_workflow']['sample'],
+                qual      = workflows['assembly_megahit_workflow']['qual'],
                 direction = directions,
         )
 
@@ -312,27 +312,27 @@ rule assembly_all_workflow:
     """
     input:
         expand( assembly_metaspades_output,
-                sample    = workflows['assembly_workflow_all']['sample'],
-                qual      = workflows['assembly_workflow_all']['qual'],
+                sample    = workflows['assembly_all_workflow']['sample'],
+                qual      = workflows['assembly_all_workflow']['qual'],
                 direction = directions,
         ),
         expand( assembly_megahit_output,
-                sample    = workflows['assembly_workflow_all']['sample'],
-                qual      = workflows['assembly_workflow_all']['qual'],
+                sample    = workflows['assembly_all_workflow']['sample'],
+                qual      = workflows['assembly_all_workflow']['qual'],
                 direction = directions,
         )
 
 rule assembly_quast_workflow:
     input:
         expand( assembly_quast_output,
-                sample    = workflows['assembly_workflow_quast']['sample'],
-                qual      = workflows['assembly_workflow_quast']['qual'],
-                assembler = workflows['assembly_workflow_quast']['assembler'],
+                sample    = workflows['assembly_quast_workflow']['sample'],
+                qual      = workflows['assembly_quast_workflow']['qual'],
+                assembler = workflows['assembly_quast_workflow']['assembler'],
         )
 
 rule assembly_multiqc_workflow:
     input:
         expand( assembly_multiqc_output_dir,
-                sample    = workflows['assembly_workflow_multiqc']['sample'],
-                assembler = workflows['assembly_workflow_multiqc']['multiqc_assembler'],
+                sample    = workflows['assembly_multiqc_workflow']['sample'],
+                assembler = workflows['assembly_multiqc_workflow']['multiqc_assembler'],
         )

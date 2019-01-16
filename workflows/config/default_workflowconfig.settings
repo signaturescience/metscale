@@ -87,7 +87,7 @@ config_default = {
             "qual" : ["2","30"],        
         },
 
-        "assembly_workflow_metaspades" : {
+        "assembly_metaspades_workflow" : {
             #
             # these parameters determine which samples
             # the assembly workflow will be run on.
@@ -97,7 +97,7 @@ config_default = {
             "qual"      : ["2","30"],
         },
 
-        "assembly_workflow_megahit" : {
+        "assembly_megahit_workflow" : {
             #
             # these parameters determine which samples
             # the assembly workflow will be run on
@@ -107,7 +107,7 @@ config_default = {
             "qual"      : ["2","30"],
         },
 
-        "assembly_workflow_all" : {
+        "assembly_all_workflow" : {
             #
             # these parameters determine which samples
             # the assembly workflow will be run on
@@ -117,14 +117,14 @@ config_default = {
             "qual"      : ["2","30"],
         },
 
-        "assembly_workflow_quast" : {
+        "assembly_quast_workflow" : {
             "assembler" : ["megahit","metaspades"],
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
 
         },
 
-        "assembly_workflow_multiqc" : {
+        "assembly_multiqc_workflow" : {
             #
             # wgich samples to run on
             # #which assembler to get input from
@@ -133,7 +133,7 @@ config_default = {
             "multiqc_assembler" :  ["megahit","metaspades"],
         },
 
-        "comparison_workflow_reads": {
+        "comparison_reads_workflow": {
             #
             # these parameters determine which reads
             # the comparison workflow will be run on
@@ -141,7 +141,7 @@ config_default = {
             "kvalue"    : ["21","31","51"],
         },
 
-        "comparison_workflow_assembly" : {
+        "comparison_assembly_workflow" : {
             #
             # these parameters determine which assembled reads
             # the comparison workflow will be run on
@@ -149,7 +149,7 @@ config_default = {
             "kvalue"    : ["21","31","51"],
         },
 
-        "comparison_workflow_reads_assembly" : {
+        "comparison_reads_assembly_workflow" : {
             #
             # these parameters determine which reads and assembled 
             # reads the comparison workflow will be run on

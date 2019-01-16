@@ -124,7 +124,7 @@ config_default = {
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
             # note that the file prefix does not need to be/should not be modified.
-            "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+            "csv_out" : "SRR606249_allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
             # 
@@ -227,21 +227,21 @@ config_default = {
             "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
             #
             # name of SBT file when unpacked
-            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
+            "sbtunpack" : "{database}_k{kvalue}.sbt.json",
             #
             # names of valid databases
             "databases" : ["genbank","refseq"],
             #
             # output csv name for sourmash gather procedure
-            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
-            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
-            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
+            "gather_csv_out"        : "{sample}_trim{qual}_k{kvalue}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}_trim{qual}_k{kvalue}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}_trim{qual}_k{kvalue}.gather_matches.csv"
         },
 
         "visualize_krona" : {
             #
             # .summary will be replaced with .html for the final report
-            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
+            "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
         }
     },
 
