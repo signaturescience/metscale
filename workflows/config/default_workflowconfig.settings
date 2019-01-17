@@ -21,16 +21,6 @@ config_default = {
             "sample"    : ["SRR606249_subset10"]
         },
 
-        "taxonomic_classification_workflow" : {
-            #
-            # These parameters determine which samples
-            # the taxonomic classification workflow 
-            # will be run on.
-            # 
-            "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],
-        },
-
         "taxonomic_classification_signatures_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
@@ -126,7 +116,7 @@ config_default = {
 
         "assembly_multiqc_workflow" : {
             #
-            # wgich samples to run on
+            # which samples to run on
             # #which assembler to get input from
             #
             "sample"    : ["SRR606249_subset10"],              

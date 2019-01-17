@@ -198,7 +198,6 @@ assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_patt
 assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_pattern'])
 quast_image = container_image_name(biocontainers, 'quast')
 
-
 rule assembly_statistics_quast:
     """
     Compute assembly statistics with quast

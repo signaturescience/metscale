@@ -6,10 +6,6 @@
     },
 
     "workflows" : {
-        "taxonomic_classification_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],
-        },
 
         "taxonomic_classification_signatures_workflow" : {
             "sample"  : ["SRR606249_subset10"],
@@ -35,41 +31,36 @@
         "taxonomic_classification_kaijureport_filteredclass_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
-        }
-    },
-
-    "taxonomic_classification" : {
-
-        "filter_taxa" : {
-            "pct_threshold" : 1
         },
 
-        "kaiju" : {
-            "dmp1" : "nodes.dmp",
-            "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr_euk.fmi",
-            "tar"  : "kaiju_index_nr_euk.tgz",
-            "url"  : "http://kaiju.binf.ku.dk/database",
-            "out"  : "{sample}.kaiju_output.trim{qual}.out"
+        "taxonomic_classification_add_taxonnames_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
         },
 
-        "kaiju_report" : {
-            "taxonomic_rank" : "genus",
-            "pct_threshold"  : 1
+        "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
         },
 
-        "sourmash" : { 
-            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
-            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
-            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
-            "databases" : ["genbank","refseq"],
-            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
-            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
-            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
+        "taxonomic_classification_kaiju_species_summary_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],     
         },
 
-        "visualize_krona" : {
-            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
-        }
-    },
+        "taxonomic_classification_visualize_krona_kaijureport_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],     
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],     
+        },  
+
+        "taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],     
+        },   
+    }
 }
