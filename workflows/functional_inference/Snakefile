@@ -192,8 +192,8 @@ rule abricate_with_metaspades:
 ###################################
 # Functional Inference: SRST2
 
-srst2_with_raw_reads_input = [ "data/SRR606249_subset10_1.trim2.fq.gz",  "data/SRR606249_subset10_2.trim2.fq.gz"]
-srst2_with_raw_reads_input_sing = [ "/tmp/SRR606249_subset10_1.trim2.fq.gz",  "/tmp/SRR606249_subset10_2.trim2.fq.gz"]
+srst2_with_raw_reads_input = [ "data/SRR606249_subset10_trim2_2.fq.gz",  "data/SRR606249_subset10_trim2_1.fq.gz"]
+srst2_with_raw_reads_input_sing = [ "/tmp/SRR606249_subset10_trim2_2.fq.gz",  "/tmp/SRR606249_subset10_trim2_1.fq.gz"]
 srst2_with_raw_reads_output = "data/SRR606249_subset10.trim2.srst2.out.log"
 srst2_with_raw_reads_output_sing = "/tmp/SRR606249_subset10.trim2.srst2.out"
 srst2_gene_db = "/tmp/ARGannot.r1.fasta"
