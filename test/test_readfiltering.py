@@ -30,10 +30,10 @@ class TestReadFiltering(unittest.TestCase):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_posttrim_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30_2_fastqc.zip")
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_1_fastqc.zip")
-        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim2_2_fastqc.zip")
-        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_trim2_1_fastqc.zip")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_1.fq.gz")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim2_2.fq.gz")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim30_1.fq.gz")
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_trim30_2.fq.gz")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )
         
     def test_3_read_filtering_multiqc_workflow(self):
