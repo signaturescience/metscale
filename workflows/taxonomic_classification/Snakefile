@@ -420,8 +420,8 @@ rule kaiju_species_summary_report:
 # Taxonomic Classification: kaiju report
 
 kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
-kaiju_report_output_file = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file)
-kaiju_report_output_file_sing = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file_sing)
+kaiju_report_output_file = re.sub(r'\.out','.genus.summary',run_kaiju_output_file)
+kaiju_report_output_file_sing = re.sub(r'\.out','.genus.summary',run_kaiju_output_file_sing)
 
 tax_rank = taxclass['kaiju_report']['taxonomic_rank']
 
@@ -464,7 +464,7 @@ rule kaiju_report:
 
 filter_taxa_pct = taxclass['kaiju_report']['pct_threshold']
 
-kaiju_filtered_report_suffix = '.kaiju_out_krona.filtered{pct}_total.summary'.format(
+kaiju_filtered_report_suffix = '.genus.filtered{pct}_total.summary'.format(
             pct = filter_taxa_pct)
 
 kaiju_filtered_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
@@ -510,7 +510,7 @@ rule kaiju_filtered_report:
 ############################################
 # Taxonomic Classification: kaiju filtered and classified report 
 
-kaiju_filteredclass_report_suffix = '.kaiju_out_krona.filtered{pct}_classified.summary'.format(
+kaiju_filteredclass_report_suffix = '.genus.filtered{pct}_classified.summary'.format(
             pct = filter_taxa_pct)
 
 kaiju_filteredclass_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
