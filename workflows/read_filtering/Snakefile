@@ -414,13 +414,14 @@ adapter_file = join(data_dir, readfilt['adapter_file']['name'])
 adapter_file_sing = join(sing_dir, readfilt['adapter_file']['name'])
 
 quality_log = join(data_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
+quality_log_sing = join(sing_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
 
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
 
-def quality_trimming_quality_log(wildcards):
+def quality_trimming_quality_log_sing(wildcards):
     """Get the log file for this quality trimming param set"""
-    return quality_log.format(**wildcards)
+    return quality_log_sing.format(**wildcards)
 
 def quality_trimming_qual(wildcards):
     """Get quality threshold for trimming"""
@@ -470,7 +471,7 @@ rule quality_trimming:
         qual = quality_trimming_qual,
         quality_input_wc = quality_trimming_quality_input,
         quality_output_wc = quality_trimming_quality_output,
-        quality_log_wc = quality_trimming_quality_log
+        quality_log_wc = quality_trimming_quality_log_sing
     log: 
         quality_log
     shell:
@@ -482,6 +483,7 @@ rule quality_trimming:
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
+        '-trimlog {params.quality_log_wc} '
 
 
 ###################################
