@@ -78,6 +78,24 @@ config_default = {
             "filename" : "fastqc-0.11.7--pl5.22.0_2.simg",
             "location" : "../container_images/",
             "version" : "00.11.7--pl5.22.0_2"
+        },
+        "prokka" : {
+            "use_local" : True,
+            "filename" : "prokka-1.13.3-01.simg",
+            "location" : "../container_images/",
+            "version" : "1.13.3-01"        
+        },
+        "abricate" : {
+            "use_local" : True,
+            "filename" : "abricate.simg",
+            "location" : "../container_images/",
+            "version" : "latest"         
+        },
+        "srst2" : {
+            "use_local" : True,
+            "filename" : "srst2.simg",
+            "location" : "../container_images/",
+            "version" : "latest"
         }
     },
 
@@ -106,7 +124,7 @@ config_default = {
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
             # note that the file prefix does not need to be/should not be modified.
-            "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+            "csv_out" : "SRR606249_allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
             # 
@@ -151,23 +169,23 @@ config_default = {
         "assembly_patterns" : {
             # 
             # filename pattern for metaspades output
-            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
+            "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             #
             # filename pattern for megahit output
-            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
+            "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             #
             # general assembler output filename pattern/input for quast
-            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/",
+            "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
             #
             # multiqc output dir pattern
-            "assembly_multiqc_pattern_report" : "{sample}_{assembler}_multiqc_report",
+            "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
             #multiqc input file. Taken from quast output file.
             "quast_output_multiqc_input_file" : "report.tsv",
             #multiqc output file
-            "multiqc_pattern_report_file" : "{sample}_{assembler}_multiqc_fastqc_report"
+            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
         }
     },
 
@@ -187,7 +205,7 @@ config_default = {
             "tar"  : "kaiju_index_nr_euk.tgz",
             "url"  : "http://kaiju.binf.ku.dk/database",
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
-            "out"  : "{sample}.kaiju_output.trim{qual}.out"
+            "out"  : "{sample}_trim{qual}.kaiju.out"
         },
 
         "kaiju_report" : {
@@ -215,15 +233,15 @@ config_default = {
             "databases" : ["genbank","refseq"],
             #
             # output csv name for sourmash gather procedure
-            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
-            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
-            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
+            "gather_csv_out"        : "{sample}_trim{qual}_k{kvalue}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}_trim{qual}_k{kvalue}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}_trim{qual}_k{kvalue}.gather_matches.csv"
         },
 
         "visualize_krona" : {
             #
             # .summary will be replaced with .html for the final report
-            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
+            "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
         }
     },
 
@@ -240,7 +258,7 @@ config_default = {
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             #
             # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
+            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}.fq.gz",
         },
 
         "direction_labels" : {
@@ -268,11 +286,11 @@ config_default = {
 
         "multiqc" :{
             # multiqc output dir pattern
-            "multiqc_pattern_report" : "{sample}_multiqc_fastqc_report_data",
+            "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
             #multiqc output file
-            "multiqc_pattern_report_file" : "{sample}_multiqc_fastqc_report",
+            "multiqc_pattern_report_file" : "{sample}_fastqc_multiqc_report",
             # multiqc input file pattern
-            "multiqc_input_pattern" : "{sample}_{direction}.trim{qual}_fastqc.zip",
+            "multiqc_input_pattern" : "{sample}_trim{qual}_{direction}_fastqc.zip",
 
         }, 
 
@@ -283,6 +301,33 @@ config_default = {
             "name" : "illumina-adapters.fa",
             "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip"
         }
+    },
+
+    "functional_inference" : {
+        #params for functional inference workflow
+        "prokka_with_megahit" : {
+            "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
+            "prefix_pattern" : "podar_metaG",
+            "input_pattern" : "{sample}.trim{qual}_megahit.contigs.fa"
+        },
+        "prokka_with_metaspades" : {
+            "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
+            "prefix_pattern" : "podar_metaG_sbu",
+            "input_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa"
+        },
+        "abricate_with_metaspades" : {
+            "output_pattern" : "{sample}_trim{qual}_metaspades_abricate.csv",
+            "input_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa"
+        },
+        "abricate_with_megahit" : {
+            "output_pattern" : "{sample}_trim{qual}_megahit_abricate.csv",
+            "input_pattern" : "{sample}.trim{qual}_megahit.contigs.fa"
+        },
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
+
     }
 }
 

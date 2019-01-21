@@ -10,7 +10,7 @@ import time
 from socket import error as SocketError
 from snakemake.io import expand
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'classification', 'all']  #keep all at the end of the list
+workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
 
 def reporthook(count, block_size, total_size):
     global start_time

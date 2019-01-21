@@ -322,8 +322,8 @@ rule kaiju2krona:
 # Taxonomic Classification: kaiju add taxon names
 
 taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
-taxon_names_output_file = re.sub(r'\.out', '.names.out', run_kaiju_output_file)
-taxon_names_output_file_sing = re.sub(r'\.out', '.names.out', run_kaiju_output_file_sing)
+taxon_names_output_file = re.sub(r'\.out', '_names.out', run_kaiju_output_file)
+taxon_names_output_file_sing = re.sub(r'\.out', '_names.out', run_kaiju_output_file_sing)
 
 
 def taxon_names_input_file_sub(wildcards):
@@ -370,10 +370,10 @@ rule add_taxon_names:
 
 
 ############################################
-# Taxonomic Classification:  kaiju species summary  WORKING ON NOW
+# Taxonomic Classification:  kaiju species summary 
 kaiju_summary_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
-kaiju_summary_output_file = re.sub(r'\.out', '.kaiju_out_specied.summary', run_kaiju_output_file)
-kaiju_summary_output_file_sing = re.sub(r'\.out', '.kaiju_out_specied.summary', run_kaiju_output_file_sing)
+kaiju_summary_output_file = re.sub(r'\.kaiju.out', '.kaiju_out_specied.summary', run_kaiju_output_file)
+kaiju_summary_output_file_sing = re.sub(r'\.kaiju.out', '.kaiju_out_specied.summary', run_kaiju_output_file_sing)
 
 
 def kaiju_species_input_file_sub(wildcards):
@@ -420,8 +420,8 @@ rule kaiju_species_summary_report:
 # Taxonomic Classification: kaiju report
 
 kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
-kaiju_report_output_file = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file)
-kaiju_report_output_file_sing = re.sub(r'\.out','.kaiju_out_krona.summary',run_kaiju_output_file_sing)
+kaiju_report_output_file = re.sub(r'\.out','_genus.summary',run_kaiju_output_file)
+kaiju_report_output_file_sing = re.sub(r'\.out','_genus.summary',run_kaiju_output_file_sing)
 
 tax_rank = taxclass['kaiju_report']['taxonomic_rank']
 
@@ -464,7 +464,7 @@ rule kaiju_report:
 
 filter_taxa_pct = taxclass['kaiju_report']['pct_threshold']
 
-kaiju_filtered_report_suffix = '.kaiju_out_krona.filtered{pct}_total.summary'.format(
+kaiju_filtered_report_suffix = '_genus_filtered{pct}_total.summary'.format(
             pct = filter_taxa_pct)
 
 kaiju_filtered_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
@@ -510,7 +510,7 @@ rule kaiju_filtered_report:
 ############################################
 # Taxonomic Classification: kaiju filtered and classified report 
 
-kaiju_filteredclass_report_suffix = '.kaiju_out_krona.filtered{pct}_classified.summary'.format(
+kaiju_filteredclass_report_suffix = '_genus_filtered{pct}_classified.summary'.format(
             pct = filter_taxa_pct)
 
 kaiju_filteredclass_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
@@ -559,9 +559,9 @@ rule kaiju_filteredclass_report:
 
 
 visualize_krona_input_file = kaiju_report_output_file
-visualize_krona_output_file = re.sub( r'\.summary', '.html', visualize_krona_input_file)
+visualize_krona_output_file = re.sub( r'.genus.summary', '_genus_krona.html', visualize_krona_input_file)
 visualize_krona_input_file_sing = kaiju_report_output_file_sing
-visualize_krona_output_file_sing = re.sub( r'\.summary', '.html', visualize_krona_input_file_sing)
+visualize_krona_output_file_sing = re.sub( r'.genus.summary', '_genus_krona.html', visualize_krona_input_file_sing)
 
 krona_image = container_image_name(biocontainers, 'krona')
 
@@ -600,11 +600,11 @@ rule visualize_krona:
 
 visualize_krona_filtered_input_file = kaiju_filtered_report_output_file
 visualize_krona_filtered_output_file = re.sub(
-    r'\.summary', '.html', visualize_krona_filtered_input_file
+    r'.genus_filtered1_total.summary', '_genus_krona_filtered1_total.html', visualize_krona_filtered_input_file
 )
 visualize_krona_filtered_input_file_sing = kaiju_filtered_report_output_file_sing
 visualize_krona_filtered_output_file_sing = re.sub(
-    r'\.summary', '.html', visualize_krona_filtered_input_file_sing
+    r'.genus_filtered1_total.summary', '_genus_krona_filtered1_total.html', visualize_krona_filtered_input_file_sing
 )
 
 
@@ -642,14 +642,13 @@ rule visualize_krona_filtered:
 
 visualize_krona_filteredclass_input_file = kaiju_filteredclass_report_output_file
 visualize_krona_filteredclass_output_file = re.sub(
-    r'\.summary', '.html', visualize_krona_filteredclass_input_file
+    r'.genus_filtered1_classified.summary', '_genus_krona_filtered1_classified.html', visualize_krona_filteredclass_input_file
 )
 
 visualize_krona_filteredclass_input_file_sing = kaiju_filteredclass_report_output_file_sing
 visualize_krona_filteredclass_output_file_sing = re.sub(
-    r'\.summary', '.html', visualize_krona_filteredclass_input_file_sing
+    r'.genus_filtered1_classified.summary', '_genus_krona_filtered1_classified.html', visualize_krona_filteredclass_input_file_sing
 )
-
 
 def visualize_krona_filteredclass_input_func(wildcards):
     return visualize_krona_filtered_input_file_sing.format(**wildcards)
@@ -747,8 +746,7 @@ rule taxonomic_classification_kaijureport_filteredclass_workflow:
 
 rule taxonomic_classification_add_taxonnames_workflow:
     """
-    What do I do?
-    Add taxon names to kaiju output file
+    Takes the output tsv from kaiju run (*.out) and adss the associated taxon names for each result (*.names.out)
     Runs def run_kaiju -> def add_taxon_names
     """
     input:
@@ -759,7 +757,7 @@ rule taxonomic_classification_add_taxonnames_workflow:
 
 rule taxonomic_classification_convert_kaiju_to_krona_workflow:
     """
-    What do I do?
+    converts kaiju output to krona input format (*.kaiju_out_krona)
     Create a krona file out of the kaiju results
     Runs def run_kaiju -> def kaiju2krona
     """
@@ -771,7 +769,7 @@ rule taxonomic_classification_convert_kaiju_to_krona_workflow:
 
 rule taxonomic_classification_kaiju_species_summary_workflow:
     """
-    What do I do?
+    Labels the krona results down to the specied level (default is the genus level
     Create a kaiju species summary results file
     Runs def run_kaiju -> def kaiju_species_summary_report
     """
@@ -783,7 +781,7 @@ rule taxonomic_classification_kaiju_species_summary_workflow:
 
 rule taxonomic_classification_visualize_krona_kaijureport_workflow:
     '''
-    what do I do?
+    Generates interactive krona plot (*.html) of the results from kaiju report
     '''
     input:
         expand( visualize_krona_output_file,
@@ -793,7 +791,7 @@ rule taxonomic_classification_visualize_krona_kaijureport_workflow:
 
 rule taxonomic_classification_visualize_krona_kaijureport_filtered_workflow:
     '''
-    what do I do?
+    Generates interactive krona plot (*.html) of the results from kaiju filtered report
     '''
     input:
         expand( visualize_krona_filtered_output_file,
@@ -803,7 +801,7 @@ rule taxonomic_classification_visualize_krona_kaijureport_filtered_workflow:
 
 rule taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow:
     '''
-    what do I do?
+    Generates interactive krona plot (*.html) of the results from kaiju filtered, classified report
     '''
     input:
         expand( visualize_krona_filteredclass_output_file,

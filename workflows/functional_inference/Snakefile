@@ -1,0 +1,281 @@
+'''
+Author: Chris Grahlmann
+Affiliation: Signature Science
+Objective: A Snakemake workflow to annotate prokaryotic genomes and screen for genes of interest
+Date: Nov 28, 2018
+Documentation: docs/workflow_assembly.md
+'''
+
+from common.utils  import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+import pdb
+
+
+############################################
+# Inference: default config
+
+data_dir = config['data_dir']
+sing_dir = config['sing_dir']
+image_dir = 'images/read'
+biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
+assembly = config['assembly']
+readfilt = config['read_filtering']
+inference = config['functional_inference']
+
+
+
+
+###################################
+# Functional Inference: prokka with megahit input
+
+
+prokka_image = container_image_name(biocontainers, 'prokka')
+#print("PK:  "+str(prokka_image))
+#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+#print("prokka with megahit input: "+ assembly_metaspades_output)
+
+prokka_with_megahit_output_dir = join(data_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+
+prokka_with_megahit_output_dir_sing = join(sing_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("INPUT/prokka_with_megahit_input_dir: " + str(prokka_with_megahit_input_dir))
+#print("OUTPUT/prokka_with_megahit_output_dir: " + str(prokka_with_megahit_output_dir))
+#print("prokka_with_megahit_output_dir_sing: "+str(prokka_with_megahit_output_dir_sing))
+prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
+
+#"data/{sample}.pe.trim{qual}.fq.gz"
+#"data/{sample}.trim{qual}_megahit.contigs.fa"
+
+rule prokka_with_megahit:
+    input:
+        prokka_with_megahit_input_dir
+    output:
+        directory(prokka_with_megahit_output_dir)
+    params:
+        input_files = prokka_with_megahit_input_dir_sing,
+        output_dir = prokka_with_megahit_output_dir_sing
+    singularity:
+        prokka_image
+    shell:
+    	'export LC_ALL=C '
+    	'&& '
+        'prokka '
+        '{params.input_files} '
+        '--outdir {params.output_dir} '
+        '--prefix {prefix_dir} '
+
+
+
+
+###################################
+# Functional Inference: prokka with metaspades input
+
+#prokka_image = container_image_name(biocontainers, 'prokka')
+
+#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+prokka_with_metaspades_output_dir = join(data_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("OUTPUT: " + str(prokka_with_metaspades_output_dir))
+prokka_with_metaspades_output_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_input_dir = join(data_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("INPUT: " + str(prokka_with_metaspades_input_dir))
+prefix_dir = inference['prokka_with_metaspades']['prefix_pattern']
+
+
+rule prokka_with_metaspades:
+    input:
+        prokka_with_metaspades_input_dir
+    output:
+        directory(prokka_with_metaspades_output_dir)
+    params:
+        input_files = prokka_with_metaspades_input_dir_sing,
+        output_dir = prokka_with_metaspades_output_dir_sing
+    singularity:
+        prokka_image
+    shell:
+    	'export LC_ALL=C '
+    	'&& '
+        'prokka '
+        '{params.input_files} '
+        '--outdir {params.output_dir} '
+        '--prefix {prefix_dir} '
+
+
+###################################
+# Functional Inference: abricate with megahit input
+
+
+abricate_image = container_image_name(biocontainers, 'abricate')
+#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+abricate_with_megahit_output = join(data_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("OUTPUT/abricate_with_megahit_output: " + str(abricate_with_megahit_output))
+abricate_with_megahit_output_sing = join(sing_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("INPUT/abricate_with_megahit_input: " + str(abricate_with_megahit_input))
+
+
+
+rule abricate_with_megahit:
+    input:
+        abricate_with_megahit_input
+        #"/tmp/SRR606249_subset10.pe.trim30.fq.gz"
+    output:
+        abricate_with_megahit_output
+    params:
+        input_files = abricate_with_megahit_input_sing,
+        output_files = abricate_with_megahit_output_sing
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '{params.input_files}>'
+        '{params.output_files} '
+
+
+
+
+###################################
+# Functional Inference: prokka with metaspades input
+
+abricate_with_metaspades_output = join(data_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("OUTPUT/abricate_with_metaspades_output: " + str(abricate_with_metaspades_output))
+abricate_with_metaspades_output_sing = join(sing_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#print("INPUT/abricate_with_metaspades_input: " + str(abricate_with_metaspades_input))
+
+
+
+rule abricate_with_metaspades:
+    input:
+        abricate_with_metaspades_input
+        #"/tmp/SRR606249_subset10.pe.trim30.fq.gz"
+    output:
+        abricate_with_metaspades_output
+    params:
+        input_files = abricate_with_metaspades_input_sing,
+        output_files = abricate_with_metaspades_output_sing
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '{params.input_files}>'
+        '{params.output_files} '
+
+
+
+
+
+###################################
+# Functional Inference: SRST2
+
+srst2_with_raw_reads_input = [ "data/SRR606249_subset10_1.trim2.fq.gz",  "data/SRR606249_subset10_2.trim2.fq.gz"]
+srst2_with_raw_reads_input_sing = [ "/tmp/SRR606249_subset10_1.trim2.fq.gz",  "/tmp/SRR606249_subset10_2.trim2.fq.gz"]
+srst2_with_raw_reads_output = "data/SRR606249_subset10.trim2.srst2.out.log"
+srst2_with_raw_reads_output_sing = "/tmp/SRR606249_subset10.trim2.srst2.out"
+srst2_gene_db = "/tmp/ARGannot.r1.fasta"
+srst2_image = container_image_name(biocontainers, 'srst2')
+
+rule srst2_with_raw_reads:
+    input:
+       srst2_with_raw_reads_input
+    output:
+        srst2_with_raw_reads_output
+    params:
+        input_files = srst2_with_raw_reads_input_sing,
+        output_files = srst2_with_raw_reads_output_sing,
+        srst2_db = srst2_gene_db
+    singularity:
+        srst2_image
+    shell:
+        'srst2 '
+        '--input_pe {params.input_files} '
+        '--output {params.output_files} '
+        '--log --gene_db {params.srst2_db}'
+
+  
+
+###################################
+# Functional Inference: build rules
+
+workflows = config['workflows']
+directions = [inference['direction_labels']['forward'],
+              inference['direction_labels']['reverse']]
+
+
+rule functional_inference_prokka_with_megahit:
+    """
+    Run prokka with MEGAHIT contigs
+    """
+    input:
+        expand( prokka_with_megahit_output_dir,
+                sample = workflows['prokka_with_megahit_workflow']['sample'],
+                qual = workflows['prokka_with_megahit_workflow']['qual']
+        )
+
+
+rule functional_inference_prokka_with_metaspades:
+    """
+    Run prokka with metaspades contigs
+    """
+    input:
+        expand( prokka_with_metaspades_output_dir,
+                sample = workflows['prokka_with_metaspades_workflow']['sample'],
+                qual = workflows['prokka_with_metaspades_workflow']['qual']
+        )
+
+rule functional_inference_abricate_with_megahit:
+    """
+    Run abricate with assembled megahit contigs as input
+    """
+    input:
+        expand( abricate_with_megahit_output,
+                sample = workflows['abricate_with_megahit_workflow']['sample'],
+                qual = workflows['abricate_with_megahit_workflow']['qual']
+        )
+
+rule functional_inference_abricate_with_metaspades:
+    """
+    Run abricate with assembled metaspades contigs as input
+    """
+    input:
+        expand( abricate_with_metaspades_output,
+                sample = workflows['abricate_with_metaspades_workflow']['sample'],
+                qual = workflows['abricate_with_metaspades_workflow']['qual']
+        )
+
+
+rule functional_inference_with_srst2:
+    '''
+    Run srst2 on raw reads
+    '''
+    input:
+       expand( srst2_with_raw_reads_output,
+                sample    = workflows['functional_inference_srst2_workflow']['sample'],
+                qual      = workflows['functional_inference_srst2_workflow']['qual'],
+                direction = directions,
+        )
+

@@ -15,4 +15,5 @@ include: "read_filtering/Snakefile"
 include: "assembly/Snakefile"
 include: "comparison/Snakefile"
 include: "taxonomic_classification/Snakefile"
+include: "functional_inference/Snakefile"
 
