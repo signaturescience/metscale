@@ -58,38 +58,35 @@ class TestTaxonomicClassification(unittest.TestCase):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_kaijureport_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.summary")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.summary")
-        filename_3 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.out")
-        filename_4 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.out")
-        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4))
-
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus.summary")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_genus.summary")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
     def test_4_taxonomic_classification_kaijureport_filtered_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_kaijureport_filtered_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_total.summary")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_classified.summary")
+        filename_1 = os.path.join(dirname,  "data/SSRR606249_subset10_trim2.kaiju_genus_filtered1_total.summary")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_genus_filtered1_total.summary")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))    
-        
+   
     def test_5_taxonomic_classification_kaijureport_filteredclass_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_kaijureport_filteredclass_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.filtered1_classified.summary")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_classified.summary")
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_filtered1_classified.summary")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_genus_filtered1_classified.summary")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
-        
+
     def test_6_taxonomic_classification_add_taxonnames_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_add_taxonnames_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()   
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.names.out")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.names.out")
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_names.out")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_names.out")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
-        
      
+    #This rule not being utilizied right now    
     def test_7_taxonomic_classification_convert_kaiju_to_krona_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_convert_kaiju_to_krona_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -97,44 +94,38 @@ class TestTaxonomicClassification(unittest.TestCase):
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona")
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
-        
-        
+             
     def test_8_taxonomic_classification_kaiju_species_summary_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_kaiju_species_summary_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_specied.summary")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_specied.summary")
-        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))       
-          
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_out_specied.summary")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_out_specied.summary")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))              
          
     def test_9_taxonomic_classification_visualize_krona_kaijureport_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.html")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.html")
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona.html")
+        filename_2 = os.path.join(dirname,  "dataSRR606249_subset10_trim30.kaiju_genus_krona.html")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
     def test_10_taxonomic_classification_visualize_krona_kaijureport_filtered_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_filtered_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_total.summary")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.filtered1_total.summary")
-        filename_3 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_total.html")
-        filename_4 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.filtered1_total.html")
-        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4))        
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona_filtered1_total.html")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_genus_krona_filtered1_total.html")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
     def test_11_taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow(self):
         snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.filtered1_classified.summary")
-        filename_2 = os.path.join(dirname,  "data/SSRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_classified.summary")
-        filename_3 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju.kaiju_out_krona.filtered1_classified.html")
-        filename_4 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona.filtered1_classified.htm")
-        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4))
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona_filtered1_classified.html")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_genus_krona_filtered1_classified.html")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
 
 if __name__ == '__main__':
