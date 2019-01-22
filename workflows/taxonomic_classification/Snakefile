@@ -220,6 +220,7 @@ run_kaiju_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
 run_kaiju_input_files += [fq_fwd, fq_rev]
 run_kaiju_output_file = join(data_dir, taxclass['kaiju']['out'])
 run_kaiju_output_file_sing = join(sing_dir, taxclass['kaiju']['out'])
+tax_class_kaiju_threads = taxclass['kaiju']['threads']
 
 kaiju_image = container_image_name(biocontainers, 'kaiju')
 
@@ -252,6 +253,8 @@ rule run_kaiju:
         '''--- Running kaiju.'''
     singularity: 
         kaiju_image
+    threads:
+        tax_class_kaiju_threads
     params:
         fq_fwd_wc = run_kaiju_fq_fwd,
         fq_rev_wc = run_kaiju_fq_rev,
@@ -265,7 +268,7 @@ rule run_kaiju:
         '-i /{params.fq_fwd_wc} '
         '-j /{params.fq_rev_wc} '
         '-o /{params.run_kaiju_output_file_wc} '
-        '-z 4'
+        '-z {threads}'
 
 
 ############################################

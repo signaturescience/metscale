@@ -168,17 +168,20 @@ config_default = {
     "assembly" : {
         "assembly_patterns" : {
             # 
-            # filename pattern for metaspades output
+            # filename pattern for metaspades output and threads to run
             "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+            "metaspades_threads" : 8,
             #
-            # filename pattern for megahit output
+            # filename pattern for megahit output amd threads to run
             "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            "megahit_threads" : 8,
             #
             # general assembler output filename pattern/input for quast
             "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
-            # quast output filename pattern
+            # quast output filename pattern and threads to run
             "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
+            "quast_threads" : 4,
             #
             # multiqc output dir pattern
             "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
@@ -205,7 +208,8 @@ config_default = {
             "tar"  : "kaiju_index_nr_euk.tgz",
             "url"  : "http://kaiju.binf.ku.dk/database",
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
-            "out"  : "{sample}_trim{qual}.kaiju.out"
+            "out"  : "{sample}_trim{qual}.kaiju.out",
+            "threads" : 8
         },
 
         "kaiju_report" : {
@@ -259,6 +263,8 @@ config_default = {
             #
             # filename pattern for post-trimmed reads
             "post_trimming_pattern" : "{sample}_trim{qual}_{direction}.fq.gz",
+            #number of threads to use.
+            "threads" : 2
         },
 
         "direction_labels" : {
@@ -299,7 +305,8 @@ config_default = {
             # 
             # name and URL for the sequencer adapter file
             "name" : "illumina-adapters.fa",
-            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip"
+            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
+            "threads" : 4
         }
     },
 

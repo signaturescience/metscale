@@ -114,6 +114,7 @@ fq_fwd_pre_trimmed_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming
 fq_rev_pre_trimmed_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
+trimmed_threads = readfilt['read_patterns']['threads']
                      
 pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing, 
                         fq_rev_pre_trimmed_sing]
@@ -135,6 +136,7 @@ pre_trimming_outputs = [pre_trimming_output_fwd,
 
 pre_trimming_outputs_sing = [pre_trimming_output_fwd_sing,
                         pre_trimming_output_rev_sing]
+
 
 
 fastqc_image = container_image_name(biocontainers, 'fastqc')
@@ -171,9 +173,9 @@ rule pre_trimming_quality_assessment:
     message: 
         '''--- Pre-trim quality check of trimmed data with fastqc.'''
     singularity: 
-        #'file:../container_images/fastqc:0.11.7--pl5.22.0_2'
         fastqc_image
-    threads: 2
+    threads: 
+        trimmed_threads
     params:
         pre_trimming_output_wc = pre_trimming_qa_outputs,
         pre_trimming_input_wc = pre_trimming_qa_inputs
@@ -256,7 +258,8 @@ rule post_trimming_quality_assessment:
         '''--- Post-trim quality check of trimmed data with fastqc.'''
     singularity: 
         fastqc_image
-    threads: 2 
+    threads: 
+        trimmed_threads 
     params:
         post_trimming_outputs_wc = post_trimming_qa_outputs,
         post_trimming_inputs_wc = post_trimming_qa_inputs_sing
@@ -395,7 +398,7 @@ fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern
                         qual='{qual}'))
                       
 trim_target_ext = readfilt['quality_trimming']['trim_suffix']
-
+trimmmo_threads = readfilt['adapter_file']['threads']
 
 fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
 fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
@@ -467,6 +470,8 @@ rule quality_trimming:
         """--- Quality trimming read data."""
     singularity: 
         trimmo_image
+    threads: 
+        trimmmo_threads
     params:
         qual = quality_trimming_qual,
         quality_input_wc = quality_trimming_quality_input,
@@ -484,6 +489,7 @@ rule quality_trimming:
         'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
         '-trimlog {params.quality_log_wc} '
+        '-threads {threads}'
 
 
 ###################################

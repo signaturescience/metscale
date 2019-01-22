@@ -74,6 +74,7 @@ assembly_metaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['
 
 assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
+assembly_metaspades_threads =  assembly['assembly_patterns']['metaspades_threads']
 
 spades_image = container_image_name(biocontainers, 'spades')
 
@@ -95,7 +96,8 @@ rule assembly_metaspades:
          '--- Assembling quality trimmed reads with SPAdes'
     singularity: 
         spades_image
-    threads: 8    #TODO: hard coded values? 
+    threads: 
+        assembly_metaspades_threads
     log: 
         assembly_metaspades_logfile
     benchmark:
@@ -103,8 +105,6 @@ rule assembly_metaspades:
     shell:
         'metaspades.py -t {threads} '
         '-m 240 '
-#        '-1 /{input.fwd} '
-#        '-2 /{input.rev} '
          '-1 {params.fwd_sing} '
          '-2 {params.rev_sing} '
         '-o /{sing_dir} '
@@ -145,6 +145,7 @@ assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_
 
 assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
 assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
+assembly_megahit_threads =  assembly['assembly_patterns']['megahit_threads']
 
 megahit_image = container_image_name(biocontainers, 'megahit')
 
@@ -164,7 +165,8 @@ rule assembly_megahit:
         '''--- Assembling quality trimmed reads with Megahit'''
     singularity:
         megahit_image
-    threads: 8  #TODO: hard coded values
+    threads:
+        assembly_megahit_threads
     log:
         assembly_megahit_logfile
     benchmark:
@@ -176,9 +178,7 @@ rule assembly_megahit:
     shell:
         'rm -rf /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
-        'megahit -t 8 '  #TODO: {threads} only shows 1
-     #   '--memory 0.20 '
-     #   '-m 1654561219 '
+        'megahit -t {threads} '  
         '-1 {params.fwd_sing} '
         '-2 {params.rev_sing} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '
@@ -196,6 +196,7 @@ assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pa
 assembly_quast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
 assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
 assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_pattern'])
+assembly_quast_threads = assembly['assembly_patterns']['quast_threads']
 quast_image = container_image_name(biocontainers, 'quast')
 
 rule assembly_statistics_quast:
@@ -211,10 +212,12 @@ rule assembly_statistics_quast:
         quast_output_sing = assembly_quast_output_sing
     message: 
         '--- Calculating assembly statistics with quast'
+    threads:
+        assembly_quast_threads
     singularity:
         quast_image
     shell:
-        'quast.py {params.quast_input_sing} -o {params.quast_output_sing}'
+        'quast.py {params.quast_input_sing} -t {threads} -o {params.quast_output_sing}'
 
 
 
