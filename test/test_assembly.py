@@ -14,7 +14,7 @@ class TestAssembly(unittest.TestCase):
         os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
      
     def test_1_assembly_workflow_metaspades(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_metaspades_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_metaspades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2.metaspades.contigs.fa")
@@ -22,7 +22,7 @@ class TestAssembly(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
              
     def test_2_assembly_workflow_megahit(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_megahit_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_megahit_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30.megahit.contigs.fa")
@@ -30,7 +30,7 @@ class TestAssembly(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))    
         
     def test_3_assembly_workflow_all(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_all_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_all_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2.metaspades.contigs.fa")
@@ -40,7 +40,7 @@ class TestAssembly(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )  
       
     def test_4_assembly_quast_workflow(self): 
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2.megahit_quast/report.tsv")
@@ -50,7 +50,7 @@ class TestAssembly(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )
 
     def test_5_assembly_multiqc_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_assembly_workflow.json assembly_multiqc_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_multiqc_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10.megahit_multiqc_report_data/multiqc.log")

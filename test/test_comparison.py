@@ -14,7 +14,7 @@ class TestComparison(unittest.TestCase):
         os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
     
     def test_1_comparison_workflow_reads(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_reads_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_allsamples_trim2and30_read_comparison.k31.csv")
@@ -23,7 +23,7 @@ class TestComparison(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
         
     def test_2_comparison_workflow_assembly(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_assembly_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_assembly_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_trim2and30_assembly_comparison.k31.csv")
@@ -32,7 +32,7 @@ class TestComparison(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
         
     def test_3_comparison_workflow_reads_assembly(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_comparison_workflow.json comparison_reads_assembly_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_reads_assembly_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_trim2and30_ra_comparison.k21.csv")

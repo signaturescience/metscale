@@ -88,7 +88,7 @@ class TestTaxonomicClassification(unittest.TestCase):
      
     #This rule not being utilizied right now    
     def test_7_taxonomic_classification_convert_kaiju_to_krona_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_convert_kaiju_to_krona_workflow"
+        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_convert_kaiju_to_krona_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju.kaiju_out_krona")
@@ -96,7 +96,7 @@ class TestTaxonomicClassification(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
              
     def test_8_taxonomic_classification_kaiju_species_summary_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_kaiju_species_summary_workflow"
+        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_kaiju_species_summary_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_out_specied.summary")
@@ -104,7 +104,7 @@ class TestTaxonomicClassification(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))              
          
     def test_9_taxonomic_classification_visualize_krona_kaijureport_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_workflow"
+        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona.html")
@@ -112,7 +112,7 @@ class TestTaxonomicClassification(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
     def test_10_taxonomic_classification_visualize_krona_kaijureport_filtered_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_filtered_workflow"
+        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_filtered_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona_filtered1_total.html")
@@ -120,7 +120,7 @@ class TestTaxonomicClassification(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
     def test_11_taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow"
+        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona_filtered1_classified.html")
@@ -128,5 +128,5 @@ class TestTaxonomicClassification(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
