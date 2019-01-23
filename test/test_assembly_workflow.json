@@ -1,0 +1,19 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+
+    },
+
+    "workflows" : {
+        "assembly_workflow_all" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+        },
+        "assembly_workflow_multiqc" : {
+            "direction" :["1", "2"],
+        }
+    }
+
+
+}

@@ -1,0 +1,34 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+    },
+
+
+
+    "workflows" : {
+        "comparison_workflow_reads": {
+            #
+            # these parameters determine which reads
+            # the comparison workflow will be run on
+            # 
+            "kvalue"    : ["21","31","51"],
+        },
+
+        "comparison_workflow_assembly" : {
+            #
+            # these parameters determine which assembled reads
+            # the comparison workflow will be run on
+            # 
+            "kvalue"    : ["21","31","51"],
+        },
+
+        "comparison_workflow_reads_assembly" : {
+            #
+            # these parameters determine which reads and assembled 
+            # reads the comparison workflow will be run on
+            # 
+            "kvalue"    : ["21","31","51"],
+        }
+    },
+}

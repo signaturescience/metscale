@@ -57,13 +57,15 @@ config_default = {
             "version" : "2.7--pl5.22.0_1"
         },
         "quast" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/biocontainers/quast",
+            "use_local" : True,
+            "filename" : "quast-4.5--boost1.61_1.simg",
+            "location" : "../container_images/",
             "version" : "4.5--boost1.61_1"
         },
         "multiqc" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/biocontainers/multiqc",
+            "use_local" : True,
+            "filename" : "multiqc-1.4--py35_0.simg",
+            "location" : "../container_images/",
             "version" : "1.4--py35_0"
         },
         "osf" : {
@@ -117,12 +119,12 @@ config_default = {
         "compare_read_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples" : ["SRR606249_subset10","SRR606249_subset25"],
+            "samples" : ["SRR606249_subset10"],
             # 
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
             # note that the file prefix does not need to be/should not be modified.
-            "csv_out" : "SRR606249allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+            "csv_out" : "SRR606249_allsamples_trim2and30_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
             # 
@@ -140,7 +142,7 @@ config_default = {
         "compare_assembly_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples"   : ["SRR606249_subset10","SRR606249_subset25"],
+            "samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
@@ -167,19 +169,23 @@ config_default = {
         "assembly_patterns" : {
             # 
             # filename pattern for metaspades output
-            "metaspades_pattern" : "{sample}.trim{qual}_metaspades.contigs.fa",
+            "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             #
             # filename pattern for megahit output
-            "megahit_pattern" : "{sample}.trim{qual}_megahit.contigs.fa",
+            "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             #
-            # general assembler output filename pattern
-            "assembly_pattern" : "{sample}.trim{qual}_{assembler}.contigs.fa",
+            # general assembler output filename pattern/input for quast
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
             # quast output filename pattern
-            "quast_pattern" : "{sample}.trim{qual}_{assembler}_quast/report.html",
+            "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
             #
-            # multiqc output filename pattern
-            "multiqc_pattern" : "{sample}.trim{qual}_{assembler}_multiqc/report.html",
+            # multiqc output dir pattern
+            "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
+            #multiqc input file. Taken from quast output file.
+            "quast_output_multiqc_input_file" : "report.tsv",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
         }
     },
 
@@ -199,7 +205,7 @@ config_default = {
             "tar"  : "kaiju_index_nr_euk.tgz",
             "url"  : "http://kaiju.binf.ku.dk/database",
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
-            "out"  : "{sample}.kaiju_output.trim{qual}.out"
+            "out"  : "{sample}_trim{qual}.kaiju.out"
         },
 
         "kaiju_report" : {
@@ -227,15 +233,15 @@ config_default = {
             "databases" : ["genbank","refseq"],
             #
             # output csv name for sourmash gather procedure
-            "gather_csv_out"        : "{sample}-k{kvalue}.trim{qual}.gather_output.csv",
-            "gather_unassigned_out" : "{sample}-k{kvalue}.trim{qual}.gather_unassigned.csv",
-            "gather_matches_out"    : "{sample}-k{kvalue}.trim{qual}.gather_matches.csv"
+            "gather_csv_out"        : "{sample}_trim{qual}_k{kvalue}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}_trim{qual}_k{kvalue}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}_trim{qual}_k{kvalue}.gather_matches.csv"
         },
 
         "visualize_krona" : {
             #
             # .summary will be replaced with .html for the final report
-            "input_summary"  : "{sample}.kaiju_output.trim{qual}.summary",
+            "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
         }
     },
 
@@ -252,7 +258,7 @@ config_default = {
             "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
             #
             # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_{direction}.trim{qual}.fq.gz",
+            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}.fq.gz",
         },
 
         "direction_labels" : {
@@ -278,13 +284,22 @@ config_default = {
             "interleave_suffix" : "pe"
         },
 
-        #
+        "multiqc" :{
+            # multiqc output dir pattern
+            "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}_fastqc_multiqc_report",
+            # multiqc input file pattern
+            "multiqc_input_pattern" : "{sample}_trim{qual}_{direction}_fastqc.zip",
+
+        }, 
+
         # Set the read adapter file
         "adapter_file" : {
             # 
             # name and URL for the sequencer adapter file
-            "name" : "TruSeq2-PE.fa",
-            "url"  : "http://dib-training.ucdavis.edu.s3.amazonaws.com/mRNAseq-semi-2015-03-04/TruSeq2-PE.fa"
+            "name" : "illumina-adapters.fa",
+            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip"
         }
     },
 
