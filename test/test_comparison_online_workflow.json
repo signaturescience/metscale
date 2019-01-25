@@ -1,0 +1,17 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+    },
+
+
+    "biocontainers" : {
+        "sourmash" : {
+            "use_local" : False
+        },
+        "sourmash_compare" : {
+            "use_local" : False
+        }
+    }
+
+}

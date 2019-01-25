@@ -1,0 +1,34 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+    },
+
+    "workflows" : {
+        "read_filtering_pretrim_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+        },
+        "read_filtering_posttrim_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"]
+        },
+        "read_filtering_multiqc_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+        },
+    },
+
+    "biocontainers" : {
+        "khmer" : {
+            "use_local" : False
+        },
+        "fastqc" : {
+            "use_local" : False
+        },
+        "trimmomatic" : {
+            "use_local" : False
+        },
+        "multiqc" : {
+            "use_local" : False
+        },
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "files" : {
+        "SRR606249_subset10_1_reads.fq.gz",
+        "SRR606249_subset10_2_reads.fq.gz"
+
+    },
+
+    "workflows" : {
+        "assembly_all_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"      : ["2","30"],
+        },
+        "assembly_multiqc_workflow" : {
+            "direction" :["1", "2"],
+        },
+
+    },
+
+    "biocontainers" : {
+        "spades" : {
+            "use_local" : False
+        },
+        "megahit" : {
+            "use_local" : False
+        },
+        "quast" : {
+            "use_local" : False
+        },
+        "multiqc" : {
+            "use_local" : False
+        },
+    }
+
+
+}

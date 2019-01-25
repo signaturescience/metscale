@@ -4,13 +4,4 @@
         "SRR606249_subset10_2_reads.fq.gz"
     },
 
-    "workflows" : {
-        "read_filtering_pretrim_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
-        },
-        "read_filtering_posttrim_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
-            "qual"   : ["2","30"]
-        },
-    }
 }
