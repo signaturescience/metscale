@@ -7,6 +7,7 @@
     "read_filtering": {
         "fastqc-0.11.7--pl5.22.0_2.simg" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
         "trimmomatic-0.36--5.simg" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
+        "khmer-2.1--py35_0.simg" : "docker://quay.io/biocontainers/khmer:2.1--py35_0",
         "illumina-adapters.fa": "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
         "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
     },
