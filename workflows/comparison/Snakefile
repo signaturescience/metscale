@@ -124,8 +124,6 @@ rule compute_read_signatures:
         '--track-abundance '
         '--scaled {read_sig_scale} '
         '-k {read_sig_kvalues_cmd} '
- #       '/{input[0]} '
- #       '/{input[1]} '
         '/{params.read_sig_inputs_sing_fwd} '
         '/{params.read_sig_inputs_sing_rev} '
         '-o /{params.read_sig_name}'

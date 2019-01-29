@@ -50,6 +50,7 @@ prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahi
 #print("OUTPUT/prokka_with_megahit_output_dir: " + str(prokka_with_megahit_output_dir))
 #print("prokka_with_megahit_output_dir_sing: "+str(prokka_with_megahit_output_dir_sing))
 prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
+prokka_megahit_threads = inference['prokka_with_megahit']['threads']
 
 #"data/{sample}.pe.trim{qual}.fq.gz"
 #"data/{sample}.trim{qual}_megahit.contigs.fa"
@@ -62,6 +63,8 @@ rule prokka_with_megahit:
     params:
         input_files = prokka_with_megahit_input_dir_sing,
         output_dir = prokka_with_megahit_output_dir_sing
+    threads:
+        prokka_megahit_threads
     singularity:
         prokka_image
     shell:
@@ -71,6 +74,7 @@ rule prokka_with_megahit:
         '{params.input_files} '
         '--outdir {params.output_dir} '
         '--prefix {prefix_dir} '
+        '--cpus {threads}'
 
 
 
@@ -93,6 +97,7 @@ prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_met
                             qual='{qual}'))
 #print("INPUT: " + str(prokka_with_metaspades_input_dir))
 prefix_dir = inference['prokka_with_metaspades']['prefix_pattern']
+prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
 
 
 rule prokka_with_metaspades:
@@ -103,6 +108,8 @@ rule prokka_with_metaspades:
     params:
         input_files = prokka_with_metaspades_input_dir_sing,
         output_dir = prokka_with_metaspades_output_dir_sing
+    threads:
+        prokka_metaspades_threads
     singularity:
         prokka_image
     shell:
@@ -112,6 +119,7 @@ rule prokka_with_metaspades:
         '{params.input_files} '
         '--outdir {params.output_dir} '
         '--prefix {prefix_dir} '
+        '--cpus {threads}'
 
 
 ###################################
@@ -130,7 +138,9 @@ abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['
                             qual='{qual}'))
 abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
+abricate_with_megahit_threads = inference['abricate_with_megahit']['threads']
 #print("INPUT/abricate_with_megahit_input: " + str(abricate_with_megahit_input))
+
 
 
 
@@ -143,12 +153,15 @@ rule abricate_with_megahit:
     params:
         input_files = abricate_with_megahit_input_sing,
         output_files = abricate_with_megahit_output_sing
+    threads:
+        abricate_with_megahit_threads
     singularity:
         abricate_image
     shell:
         'abricate --csv '
         '{params.input_files}>'
         '{params.output_files} '
+        '--threads {threads}'
 
 
 
@@ -165,6 +178,7 @@ abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspad
                             qual='{qual}'))
 abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
+abricate_with_metaspades_threads = inference['abricate_with_metaspades']['threads']
 #print("INPUT/abricate_with_metaspades_input: " + str(abricate_with_metaspades_input))
 
 
@@ -178,12 +192,15 @@ rule abricate_with_metaspades:
     params:
         input_files = abricate_with_metaspades_input_sing,
         output_files = abricate_with_metaspades_output_sing
+    threads:
+        abricate_with_metaspades_threads
     singularity:
         abricate_image
     shell:
         'abricate --csv '
         '{params.input_files}>'
         '{params.output_files} '
+        '--threads {threads}'
 
 
 
