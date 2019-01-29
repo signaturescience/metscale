@@ -25,7 +25,7 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
     
-def download_file(workflow, data):
+def download_file(workflow, data, install_dir):
     if workflow in data.keys():
         for file_name, url in data[workflow].items():
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
@@ -81,7 +81,7 @@ def download_file(workflow, data):
                         subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
                         os.rename(file_name, "../container_images/"+file_name)    
     
-def main(user_input, file_list='config/offline_downloads.json'):   
+def main_func(user_input, install_dir, file_list='config/offline_downloads.json'):   
     try:
         with open(file_list)as f:
             data = json.load(f)
@@ -97,9 +97,9 @@ def main(user_input, file_list='config/offline_downloads.json'):
     if (user_input == 'all'):
         user_input = workflows[0:-1]
         for workflow in user_input:     
-            download_file(workflow, data)
+            download_file(workflow, data, install_dir)
     else:
-        download_file(user_input, data)
+        download_file(user_input, data, install_dir)
         
         
 if __name__ == '__main__':
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     install_dir = args.data_dir
     user_input = args.workflow
-    main(user_input)
+    main_func(user_input, install_dir)
     
 
 
