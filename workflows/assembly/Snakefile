@@ -71,7 +71,6 @@ assembly_metaspades_input_rev_sing = assembly_metaspades_input_pattern_sing.form
 assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['metaspades_pattern'])
 assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
 assembly_metaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['metaspades_pattern'])
-print("assembly_metaspades_output_sing: "+str(assembly_metaspades_output_sing))
 
 assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
