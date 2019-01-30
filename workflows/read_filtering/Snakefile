@@ -651,5 +651,5 @@ rule read_filtering_posttrim_workflow:
 rule read_filtering_multiqc_workflow:
     input:
         expand( read_filtering_multiqc_output_dir,
-                sample    = workflows['read_filtering_workflow_multiqc']['sample'],
+                sample    = workflows['read_filtering_multiqc_workflow']['sample'],
         )
