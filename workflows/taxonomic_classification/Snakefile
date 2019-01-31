@@ -425,8 +425,6 @@ rule kaiju_species_summary_report:
 kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 kaiju_report_output_file = re.sub(r'\.out','_genus.summary',run_kaiju_output_file)
 kaiju_report_output_file_sing = re.sub(r'\.out','_genus.summary',run_kaiju_output_file_sing)
-print("kaiju_report_input_files: "+str(kaiju_report_input_files))
-print("kaiju_report_output_file: "+str(kaiju_report_output_file))
 tax_rank = taxclass['kaiju_report']['taxonomic_rank']
 
 def kaiju_report_input_name(wildcards):
@@ -687,12 +685,11 @@ rule visualize_krona_filteredclass:
 
 #WE ARE HERE!
 vks_input = ["data/SRR606249_subset10_trim2.kaiju_out_specied.summary","data/SRR606249_subset10_trim30.kaiju_out_specied.summary"]
-#kaiju_genus_krona.html
 visualize_kaiju_species_input_file = kaiju_summary_output_file
 visualize_kaiju_species_input_file_sing = kaiju_summary_output_file_sing
 
-visualize_kaiju_species_output_file = re.sub( r'.kaiju_out_specied.summary', 'kaiju_species_krona.html', visualize_kaiju_species_input_file)
-visualize_kaiju_species_output_file_sing = re.sub( r'.kaiju_out_specied.summary', 'kaiju_species_krona.html', visualize_kaiju_species_input_file_sing)
+visualize_kaiju_species_output_file = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_input_file)
+visualize_kaiju_species_output_file_sing = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_input_file_sing)
 
 print("visualize_kaiju_species_input_file: "+str(visualize_kaiju_species_input_file))
 print("visualize_kaiju_species_output_file: "+str(visualize_kaiju_species_output_file))
