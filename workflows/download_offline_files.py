@@ -1,8 +1,8 @@
 import json
-import zipfile
 import subprocess
-import shutil
+from shutil import copyfile
 import urllib.request
+from urllib.parse import urlparse
 import os
 import sys
 import argparse
@@ -10,7 +10,7 @@ import time
 from socket import error as SocketError
 from snakemake.io import expand
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
+workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash', 'kaiju', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
 
 def reporthook(count, block_size, total_size):
     global start_time
@@ -25,9 +25,13 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
     
-def download_file(workflow, data):
+def download_file(workflow, data, install_dir):
     if workflow in data.keys():
-        for file_name, url in data[workflow].items():
+        for file_name, url_string in data[workflow].items():
+            try:
+                url = urlparse(url_string)
+            except Exception as e:  #we don't care since some of the JSONS are not URL's
+                pass
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
                 tar_file = data[workflow]['sbttar']
                 db = data[workflow]['databases']
@@ -46,42 +50,32 @@ def download_file(workflow, data):
                                 os.remove(install_dir+ "/"+file)
                             except OSError:
                                 pass
-            elif (':' in url):      #Normal files to DL
-                file_type = url.partition(":")[0] 
-                if (file_type == 'https' or file_type == 'http'):
-                    if not (os.path.isfile(os.path.join(install_dir, file_name))):
-                        print("Downloading " +file_name + " from " + url)
-                        if (os.path.splitext(url)[1] == '.zip'):
-                            full_file_name = os.path.basename(url)
-                            print("Unzipping files "+file_name)
-                            urllib.request.urlretrieve(url, os.path.join(install_dir, full_file_name), reporthook)
-                            with zipfile.ZipFile(os.path.join(install_dir, full_file_name), "r") as zip_file:
-                                for item in zip_file.namelist():
-                                    zip_filename = os.path.basename(item)
-                                    if not zip_filename:
-                                        continue
-                                    source = zip_file.open(item)
-                                    with open(os.path.join(install_dir,zip_filename), "wb") as target:
-                                        shutil.copyfileobj(source, target)        
-                                os.remove(install_dir+ "/"+full_file_name)
-                        else:
-                            try:
-                                urllib.request.urlretrieve(url, install_dir+ "/"+file_name, reporthook)
-                            except SocketError as e:
-                                print("Error downloading file " + file_name + " Retry script.")
-                                print(e)
-                                try:
-                                    os.remove(install_dir+ "/"+file_name)
-                                except OSError:
-                                    pass
-                elif (file_type == 'docker'):
-                    if not (os.path.isfile("../container_images/"+file_name)):
-                        print("Downloading singularity image " +file_name)
-                        sing_command = "singularity pull "+url
-                        subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
-                        os.rename(file_name, "../container_images/"+file_name)    
+            elif (url.scheme == "http" or url.scheme == "https"):      #download via http
+                if not (os.path.isfile(os.path.join(install_dir, file_name))):
+                    print("Downloading " +file_name + " from " + url_string)
+                    try:
+                        urllib.request.urlretrieve(url_string, install_dir+ "/"+file_name, reporthook)
+                    except SocketError as e:
+                        print("Error downloading file " + file_name + " Retry script.")
+                        print(e)
+                        try:
+                            os.remove(install_dir+ "/"+file_name)
+                        except OSError:
+                            pass
+            elif (url.scheme == 'docker'):    #download singularity image
+                if not (os.path.isfile("../container_images/"+file_name)):
+                    print("Downloading singularity image " +file_name)
+                    sing_command = "singularity pull "+url_string
+                    subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
+                    os.rename(file_name, "../container_images/"+file_name)  
+            elif (url.scheme =="file"):         #copy file from local location
+                if not (os.path.isfile(os.path.join(install_dir, file_name))):
+                    print("Copying "+ file_name)
+                    copyfile(".."+ url.path, install_dir+ "/"+ file_name)
+                        
+                         
     
-def main(user_input, file_list='config/offline_downloads.json'):   
+def main_func(user_input, install_dir, file_list='config/offline_downloads.json'):   
     try:
         with open(file_list)as f:
             data = json.load(f)
@@ -97,19 +91,20 @@ def main(user_input, file_list='config/offline_downloads.json'):
     if (user_input == 'all'):
         user_input = workflows[0:-1]
         for workflow in user_input:     
-            download_file(workflow, data)
+            download_file(workflow, data, install_dir)
     else:
-        download_file(user_input, data)
+        for workflow in user_input:
+            download_file(workflow, data, install_dir)
         
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
-    parser.add_argument("--workflow", help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
+    parser.add_argument("--workflow", nargs='+', help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
     parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
     args = parser.parse_args()
     install_dir = args.data_dir
     user_input = args.workflow
-    main(user_input)
+    main_func(user_input, install_dir)
     
 
 
