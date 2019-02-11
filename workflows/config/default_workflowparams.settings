@@ -338,6 +338,12 @@ config_default = {
             "forward" : "1",
             "reverse" : "2"
         },
+        #input param for srst2 is pulled from read filtering post_trimming_pattern
+        "srst2" : {
+            "threads" : 4,
+            "output_pattern" : "{sample}_trim{qual}.srst2",
+            "gene_db" : "ARGannot.r1.fasta"
+        }
 
     }
 }

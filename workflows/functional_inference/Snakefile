@@ -25,17 +25,11 @@ readfilt = config['read_filtering']
 inference = config['functional_inference']
 
 
-
-
 ###################################
 # Functional Inference: prokka with megahit input
 
 
 prokka_image = container_image_name(biocontainers, 'prokka')
-#print("PK:  "+str(prokka_image))
-#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
-#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
-#print("prokka with megahit input: "+ assembly_metaspades_output)
 
 prokka_with_megahit_output_dir = join(data_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
@@ -46,14 +40,9 @@ prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['
                             qual='{qual}'))
 prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-#print("INPUT/prokka_with_megahit_input_dir: " + str(prokka_with_megahit_input_dir))
-#print("OUTPUT/prokka_with_megahit_output_dir: " + str(prokka_with_megahit_output_dir))
-#print("prokka_with_megahit_output_dir_sing: "+str(prokka_with_megahit_output_dir_sing))
 prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
 prokka_megahit_threads = inference['prokka_with_megahit']['threads']
 
-#"data/{sample}.pe.trim{qual}.fq.gz"
-#"data/{sample}.trim{qual}_megahit.contigs.fa"
 
 rule prokka_with_megahit:
     input:
@@ -82,20 +71,14 @@ rule prokka_with_megahit:
 ###################################
 # Functional Inference: prokka with metaspades input
 
-#prokka_image = container_image_name(biocontainers, 'prokka')
-
-#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
-#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
 prokka_with_metaspades_output_dir = join(data_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-#print("OUTPUT: " + str(prokka_with_metaspades_output_dir))
 prokka_with_metaspades_output_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 prokka_with_metaspades_input_dir = join(data_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-#print("INPUT: " + str(prokka_with_metaspades_input_dir))
 prefix_dir = inference['prokka_with_metaspades']['prefix_pattern']
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
 
@@ -125,13 +108,10 @@ rule prokka_with_metaspades:
 ###################################
 # Functional Inference: abricate with megahit input
 
-
 abricate_image = container_image_name(biocontainers, 'abricate')
-#assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
-#prokka_meagit_pattern = inference['prokka_with_megahit']['outdir_pattern']
+
 abricate_with_megahit_output = join(data_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-#print("OUTPUT/abricate_with_megahit_output: " + str(abricate_with_megahit_output))
 abricate_with_megahit_output_sing = join(sing_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
@@ -139,15 +119,11 @@ abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['
 abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_megahit_threads = inference['abricate_with_megahit']['threads']
-#print("INPUT/abricate_with_megahit_input: " + str(abricate_with_megahit_input))
-
-
 
 
 rule abricate_with_megahit:
     input:
         abricate_with_megahit_input
-        #"/tmp/SRR606249_subset10.pe.trim30.fq.gz"
     output:
         abricate_with_megahit_output
     params:
@@ -171,7 +147,6 @@ rule abricate_with_megahit:
 
 abricate_with_metaspades_output = join(data_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-#print("OUTPUT/abricate_with_metaspades_output: " + str(abricate_with_metaspades_output))
 abricate_with_metaspades_output_sing = join(sing_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
@@ -179,14 +154,10 @@ abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspad
 abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_metaspades_threads = inference['abricate_with_metaspades']['threads']
-#print("INPUT/abricate_with_metaspades_input: " + str(abricate_with_metaspades_input))
-
-
 
 rule abricate_with_metaspades:
     input:
         abricate_with_metaspades_input
-        #"/tmp/SRR606249_subset10.pe.trim30.fq.gz"
     output:
         abricate_with_metaspades_output
     params:
@@ -209,29 +180,68 @@ rule abricate_with_metaspades:
 ###################################
 # Functional Inference: SRST2
 
-srst2_with_raw_reads_input = [ "data/SRR606249_subset10_1.trim2.fq.gz",  "data/SRR606249_subset10_2.trim2.fq.gz"]
-srst2_with_raw_reads_input_sing = [ "/tmp/SRR606249_subset10_1.trim2.fq.gz",  "/tmp/SRR606249_subset10_2.trim2.fq.gz"]
-srst2_with_raw_reads_output = "data/SRR606249_subset10.trim2.srst2.out.log"
-srst2_with_raw_reads_output_sing = "/tmp/SRR606249_subset10.trim2.srst2.out"
-srst2_gene_db = "/tmp/ARGannot.r1.fasta"
-srst2_image = container_image_name(biocontainers, 'srst2')
+srst2_fwd_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}', qual='{qual}'))
 
+srst2_rev_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}', qual='{qual}'))
+
+srst2_post_trimming_inputs = [ srst2_fwd_post_trimmed, 
+                        srst2_rev_post_trimmed]
+
+srst2_fwd_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}', qual='{qual}'))
+srst2_rev_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}', qual='{qual}'))
+
+srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 
+                        srst2_rev_post_trimmed_sing]
+
+def srst2_post_trimming_inputs_sing(wildcards):
+ 
+    # input already includes data/ prefix
+    pre_inputs_wc = [x.format(**wildcards) for x in srst2_post_trimming_inputs_list]
+
+    # for containers, turn prefix data/ into /data/
+    pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
+    pre_inputs_wcs = " ".join(pre_inputs_wc)
+    return pre_inputs_wc
+
+srst2_output = join(data_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}'))
+srst2_output = srst2_output + '__genes__ARGannot.r1__results.txt'
+srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}'))
+
+def srst2_output_sub(wildcards):
+    return srst2_output_sing.format(**wildcards)
+
+srst2_gene_db = join(sing_dir, inference['srst2']['gene_db'])
+srst2_image = container_image_name(biocontainers, 'srst2')
+srst2_threads = inference['srst2']['threads']
+
+#SRR606249_subset10_trim2.srst2__fullgenes__ARGannot.r1__results.txt
 rule srst2_with_raw_reads:
     input:
-       srst2_with_raw_reads_input
+       srst2_post_trimming_inputs
     output:
-        srst2_with_raw_reads_output
+        srst2_output
     params:
-        input_files = srst2_with_raw_reads_input_sing,
-        output_files = srst2_with_raw_reads_output_sing,
+        input_files = srst2_post_trimming_inputs_sing,
+        output_files = srst2_output_sub,
         srst2_db = srst2_gene_db
+    threads:
+        srst2_threads
     singularity:
         srst2_image
     shell:
         'srst2 '
         '--input_pe {params.input_files} '
         '--output {params.output_files} '
-        '--log --gene_db {params.srst2_db}'
+        '--log --gene_db {params.srst2_db} '
+        '--threads {threads} '
 
   
 
@@ -239,60 +249,61 @@ rule srst2_with_raw_reads:
 # Functional Inference: build rules
 
 workflows = config['workflows']
-directions = [inference['direction_labels']['forward'],
-              inference['direction_labels']['reverse']]
+
+directions = [readfilt['direction_labels']['forward'],
+              readfilt['direction_labels']['reverse']]
 
 
-rule functional_inference_prokka_with_megahit:
+rule functional_inference_prokka_with_megahit_workflow:
     """
     Run prokka with MEGAHIT contigs
     """
     input:
         expand( prokka_with_megahit_output_dir,
-                sample = workflows['prokka_with_megahit_workflow']['sample'],
-                qual = workflows['prokka_with_megahit_workflow']['qual']
+                sample = workflows['functional_inference_prokka_with_megahit_workflow']['sample'],
+                qual = workflows['functional_inference_prokka_with_megahit_workflow']['qual']
         )
 
 
-rule functional_inference_prokka_with_metaspades:
+rule functional_inference_prokka_with_metaspades_workflow:
     """
     Run prokka with metaspades contigs
     """
     input:
         expand( prokka_with_metaspades_output_dir,
-                sample = workflows['prokka_with_metaspades_workflow']['sample'],
-                qual = workflows['prokka_with_metaspades_workflow']['qual']
+                sample = workflows['functional_inference_prokka_with_metaspades_workflow']['sample'],
+                qual = workflows['functional_inference_prokka_with_metaspades_workflow']['qual']
         )
 
-rule functional_inference_abricate_with_megahit:
+rule functional_inference_abricate_with_megahit_workflow:
     """
     Run abricate with assembled megahit contigs as input
     """
     input:
         expand( abricate_with_megahit_output,
-                sample = workflows['abricate_with_megahit_workflow']['sample'],
-                qual = workflows['abricate_with_megahit_workflow']['qual']
+                sample = workflows['functional_inference_abricate_with_megahit_workflow']['sample'],
+                qual = workflows['functional_inference_abricate_with_megahit_workflow']['qual']
         )
 
-rule functional_inference_abricate_with_metaspades:
+rule functional_inference_abricate_with_metaspades_workflow:
     """
     Run abricate with assembled metaspades contigs as input
     """
     input:
         expand( abricate_with_metaspades_output,
-                sample = workflows['abricate_with_metaspades_workflow']['sample'],
-                qual = workflows['abricate_with_metaspades_workflow']['qual']
+                sample = workflows['functional_inference_abricate_with_metaspades_workflow']['sample'],
+                qual = workflows['functional_inference_abricate_with_metaspades_workflow']['qual']
         )
 
 
-rule functional_inference_with_srst2:
+rule functional_inference_with_srst2_workflow:
     '''
     Run srst2 on raw reads
     '''
     input:
-       expand( srst2_with_raw_reads_output,
-                sample    = workflows['functional_inference_srst2_workflow']['sample'],
-                qual      = workflows['functional_inference_srst2_workflow']['qual'],
+       expand( srst2_output,
+                sample    = workflows['functional_inference_with_srst2_workflow']['sample'],
+                qual      = workflows['functional_inference_with_srst2_workflow']['qual'],
                 direction = directions,
         )
 
