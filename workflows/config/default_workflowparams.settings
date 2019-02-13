@@ -304,8 +304,8 @@ config_default = {
         "adapter_file" : {
             # 
             # name and URL for the sequencer adapter file
-            "name" : "illumina-adapters.fa",
-            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
+            "name" : "adapters_combined_256_unique.fasta",
+            "url"  : "https://raw.githubusercontent.com/signaturescience/metagenomics/master/resources/adapters_combined_256_unique.fasta",
             "threads" : 4
         },
 
@@ -345,6 +345,12 @@ config_default = {
             "forward" : "1",
             "reverse" : "2"
         },
+        #input param for srst2 is pulled from read filtering post_trimming_pattern
+        "srst2" : {
+            "threads" : 4,
+            "output_pattern" : "{sample}_trim{qual}.srst2",
+            "gene_db" : "ARGannot.r1.fasta"
+        }
 
     }
 }
