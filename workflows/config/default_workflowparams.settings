@@ -286,8 +286,8 @@ config_default = {
 
         "interleaving" : {
             # 
-            # suffix for interleaved reads files (replaces .fq.gz)
-            "interleave_suffix" : "pe"
+            # output pattern for khmer interleave reads
+            "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
         },
 
         "multiqc" :{
@@ -307,6 +307,13 @@ config_default = {
             "name" : "illumina-adapters.fa",
             "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
             "threads" : 4
+        },
+
+        "subsample_interleaving" : {
+             #
+             #output of subset percentage
+             "percent" : 10,
+             "subsample_output_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz"
         }
     },
 

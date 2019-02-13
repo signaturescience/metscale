@@ -21,6 +21,11 @@ config_default = {
             "sample"    : ["SRR606249_subset10"]
         },
 
+        "read_filtering_khmer_interleave_reads_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"]
+        },
+
         "taxonomic_classification_signatures_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
