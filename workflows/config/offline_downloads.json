@@ -7,7 +7,7 @@
     "read_filtering": {
         "fastqc-0.11.7--pl5.22.0_2.simg" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
         "trimmomatic-0.36--5.simg" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
-        "illumina-adapters.fa": "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
+        "adapters_combined_256_unique.fasta": "file:///resources/adapters_combined_256_unique.fasta",
         "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
     },
 
@@ -25,12 +25,26 @@
     "taxonomic_classification": {
         "kaiju-1.6.1--pl5.22.0_0.simg" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
         "krona-2.7--pl5.22.0_1.simg" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
-        "sourmash-2.0.0a3--py36_0.simg" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
         "kaiju_index_nr_euk.tgz"  : "http://kaiju.binf.ku.dk/database/kaiju_index_nr_euk.tgz",
+        "sourmash-2.0.0a3--py36_0.simg" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
         "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
         "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
         "databases" : ["genbank","refseq"],
         "kvalue"    : ["21","31","51"]
+    },
+
+    "sourmash" : {
+        "sourmash-2.0.0a3--py36_0.simg" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
+        "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
+        "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
+        "databases" : ["genbank","refseq"],
+        "kvalue"    : ["21","31","51"]
+    },
+
+    "kaiju" : {
+        "kaiju-1.6.1--pl5.22.0_0.simg" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
+        "krona-2.7--pl5.22.0_1.simg" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
+        "kaiju_index_nr_euk.tgz"  : "http://kaiju.binf.ku.dk/database/kaiju_index_nr_euk.tgz"
     },
 
     "functional_inference" : {

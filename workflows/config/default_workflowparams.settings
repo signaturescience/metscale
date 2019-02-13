@@ -304,8 +304,8 @@ config_default = {
         "adapter_file" : {
             # 
             # name and URL for the sequencer adapter file
-            "name" : "illumina-adapters.fa",
-            "url"  : "https://gist.github.com/stephenturner/1b293683eea08a240302687b58dc307b/archive/cec481734fce729658dd3835629dbaa6ea204464.zip",
+            "name" : "adapters_combined_256_unique.fasta",
+            "url"  : "https://raw.githubusercontent.com/signaturescience/metagenomics/master/resources/adapters_combined_256_unique.fasta",
             "threads" : 4
         }
     },
