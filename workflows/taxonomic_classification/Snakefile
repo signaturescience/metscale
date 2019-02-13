@@ -425,7 +425,6 @@ rule kaiju_species_summary_report:
 kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 kaiju_report_output_file = re.sub(r'\.out','_genus.summary',run_kaiju_output_file)
 kaiju_report_output_file_sing = re.sub(r'\.out','_genus.summary',run_kaiju_output_file_sing)
-
 tax_rank = taxclass['kaiju_report']['taxonomic_rank']
 
 def kaiju_report_input_name(wildcards):
@@ -680,6 +679,51 @@ rule visualize_krona_filteredclass:
         '/{params.visualize_krona_filteredclass_input_wc} '
 
 
+
+############################################
+# Taxonomic Classification: generate krona HTML using species summary results
+
+#WE ARE HERE!
+vks_input = ["data/SRR606249_subset10_trim2.kaiju_out_specied.summary","data/SRR606249_subset10_trim30.kaiju_out_specied.summary"]
+visualize_kaiju_species_input_file = kaiju_summary_output_file
+visualize_kaiju_species_input_file_sing = kaiju_summary_output_file_sing
+
+visualize_kaiju_species_output_file = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_input_file)
+visualize_kaiju_species_output_file_sing = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_input_file_sing)
+
+print("visualize_kaiju_species_input_file: "+str(visualize_kaiju_species_input_file))
+print("visualize_kaiju_species_output_file: "+str(visualize_kaiju_species_output_file))
+krona_image = container_image_name(biocontainers, 'krona')
+
+
+def visualize_kaiju_species_input_func_sing(wildcards):
+    return visualize_kaiju_species_input_file_sing.format(**wildcards)
+
+def visualize_kaiju_species_output_func_sing(wildcards):
+    return visualize_kaiju_species_output_file_sing.format(**wildcards)
+
+rule visualize_kaiju_species:
+    """
+    Visualize all kaiju species using krona
+    """
+    input:
+       visualize_kaiju_species_input_file
+       #vks_input
+    output:
+        visualize_kaiju_species_output_file
+    message:
+        '''--- Creating krona report from species summary report.'''
+    params:
+        visualize_kaiju_species_input_wc = visualize_kaiju_species_input_func_sing,
+        visualize_kaiju_species_output_wc = visualize_kaiju_species_output_func_sing,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_kaiju_species_output_wc} '
+        '/{params.visualize_kaiju_species_input_wc} '
+
+
 ###################################
 # Taxonomic Classification: build rules
 
@@ -811,4 +855,16 @@ rule taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow
                 sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['sample'],
                 qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['qual']
         )
+
+
+rule taxonomic_classification_visualize_krona_species_summary_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from species summary report
+    '''
+    input:
+        expand( visualize_kaiju_species_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_species_summary_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_species_summary_workflow']['qual']
+        )
+
 

@@ -126,6 +126,15 @@ class TestTaxonomicClassification(unittest.TestCase):
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_genus_krona_filtered1_classified.html")
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_genus_krona_filtered1_classified.html")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+        
+    def test_12_taxonomic_classification_visualize_krona_species_summary_workflow(self):
+        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json taxonomic_classification_visualize_krona_species_summary_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.kaiju_species_krona.html")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_trim30.kaiju_species_krona.html")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))        
+        
 
 
 if __name__ == "__main__":
