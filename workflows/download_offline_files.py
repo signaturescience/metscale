@@ -88,7 +88,7 @@ def main_func(user_input, install_dir, file_list='config/offline_downloads.json'
             os.mkdir("data")
     except IOError:
         print("Error: can't create data directory")     
-    if (user_input == 'all'):
+    if ('all' in user_input):
         user_input = workflows[0:-1]
         for workflow in user_input:     
             download_file(workflow, data, install_dir)
