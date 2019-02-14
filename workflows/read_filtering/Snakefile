@@ -9,7 +9,7 @@ Documentation: docs/workflow_readfilt.md
 #from utils import container_image_is_external, container_image_name
 from common.utils  import container_image_is_external, container_image_name 
 from os.path import join, isfile, dirname
-import os, re
+import os, re, gzip, io
 import pdb
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 import ipdb
@@ -304,7 +304,6 @@ interleave_output_sing = fq_interleave_sing
 
 khmer_image = container_image_name(biocontainers,'khmer')
 
-interleave_reads_log = join(data_dir,'interleave_{sample}_trim{qual}.log')
 
 def interleave_reads_inputs_sing(wildcards):
     # inputs should include the data directory prefix
@@ -338,15 +337,12 @@ rule interleave_reads:
     """
     input:
         interleave_input = interleave_reads_inputs
-        #input_her
     output:
         interleave_output
     message:
         """--- Interleaving read data."""
     singularity:
         khmer_image
-    log:
-        interleave_reads_log
     params:
         interleave_input_wc = interleave_reads_inputs_sing,
         interleave_output_wc = interleave_reads_output_sing
@@ -359,23 +355,45 @@ rule interleave_reads:
 
 
 ###################################
-# Read Filtering: sub sample interleave
+# Read Filtering: sub set interleave
+
 subsample_interleave_input = interleave_output
-
-subsample_interleave_reads_log = join(data_dir,'interleave_{sample}_trim{qual}.log')
+subsample_interleave_input_sing = interleave_output_sing
 subsample_interleave_max_reads = readfilt['subsample_interleaving']['max_reads']
+subsample_interleave_percent = readfilt['subsample_interleaving']['percent']
 
-def subsample_interleave_number_reads:
-    percent = readfilt['subsample_interleaving']['percent']
+subsample_interleave_output = join(data_dir, readfilt['subsample_interleaving']['subsample_output_pattern'])
+subsample_interleave_output_sing = join(sing_dir, readfilt['subsample_interleaving']['subsample_output_pattern'])
 
 
-def subsample_interleave_reads_inputs_sing:
-    pass
+print("subsample_interleave_input "+str(subsample_interleave_input))
+print("subsample_interleave_input_sing: "+str(subsample_interleave_input_sing))
+print("subsample_interleave_percent "+str(subsample_interleave_percent))
+print("subsample_interleave_output: "+str(subsample_interleave_output))
 
-def subsample_interleave_reads_output_sing:
-    pass
 
-rule sample_interaved_reads:
+
+def subsample_interleave_reads_inputs(wildcards):
+    return subsample_interleave_input.format(**wildcards)
+
+def subsample_interleave_reads_inputs_sing(wildcards):
+    return subsample_interleave_input_sing.format(**wildcards)
+
+def subsample_interleave_reads_output_sing(wildcards):
+    return subsample_interleave_output_sing.format(**wildcards)
+
+#TODO:  Replace with OUTPUT="$(zcat SRR606249_subset10_trim30_interleaved_reads.fq.gz | echo $((`wc -l`/4)))"
+def subsample_interleave_number_reads(wildcards):
+    in_file = subsample_interleave_reads_inputs(wildcards)
+    i=0
+    with gzip.open(in_file, 'rb') as gz_file:
+        with io.BufferedReader(gz_file) as f:
+            for line in f:
+                i+=1
+    return (int(i/4))
+
+
+rule subsample_interleaved_reads:
     """
     Sample from full interleaved reads
     """
@@ -385,20 +403,41 @@ rule sample_interaved_reads:
         subsample_interleave_output
     singularity:
         khmer_image
-    log:
-        subsample_interleave_reads_log
     params:
-        subsample_interleave_input_wc =  subsample_interleave_reads_inputs_sing
-        subsample_interleave_output_wc = subsample_interleave_reads_output_sing
+        subsample_interleave_input_wc =  subsample_interleave_reads_inputs_sing,
+        subsample_interleave_output_wc = subsample_interleave_reads_output_sing,
+        num_reads = subsample_interleave_number_reads
     shell:
         'sample-reads-randomly.py -N {params.num_reads} '
         '-M {subsample_interleave_max_reads} '
-        '-o {params.subsample_interleave_reads_output_sing} '
-        '--gzip {params.subsample_interleave_reads_inputs_sing} '
+        '-o {params.subsample_interleave_output_wc} '
+        '--gzip {params.subsample_interleave_input_wc} '
+
+
+###################################
+# Read Filtering: split interleaved reads
+split_interleave_input = subsample_interleave_output
+split_interleave_input_sing = subsample_interleave_output_sing
+
+print("split_interleave_input "+str(split_interleave_input))
+print("split_interleave_input_sing "+str(split_interleave_input_sing))
 
 
 
 
+
+
+
+simple_input = "data/simple_in.txt"
+simple_output = "data/simple_out.txt"
+
+rule simple:
+    input:
+        simple_input
+    output:
+        '{sample}.txt'
+    shell:
+        'echo {simple_input2} > {output}'
 
 ###################################
 # Read Filtering: quality trimming
@@ -497,7 +536,6 @@ def quality_trimming_quality_output(wildcards):
     Absolute path for container: data/ becomes /data/
     """
     # input includes data/ prefix
-    print("quality_trimming_quality_output")
     quality_output_wc = [x.format(**wildcards) for x in quality_output_sing]
 
     # for containers, turn prefix data/ into /data/
@@ -665,12 +703,14 @@ rule read_filtering_statistics_multiqc:
 ###         'wget -O {params.read_data_file} {params.read_data_url}'
 
 '''
+probably not
 There appears to be a bug in snakemake where when you call read_filtering_khmer_interleave_reads_workflow
 it makes the DAG it think it should also call download_reads as a dependency and gives it the incorrect
 wild cards that make it match the output of interleave_reads. This leads to an AmbiguousRuleExcpetion.
 I think this happens somewhere in def collect_potential_dependencies(self, job)
 '''
-ruleorder: interleave_reads > download_reads
+#ruleorder: interleave_reads > download_reads
+#ruleorder: subsample_interleaved_reads > download_reads
 ###################################
 # Read Filtering: build rules
 
@@ -718,3 +758,20 @@ rule read_filtering_khmer_interleave_reads_workflow:
                 direction = directions,
                 qual      = workflows['read_filtering_khmer_interleave_reads_workflow']['qual'],
         )
+
+rule read_filtering_khmer_subsample_interleave_reads_workflow:
+    '''
+    Build rule: something something
+    '''
+    input:
+        expand( subsample_interleave_output,
+                sample    = workflows['read_filtering_khmer_subsample_interleave_reads_workflow']['sample'],
+                qual      = workflows['read_filtering_khmer_subsample_interleave_reads_workflow']['qual'],
+        )
+
+
+SAMPLES = ['Sample1', 'Sample2']
+
+rule simple_all:
+    input:
+        expand('{sample}.txt', sample=SAMPLES)

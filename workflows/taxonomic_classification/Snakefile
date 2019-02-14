@@ -683,16 +683,11 @@ rule visualize_krona_filteredclass:
 ############################################
 # Taxonomic Classification: generate krona HTML using species summary results
 
-#WE ARE HERE!
-vks_input = ["data/SRR606249_subset10_trim2.kaiju_out_specied.summary","data/SRR606249_subset10_trim30.kaiju_out_specied.summary"]
 visualize_kaiju_species_input_file = kaiju_summary_output_file
 visualize_kaiju_species_input_file_sing = kaiju_summary_output_file_sing
-
 visualize_kaiju_species_output_file = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_input_file)
 visualize_kaiju_species_output_file_sing = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_input_file_sing)
 
-print("visualize_kaiju_species_input_file: "+str(visualize_kaiju_species_input_file))
-print("visualize_kaiju_species_output_file: "+str(visualize_kaiju_species_output_file))
 krona_image = container_image_name(biocontainers, 'krona')
 
 
@@ -708,7 +703,6 @@ rule visualize_kaiju_species:
     """
     input:
        visualize_kaiju_species_input_file
-       #vks_input
     output:
         visualize_kaiju_species_output_file
     message:
