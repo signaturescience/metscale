@@ -374,8 +374,6 @@ subsample_interleave_output_sing = join(sing_dir, readfilt['subsample_interleavi
 
 print("subsample_interleaved_reads")
 print("subsample_interleave_input "+str(subsample_interleave_input))
-#print("subsample_interleave_input_sing: "+str(subsample_interleave_input_sing))
-#print("subsample_interleave_percent "+str(subsample_interleave_percent))
 print("subsample_interleave_output: "+str(subsample_interleave_output))
 
 
@@ -389,15 +387,6 @@ def subsample_interleave_reads_inputs_sing(wildcards):
 def subsample_interleave_reads_output_sing(wildcards):
     return subsample_interleave_output_sing.format(**wildcards)
 
-#TODO:  Replace with OUTPUT="$(zcat SRR606249_subset10_trim30_interleaved_reads.fq.gz | echo $((`wc -l`/4)))"
-def subsample_interleave_number_reads(wildcards):
-    in_file = subsample_interleave_reads_inputs(wildcards)
-    i=0
-    with gzip.open(in_file, 'rb') as gz_file:
-        with io.BufferedReader(gz_file) as f:
-            for line in f:
-                i+=1
-    return (int(i/4))
 
 
 rule subsample_interleaved_reads:
@@ -406,23 +395,25 @@ rule subsample_interleaved_reads:
     """
     input:
         subsample_interleave_input
-       # rules.interleave_reads.output
     output:
         subsample_interleave_output
+    message:
+        """--- Subsample Interleaved read data."""
     singularity:
         khmer_image
     params:
         subsample_interleave_input_wc =  subsample_interleave_reads_inputs_sing,
         subsample_interleave_output_wc = subsample_interleave_reads_output_sing,
-        num_reads = subsample_interleave_number_reads
     shell:
-     #   'NUM_READS="$(zcat SRR606249_subset10_trim30_interleaved_reads.fq.gz | echo $((`wc -l`/4)))" && '
-        'sample-reads-randomly.py -N {params.num_reads} '
+        'TOTAL_READS="$(zcat {params.subsample_interleave_input_wc} | echo $((`wc -l`/4)))" && '
+        'NUM_READS=$((TOTAL_READS / {subsample_interleave_percent})) && '
+        'sample-reads-randomly.py -N $NUM_READS '
         '-M {subsample_interleave_max_reads} '
         '-o {params.subsample_interleave_output_wc} '
         '--gzip {params.subsample_interleave_input_wc} '
 
-#  'NUM_READS="$(zcat {input} | echo $((`wc -l`/4)))" && '
+
+
 
 
 ###################################
@@ -433,8 +424,61 @@ split_interleave_input_sing = subsample_interleave_output_sing
 print("split_interleave_input "+str(split_interleave_input))
 print("split_interleave_input_sing "+str(split_interleave_input_sing))
 
-#split_interleave_output = {sample}_subset{percent}_trim{qual}
 
+
+split_interleave_output_rev = join(data_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        percent=readfilt['subsample_interleaving']['percent'],
+                        sample='{sample}',
+                        qual='{qual}'))
+split_interleave_output_fwd = join(data_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        percent=readfilt['subsample_interleaving']['percent'],
+                        sample='{sample}',
+                        qual='{qual}'))
+
+split_interleave_output_rev_sing = join(sing_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        percent=readfilt['subsample_interleaving']['percent'],
+                        sample='{sample}',
+                        qual='{qual}'))
+split_interleave_output_fwd_sing = join(sing_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+                        direction=readfilt['direction_labels']['forward'],
+                        percent=readfilt['subsample_interleaving']['percent'],
+                        sample='{sample}',
+                        qual='{qual}'))
+
+split_interleave_output = [split_interleave_output_fwd , split_interleave_output_rev ]
+
+
+print("split_interleave_output: "+str(split_interleave_output))
+#split_interleave_output = {sample}_subset{percent}_trim{qual_{direction}.fq.gz
+
+def split_interleaved_qa_outputs_fwd_sing(wildcards):
+    return split_interleave_output_fwd_sing.format(**wildcards)
+
+
+
+def split_interleaved_qa_outputs_rev_sing(wildcards):
+    return split_interleave_output_rev_sing.format(**wildcards)
+
+rule split_interleaved_reads:
+    input:
+        split_interleave_input
+    output:
+        split_interleave_output 
+    message:
+       """--- We be in split interleaved reads."""
+    singularity:
+        khmer_image
+    params:
+        split_input = split_interleave_input_sing,
+        output_fwd = split_interleaved_qa_outputs_fwd_sing,
+        output_rev = split_interleaved_qa_outputs_rev_sing,
+    shell:
+        'split-paired-reads.py {params.split_input} '
+        '-1 {params.output_fwd} '
+        '-2 {params.output_rev} --gzip '
 
 
 ###################################
@@ -568,7 +612,7 @@ def quality_trimming_quality_output(wildcards):
     quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
     quality_output_wcs = " ".join(quality_output_wc)
     return quality_output_wcs
-
+print("quality_output: "+str(quality_output))
 
 rule quality_trimming:
     """
@@ -794,6 +838,18 @@ rule read_filtering_khmer_subsample_interleave_reads_workflow:
                 sample    = workflows['read_filtering_khmer_subsample_interleave_reads_workflow']['sample'],
                 qual      = workflows['read_filtering_khmer_subsample_interleave_reads_workflow']['qual'],
         )
+
+rule read_filtering_khmer_split_interleaved_reads_workflow:
+    '''
+    Build rules: something here
+    '''
+    input:
+        expand( split_interleave_output,
+                sample      = workflows['read_filtering_khmer_split_interleaved_reads_workflow']['sample'],
+                qual        = workflows['read_filtering_khmer_split_interleaved_reads_workflow']['qual'],
+                direction = directions,
+        )
+
 
 
 SAMPLES = ['Sample1', 'Sample2']

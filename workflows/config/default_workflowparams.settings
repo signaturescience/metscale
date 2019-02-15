@@ -313,10 +313,16 @@ config_default = {
 
         "subsample_interleaving" : {
              #
-             #output of subset percentage (.1 = 10%)
-             "percent" : .10,
+             #output of subset percentage (10 = 10%, don't use zero!)
+             "percent" : 10,
              "subsample_output_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
              "max_reads" : 100000000
+        },
+
+        "split_interleaved_reads" : {
+            #
+            #output file pattern
+            "split_interleaved_output_pattern" : "{sample}_trim{qual}_subset{percent}_{direction}.fq.gz"
         },
 
         "count_unique_reads" : {

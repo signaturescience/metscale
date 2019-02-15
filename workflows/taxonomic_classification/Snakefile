@@ -114,6 +114,8 @@ def gather_unassigned_wc_f(wildcards):
 def gather_matches_wc_f(wildcards):
     return gather_matches.format(**wildcards)
 
+print("read_sig_output: "+str(read_sig_output))
+print("all_unpacked_sbts: "+str(all_unpacked_sbts))
 
 rule gather_compare_signatures:
     """

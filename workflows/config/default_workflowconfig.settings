@@ -31,6 +31,12 @@ config_default = {
             "qual"   : ["2","30"]
         },
 
+        "read_filtering_khmer_split_interleaved_reads_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"]
+
+        },
+
         "read_filtering_khmer_count_unique_reads_workflow" : {
             "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"],
