@@ -702,7 +702,7 @@ rule visualize_kaiju_species:
     Visualize all kaiju species using krona
     """
     input:
-       visualize_kaiju_species_input_file
+        visualize_kaiju_species_input_file
     output:
         visualize_kaiju_species_output_file
     message:

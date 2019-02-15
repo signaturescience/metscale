@@ -286,12 +286,6 @@ config_default = {
             "trim_suffix" : "se"
         },
 
-        "interleaving" : {
-            # 
-            # output pattern for khmer interleave reads
-            "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
-        },
-
         "multiqc" :{
             # multiqc output dir pattern
             "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
@@ -311,13 +305,31 @@ config_default = {
             "threads" : 4
         },
 
+        "interleaving" : {
+            # 
+            # output pattern for khmer interleave reads
+            "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+        },
+
         "subsample_interleaving" : {
              #
              #output of subset percentage (.1 = 10%)
              "percent" : .10,
              "subsample_output_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
              "max_reads" : 100000000
+        },
+
+        "count_unique_reads" : {
+            #
+            #input file pattern. Right now set to the output from interleaving
+            "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+            #output file pattern.
+            "output_pattern" : "{sample}_trim{qual}_interleaved_unique{kmers}.txt"
         }
+
+
+
+
     },
 
     "functional_inference" : {
