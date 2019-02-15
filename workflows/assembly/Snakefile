@@ -237,12 +237,12 @@ assembly_multiqc_output_file_sing = join(sing_dir, assembly['assembly_patterns']
 
 multiqc_image = container_image_name(biocontainers, 'multiqc')
 
-#TODO: Not sure if using 'qual' from assembly_workflow_all is the best idea
+#TODO: Not sure if using 'qual' from assembly_all_workflow is the best idea
 def assembly_expand_multiqc_input(wildcards):
     """
     Return input list for multiqc input
     """
-    wildcards.qual = workflows['assembly_workflow_all']['qual']
+    wildcards.qual = workflows['assembly_all_workflow']['qual']
     multiqc_input = expand(assembly_multiqc_input_pattern, sample = wildcards.sample, qual=wildcards.qual, assembler = wildcards.assembler)
     return multiqc_input
 
@@ -251,7 +251,7 @@ def expand_assembly_multiqc_input_sing(wildcards):
     """
     Return input list for multiqc input for sing image
     """
-    wildcards.qual = workflows['assembly_workflow_all']['qual']
+    wildcards.qual = workflows['assembly_all_workflow']['qual']
     multiqc_input = expand(assembly_multiqc_input_pattern_sing, sample = wildcards.sample, qual=wildcards.qual, assembler = wildcards.assembler)
     return multiqc_input
 
