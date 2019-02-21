@@ -34,13 +34,13 @@ config_default = {
         "read_filtering_khmer_split_interleaved_reads_workflow" : {
             "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
-
         },
+
 
         "read_filtering_khmer_count_unique_reads_workflow" : {
             "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"],
-            "kmer" : ["21", "31", "51"]
+            "kmers" : [21,31,51]
         },
 
         "taxonomic_classification_signatures_workflow" : {

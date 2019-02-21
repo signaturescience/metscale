@@ -329,9 +329,19 @@ config_default = {
             #
             #input file pattern. Right now set to the output from interleaving
             "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+            #input pattern from the subsample interleave
+            #"input_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
             #output file pattern.
-            "output_pattern" : "{sample}_trim{qual}_interleaved_unique{kmers}.txt"
-        }
+            "output_pattern" : "{sample}_trim{qual}_interleaved_uniqueK{kmers}.txt",
+        },
+
+        "convert_fastq_fasta" : {
+            #
+            #input fastq file
+            "input_pattern" : "{file}.fq.gz",
+            "output_pattern" : "{file}.fa",
+            "output_dir" : "fasta"
+        },
 
 
 

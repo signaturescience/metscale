@@ -241,9 +241,6 @@ def post_trimming_qa_outputs(wildcards):
     post_outputs_wcs = " ".join(post_outputs_wc)
     return post_outputs_wcs
 
-#print("post_trimming_quality_assessment/read read_filtering_posttrim_workflow")
-#print("post_trimming_inputs: "+str(post_trimming_inputs))
-#print("post_trimming_outputs: "+str(post_trimming_outputs))
 
 rule post_trimming_quality_assessment:
     """
@@ -332,10 +329,6 @@ def interleave_reads_logfile(wildcards):
     # wildcard substitution
     return interleave_reads_log.format(**wildcards)
 
-#print("interleave_reads")
-#print("interleave_input:"+str(interleave_input))
-#print("interleave_output:"+str(interleave_output))
-
 
 rule interleave_reads:
     """
@@ -371,11 +364,6 @@ subsample_interleave_percent = readfilt['subsample_interleaving']['percent']
 
 subsample_interleave_output = join(data_dir, readfilt['subsample_interleaving']['subsample_output_pattern'])
 subsample_interleave_output_sing = join(sing_dir, readfilt['subsample_interleaving']['subsample_output_pattern'])
-
-print("subsample_interleaved_reads")
-print("subsample_interleave_input "+str(subsample_interleave_input))
-print("subsample_interleave_output: "+str(subsample_interleave_output))
-
 
 
 def subsample_interleave_reads_inputs(wildcards):
@@ -421,9 +409,6 @@ rule subsample_interleaved_reads:
 
 split_interleave_input = subsample_interleave_output
 split_interleave_input_sing = subsample_interleave_output_sing
-print("split_interleave_input "+str(split_interleave_input))
-print("split_interleave_input_sing "+str(split_interleave_input_sing))
-
 
 
 split_interleave_output_rev = join(data_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
@@ -451,13 +436,8 @@ split_interleave_output_fwd_sing = join(sing_dir, readfilt['split_interleaved_re
 split_interleave_output = [split_interleave_output_fwd , split_interleave_output_rev ]
 
 
-print("split_interleave_output: "+str(split_interleave_output))
-#split_interleave_output = {sample}_subset{percent}_trim{qual_{direction}.fq.gz
-
 def split_interleaved_qa_outputs_fwd_sing(wildcards):
     return split_interleave_output_fwd_sing.format(**wildcards)
-
-
 
 def split_interleaved_qa_outputs_rev_sing(wildcards):
     return split_interleave_output_rev_sing.format(**wildcards)
@@ -468,7 +448,7 @@ rule split_interleaved_reads:
     output:
         split_interleave_output 
     message:
-       """--- We be in split interleaved reads."""
+       """--- Split interleaved reads."""
     singularity:
         khmer_image
     params:
@@ -490,24 +470,61 @@ count_unique_reads_input_sing = join(sing_dir, readfilt['count_unique_reads']['i
                         sample='{sample}', qual='{qual}'))
 
 
+count_unique_reads_output =  join(data_dir, readfilt['count_unique_reads']['output_pattern'])
+count_unique_reads_output_sing =  join(sing_dir, readfilt['count_unique_reads']['output_pattern'])
 
 
-
-
-
-
-
-
-simple_input = "data/simple_in.txt"
-simple_output = "data/simple_out.txt"
-
-rule simple:
+rule count_unique_reads:
     input:
-        simple_input
+      count_unique_reads_input
     output:
-        '{sample}.txt'
+      count_unique_reads_output
+    message:
+        """--- Count unique reads."""
+    singularity:
+        khmer_image 
+    params:
+        reads_input = count_unique_reads_input_sing,
+        reads_output = count_unique_reads_output_sing
     shell:
-        'echo {simple_input2} > {output}'
+        'unique-kmers.py -k {wildcards.kmers} '
+        '{params.reads_input} '
+        '-R {params.reads_output}'
+
+
+
+###################################
+# Read Filtering: convert fastq files to fasta
+
+files, = glob_wildcards("data/{file}.fq.gz")
+
+fastq_to_fasta_input = join(data_dir, readfilt['convert_fastq_fasta']['input_pattern'])
+fastq_to_fasta_input_sing = join(sing_dir,readfilt['convert_fastq_fasta']['input_pattern'])
+fastq_to_fasta_output = join(data_dir,readfilt['convert_fastq_fasta']['output_pattern'])
+fastq_to_fasta_output_sing = join(sing_dir,readfilt['convert_fastq_fasta']['output_pattern'])
+
+def convert_fastq_to_fasta_input_sing(wildcards):
+    return fastq_to_fasta_input_sing.format(**wildcards)
+
+def convert_fast_to_fasta_output_sing(wildcards):
+    return fastq_to_fasta_output_sing.format(**wildcards)
+
+
+rule convert_fastq_to_fasta:
+    input:  
+        fastq_to_fasta_input
+    output: 
+        fastq_to_fasta_output
+    message: 
+        """--- Convert fastq to fata."""
+    singularity:
+        khmer_image
+    params:
+        convert_input = convert_fastq_to_fasta_input_sing,
+        convert_output = convert_fast_to_fasta_output_sing
+    shell:  
+        "fastq-to-fasta.py -o {params.convert_output} {params.convert_input}"
+
 
 ###################################
 # Read Filtering: quality trimming
@@ -612,7 +629,7 @@ def quality_trimming_quality_output(wildcards):
     quality_output_wc = ["/%s"%(x) for x in quality_output_wc]
     quality_output_wcs = " ".join(quality_output_wc)
     return quality_output_wcs
-print("quality_output: "+str(quality_output))
+
 
 rule quality_trimming:
     """
@@ -781,6 +798,10 @@ I think this happens somewhere in def collect_potential_dependencies(self, job)
 '''
 #ruleorder: interleave_reads > download_reads
 #ruleorder: subsample_interleaved_reads > download_reads
+
+
+
+
 ###################################
 # Read Filtering: build rules
 
@@ -812,6 +833,9 @@ rule read_filtering_posttrim_workflow:
 
 
 rule read_filtering_multiqc_workflow:
+    """
+    Build rule: run multiqc stats on trimmed reads
+    """
     input:
         expand( read_filtering_multiqc_output_dir,
                 sample    = workflows['read_filtering_multiqc_workflow']['sample'],
@@ -820,7 +844,7 @@ rule read_filtering_multiqc_workflow:
 
 rule read_filtering_khmer_interleave_reads_workflow:
     '''
-    Build rule: something something
+    Build rule: Take forward and reversed trimmed reads and run interleave-reads
     '''
     input:
         expand( interleave_output,
@@ -831,7 +855,7 @@ rule read_filtering_khmer_interleave_reads_workflow:
 
 rule read_filtering_khmer_subsample_interleave_reads_workflow:
     '''
-    Build rule: something something
+    Build rule: take interleaved reads input and run sample-reads-randomly
     '''
     input:
         expand( subsample_interleave_output,
@@ -841,7 +865,7 @@ rule read_filtering_khmer_subsample_interleave_reads_workflow:
 
 rule read_filtering_khmer_split_interleaved_reads_workflow:
     '''
-    Build rules: something here
+    Build rules: Take interleaved input and run split-paired-reads
     '''
     input:
         expand( split_interleave_output,
@@ -850,10 +874,22 @@ rule read_filtering_khmer_split_interleaved_reads_workflow:
                 direction = directions,
         )
 
-
-
-SAMPLES = ['Sample1', 'Sample2']
-
-rule simple_all:
+rule read_filtering_khmer_count_unique_reads_workflow:
+    '''
+    Build rule: run unique-kmers python script return txt file
+    '''
     input:
-        expand('{sample}.txt', sample=SAMPLES)
+        expand( count_unique_reads_output,
+                sample      = workflows['read_filtering_khmer_count_unique_reads_workflow']['sample'],
+                qual        = workflows['read_filtering_khmer_count_unique_reads_workflow']['qual'],
+                kmers       = workflows['read_filtering_khmer_count_unique_reads_workflow']['kmers'],
+        )
+
+rule read_filtering_fastq_to_fasta:
+    '''
+    build rule: convert fq.gz files to .fa files
+    '''
+    input:  
+        expand("data/{file}.fa", file=files)
+
+
