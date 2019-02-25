@@ -50,8 +50,12 @@
     "functional_inference" : {
         "prokka-1.13.3-01.simg" : "docker://ummidock/prokka:1.13.3-01",
         "abricate.simg" : "docker://thanhleviet/abricate",
-        "srst2.simg" : "docker://brooksph/srst2",
-        "ARGannot.r1.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ARGannot.r1.fasta"
+        "srst2.simg" : "docker://quay.io/biocontainers/SRST2:0.2.0--py27_2",
+        "ARGannot.r3.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ARGannot_r3.fasta",
+        "ResFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ResFinder.fasta",
+        "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
+        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta"
+
     }
 
 }

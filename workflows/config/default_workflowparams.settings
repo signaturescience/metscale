@@ -93,9 +93,9 @@ config_default = {
         },
         "srst2" : {
             "use_local" : True,
-            "filename" : "srst2.simg",
+            "filename" : "SRST2-0.2.0--py27_2.simg",
             "location" : "../container_images/",
-            "version" : "latest"
+            "version" : "0.2.0--py27_2"
         }
     },
 
@@ -345,8 +345,9 @@ config_default = {
         #input param for srst2 is pulled from read filtering post_trimming_pattern
         "srst2" : {
             "threads" : 4,
-            "output_pattern" : "{sample}_trim{qual}.srst2",
-            "gene_db" : "ARGannot.r1.fasta"
+            "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
+            #gene database to run with srst2 {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
+            "db" : "ARGannot.r3.fasta"
         }
 
     }
