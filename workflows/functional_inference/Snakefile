@@ -109,16 +109,15 @@ rule prokka_with_metaspades:
 # Functional Inference: abricate with megahit input
 
 abricate_image = container_image_name(biocontainers, 'abricate')
-
+abricate_with_megahit_db = inference['abricate_with_megahit']['db']
 abricate_with_megahit_output = join(data_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}'))
+                            qual='{qual}', db=abricate_with_megahit_db))
 abricate_with_megahit_output_sing = join(sing_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}'))
+                            qual='{qual}', db=abricate_with_megahit_db))
 abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-
 
 rule abricate_with_megahit:
     input:
@@ -128,11 +127,11 @@ rule abricate_with_megahit:
     params:
         input_files = abricate_with_megahit_input_sing,
         output_files = abricate_with_megahit_output_sing
-
     singularity:
         abricate_image
     shell:
         'abricate --csv '
+        '--db {abricate_with_megahit_db} '
         '{params.input_files}>'
         '{params.output_files} '
 
@@ -140,12 +139,13 @@ rule abricate_with_megahit:
 
 
 ###################################
-# Functional Inference: prokka with metaspades input
+# Functional Inference: abricate with metaspades input
 
+abricate_with_metaspades_db = inference['abricate_with_metaspades']['db']
 abricate_with_metaspades_output = join(data_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}'))
+                            qual='{qual}', db=abricate_with_metaspades_db))
 abricate_with_metaspades_output_sing = join(sing_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}'))
+                            qual='{qual}', db=abricate_with_metaspades_db))
 abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
@@ -163,6 +163,7 @@ rule abricate_with_metaspades:
         abricate_image
     shell:
         'abricate --csv '
+        '--db {abricate_with_metaspades_db} '
         '{params.input_files}>'
         '{params.output_files} '
 
@@ -215,7 +216,6 @@ srst2_gene_db = join(sing_dir, inference['srst2']['gene_db'])
 srst2_image = container_image_name(biocontainers, 'srst2')
 srst2_threads = inference['srst2']['threads']
 
-#SRR606249_subset10_trim2.srst2__fullgenes__ARGannot.r1__results.txt
 rule srst2_with_raw_reads:
     input:
        srst2_post_trimming_inputs

@@ -325,12 +325,18 @@ config_default = {
             "threads" : 8
         },
         "abricate_with_metaspades" : {
-            "output_pattern" : "{sample}_trim{qual}_metaspades_abricate.csv",
+            "output_pattern" : "{sample}_trim{qual}_metaspades_abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+            #database to run with abricate {card, ncbibetalactamase, vfdb, plasmidfinder,
+            # argannot, resfinder}
+            "db" : "card
         },
         "abricate_with_megahit" : {
-            "output_pattern" : "{sample}_trim{qual}_megahit_abricate.csv",
+            "output_pattern" : "{sample}_trim{qual}_megahit_abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            #database to run with abricate {card, ncbibetalactamase, vfdb, plasmidfinder,
+            # argannot, resfinder}
+            "db" : "card"
         },
         "direction_labels" : {
             "forward" : "1",
