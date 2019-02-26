@@ -364,6 +364,21 @@ rule compare_read_assembly_signatures:
         '--csv /{params.compare_ra_output_wc}'
 
 
+compare_heatmap_input = compare_ra_sigs_output
+print("compare_heatmap_input: "+str(compare_heatmap_input))
+
+
+rule create_heat_map:
+    """
+    create a heat map
+    """
+    input:
+        compare_heatmap_input
+    output:
+        compare_heatmap_ouput
+    script:
+        "data/hello_world.r"
+
 
 ###################################
 # Comparison: build rules
@@ -395,6 +410,15 @@ rule comparison_reads_assembly_workflow:
     """
     input:
         expand( compare_ra_sigs_output,
+                kvalue = workflows['comparison_reads_assembly_workflow']['kvalue']
+        )
+
+rule comparison_output_heatmap_workflow:
+    """
+    Build rule: output a jaccard index heatmap
+    """
+    input:
+        expand( compare_heatmap_output,
                 kvalue = workflows['comparison_reads_assembly_workflow']['kvalue']
         )
 

@@ -12,7 +12,7 @@ from os.path import join, isfile, dirname
 import os, re, gzip, io
 import pdb
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
-import ipdb
+
 HTTP = HTTPRemoteProvider()
 
 
@@ -853,7 +853,7 @@ rule read_filtering_khmer_interleave_reads_workflow:
                 qual      = workflows['read_filtering_khmer_interleave_reads_workflow']['qual'],
         )
 
-rule read_filtering_khmer_subsample_interleave_reads_workflow:
+rule read_filtering_khmer_subsample_interleaved_reads_workflow:
     '''
     Build rule: take interleaved reads input and run sample-reads-randomly
     '''
@@ -885,7 +885,7 @@ rule read_filtering_khmer_count_unique_reads_workflow:
                 kmers       = workflows['read_filtering_khmer_count_unique_reads_workflow']['kmers'],
         )
 
-rule read_filtering_fastq_to_fasta:
+rule read_filtering_fastq_to_fasta_workflow:
     '''
     build rule: convert fq.gz files to .fa files
     '''

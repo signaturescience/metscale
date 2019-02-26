@@ -9,7 +9,7 @@ Documentation: docs/workflow_assembly.md
 from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
-import pdb
+
 
 
 ############################################
