@@ -41,7 +41,73 @@ class TestReadFiltering(unittest.TestCase):
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
         filename = os.path.join(dirname, "data/SRR606249_subset10_fastqc_multiqc_report.html")
-        self.assertTrue(os.path.isfile(filename) )  
+        self.assertTrue(os.path.isfile(filename) )
+        
+    def test_4_read_filtering_khmer_interleave_reads(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_interleave_reads_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd() 
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_reads.fq.gz")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_reads.fq.gz")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+        
+    def test_5_read_filtering_khmer_subsample_interleaved_reads(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_subsample_interleaved_reads_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd() 
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset_interleaved_reads.fq.gz")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset_interleaved_reads.fq.gz")  
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
+        
+        
+    def test_6_read_filtering_khmer_split_interleaved_reads(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_split_interleaved_reads_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd() 
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_2.fq.gz") 
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_1.fq.gz") 
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_2.fq.gz") 
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_1.fq.gz")  
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )  
+         
+        
+    def test_7_read_filtering_khmer_cout_unique_reads(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_count_unique_reads_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd() 
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_uniqueK21.txt")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_uniqueK51.txt")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_uniqueK31.txt")
+        filename_4 = os.path.join(dirname, "data/SSRR606249_subset10_trim2_interleaved_uniqueK31.txt") 
+        filename_5 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_uniqueK21.txt")
+        filename_6 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_uniqueK51.txt")     
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) and os.path.isfile(filename_5) and os.path.isfile(filename_6) ) 
+        
+
+        
+    def test_7_read_filtering_khmer_fastq_to_fasta(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_fastq_to_fasta_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd() 
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30_1.fa")  
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_2.fa")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim2_2.fa")
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_trim2_1.fa")
+        filename_5 = os.path.join(dirname, "data/SRR606249_subset10_2_reads.fa")
+        filename_6 = os.path.join(dirname, "data/SRR606249_subset10_1_reads.fa")
+        filename_7 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_1.fa")
+        filename_8 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_2.fa")
+        filename_9 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_1.fa")
+        filename_10 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_2.fa")
+        filename_11 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset_interleaved_reads.fa")
+        filename_12 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset_interleaved_reads.fa")
+        filename_13 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_reads.fa")
+        filename_14 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_reads.fa")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) and   
+                os.path.isfile(filename_5) and os.path.isfile(filename_6) and os.path.isfile(filename_7) and os.path.isfile(filename_8) and 
+                os.path.isfile(filename_9) and os.path.isfile(filename_10) and os.path.isfile(filename_11) and os.path.isfile(filename_12) and
+                os.path.isfile(filename_13) and os.path.isfile(filename_14))
   
+   
 if __name__ == "__main__":
     unittest.main()
