@@ -8,7 +8,8 @@
         "fastqc-0.11.7--pl5.22.0_2.simg" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
         "trimmomatic-0.36--5.simg" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
         "adapters_combined_256_unique.fasta": "file:///resources/adapters_combined_256_unique.fasta",
-        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
+        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
+        "khmer-2.1--py35_0.simg" :  "docker://quay.io/biocontainers/khmer:2.1--py35_0"
     },
 
     "assembly": {

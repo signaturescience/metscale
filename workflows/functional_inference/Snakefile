@@ -9,7 +9,7 @@ Documentation: docs/workflow_assembly.md
 from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
-import pdb
+
 
 
 ############################################
@@ -205,9 +205,6 @@ def srst2_post_trimming_inputs_sing(wildcards):
 srst2_db_location = join(sing_dir, inference['srst2']['db'])
 srst2_db = inference['srst2']['db']
 srst2_output = join(data_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db=srst2_db))
-#print(srst2_output)
-#print(srst2_db.split(".fasta",1)[0])
-#data/{sample}_trim{qual}_ARGannot.r3.fasta.srst2
 srst2_output = srst2_output + '__genes__' + srst2_db.split(".fasta",1)[0] + '__results.txt'
 srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db=srst2_db))
 

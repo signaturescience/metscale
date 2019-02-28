@@ -21,6 +21,28 @@ config_default = {
             "sample"    : ["SRR606249_subset10"]
         },
 
+        "read_filtering_khmer_interleave_reads_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"]
+        },
+
+        "read_filtering_khmer_subsample_interleave_reads_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"]
+        },
+
+        "read_filtering_khmer_split_interleaved_reads_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"]
+        },
+
+
+        "read_filtering_khmer_count_unique_reads_workflow" : {
+            "sample"    : ["SRR606249_subset10"],
+            "qual"   : ["2","30"],
+            "kmers" : [21,31,51]
+        },
+
         "taxonomic_classification_signatures_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],

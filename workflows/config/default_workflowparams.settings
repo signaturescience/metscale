@@ -40,9 +40,11 @@ config_default = {
             "version" : "2.0.0a3--py36_0"
         },
         "khmer" : {
-            "use_local" : False,
+            "use_local" : True,
+            "filename" : "khmer-2.1--py35_0.simg",
             "quayurl" : "quay.io/biocontainers/khmer",
-            "version" : "2.1.2--py35_0"
+            "location" : "../container_images/",
+            "version" : "2.1--py35_0"
         },
         "kaiju" : {
             "use_local" : True,
@@ -284,12 +286,6 @@ config_default = {
             "trim_suffix" : "se"
         },
 
-        "interleaving" : {
-            # 
-            # suffix for interleaved reads files (replaces .fq.gz)
-            "interleave_suffix" : "pe"
-        },
-
         "multiqc" :{
             # multiqc output dir pattern
             "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
@@ -307,7 +303,49 @@ config_default = {
             "name" : "adapters_combined_256_unique.fasta",
             "url"  : "https://raw.githubusercontent.com/signaturescience/metagenomics/master/resources/adapters_combined_256_unique.fasta",
             "threads" : 4
-        }
+        },
+
+        "interleaving" : {
+            # 
+            # output pattern for khmer interleave reads
+            "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+        },
+
+        "subsample_interleaving" : {
+             #
+             #output of subset percentage (10 = 10%, don't use zero!)
+             "percent" : 10,
+             "subsample_output_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
+             "max_reads" : 100000000
+        },
+
+        "split_interleaved_reads" : {
+            #
+            #output file pattern
+            "split_interleaved_output_pattern" : "{sample}_trim{qual}_subset{percent}_{direction}.fq.gz"
+        },
+
+        "count_unique_reads" : {
+            #
+            #input file pattern. Right now set to the output from interleaving
+            "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+            #input pattern from the subsample interleave
+            #"input_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
+            #output file pattern.
+            "output_pattern" : "{sample}_trim{qual}_interleaved_uniqueK{kmers}.txt",
+        },
+
+        "convert_fastq_fasta" : {
+            #
+            #input fastq file
+            "input_pattern" : "{file}.fq.gz",
+            "output_pattern" : "{file}.fa",
+            "output_dir" : "fasta"
+        },
+
+
+
+
     },
 
     "functional_inference" : {

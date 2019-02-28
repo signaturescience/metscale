@@ -5,7 +5,8 @@ wildcard_constraints:
     qual="\d+",
     kvalue="\d+",
     assembler="\w+",
-    sample="\w+"
+    sample="\w+",
+    direction="\d+"
 
 include: "config/default_datafiles.settings"
 include: "config/default_workflowparams.settings"
