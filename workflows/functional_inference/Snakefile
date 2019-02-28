@@ -247,7 +247,7 @@ directions = [readfilt['direction_labels']['forward'],
               readfilt['direction_labels']['reverse']]
 
 
-rule functional_inference_prokka_with_megahit_workflow:
+rule functional_prokka_with_megahit_workflow:
     """
     Run prokka with MEGAHIT contigs
     """
@@ -258,7 +258,7 @@ rule functional_inference_prokka_with_megahit_workflow:
         )
 
 
-rule functional_inference_prokka_with_metaspades_workflow:
+rule functional_prokka_with_metaspades_workflow:
     """
     Run prokka with metaspades contigs
     """
@@ -268,7 +268,7 @@ rule functional_inference_prokka_with_metaspades_workflow:
                 qual = workflows['functional_inference_prokka_with_metaspades_workflow']['qual']
         )
 
-rule functional_inference_abricate_with_megahit_workflow:
+rule functional_abricate_with_megahit_workflow:
     """
     Run abricate with assembled megahit contigs as input
     """
@@ -278,7 +278,7 @@ rule functional_inference_abricate_with_megahit_workflow:
                 qual = workflows['functional_inference_abricate_with_megahit_workflow']['qual']
         )
 
-rule functional_inference_abricate_with_metaspades_workflow:
+rule functional_abricate_with_metaspades_workflow:
     """
     Run abricate with assembled metaspades contigs as input
     """
@@ -289,7 +289,7 @@ rule functional_inference_abricate_with_metaspades_workflow:
         )
 
 
-rule functional_inference_with_srst2_workflow:
+rule functional_with_srst2_workflow:
     '''
     Run srst2 on raw reads
     '''
