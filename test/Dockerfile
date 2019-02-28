@@ -1,7 +1,7 @@
 FROM centos:6.10
 
 RUN yum -y install epel-release libarchive-devel squashfs-tools
-RUN yum -y install git python-pip wget gcc
+RUN yum -y install git python-pip wget gcc R-core
 RUN pip install coverage nose nose-watch
 RUN wget https://github.com/singularityware/singularity/releases/download/2.6.1/singularity-2.6.1.tar.gz &&\
 		tar xvf singularity-2.6.1.tar.gz &&\

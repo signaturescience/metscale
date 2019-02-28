@@ -9,8 +9,10 @@ import argparse
 import time
 from socket import error as SocketError
 from snakemake.io import expand
+from google.auth.compute_engine import _metadata
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash', 'kaiju', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
+workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash', 'kaiju', 'taxonomic_classification', 'functional_inference', 'r', 'all']  #keep all at the end of the list
+R_PKG_LOCATION = "../resources/packages/"
 
 def reporthook(count, block_size, total_size):
     global start_time
@@ -24,9 +26,32 @@ def reporthook(count, block_size, total_size):
     sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
-    
+
+
+def download_R(data):
+        for file_name, url_string in data['r'].items():
+            try:
+                url = urlparse(url_string)
+            except Exception as e:  #we don't care since some of the JSONS are not URL's
+                pass
+            if not (os.path.isdir(os.path.join(R_PKG_LOCATION, file_name.split("_")[0]))): 
+                print("Downloading " +file_name + " from " + url_string)
+                try:
+                    urllib.request.urlretrieve(url_string, file_name, reporthook)
+                except SocketError as e:
+                    print("Error downloading file " + file_name + " Retry script.")
+                    print(e)
+                sing_command = "R CMD INSTALL " + file_name + " --library=" + R_PKG_LOCATION
+                subprocess.run([sing_command], shell=True)
+                try:
+                    os.remove(file_name)
+                except OSError:
+                    pass
+        
 def download_file(workflow, data, install_dir):
     if workflow in data.keys():
+        if (workflow == "r"):
+            download_R(data)
         for file_name, url_string in data[workflow].items():
             try:
                 url = urlparse(url_string)
