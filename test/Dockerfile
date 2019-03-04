@@ -20,9 +20,11 @@ RUN conda config --add channels conda-forge
 RUN conda config --add channels bioconda
 RUN conda create -y --name metag
 RUN conda install datrie
+RUN conda install snakemake
+RUN conda install r-essentials r-base
 RUN source activate metag
 
-RUN pip install snakemake
+
 RUN pip install osfclient
 RUN git clone https://github.com/signaturescience/metagenomics.git
 
