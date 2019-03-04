@@ -58,8 +58,13 @@ The metagenomics workflows use the following tools:
 		-GNU General Public License v2
 
 	-MultiQC version 1.4--py35_0
-		-https://multiqc.info/
+		-https://multiqc.iCopyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of Californianfo/
 		-GNU General Public License v3
+		
+	-Khmer version 2.1--py35_0
+		-https://khmer.readthedocs.io/en/v2.1.2/user/scripts.html
+		-Copyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of California
+		-BSD-3-Clause License
 	
 	-SPAdes version 3.11--py27_zlibl.2.8_0
 		-http://cab.spbu.ru/software/spades

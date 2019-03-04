@@ -1,9 +1,9 @@
 
 # Open Source Metagenomics Workflows
 
-These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is paired-end Illumina FASTQ files, and the current outputs include filtered reads, MultiQC reports for FastQC and QUAST results, assembled contigs, metagenome comparison estimates, and taxonomic classifications. 
+These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is paired-end Illumina FASTQ files, and the current outputs include filtered reads, assembled contigs, MultiQC reports for FastQC and QUAST results, metagenome comparison estimates, taxonomic classifications, and gene predictions. 
 
-![](https://github.com/signaturescience/metagenomics/blob/master/workflows/Overview_Flowchart.png)
+![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/Overview_Flowchart.png)
 
 Future outputs will include additional taxonomic classifications and visualizations, functional predictions, and alignments. We are actively developing these workflows, so please stay tuned for updates!
 
@@ -13,11 +13,11 @@ The [wiki](https://github.com/signaturescience/metagenomics/wiki) for this proje
 
 ## Prerequisites
 
-It is currently assumed that all workflow steps will be run on CentOS, but other operating systems will be tested in the future.
+These workflows have been tested to run offline on CentOS, Red Hat, and Ubuntu.
 
 ## Data 
 
-The workflows have been tested with subsampled data from this publication:
+The workflows have been tested with a subsampled dataset from this publication:
 
 [Shakya, M., C. Quince, J. H. Campbell, Z. K. Yang, C. W. Schadt and M. Podar (2013). "Comparative metagenomic and rRNA microbial diversity characterization using archaeal and bacterial synthetic communities." Environ Microbiol 15(6): 1882-1899.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3665634/)
  
