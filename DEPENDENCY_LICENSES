@@ -47,47 +47,80 @@ The metagenomics workflows use the following tools:
 	-https://biocontainers.pro/
 	-Apache 2.0 License
 
--These are the tools used within Biocontainers in the current workflows:
+-The following are downloaded from Biocontainers and used in the current workflows:
 
 	-Trimmomatic version 0.36--5
+		-quay.io/biocontainers/trimmomatic
 		-https://github.com/timflutre/trimmomatic
 		-GNU General Public License v3
 
 	-FastQC version 0.11.7--p15.22.0_2
+		-quay.io/biocontainers/fastqc
 		-https://github.com/s-andrews/FastQC
 		-GNU General Public License v2
 
 	-MultiQC version 1.4--py35_0
+		-quay.io/biocontainers/multiqc
 		-https://multiqc.iCopyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of Californianfo/
 		-GNU General Public License v3
 		
 	-Khmer version 2.1--py35_0
+		-quay.io/biocontainers/khmer
 		-https://khmer.readthedocs.io/en/v2.1.2/user/scripts.html
 		-Copyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of California
 		-BSD-3-Clause License
 	
 	-SPAdes version 3.11--py27_zlibl.2.8_0
+		-quay.io/biocontainers/spades
 		-http://cab.spbu.ru/software/spades
 		-GNU General Public License v2
  
 	-MEGAHIT version 1.1.2--py35_0
+		-quay.io/biocontainers/megahit
 		-https://github.com/voutcn/megahit
 		-GNU General Public License v3
 
 	-QUAST version 4.5--boost1.61_1
+		-quay.io/biocontainers/quast
 		-http://quast.sourceforge.net/
 		-GNU General Public License v2
 
 	-Sourmash version 2.0.0a3--py36_0
+		-quay.io/biocontainers/sourmash
 		-https://github.com/dib-lab/sourmash
 		-Copyright © 2016 The Regents of the University of California
 		-BSD-3-Clause License
 
 	-Kaiju version 1.6.1--pl5.22.0_0
+		-quay.io/biocontainers/kaiju
 		-http://kaiju.binf.ku.dk/
 		-GNU General Public License v3
 
 	-Krona version 2.7--pl5.22.0_1
+		-quay.io/biocontainers/krona
 		-https://github.com/marbl/Krona
 		-Copyright © 2011, Battelle National Biodefense Institute (BNBI)
 		-BSD 2-clause “Simplified” License
+		
+	-SRST2 version 2-0.2.0--py27_2
+		-quay.io/biocontainers/srst2
+		-https://github.com/katholt/srst2
+		-Copyright (c) 2013, Michael Inouye, Bernie Pope, Harriet Dashnow, Kathryn Holt
+		-BSD License
+
+-Docker
+	-https://www.docker.com/legal/components-licenses
+	-Copyright © 2019 Docker Inc. All rights reserved.
+	-Apache 2.0 license
+
+-The following are downloaded from Docker Hub and used in the current workflows:
+
+	-ABRicate version 0.5-dev
+		-https://hub.docker.com/r/thanhleviet/abricate/
+		-https://github.com/tseemann/abricate
+		-GNU General Public License v2
+		
+	-Prokka version 1.13.3-01
+		-https://hub.docker.com/r/ummidock/prokka/
+		-https://github.com/tseemann/prokka
+		-GNU General Public License v3
