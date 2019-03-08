@@ -113,20 +113,24 @@ config_default = {
             # should match the scale and k values above.
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix"    : "_scaled10k.k21_31_51.sig", 
+            #"sig_suffix"    : "_scaled10k.k21_31_51.sig", 
+            "sig_suffix"    : "_scaled{scale}.k{kvalues}.sig", 
+
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
-            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+            #"merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+             "merge_suffix"  : "_merge_scaled{scale}.k{kvalues}.fq.gz"
         },
         "compare_read_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples" : ["SRR606249_subset10"],
+            #"samples" : ["SRR606249_subset10"],
             # 
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
             # note that the file prefix does not need to be/should not be modified.
-            "csv_out" : "SRR606249_allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+            #"csv_out" : "SRR606249_allsamples_trim2and30_read_comparison.k{kvalue}.csv"
+            "csv_out" : "{sample}_trim{qual}_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
             # 
@@ -136,7 +140,7 @@ config_default = {
             "qual"          : ["2","30"],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix" : "_scaled10k.k21_31_51.sig",
+            "sig_suffix" : "_scaled{scale}k.{kvalues}.sig",
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
@@ -144,17 +148,17 @@ config_default = {
         "compare_assembly_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "samples"   : ["SRR606249_subset10"],
+            #"samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
             # {kvalue} is replaced with the k value used in the comparison
-            "csv_out"   : "SRR606249_trim2and30_assembly_comparison.k{kvalue}.csv"
+            "csv_out"   : "{sample}_trim{qual}_assembly_comparison.k{kvalue}.csv"
         },
         "compare_read_assembly_signatures" : {
             #
             # the samples, quality, assembler variables are used in expand() to form filenames
-            "samples"   : ["SRR606249_subset10"],
+            #"samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # k values are passed to sourmash compare
@@ -162,7 +166,7 @@ config_default = {
             #
             # csv_out is the single output file containing
             # comparison results among all of the above files.
-            "csv_out"   : "SRR606249_trim2and30_ra_comparison.k{kvalue}.csv"
+            "csv_out"   : "{sample}_read_assembly_comparison.k{kvalue}.csv"
         }
     },
 

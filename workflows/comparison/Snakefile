@@ -49,7 +49,7 @@ read_sig_input_rev = join(data_dir, readfilt['read_patterns']['post_trimming_pat
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['reverse']))
-read_sig_inputs  = [read_sig_input_fwd,
+compute_read_sig_inputs  = [read_sig_input_fwd,
                     read_sig_input_rev]
 
 read_sig_input_fwd_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
@@ -62,30 +62,42 @@ read_sig_input_rev_sing = join(sing_dir, readfilt['read_patterns']['post_trimmin
                                 direction = readfilt['direction_labels']['reverse']))
 
 
-
-
 # signature file output replaces .fq.gz with sig_suffix variable
 # (also remove direction)
 read_base_output_name = re.sub('_{direction}', '', 
                         readfilt['read_patterns']['post_trimming_pattern'])
+compute_read_sig_output_name = re.sub(r'.fq.gz',  comparison['compute_read_signatures']['sig_suffix'], read_base_output_name)
 
-read_sig_output_name = re.sub(r'\.fq\.gz',
-                              comparison['compute_read_signatures']['sig_suffix'],
-                              read_base_output_name)
-read_sig_output = join(data_dir, read_sig_output_name)
-read_sig_output_sing = join(sing_dir, read_sig_output_name)
+#TODO: Have kvalues in both workflowconfig and workflowparams. Because of this.
+read_sig_kvalues_string = '_'.join(map(str,comparison['compute_read_signatures']['kvalues'])) 
+compute_read_sig_output_name = compute_read_sig_output_name.format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                kvalues = read_sig_kvalues_string,
+                                scale = comparison['compute_read_signatures']['scale'])
 
 
-read_merge_output_name = re.sub(r'\.fq\.gz',
+compute_read_sig_output = join(data_dir, compute_read_sig_output_name)
+read_sig_output_sing = join(sing_dir, compute_read_sig_output_name)
+
+
+
+read_base_merge_output_name = re.sub(r'\.fq\.gz',
                               comparison['compute_read_signatures']['merge_suffix'],
                               read_base_output_name)
-read_merge_output = join(data_dir, read_merge_output_name)
+read_merge_output = join(sing_dir, read_base_merge_output_name.format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                kvalues = read_sig_kvalues_string,
+                                scale = comparison['compute_read_signatures']['scale']))
+
+
+
 
 # scale, for command line
 read_sig_scale = "%s"%(comparison['compute_read_signatures']['scale'])
-
+#TODO: Have kvalues in both workflowconfig and workflowparams. Because of this.
 read_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_read_signatures']['kvalues']])
-
 
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
@@ -108,9 +120,9 @@ rule compute_read_signatures:
     Compute read signatures from trimmed data using sourmash.
     """
     input:
-        read_sig_inputs
+        compute_read_sig_inputs
     output:
-        read_sig_output
+        compute_read_sig_output
     singularity:
         sourmash_compute_image
     params:
@@ -135,21 +147,28 @@ rule compute_read_signatures:
 
 
 # input is the output of the assembly workflow
-assembly_sig_input_prefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['assembly_pattern'])
+#assembly_sig_input_prefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['assembly_pattern'])
 assembly_sig_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 assembly_sig_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
-
 
 # output replaces .contigs.fa with sig_suffix variable
 assembly_sig_output_name = re.sub(r'\.contigs\.fa',
                                   comparison['compute_assembly_signatures']['sig_suffix'],
                                   assembly['assembly_patterns']['assembly_pattern'])
+#TODO: Have kvalues in both workflowconfig and workflowparams. Because of this.
+assembly_sig_kvalues_string = '_'.join(map(str,comparison['compute_assembly_signatures']['kvalues'])) 
+assembly_sig_output_name = assembly_sig_output_name.format(
+                                sample = '{sample}',
+                                qual = '{qual}',
+                                assembler = '{assembler}',
+                                kvalues = assembly_sig_kvalues_string,
+                                scale = comparison['compute_assembly_signatures']['scale'])
+
 assembly_sig_output = join(data_dir, assembly_sig_output_name)
 assembly_sig_output_sing = join(sing_dir, assembly_sig_output_name)
 
-# scale, for command line
+## scale, for command line
 assembly_sig_scale = "%s"%(comparison['compute_assembly_signatures']['scale'])
-
 # likewise, get separate k values for assembly and read signatures
 assembly_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembly_signatures']['kvalues']])
 
@@ -182,21 +201,25 @@ rule compute_assembly_signatures:
 
 # We need to use expand() to create a list of 
 # read signature files (the input files)
+
 compare_read_sigs_input_names = expand( 
-                read_sig_output_name,
-                sample = comparison['compare_read_signatures']['samples'],
+                compute_read_sig_output_name,
+                sample = workflows['comparison_reads_workflow']['sample'],
                 qual = comparison['compute_read_signatures']['qual'])
 
 # Turn filename X into data/X
 compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_names]
 compare_read_sigs_inputs_sing = [join(sing_dir,k) for k in compare_read_sigs_input_names]
 
-
 # User specifies CSV output file.
-# This name is used verbatim.
 compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
-compare_read_sigs_output = join(data_dir, compare_read_sigs_output_name)
-compare_read_sigs_output_sing = join(sing_dir, compare_read_sigs_output_name)
+read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures']['qual'])) 
+compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
+                                sample = workflows['comparison_reads_workflow']['sample'],
+                                qual = read_sig_qual_string,
+                                kvalue = '{kvalue}')
+compare_read_sigs_output = [join(data_dir, file) for file in compare_read_sigs_output_name]
+compare_read_sigs_output_sing = [join(sing_dir, file) for file in compare_read_sigs_output_name]
 
 sourmash_compare_image = container_image_name(biocontainers, 'sourmash_compare')
 
@@ -205,7 +228,9 @@ def compare_read_sigs_output_wc(wildcards):
     """
     Perform wildcard substitution for the output file name
     """
-    out_wc = compare_read_sigs_output_sing.format(**wildcards)
+    out_wc = []
+    for file in compare_read_sigs_output_sing:
+        out_wc.append(file.format(**wildcards))
     return out_wc
 
 def compare_read_sigs_inputs_wc(wildcards):
@@ -245,7 +270,7 @@ rule compare_read_signatures:
 # We already have the assembly sig name
 compare_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample = comparison['compare_assembly_signatures']['samples'],
+            sample = workflows['comparison_assembly_workflow']['sample'],
             qual = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
 
@@ -254,18 +279,24 @@ compare_assembly_sigs_inputs = [join(data_dir, k) for k in compare_assembly_sigs
 compare_assembly_sigs_inputs_sing = [join(sing_dir, k) for k in compare_assembly_sigs_input_names]
 
 # User specifies CSV output file.
-# This name is used verbatim.
 compare_assembly_sigs_output_name = comparison['compare_assembly_signatures']['csv_out']
-compare_assembly_sigs_output = join(data_dir, compare_assembly_sigs_output_name)
-compare_assembly_sigs_output_sing = join(sing_dir, compare_assembly_sigs_output_name)
+compare_assembly_qual_string = 'and'.join(map(str,comparison['compute_assembly_signatures']['qual'])) 
+compare_assembly_sigs_output_name = expand(compare_assembly_sigs_output_name,
+                                    sample = workflows['comparison_assembly_workflow']['sample'],
+                                    qual = compare_assembly_qual_string,
+                                    kvalue = '{kvalue}')
 
+compare_assembly_sigs_output = [join(data_dir, file) for file in compare_assembly_sigs_output_name]
+compare_assembly_sigs_output_sing = [join(sing_dir, file) for file in compare_assembly_sigs_output_name]
 
 
 def compare_assembly_sigs_output_wc(wildcards):
     """
     Perform wildcard substitution for the output file name
     """
-    out_wc = compare_assembly_sigs_output_sing.format(**wildcards)
+    out_wc = []
+    for file in compare_assembly_sigs_output_sing:
+        out_wc.append(file.format(**wildcards))
     return out_wc
 
 def compare_assembly_sigs_inputs_wc(wildcards):
@@ -305,32 +336,37 @@ rule compare_assembly_signatures:
 
 compare_ra_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample = comparison['compare_assembly_signatures']['samples'],
+            sample = workflows['comparison_assembly_workflow']['sample'],
             qual = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler']
 )
 compare_ra_read_sigs_input_names = expand(
-            read_sig_output_name,
-            sample = comparison['compare_read_signatures']['samples'],
+            compute_read_sig_output_name,
+            sample = workflows['comparison_reads_workflow']['sample'],
             qual = comparison['compute_read_signatures']['qual']
 )
-compare_ra_sigs_inputs =  [join(data_dir, k) for k in compare_ra_read_sigs_input_names]
-compare_ra_sigs_inputs += [join(data_dir, k) for k in compare_ra_assembly_sigs_input_names]
-compare_ra_sigs_inputs_sing =  [join(sing_dir, k) for k in compare_ra_read_sigs_input_names]
-compare_ra_sigs_inputs_sing += [join(sing_dir, k) for k in compare_ra_assembly_sigs_input_names]
+compare_ra_sigs_inputs =  [join(data_dir, file) for file in compare_ra_read_sigs_input_names]
+compare_ra_sigs_inputs += [join(data_dir, file) for file in compare_ra_assembly_sigs_input_names]
+compare_ra_sigs_inputs_sing =  [join(sing_dir, file) for file in compare_ra_read_sigs_input_names]
+compare_ra_sigs_inputs_sing += [join(sing_dir, file) for file in compare_ra_assembly_sigs_input_names]
 
 # User specifies CSV output file.
-# This name is used verbatim.
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
-compare_ra_sigs_output = join(data_dir, compare_ra_sigs_output_name)
-compare_ra_sigs_output_sing = join(sing_dir, compare_ra_sigs_output_name)
+ra_samples_string = 'and'.join(map(str,workflows['comparison_reads_workflow']['sample'] + workflows['comparison_assembly_workflow']['sample'])) 
+compare_ra_sigs_output_name = expand(compare_ra_sigs_output_name,
+                                sample = ra_samples_string,
+                                kvalue = '{kvalue}')
 
+compare_ra_sigs_output = [join(data_dir, file) for file in compare_ra_sigs_output_name]
+compare_ra_sigs_output_sing = [join(sing_dir, file) for file in compare_ra_sigs_output_name]
 
 def compare_ra_sigs_output_wc(wildcards):
     """
     Perform wildcard substitution for the output file name
     """
-    out_wc = compare_ra_sigs_output_sing.format(**wildcards)
+    out_wc = []
+    for file in compare_ra_sigs_output_sing:
+        out_wc.append(file.format(**wildcards))
     return out_wc
 
 def compare_ra_sigs_inputs_wc(wildcards):
@@ -377,7 +413,7 @@ rule comparison_reads_workflow:
     """
     input:
         expand( compare_read_sigs_output,
-                kvalue = workflows['comparison_reads_workflow']['kvalue']
+                kvalue      = workflows['comparison_reads_workflow']['kvalue']
        )
 
 

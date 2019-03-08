@@ -120,7 +120,7 @@ rule gather_compare_signatures:
     Gather and compare signatures using sourmash gather
     """
     input:
-        read_sig_output,
+        compute_read_sig_output,
         all_unpacked_sbts
     output:
         gather_csv,
@@ -732,7 +732,7 @@ rule taxclass_signatures_workflow:
     Note:This runs the comparison/compute_read_signatures_rule
     """
     input:
-        expand(read_sig_output,
+        expand(compute_read_sig_output,
                 sample  = workflows['taxonomic_classification_signatures_workflow']['sample'], 
                 qual    = workflows['taxonomic_classification_signatures_workflow']['qual'], 
         )
@@ -742,7 +742,7 @@ rule taxclass_gather_workflow:
     Gather and compare read signatures using sourmash gather
     """
     input:
-        expand( read_sig_output,
+        expand( compute_read_sig_output,
                 sample = workflows['taxonomic_classification_gather_workflow']['sample'],
                 qual = workflows['taxonomic_classification_gather_workflow']['qual']
         ),
