@@ -1,0 +1,61 @@
+Identifier,Lowest_Rank,Lowest_NCBI_TaxID,Lowest_NCBI_Tax_Name,GenBank_ID,Reads
+ds-nycsm_01,Strain_No_Rank,260799,Bacillus anthracis str. Sterne,NC_005945.1,16627
+ds-nycsm_02,Strain_No_Rank,198094,Bacillus anthracis str. Ames,NC_003997.3,8373
+ds-nycsm_03,Strain_No_Rank,526973,Bacillus cereus m1293,NZ_CM000714.1,25000
+ds-nycsm_04,Strain_No_Rank,273036,Staphylococcus aureus RF122,NC_007622.1,25000
+ds-nycsm_05,Strain_No_Rank,565659,"Enterococcus faecium 1,141,733",NZ_GG688463.1,2158
+ds-nycsm_05,Strain_No_Rank,565659,"Enterococcus faecium 1,141,733",NZ_GG688464.1,22842
+ds-nycsm_06,Strain_No_Rank,565652,Enterococcus casseliflavus EC30,NZ_GG670387.1,3690
+ds-nycsm_06,Strain_No_Rank,565652,Enterococcus casseliflavus EC30,NZ_GG670388.1,21310
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000070.1,134
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000071.1,243
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000067.1,562
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000068.1,935
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000066.1,1370
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000069.1,4620
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000072.1,6384
+ds-nycsm_07,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000065.1,10752
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000201.1,39
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000203.1,47
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000214.1,82
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000207.1,116
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000213.1,262
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000215.1,433
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000206.1,623
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000216.1,1415
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000202.1,1573
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000211.1,1597
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000209.1,1883
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000212.1,2976
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000210.1,3200
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000205.1,5152
+ds-nycsm_08,Species,1938595,Pseudoalteromonas sp. TAB23,NZ_AUTP01000204.1,5602
+ds-nycsm_09,Strain_No_Rank,318167,Shewanella frigidimarina NCIMB 400,NC_008345.1,25000
+ds-nycsm_10,Strain_No_Rank,319224,Shewanella putrefaciens CN-32,NC_009438.1,25000
+ds-nycsm_11,Strain_No_Rank,640513,Enterobacter asburiae LF7a,NC_015968.1,25000
+ds-nycsm_12,Strain_No_Rank,1104326,Enterobacter cloacae subsp. dissolvens SDM,NC_018079.1,25000
+ds-nycsm_13,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013365.1,237
+ds-nycsm_13,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013367.1,295
+ds-nycsm_13,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013364.1,4285
+ds-nycsm_13,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013370.1,5400
+ds-nycsm_13,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013366.1,6311
+ds-nycsm_14,Strain_No_Rank,511145,Escherichia coli str. K-12 substr. MG1655,NC_000913.3,8472
+ds-nycsm_15,Strain_No_Rank,1400139,Klebsiella aerogenes UCI 16,NZ_KI973159.1,25000
+ds-nycsm_16,Strain_No_Rank,187410,Yersinia pestis KIM10+,NC_004088.1,25000
+ds-nycsm_17,Strain_No_Rank,335284,Psychrobacter cryohalolentis K5,NC_007969.1,25000
+ds-nycsm_18,Strain_No_Rank,208964,Pseudomonas aeruginosa PAO1,NC_002516.2,25000
+ds-nycsm_19,Strain_No_Rank,220664,Pseudomonas protegens Pf-5,NC_004129.6,25000
+ds-nycsm_20,Strain_No_Rank,1210443,Pseudomonas stutzeri T13,NZ_ALJB01000012.1,2936
+ds-nycsm_20,Strain_No_Rank,1210443,Pseudomonas stutzeri T13,NZ_ALJB01000013.1,22064
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000032.1,89
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000031.1,118
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000029.1,228
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000034.1,946
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000030.1,2313
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000033.1,3330
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000028.1,3785
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000036.1,4848
+ds-nycsm_21,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000035.1,9343
+ds-nycsm_22,Strain_No_Rank,1235458,Stenotrophomonas maltophilia AU12-09,NZ_APIT01000028.1,1252
+ds-nycsm_22,Strain_No_Rank,1235458,Stenotrophomonas maltophilia AU12-09,NZ_APIT01000029.1,6917
+ds-nycsm_22,Strain_No_Rank,1235458,Stenotrophomonas maltophilia AU12-09,NZ_APIT01000027.1,16831

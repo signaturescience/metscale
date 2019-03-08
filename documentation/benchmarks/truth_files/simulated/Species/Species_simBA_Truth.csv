@@ -1,0 +1,522 @@
+"NCBI_Taxon_ID","Taxon_Name","Read_Count"
+"39485","[Eubacterium] eligens",15173
+"1511","Acetoanaerobium sticklandii",4482
+"438","Acetobacter pasteurianus",29269
+"2148","Acholeplasma laidlawii",4645
+"905","Acidaminococcus fermentans",5732
+"187327","Acidaminococcus intestini",551
+"563177","Acidianus hospitalis",5061
+"242703","Acidilobus saccharovorans",5939
+"62140","Acidiphilium multivorum",37663
+"33059","Acidithiobacillus caldus",23580
+"160808","Acidithiobacillus ferrivorans",5741
+"920","Acidithiobacillus ferrooxidans",451
+"33075","Acidobacterium capsulatum",5912
+"28049","Acidothermus cellulolyticus",5875
+"80869","Acidovorax citrulli",3935
+"379547","Aciduliprofundum boonei",5280
+"40567","Actinosynnema mirum",4237
+"654","Aeromonas veronii",2491
+"358","Agrobacterium tumefaciens",13407
+"373","Agrobacterium vitis",39635
+"239935","Akkermansia muciniphila",5902
+"405212","Alicyclobacillus acidocaldarius",23708
+"328814","Alistipes shahii",4608
+"351052","Alkalilimnicola ehrlichii",5505
+"208226","Alkaliphilus metalliredigens",5100
+"461876","Alkaliphilus oremlandii",5119
+"715451","Alteromonas naphthalenivorans",5247
+"81468","Aminobacterium colombiense",5750
+"42838","Ammonifex degensii",11851
+"447217","Anaeromyxobacter sp. K",1964
+"770","Anaplasma marginale",4795
+"28264","Arcanobacterium haemolyticum",5847
+"2234","Archaeoglobus fulgidus",5811
+"84156","Archaeoglobus profundus",11431
+"944547","Arcobacter sp. L",7963
+"551760","Aromatoleum aromaticum",14114
+"290399","Arthrobacter sp. FB24",20245
+"118562","Arthrospira platensis",100000
+"78587","Asticcacaulis excentricus",23716
+"1382","Atopobium parvulum",5532
+"7","Azorhizobium caulinodans",5364
+"146939","Azospira oryzae",5105
+"193","Azospirillum lipoferum",32888
+"1452","Bacillus atrophaeus",8
+"1413","Bacillus cellulosilyticus",5415
+"86665","Bacillus halodurans",1967
+"1404","Bacillus megaterium",1559
+"79885","Bacillus pseudofirmus",12343
+"1428","Bacillus thuringiensis",3592
+"492670","Bacillus velezensis",6
+"290053","Bacteroides helcogenes",5574
+"33045","Bartonella grahamii",8092
+"803","Bartonella quintana",4975
+"533","Beijerinckia indica",17773
+"1680","Bifidobacterium adolescentis",2230
+"28025","Bifidobacterium animalis",5653
+"1681","Bifidobacterium bifidum",30385
+"1685","Bifidobacterium breve",100000
+"216816","Bifidobacterium longum",100000
+"164514","Blattabacterium punctulatus",4814
+"518","Bordetella bronchiseptica",739
+"519","Bordetella parapertussis",447
+"520","Bordetella pertussis",100000
+"140","Borrelia hermsii",43322
+"44449","Borrelia recurrentis",7265
+"664662","Borreliella bavariensis",2930
+"64897","Borreliella bissettii",34477
+"29519","Borreliella garinii",30370
+"43669","Brachybacterium faecium",4651
+"159","Brachyspira hyodysenteriae",3883
+"84377","Brachyspira intermedia",2219
+"84378","Brachyspira murdochii",2563
+"74313","Brevundimonas subvibrioides",5326
+"235","Brucella abortus",49
+"444163","Brucella microti",349
+"120576","Brucella pinnipedialis",3528
+"29461","Brucella suis",5
+"9","Buchnera aphidicola",3314
+"482957","Burkholderia lata",11095
+"640512","Burkholderia sp. CCGE1003",9502
+"1097668","Burkholderia sp. YI23",16680
+"60552","Burkholderia vietnamiensis",28309
+"43305","Butyrivibrio proteoclasticus",20462
+"911092","Caldanaerobacter subterraneus",4496
+"52766","Caldicellulosiruptor lactoaceticus",899
+"717609","Caldicellulosiruptor obsidiansis",2785
+"44001","Caldicellulosiruptor saccharolyticus",2005
+"199","Campylobacter concisus",11945
+"200","Campylobacter curvus",2677
+"196","Campylobacter fetus",4999
+"201","Campylobacter lari",4003
+"281120","Candidatus Amoebophilus asiaticus",5131
+"1041504","Candidatus Arthromitus sp. SFB-rat-Yit",3362
+"511435","Candidatus Azobacteroides pseudotrichonymphae",26176
+"186490","Candidatus Baumannia cicadellinicola",5140
+"203907","Candidatus Blochmannia floridanus",3925
+"471827","Candidatus Desulforudis audaxviator",5922
+"138072","Candidatus Hamiltonella defensa",10997
+"498846","Candidatus Korarchaeum cryptofilum",5927
+"34021","Candidatus Liberibacter asiaticus",5237
+"234827","Candidatus Midichloria mitochondrii",5382
+"1048758","Candidatus Moranella endobia",5780
+"37692","Candidatus Phytoplasma mali",2296
+"401619","Candidatus Riesia pediculicola",9041
+"129958","Carboxydothermus hydrogenoformans",3092
+"2751","Carnobacterium maltaromaticum",100000
+"208596","Carnobacterium sp. 17-4",8668
+"155892","Caulobacter vibrioides",5196
+"1711","Cellulomonas flavigena",4489
+"11","Cellulomonas gilvus",4511
+"59600","Cellulophaga algicola",4792
+"155077","Cellvibrio japonicus",5868
+"266779","Chelativorans sp. BNC1",22865
+"83555","Chlamydia abortus",4708
+"83556","Chlamydia felis",10456
+"83560","Chlamydia muridarum",10918
+"83558","Chlamydia pneumoniae",5633
+"1986029","Chlamydia virus CPAR39",2354
+"458033","Chloracidobacterium thermophilum",10959
+"274539","Chlorobaculum parvum",5849
+"1092","Chlorobium limicola",5868
+"1096","Chlorobium phaeobacteroides",5780
+"152260","Chloroflexus aggregans",5953
+"1108","Chloroflexus aurantiacus",28
+"100716","Chloroherpeton thalassium",5848
+"1488","Clostridium acetobutylicum",7989
+"1493","Clostridium cellulovorans",3998
+"1538","Clostridium ljungdahlii",840
+"1542","Clostridium novyi",382
+"1502","Clostridium perfringens",4950
+"1042156","Clostridium sp. SY8519",5783
+"1513","Clostridium tetani",5444
+"158899","Collimonas fungivorans",5620
+"363952","Comamonas thiooxydans",3357
+"191495","Conexibacter woesei",4838
+"35786","Coprothermobacter proteolyticus",5773
+"65058","Corynebacterium ulcerans",5816
+"413502","Cronobacter turicensis",11143
+"119219","Cupriavidus metallidurans",10641
+"106590","Cupriavidus necator",7472
+"43989","Cyanothece sp. ATCC 51142",154
+"395961","Cyanothece sp. PCC 7425",23505
+"497965","Cyanothece sp. PCC 7822",37988
+"41431","Cyanothece sp. PCC 8801",13788
+"197162","Deferribacter desulfuricans",6436
+"61435","Dehalococcoides mccartyi",5760
+"552810","Dehalogenimonas lykanthroporepellens",5770
+"310783","Deinococcus deserti",23543
+"309887","Deinococcus maricopensis",5480
+"55148","Deinococcus proteolyticus",28676
+"742013","Delftia sp. Cs1-4",1491
+"118000","Denitrovibrio acetiphilus",5683
+"49338","Desulfitobacterium hafniense",5727
+"60893","Desulfobacca acetoxidans",5928
+"2296","Desulfobacterium autotrophicum",11355
+"894","Desulfobulbus propionicus",5851
+"45663","Desulfohalobium retbaense",11476
+"79209","Desulfosporosinus meridiei",5147
+"873","Desulfovibrio africanus",5860
+"58180","Desulfovibrio alaskensis",5721
+"876","Desulfovibrio desulfuricans",5903
+"881","Desulfovibrio vulgaris",11753
+"94694","Desulfurococcus amylolyticus",6650
+"2275","Desulfurococcus mucosus",1149
+"870","Dichelobacter nodosus",5848
+"14","Dictyoglomus thermophilum",4192
+"983548","Dokdonia sp. 4H-3-7-5",5031
+"636","Edwardsiella tarda",4842
+"945","Ehrlichia chaffeensis",3852
+"779","Ehrlichia ruminantium",3443
+"399742","Enterobacter sp. 638",10511
+"53346","Enterococcus mundtii",100000
+"552","Erwinia amylovora",16882
+"182337","Erwinia billingiae",13737
+"79967","Erwinia pyrifoliae",20083
+"338565","Erwinia tasmaniensis",33696
+"564","Escherichia fergusonii",3436
+"53442","Eubacterium callanderi",5704
+"332410","Exiguobacterium sibiricum",16386
+"360911","Exiguobacterium sp. AT1b",1612
+"97393","Ferroplasma acidarmanus",5126
+"2424","Fervidobacterium nodosum",5011
+"93466","Fervidobacterium pennivorans",5328
+"143361","Filifactor alocis",4706
+"1260","Finegoldia magna",8704
+"28110","Francisella philomiragia",7359
+"298653","Frankia sp. EAN1pec",4861
+"851","Fusobacterium nucleatum",1211
+"750","Gallibacterium anatis",8660
+"471223","Geobacillus sp. WCH70",14152
+"581103","Geobacillus sp. Y4.1MC1",2613
+"550542","Geobacillus sp. Y412MC52",9
+"225194","Geobacter bemidjiensis",4461
+"443144","Geobacter sp. M21",5386
+"35554","Geobacter sulfurreducens",5417
+"300231","Glaciecola nitratireducens",5829
+"983545","Glaciecola sp. 4H-3-7+YE-5",6685
+"2054","Gordonia bronchialis",11239
+"84595","Gordonia polyisoprenivorans",100000
+"413810","Halalkalicoccus jeotgali",41519
+"80816","Haliangium ochraceum",5356
+"2238","Haloarcula marismortui",26487
+"97084","Halobacteriovorax marinus",10905
+"2242","Halobacterium salinarum",15382
+"756883","halophilic archaeon DL31",14348
+"387343","Halopiger xanaduensis",22989
+"146826","Halorhabdus utahensis",5830
+"31909","Halothermothrix orenii",5058
+"213","Helicobacter cinaedi",95896
+"217","Helicobacter mustelae",5350
+"964","Herbaspirillum seropedicae",4761
+"84405","Hippea maritima",5134
+"2724","Hirschia baltica",11736
+"731","Histophilus somni",10291
+"1515","Hungateiclostridium thermocellum",4866
+"135577","Idiomarina loihiensis",3652
+"160233","Ignicoccus hospitalis",5955
+"375286","Janthinobacterium sp. Marseille",5835
+"43674","Jonesia denitrificans",5933
+"261964","Kangiella koreensis",5730
+"2066","Kitasatospora setae",3251
+"1177712","Komagataeibacter medellinensis",25389
+"651457","Kosmotoga olearia",5736
+"1276","Kytococcus sedentarius",5033
+"66219","Lachnoclostridium phytofermentans",5179
+"1624","Lactobacillus salivarius",13322
+"1358","Lactococcus lactis",4336
+"168471","Laribacter hongkongensis",5605
+"29546","Lawsonia intracellularis",16928
+"450","Legionella longbeachae",9258
+"1575","Leifsonia xyli",5577
+"174","Leptospira borgpetersenii",5393
+"173","Leptospira interrogans",8237
+"34029","Leptothrix cholodnii",4721
+"40542","Leptotrichia buccalis",2482
+"1252","Leuconostoc carnosum",10047
+"1244","Leuconostoc gelidum",100000
+"136609","Leuconostoc kimchii",11667
+"1245","Leuconostoc mesenteroides",2501
+"1638","Listeria ivanovii",4970
+"1640","Listeria seeligeri",4769
+"1643","Listeria welshimeri",4688
+"69966","Macrococcus caseolyticus",37445
+"884684","Mageeibacillus indolicus",5597
+"1124597","Magnetococcus marinus",5912
+"252966","Mahella australiensis",5785
+"313603","Maribacter sp. HTCC2170",5335
+"186192","Marinithermus hydrothermalis",5768
+"149715","Marinitoga piezophila",6834
+"119864","Marinomonas mediterranea",5851
+"936476","Marinomonas posidonica",5759
+"400668","Marinomonas sp. MWYL1",5748
+"907","Megasphaera elsdenii",5398
+"277","Meiothermus ruber",5240
+"536018","Mesorhizobium australicum",3587
+"39645","Mesorhizobium ciceri",4207
+"1184387","Mesotoga prima",11793
+"1006005","Metallosphaera cuprina",5793
+"43687","Metallosphaera sedula",5809
+"877455","Methanobacterium lacus",4774
+"83171","Methanocaldococcus fervens",7392
+"644281","Methanocaldococcus sp. FS406-22",6928
+"29291","Methanococcoides burtonii",5482
+"42879","Methanococcus aeolicus",4058
+"2187","Methanococcus vannielii",4564
+"83984","Methanocorpusculum labreanum",5786
+"2322","Methanohalobium evestigatum",9882
+"2176","Methanohalophilus mahii",5576
+"54120","Methanolacinia petrolearia",5331
+"2317","Methanosphaera stadtmanae",2781
+"475088","Methanosphaerula palustris",5936
+"155863","Methanothermococcus okinawensis",7305
+"2223","Methanothrix soehngenii",11561
+"114616","Methylobacterium nodulans",46160
+"31998","Methylobacterium radiotolerans",39630
+"199596","Methylocella silvestris",5821
+"414","Methylococcus capsulatus",4259
+"271065","Methylomicrobium alcaliphilum",9696
+"421","Methylomonas methanica",5915
+"359408","Methylotenera mobilis",5794
+"266009","Methylovorus glucosotrophus",15781
+"887061","Methylovorus sp. MP688",4074
+"349221","Micavibrio aeruginosavorus",5953
+"1270","Micrococcus luteus",2321
+"29405","Microlunatus phosphovorus",5762
+"47850","Micromonospora aurantiaca",769
+"648999","Micromonospora sp. L5",876
+"480","Moraxella catarrhalis",5527
+"111501","Muricauda ruestringensis",5661
+"78331","Mycobacterium canettii",1191
+"1767","Mycobacterium intracellulare",100000
+"1769","Mycobacterium leprae",5856
+"164756","Mycobacterium sp. MCS",31
+"1773","Mycobacterium tuberculosis",102
+"875328","Mycolicibacter sinensis",5054
+"110539","Mycolicibacterium vanbaalenii",1649
+"2110","Mycoplasma agalactiae",3483
+"2111","Mycoplasma arthritidis",4518
+"28903","Mycoplasma bovis",3327
+"45361","Mycoplasma conjunctivae",3485
+"50052","Mycoplasma crocodyli",3107
+"2096","Mycoplasma gallisepticum",4477
+"29501","Mycoplasma haemofelis",5397
+"2098","Mycoplasma hominis",3184
+"2099","Mycoplasma hyopneumoniae",1884
+"2100","Mycoplasma hyorhinis",1206
+"28227","Mycoplasma penetrans",1859
+"2104","Mycoplasma pneumoniae",5529
+"2107","Mycoplasma pulmonis",2159
+"53461","Nakamurella multipartita",5138
+"13769","Natrialba magadii",17090
+"69525","Natrinema pellirubrum",12835
+"244787","Nautilia profundicola",4976
+"485","Neisseria gonorrhoeae",3102
+"486","Neisseria lactamica",100000
+"950","Neorickettsia risticii",5454
+"269261","Nitratifractor salsuginis",5844
+"912","Nitrobacter hamburgensis",22945
+"133539","Nitrosococcus halophilus",11824
+"1229","Nitrosococcus oceani",9437
+"915","Nitrosomonas europaea",5800
+"261292","Nitrosomonas sp. Is79A3",5848
+"330214","Nitrospira defluvii",5940
+"196162","Nocardioides sp. JS614",10317
+"103690","Nostoc sp. PCC 7120",36234
+"702113","Novosphingobium sp. PP1Y",20513
+"187137","Oceanithermus profundus",11148
+"182710","Oceanobacillus iheyensis",4994
+"53946","Octadecabacter arcticus",17682
+"1247","Oenococcus oeni",5454
+"40137","Oligotropha carboxidovorans",5488
+"100379","Onion yellows phytoplasma",350
+"784","Orientia tsutsugamushi",4270
+"43663","Paenarthrobacter aurescens",12398
+"1464","Paenibacillus larvae",100000
+"481743","Paenibacillus sp. Y412MC10",1371
+"159743","Paenibacillus terrae",5083
+"553","Pantoea ananatis",5582
+"412963","Paraburkholderia rhizoxinica",17731
+"266","Paracoccus denitrificans",12896
+"208216","Parvularcula bermudensis",5878
+"747","Pasteurella multocida",5486
+"554","Pectobacterium carotovorum",5364
+"1255","Pediococcus pentosaceus",5240
+"531813","Pelagibacterium halotolerans",11861
+"19","Pelobacter carbinolicus",5933
+"1100","Pelodictyon luteolum",5858
+"34090","Pelodictyon phaeoclathratiforme",5845
+"309805","Persephonella marina",8711
+"221822","Phaeobacter inhibens",13843
+"74109","Photobacterium profundum",53658
+"2218628","Photorhabdus laumondii",5087
+"891974","Plautia stali symbiont",14651
+"313598","Polaribacter sp. MED152",3360
+"216465","Polaromonas naphthalenivorans",51171
+"296591","Polaromonas sp. JS666",17345
+"576611","Polynucleobacter asymbioticus",5821
+"28123","Porphyromonas asaccharolytica",100000
+"837","Porphyromonas gingivalis",4664
+"1219","Prochlorococcus marinus",8
+"1744","Propionibacterium freudenreichii",5477
+"584","Proteus mirabilis",3800
+"588","Providencia stuartii",100000
+"361575","Pseudarthrobacter phenanthrenivorans",14349
+"182210","Pseudodesulfovibrio aespoeensis",5691
+"748280","Pseudogulbenkiania sp. NH8B",3328
+"312306","Pseudomonas entomophila",4426
+"47880","Pseudomonas fulva",2649
+"251701","Pseudomonas syringae group genomosp. 3",2314
+"119394","Pseudothermotoga thermarum",5625
+"415229","Pseudoxanthomonas spadix",4934
+"314722","Pseudoxanthomonas suwonensis",4110
+"357794","Psychromonas ingrahamii",5584
+"314282","Psychromonas sp. CNPT3",5582
+"1007105","Pusillimonas sp. T7-7",11870
+"2277","Pyrobaculum islandicum",5896
+"29292","Pyrococcus abyssi",11631
+"2261","Pyrococcus furiosus",5215
+"342949","Pyrococcus sp. NA2",5605
+"1008460","Pyrococcus yayanosii",5829
+"329","Ralstonia pickettii",9439
+"305","Ralstonia solanacearum",9941
+"43767","Rhodococcus hoagii",5268
+"1085","Rhodospirillum rubrum",11546
+"29549","Rhodothermus marinus",11420
+"35788","Rickettsia africae",4437
+"42862","Rickettsia felis",11448
+"35790","Rickettsia japonica",514
+"782","Rickettsia prowazekii",3427
+"783","Rickettsia rickettsii",539
+"34085","Riemerella anatipestifer",4907
+"2047","Rothia dentocariosa",29143
+"89184","Ruegeria pomeroyi",11209
+"292414","Ruegeria sp. TM1040",17101
+"1264","Ruminococcus albus",100000
+"1161942","Ruminococcus champanellensis",5709
+"106","Runella slithyformis",34421
+"1852","Saccharomonospora viridis",5668
+"86304","Saccharophagus degradans",5903
+"168695","Salinispora tropica",884
+"54736","Salmonella bongori",5051
+"826","Sebaldella termitidis",12044
+"55206","Sediminispirochaeta smaragdinae",5262
+"286802","Segniliparus rotundus",5813
+"82996","Serratia plymuthica",9983
+"60478","Shewanella amazonensis",5836
+"192073","Shewanella denitrificans",5738
+"271098","Shewanella halifaxensis",5686
+"359303","Shewanella loihica",5535
+"70864","Shewanella pealeana",5651
+"404011","Shewanella piezotolerans",5741
+"271097","Shewanella sediminis",5750
+"94122","Shewanella sp. ANA-3",6201
+"60480","Shewanella sp. MR-4",2980
+"60481","Shewanella sp. MR-7",8958
+"60217","Shewanella violacea",5655
+"60961","Shewanella woodyi",5661
+"621","Shigella boydii",93
+"623","Shigella flexneri",1187
+"624","Shigella sonnei",945
+"84110","Slackia heliotrinireducens",5891
+"63612","Sodalis glossinidius",22742
+"995","Solitalea canadensis",5465
+"1131703","Sphaerochaeta globosa",5862
+"1131707","Sphaerochaeta pleomorpha",5787
+"332056","Sphingobium japonicum",6771
+"117207","Sphingopyxis alaskensis",9417
+"46355","Spirochaeta africana",5939
+"154","Spirochaeta thermophila",5893
+"1283","Staphylococcus haemolyticus",2114
+"283734","Staphylococcus pseudintermedius",4611
+"29385","Staphylococcus saprophyticus",2532
+"84599","Staphylothermus hellenicus",5349
+"2280","Staphylothermus marinus",5214
+"921","Starkeya novella",5049
+"34105","Streptobacillus moniliformis",3974
+"1328","Streptococcus anginosus",8308
+"315405","Streptococcus gallolyticus",2364
+"28037","Streptococcus mitis",1786
+"1348","Streptococcus parauberis",4566
+"257758","Streptococcus pseudopneumoniae",583
+"1349","Streptococcus uberis",4850
+"29303","Streptomyces cattleya",9008
+"1902","Streptomyces coelicolor",11099
+"1169025","Streptomyces pratensis",8580
+"1930","Streptomyces scabiei",3569
+"2285","Sulfolobus acidocaldarius",5393
+"309806","Sulfurihydrogenibium azorense",4000
+"32046","Synechococcus elongatus",246
+"64471","Synechococcus sp. CC9311",5594
+"316279","Synechococcus sp. CC9902",5749
+"321327","Synechococcus sp. JA-3-3Ab",5575
+"32049","Synechococcus sp. PCC 7002",36850
+"84588","Synechococcus sp. WH 8102",1665
+"119484","Syntrophobacter fumaroxidans",5911
+"51197","Syntrophobotulus glycolicus",5684
+"863","Syntrophomonas wolfei",5759
+"86170","Syntrophothermus lipocalidus",5926
+"316277","Syntrophus aciditrophicus",5906
+"84590","Taylorella asinigenitalis",5377
+"499229","Tepidanaerobacter acetatoxydans",5276
+"870903","Terriglobus saanensis",5966
+"51669","Tetragenococcus halophilus",4997
+"85643","Thauera sp. MZ1T",5359
+"81462","Thermanaerovibrio acidaminovorans",5827
+"863643","Thermincola potens",3051
+"108150","Thermoanaerobacter italicus",1098
+"583357","Thermoanaerobacter mathranii",808
+"496866","Thermoanaerobacter pseudethanolicus",6
+"399726","Thermoanaerobacter sp. X514",1
+"46354","Thermoanaerobacter wiegelii",1313
+"2021","Thermobifida fusca",5701
+"55802","Thermococcus barophilus",10442
+"172049","Thermococcus sibiricus",5232
+"1042877","Thermococcus sp. 4557",5528
+"171695","Thermodesulfatator indicus",5598
+"500","Thermomicrobium roseum",11899
+"184117","Thermoproteus uzoniensis",5921
+"291990","Thermosediminibacter oceani",5821
+"2421","Thermosipho africanus",3733
+"46541","Thermosipho melanesiensis",4067
+"146786","Thermosynechococcus elongatus",5600
+"93930","Thermotoga naphthophila",663
+"126740","Thermotoga sp. RQ2",665
+"37636","Thermus scotoductus",2735
+"1111069","Thermus sp. CCB_US3_UF1",10140
+"274","Thermus thermophilus",7635
+"396595","Thioalkalivibrio sp. K90mix",1231
+"426114","Thiomonas arsenitoxydans",9608
+"43948","Tolumonas auensis",5647
+"81028","Treponema brennaborense",5856
+"215591","Treponema caldarium",5764
+"158","Treponema denticola",5099
+"160","Treponema pallidum",2324
+"53435","Treponema paraluiscuniculi",2109
+"88058","Treponema primitia",5823
+"1206","Trichodesmium erythraeum",4673
+"332249","Truepera radiovictrix",5841
+"2061","Tsukamurella paurometabola",11158
+"2130","Ureaplasma urealyticum",2678
+"364317","Verminephrobacter eiseniae",11363
+"1003110","Verrucosispora maris",10453
+"663","Vibrio alginolyticus",12588
+"55601","Vibrio anguillarum",2031
+"150340","Vibrio antiquarius",1908
+"680","Vibrio campbellii",9382
+"29494","Vibrio furnissii",100000
+"28173","Vibrio nigripulchritudo",100000
+"164451","Vulcanisaeta distributa",5718
+"71667","Waddlia chondrophila",10960
+"80849","Wolbachia endosymbiont of Brugia malayi",4694
+"66084","Wolbachia sp. wRi",18
+"844","Wolinella succinogenes",5848
+"339","Xanthomonas campestris",4828
+"346","Xanthomonas citri",100256
+"456327","Xanthomonas euvesicatoria",8701
+"40576","Xenorhabdus bovienii",5322
+"630","Yersinia enterocolitica",8349
+"633","Yersinia pseudotuberculosis",11557
+"63186","Zobellia galactanivorans",5782
+"542","Zymomonas mobilis",5785

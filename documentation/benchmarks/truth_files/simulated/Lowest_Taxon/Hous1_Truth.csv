@@ -1,0 +1,113 @@
+Identifier,Lowest_Rank,Lowest_NCBI_TaxID,Lowest_NCBI_Tax_Name,GenBank_ID,Reads
+ds-hous1_01,Strain_No_Rank,1421011,Lactobacillus acidophilus CFH,NZ_AYUB01000008.1,2669
+ds-hous1_01,Strain_No_Rank,1421011,Lactobacillus acidophilus CFH,NZ_AYUB01000010.1,9365
+ds-hous1_01,Strain_No_Rank,1421011,Lactobacillus acidophilus CFH,NZ_AYUB01000009.1,12966
+ds-hous1_02,Strain_No_Rank,525318,Lactobacillus buchneri ATCC 11577,NZ_GG669710.1,14815
+ds-hous1_03,Strain_No_Rank,511437,Lactobacillus buchneri NRRL B-30929,NC_015428.1,10185
+ds-hous1_04,Strain_No_Rank,883092,Lactobacillus crispatus FB077-07,NZ_JH932272.1,25000
+ds-hous1_05,Strain_No_Rank,1269760,Lactobacillus delbrueckii subsp. lactis CRL581,NZ_KE145374.1,25000
+ds-hous1_06,Strain_No_Rank,1408443,Lactobacillus fermentum NB-22,NZ_KI546224.1,963
+ds-hous1_06,Strain_No_Rank,1408443,Lactobacillus fermentum NB-22,NZ_KI546221.1,7091
+ds-hous1_06,Strain_No_Rank,1408443,Lactobacillus fermentum NB-22,NZ_KI546223.1,8384
+ds-hous1_06,Strain_No_Rank,1408443,Lactobacillus fermentum NB-22,NZ_KI546222.1,8562
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000083.1,3625
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000084.1,1880
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000085.1,1741
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000086.1,3383
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000087.1,885
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000088.1,3484
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000089.1,715
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000090.1,2916
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000091.1,323
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000092.1,626
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000093.1,1367
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000094.1,1053
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000095.1,723
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000096.1,512
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000097.1,732
+ds-hous1_07,Strain_No_Rank,1226336,Lactobacillus helveticus CIRM-BIA 101,NZ_CBUN010000098.1,1035
+ds-hous1_08,Strain_No_Rank,525330,Lactobacillus johnsonii ATCC 33200,NZ_AZCY01000003.1,25000
+ds-hous1_09,Strain_No_Rank,1033837,Lactobacillus kefiranofaciens ZW3,NC_015602.1,25000
+ds-hous1_10,Strain_No_Rank,1327988,Lactobacillus plantarum 16,NC_021514.1,25000
+ds-hous1_11,Strain_No_Rank,927703,Lactobacillus reuteri ATCC 53608,NZ_FR854363.1,25000
+ds-hous1_12,Strain_No_Rank,1203258,Lactobacillus rhamnosus LRHMDP2,NZ_AMQW01000002.1,25000
+ds-hous1_13,Strain_No_Rank,525362,Lactobacillus ruminis ATCC 25644,NZ_GL833109.1,25000
+ds-hous1_14,Strain_No_Rank,394221,Maricaulis maris MCS10,NC_008347.1,25000
+ds-hous1_15,Strain_No_Rank,398580,Dinoroseobacter shibae DFL 12 = DSM 16493,NC_009952.1,25000
+ds-hous1_16,Species,290400,Jannaschia sp. CCS1,NC_007802.1,25000
+ds-hous1_17,Strain_No_Rank,391626,Octadecabacter antarcticus 307,NC_020911.1,25000
+ds-hous1_18,Strain_No_Rank,383629,Phaeobacter inhibens 2.10,NC_018286.1,25000
+ds-hous1_19,Species,911045,Pseudovibrio sp. FO-BEG1,NC_016642.1,25000
+ds-hous1_20,Strain_No_Rank,272942,Rhodobacter capsulatus SB 1003,NC_014034.1,25000
+ds-hous1_21,Strain_No_Rank,272943,Rhodobacter sphaeroides 2.4.1,NC_007493.2,25000
+ds-hous1_22,Strain_No_Rank,391595,Roseobacter litoralis Och 149,NC_015730.1,25000
+ds-hous1_23,Strain_No_Rank,322710,Azotobacter vinelandii DJ,NC_012560.1,25000
+ds-hous1_24,Strain_No_Rank,208964,Pseudomonas aeruginosa PAO1,NC_002516.2,2103
+ds-hous1_25,Strain_No_Rank,208963,Pseudomonas aeruginosa UCBPP-PA14,NC_008463.1,22897
+ds-hous1_26,Strain_No_Rank,399739,Pseudomonas mendocina ymp,NC_009439.1,25000
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000042.1,74
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000039.1,221
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000037.1,964
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000038.1,1083
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000040.1,1083
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000041.1,3078
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000043.1,6416
+ds-hous1_27,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000044.1,12081
+ds-hous1_28,Strain_No_Rank,220664,Pseudomonas protegens Pf-5,NC_004129.6,25000
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000080.1,47
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000072.1,59
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000079.1,287
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000074.1,661
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000073.1,781
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000076.1,1146
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000075.1,2559
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000078.1,3138
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000081.1,3988
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000077.1,4762
+ds-hous1_29,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000071.1,7572
+ds-hous1_30,Strain_No_Rank,1210443,Pseudomonas stutzeri T13,NZ_ALJB01000013.1,1480
+ds-hous1_30,Strain_No_Rank,1210443,Pseudomonas stutzeri T13,NZ_ALJB01000015.1,2078
+ds-hous1_30,Strain_No_Rank,1210443,Pseudomonas stutzeri T13,NZ_ALJB01000016.1,8427
+ds-hous1_30,Strain_No_Rank,1210443,Pseudomonas stutzeri T13,NZ_ALJB01000014.1,13015
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000141.1,3
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000144.1,49
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000179.1,70
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000163.1,155
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000175.1,216
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000166.1,263
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_JH600699.1,296
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000150.1,364
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000155.1,368
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_JH600703.1,398
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000172.1,439
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000142.1,487
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000164.1,532
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000171.1,562
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000180.1,568
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000168.1,625
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000177.1,686
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000162.1,751
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000165.1,857
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000154.1,1058
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000145.1,1088
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000167.1,1188
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_JH600702.1,1248
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_JH600701.1,1525
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000146.1,1595
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000161.1,1853
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000176.1,2225
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_AGNP01000143.1,2238
+ds-hous1_31,Strain_No_Rank,1094177,Pseudomonas syringae pv. actinidiae KW41,NZ_JH600700.1,3293
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000027.1,324
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000022.1,341
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000020.1,393
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000026.1,489
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000019.1,532
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000028.1,869
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000024.1,969
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000021.1,1666
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000025.1,1966
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000016.1,2342
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000018.1,3456
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000023.1,4812
+ds-hous1_32,Strain_No_Rank,875329,Pseudomonas savastanoi pv. glycinea str. B076,NZ_AEGG01000017.1,6841

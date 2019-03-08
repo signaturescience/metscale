@@ -1,0 +1,122 @@
+Identifier,Lowest_Rank,Lowest_NCBI_TaxID,Lowest_NCBI_Tax_Name,GenBank_ID,Reads
+ds-gut_01,Strain_No_Rank,411466,Actinomyces odontolyticus ATCC 17982,NZ_DS264586.1,25000
+ds-gut_02,Strain_No_Rank,765105,Propionibacterium acnes HL001PA1,NZ_GL383101.1,4413
+ds-gut_02,Strain_No_Rank,765105,Propionibacterium acnes HL001PA1,NZ_GL383102.1,6132
+ds-gut_03,Strain_No_Rank,765115,Propionibacterium acnes HL002PA1,NZ_GL383103.1,86
+ds-gut_03,Strain_No_Rank,765115,Propionibacterium acnes HL002PA1,NZ_GL383104.1,852
+ds-gut_03,Strain_No_Rank,765115,Propionibacterium acnes HL002PA1,NZ_GL383106.1,2446
+ds-gut_03,Strain_No_Rank,765115,Propionibacterium acnes HL002PA1,NZ_GL383107.1,11071
+ds-gut_04,Strain_No_Rank,435590,Bacteroides vulgatus ATCC 8482,NC_009614.1,25000
+ds-gut_05,Strain_No_Rank,243230,Deinococcus radiodurans R1,NC_001263.1,25000
+ds-gut_06,Strain_No_Rank,526973,Bacillus cereus m1293,NZ_CM000714.1,25000
+ds-gut_07,Strain_No_Rank,393123,Listeria monocytogenes FSL N1-017,NZ_AARP04000029.1,879
+ds-gut_07,Strain_No_Rank,393123,Listeria monocytogenes FSL N1-017,NZ_AARP04000026.1,6132
+ds-gut_07,Strain_No_Rank,393123,Listeria monocytogenes FSL N1-017,NZ_AARP04000028.1,7500
+ds-gut_07,Strain_No_Rank,393123,Listeria monocytogenes FSL N1-017,NZ_AARP04000027.1,10489
+ds-gut_08,Strain_No_Rank,93062,Staphylococcus aureus subsp. aureus COL,NC_002951.2,25000
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696845.1,21
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696843.1,27
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696846.1,44
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696842.1,48
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696834.1,49
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696827.1,109
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696819.1,113
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696836.1,119
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696829.1,122
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696837.1,129
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696814.1,130
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696833.1,140
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696828.1,157
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696817.1,183
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696824.1,200
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696818.1,209
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696821.1,210
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696808.1,213
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696809.1,225
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696830.1,226
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696812.1,236
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696816.1,239
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696825.1,259
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696810.1,350
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696813.1,357
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696823.1,358
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696826.1,471
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696832.1,3808
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696803.1,5645
+ds-gut_09,Strain_No_Rank,525376,Staphylococcus epidermidis W23144,NZ_GG696805.1,10603
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454396.1,26
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454400.1,35
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454403.1,94
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454401.1,378
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454404.1,1904
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454395.1,3398
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454399.1,9328
+ds-gut_10,Strain_No_Rank,749498,Enterococcus faecalis TX0027,NZ_GL454397.1,9837
+ds-gut_11,Strain_No_Rank,1403312,Lactobacillus gasseri 130918,NZ_CP006809.1,25000
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000057.1,56
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000052.1,296
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000060.1,700
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000058.1,702
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000055.1,796
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000054.1,1539
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000053.1,1572
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000059.1,3429
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000061.1,5885
+ds-gut_12,Strain_No_Rank,1154870,Streptococcus agalactiae MRI Z1-039,NZ_ALSA01000056.1,10025
+ds-gut_13,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000080.1,2324
+ds-gut_13,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000079.1,3972
+ds-gut_13,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000081.1,4099
+ds-gut_13,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000082.1,4748
+ds-gut_13,Strain_No_Rank,1074120,Streptococcus mutans TCI-125,NZ_AGKM01000078.1,9857
+ds-gut_14,Strain_No_Rank,516950,Streptococcus pneumoniae CGSP14,NC_010582.1,25000
+ds-gut_15,Strain_No_Rank,290402,Clostridium beijerinckii NCIMB 8052,NC_009617.1,25000
+ds-gut_16,Strain_No_Rank,272943,Rhodobacter sphaeroides 2.4.1,NC_007493.2,25000
+ds-gut_17,Strain_No_Rank,630588,Neisseria meningitidis alpha710,NC_017505.1,25000
+ds-gut_18,Strain_No_Rank,637913,Helicobacter pylori v225d,NC_017355.1,25000
+ds-gut_19,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013364.1,25000
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000271.1,18
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000270.1,37
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000263.1,49
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000265.1,89
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000231.1,121
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000250.1,176
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000252.1,178
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000237.1,179
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000244.1,179
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000245.1,190
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000258.1,218
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000255.1,237
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000246.1,259
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000241.1,260
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000232.1,264
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000236.1,329
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000234.1,360
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000262.1,420
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000242.1,436
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000276.1,447
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000238.1,448
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000257.1,454
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000243.1,458
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000272.1,492
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000251.1,500
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000233.1,541
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000240.1,601
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000266.1,610
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000269.1,623
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000256.1,665
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000273.1,683
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000254.1,748
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000247.1,785
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000235.1,824
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000264.1,913
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000253.1,950
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000274.1,1099
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000260.1,1126
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000261.1,1128
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000259.1,1198
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000248.1,1268
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000249.1,1280
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000268.1,1393
+ds-gut_20,Strain_No_Rank,710094,Acinetobacter baumannii AB056,NZ_ADGZ01000267.1,1767
+ds-gut_21,Strain_No_Rank,983918,Pseudomonas aeruginosa HB13,NZ_AEVV03000001.1,18223
+ds-gut_22,Strain_No_Rank,208964,Pseudomonas aeruginosa PAO1,NC_002516.2,6777

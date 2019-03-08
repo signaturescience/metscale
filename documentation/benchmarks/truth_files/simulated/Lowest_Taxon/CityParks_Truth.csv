@@ -1,0 +1,100 @@
+Identifier,Lowest_Rank,Lowest_NCBI_TaxID,Lowest_NCBI_Tax_Name,GenBank_ID,Reads
+ds-cityparks_01,Strain_No_Rank,204669,Candidatus Koribacter versatilis Ellin345,NC_008009.1,25000
+ds-cityparks_02,Strain_No_Rank,682795,Granulicella mallensis MP5ACTX8,NC_016631.1,25000
+ds-cityparks_03,Strain_No_Rank,1198114,Granulicella tundricola MP5ACTX9,NC_015058.1,8420
+ds-cityparks_03,Strain_No_Rank,1198114,Granulicella tundricola MP5ACTX9,NC_015057.1,16580
+ds-cityparks_04,Strain_No_Rank,234267,Candidatus Solibacter usitatus Ellin6076,NC_008536.1,25000
+ds-cityparks_05,Strain_No_Rank,479433,Catenulispora acidiphila DSM 44928,NC_013131.1,25000
+ds-cityparks_06,Strain_No_Rank,246196,Mycobacterium smegmatis str. MC2 155,NC_008596.1,25000
+ds-cityparks_07,Strain_No_Rank,1133849,Nocardia brasiliensis ATCC 700358,NC_018681.1,25000
+ds-cityparks_08,Strain_No_Rank,632772,Rhodococcus opacus B4,NC_012522.1,25000
+ds-cityparks_09,Strain_No_Rank,326424,Frankia alni ACN14a,NC_008278.1,25000
+ds-cityparks_10,Strain_No_Rank,443906,Clavibacter michiganensis subsp. michiganensis NCPPB 382,NC_009480.1,25000
+ds-cityparks_11,Strain_No_Rank,653045,Streptomyces violaceusniger Tu 4113,NC_015957.1,25000
+ds-cityparks_12,Strain_No_Rank,479432,Streptosporangium roseum DSM 43021,NC_013595.1,25000
+ds-cityparks_13,Strain_No_Rank,309807,Salinibacter ruber DSM 13855,NC_007677.1,25000
+ds-cityparks_14,Strain_No_Rank,997883,Bacteroides fragilis CL07T12C05,NZ_JH724215.1,25000
+ds-cityparks_15,Strain_No_Rank,435590,Bacteroides vulgatus ATCC 8482,NC_009614.1,25000
+ds-cityparks_16,Strain_No_Rank,553174,Prevotella melaninogenica ATCC 25845,NC_014370.1,25000
+ds-cityparks_17,Strain_No_Rank,435591,Parabacteroides distasonis ATCC 8503,NC_009615.1,25000
+ds-cityparks_18,Strain_No_Rank,880070,Cyclobacterium marinum DSM 745,NC_015914.1,25000
+ds-cityparks_19,Strain_No_Rank,471854,Dyadobacter fermentans DSM 18053,NC_013037.1,25000
+ds-cityparks_20,Strain_No_Rank,867900,Cellulophaga lytica DSM 7489,NC_015167.1,25000
+ds-cityparks_21,Species,96345,Flavobacterium psychrophilum,NZ_JRWE01000114.1,3082
+ds-cityparks_21,Species,96345,Flavobacterium psychrophilum,NZ_JRWE01000116.1,5024
+ds-cityparks_21,Species,96345,Flavobacterium psychrophilum,NZ_JRWE01000115.1,6780
+ds-cityparks_21,Species,96345,Flavobacterium psychrophilum,NZ_JRWE01000113.1,10114
+ds-cityparks_22,Strain_No_Rank,655815,Zunongwangia profunda SM-A87,NC_014041.1,25000
+ds-cityparks_23,Strain_No_Rank,760192,Haliscomenobacter hydrossis DSM 1100,NC_015510.1,25000
+ds-cityparks_24,Strain_No_Rank,485917,Pedobacter heparinus DSM 2366,NC_013061.1,25000
+ds-cityparks_25,Strain_No_Rank,762903,Pseudopedobacter saltans DSM 12145,NC_015177.1,25000
+ds-cityparks_26,Strain_No_Rank,575540,Isosphaera pallida ATCC 43644,NC_014962.1,25000
+ds-cityparks_27,Strain_No_Rank,886293,Singulisphaera acidiphila DSM 18658,NC_019892.1,25000
+ds-cityparks_28,Strain_No_Rank,521674,Planctopirus limnophila DSM 3776,NC_014148.1,25000
+ds-cityparks_29,Strain_No_Rank,991778,Rhodopirellula baltica WH47,NZ_AFAR01000298.1,330
+ds-cityparks_29,Strain_No_Rank,991778,Rhodopirellula baltica WH47,NZ_AFAR01000295.1,523
+ds-cityparks_29,Strain_No_Rank,991778,Rhodopirellula baltica WH47,NZ_AFAR01000297.1,885
+ds-cityparks_29,Strain_No_Rank,991778,Rhodopirellula baltica WH47,NZ_AFAR01000299.1,1477
+ds-cityparks_29,Strain_No_Rank,991778,Rhodopirellula baltica WH47,NZ_AFAR01000296.1,7081
+ds-cityparks_29,Strain_No_Rank,991778,Rhodopirellula baltica WH47,NZ_AFAR01000294.1,14704
+ds-cityparks_30,Strain_No_Rank,756272,Rubinisphaera brasiliensis DSM 5305,NC_015174.1,25000
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000135.1,314
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000133.1,418
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000131.1,1136
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000132.1,1487
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000136.1,1492
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000013.1,2639
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000134.1,2848
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000137.1,4406
+ds-cityparks_31,Species,1076,Rhodopseudomonas palustris,NZ_LCZM01000130.1,10260
+ds-cityparks_32,Strain_No_Rank,509190,Caulobacter segnis ATCC 21756,NC_014100.1,25000
+ds-cityparks_33,Strain_No_Rank,488538,Candidatus Puniceispirillum marinum IMCC1322,NC_014010.1,25000
+ds-cityparks_34,Strain_No_Rank,991905,Polymorphum gilvum SL003B-26A1,NC_015259.1,25000
+ds-cityparks_35,Strain_No_Rank,935554,Rhizobium leguminosarum bv. viciae WSM1481,NZ_AQUM01000001.1,25000
+ds-cityparks_36,Strain_No_Rank,574556,Anaplasma centrale str. Israel,NC_013532.1,25000
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000091.1,52
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000097.1,102
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000076.1,114
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000078.1,124
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000090.1,166
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000092.1,205
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000087.1,214
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000075.1,354
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000081.1,355
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000089.1,411
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000080.1,492
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000082.1,966
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000095.1,1009
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000094.1,1067
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000085.1,1195
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000088.1,1202
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000077.1,1260
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000096.1,1410
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000079.1,2239
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000083.1,2242
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000093.1,2752
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000084.1,3239
+ds-cityparks_37,Strain_No_Rank,1167689,Burkholderia cenocepacia PT15,NZ_AXZX01000086.1,3830
+ds-cityparks_38,Species,34073,Variovorax paradoxus,NZ_LKTW01000003.1,482
+ds-cityparks_38,Species,34073,Variovorax paradoxus,NZ_LKTW01000004.1,24518
+ds-cityparks_39,Species,35,Myxococcus macrosporus,NC_015711.1,25000
+ds-cityparks_40,Strain_No_Rank,448385,Sorangium cellulosum So ce56,NC_010162.1,25000
+ds-cityparks_41,Strain_No_Rank,637913,Helicobacter pylori v225d,NC_017355.1,25000
+ds-cityparks_42,Strain_No_Rank,529120,Alteromonas macleodii ATCC 27126,NC_018632.1,25000
+ds-cityparks_43,Strain_No_Rank,585396,Escherichia coli O111:H- str. 11128,NC_013364.1,25000
+ds-cityparks_44,Strain_No_Rank,1016998,Salmonella enterica subsp. enterica serovar Paratyphi B str. SPB7,NC_010102.1,25000
+ds-cityparks_45,Strain_No_Rank,208964,Pseudomonas aeruginosa PAO1,NC_002516.2,25000
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000023.1,90
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000026.1,284
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000027.1,587
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000025.1,1637
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000024.1,2723
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000022.1,8952
+ds-cityparks_46,Strain_No_Rank,564420,Pseudomonas fluorescens NZ011,NZ_AJXJ01000028.1,10727
+ds-cityparks_47,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000050.1,1992
+ds-cityparks_47,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000051.1,2844
+ds-cityparks_47,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000049.1,4629
+ds-cityparks_47,Strain_No_Rank,1193499,Pseudomonas putida SJTE-1,NZ_AKCL01000052.1,15535
+ds-cityparks_48,Strain_No_Rank,1235458,Stenotrophomonas maltophilia AU12-09,NZ_APIT01000026.1,3446
+ds-cityparks_48,Strain_No_Rank,1235458,Stenotrophomonas maltophilia AU12-09,NZ_APIT01000027.1,6096
+ds-cityparks_48,Strain_No_Rank,1235458,Stenotrophomonas maltophilia AU12-09,NZ_APIT01000025.1,15458
