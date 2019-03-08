@@ -140,7 +140,7 @@ config_default = {
             "qual"          : ["2","30"],
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix" : "_scaled{scale}k.{kvalues}.sig",
+            "sig_suffix" : "_scaled{scale}.k{kvalues}.sig",
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
             "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
