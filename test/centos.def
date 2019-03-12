@@ -1,0 +1,49 @@
+Bootstrap: yum
+OSVersion: 6
+MirrorURL: http://mirror.centos.org/centos-6/6.10/os/$basearch
+Include: yum
+
+
+%post
+	yum -y install epel-release libarchive-devel squashfs-tools
+	yum -y install git python-pip wget gcc bzip2 tar python3-pip
+
+	
+	mkdir /metag
+	cd /metag	
+	git clone https://github.com/signaturescience/metagenomics.git
+	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
+	bash Miniconda3-latest-Linux-x86_64.sh -b -p/metag/miniconda3
+	bash rm Miniconda3-latest-Linux-x86_64.sh
+	PATH="/metag/miniconda3/bin:$PATH"
+	conda config --add channels r
+	conda config --add channels defaults
+	conda config --add channels conda-forge
+	conda config --add channels bioconda
+	conda create -y --name metag
+	conda install datrie -y
+	conda install snakemake -y
+	conda install r-base -y
+
+	. /metag/miniconda3/bin/activate metag
+	pip install osfclient
+	
+	
+	wget https://github.com/singularityware/singularity/releases/download/2.6.1/singularity-2.6.1.tar.gz &&\
+		tar xvf singularity-2.6.1.tar.gz &&\
+		cd singularity-2.6.1 &&\
+		./configure --prefix=/usr/local --sysconfdir=/etc &&\
+		make &&\
+		make install
+	rm singularity-2.6.1.tar.gz
+
+%environment	
+	export LC_ALL=C
+	export PATH=/metag/miniconda3/bin:$PATH
+	export SINGULARITY_BINDPATH="data:/tmp"
+	
+	
+%environment
+	export LC_ALL=C
+	export PATH=/metag/miniconda3/bin:$PATH
+	export SINGULARITY_BINDPATH="data:/tmp"
