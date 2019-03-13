@@ -215,6 +215,7 @@ config_default = {
             "url"  : "http://kaiju.binf.ku.dk/database",
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
             "out"  : "{sample}_trim{qual}.kaiju.out",
+            "contig_out" : "{sample}_trim{qual}_{assembler}.kaiju.out",
             "threads" : 8
         },
 

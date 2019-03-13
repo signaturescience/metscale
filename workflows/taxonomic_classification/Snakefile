@@ -240,7 +240,8 @@ def run_kaiju_output(wildcards):
     run_kaiju_output_file_wc = run_kaiju_output_file_sing.format(**wildcards)
     return run_kaiju_output_file_wc
 
-
+print("run_kaiju_input_files/run_kaiju: "+str(run_kaiju_input_files))
+print("run_kaiju_output_file/run_kaiju: "+str(run_kaiju_output_file))
 rule run_kaiju:
     """
     Run kaiju after downloading and unpacking the kaiju database. 
@@ -268,6 +269,54 @@ rule run_kaiju:
         '-i /{params.fq_fwd_wc} '
         '-j /{params.fq_rev_wc} '
         '-o /{params.run_kaiju_output_file_wc} '
+        '-z {threads}'
+
+
+
+
+############################################
+# Taxonomic Classification: run kaiju on contigs
+run_kaiju_contig_input_file = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+run_kaiju_contig_input_file_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+
+
+run_kaiju_contigs_output_file = join(data_dir, taxclass['kaiju']['contig_out'])
+run_kaiju_contigs_output_file_sing = join(sing_dir, taxclass['kaiju']['contig_out'])
+
+def run_contigs_output_sing(wildcards):
+    kaiju_output_sing = run_kaiju_contigs_output_file_sing.format(**wildcards)
+    return kaiju_output_sing
+
+def run_contigs_input_sing(wildcards):
+    kaiju_input_sing = run_kaiju_contig_input_file_sing.format(**wildcards)
+    return kaiju_input_sing
+
+
+rule run_contigs_kaiju:
+    """
+    Run kaiju after downloading and unpacking the kaiju database. 
+    """
+    input:
+        run_kaiju_contig_input_file
+    output:
+        run_kaiju_contigs_output_file
+    message: 
+        '''--- Running kaiju.'''
+    singularity: 
+        kaiju_image
+    threads:
+        tax_class_kaiju_threads
+    params:
+        fq_fwd_wc = run_contigs_input_sing,
+        run_contigs_kaiju_output_file_wc = run_contigs_output_sing
+    shell:
+        'kaiju '
+        '-x '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-f /{kaiju_fmi_sing} '
+        '-i /{params.fq_fwd_wc} '
+        '-o /{params.run_contigs_kaiju_output_file_wc} '
         '-z {threads}'
 
 
@@ -435,6 +484,8 @@ def kaiju_report_output_name(wildcards):
     kaiju_report_out = kaiju_report_output_file_sing.format(**wildcards)
     return kaiju_report_out
 
+print("kaiju_report_input_files: "+str(kaiju_report_input_files))
+print("kaiju_report_output_file:" +str(kaiju_report_output_file))
 rule kaiju_report:
     """
     Generate a kaiju report from kaiju results
@@ -458,6 +509,67 @@ rule kaiju_report:
         '-i /{params.kaiju_report_input_wc} '
         '-r {tax_rank} '
         '-o /{params.kaiju_report_output_wc} '
+
+
+#################################################
+#
+#
+#
+#
+#
+#
+#
+###############################################
+# Taxonomic Classification: kaiju report for contigs
+
+kaiju_contigs_report_input_file = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+kaiju_contigs_report_input_file_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+#kaiju_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
+
+run_kaiju_contigs_output_file = join(data_dir, taxclass['kaiju']['contig_out'])
+run_kaiju_output_contigs_file_sing = join(sing_dir, taxclass['kaiju']['contig_out'])
+
+
+kaiju_contigs_report_output_file = re.sub(r'\.out','_genus.summary',run_kaiju_contigs_output_file)
+kaiju_contigs_report_output_file_sing = re.sub(r'\.out','_genus.summary',run_kaiju_output_contigs_file_sing)
+tax_rank = taxclass['kaiju_report']['taxonomic_rank']
+
+def kaiju_report_input_name(wildcards):
+    kaiju_report_in = run_kaiju_output_file_sing.format(**wildcards)
+    return kaiju_report_in
+
+def kaiju_report_output_name(wildcards):
+    kaiju_report_out = kaiju_contigs_report_output_file_sing.format(**wildcards)
+    return kaiju_report_out
+
+print("kaiju_contigs_report_input_file: "+str(kaiju_contigs_report_input_file))
+print("kaiju_contigs_report_output_file: "+str(kaiju_contigs_report_output_file))
+
+rule kaiju_contigs_report:
+    """
+    Generate a kaiju report from kaiju results
+    """
+    input:
+        kaiju_contigs_report_input_file
+    output:
+        kaiju_contigs_report_output_file
+    message: 
+        '''--- Generating a kaiju report.'''
+    singularity:
+        kaiju_image
+    params:
+        kaiju_report_input_wc = kaiju_report_input_name,
+        kaiju_report_output_wc = kaiju_report_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-i /{params.kaiju_report_input_wc} '
+        '-r {tax_rank} '
+        '-o /{params.kaiju_report_output_wc} '
+
+
 
 
 
@@ -754,12 +866,23 @@ rule taxclass_gather_workflow:
 
 rule taxclass_kaijureport_workflow:
     """
-    Run kaiju and generate a report from all results.
+    Run kaiju and generate a report from all (except contigs)results.
     """
     input:
         expand( kaiju_report_output_file,
                 sample = workflows['taxonomic_classification_kaijureport_workflow']['sample'],
                 qual = workflows['taxonomic_classification_kaijureport_workflow']['qual']
+        )
+
+rule taxclass_kaijureport_contigs_workflow:
+    """
+    Run kaiju and generate a report from all contigs results.
+    """
+    input:
+        expand( kaiju_contigs_report_output_file,
+                sample = workflows['taxonomic_classification_kaijureport_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_contigs_workflow']['assembler']
         )
 
 

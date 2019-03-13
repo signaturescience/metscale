@@ -59,6 +59,12 @@ config_default = {
             "qual" : ["2","30"],
         },
 
+        "taxonomic_classification_kaijureport_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]   
+        },
+
         "taxonomic_classification_kaijureport_filtered_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
