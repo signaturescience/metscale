@@ -7,26 +7,29 @@ Include: yum
 %post
 	yum -y install epel-release libarchive-devel squashfs-tools
 	yum -y install git python-pip wget gcc bzip2 tar python3-pip
-
+ 	yum -y install libXrender
+ 	yum -y install libXext
 	
 	mkdir /metag
 	cd /metag	
 	git clone https://github.com/signaturescience/metagenomics.git
 	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
 	bash Miniconda3-latest-Linux-x86_64.sh -b -p/metag/miniconda3
-	bash rm Miniconda3-latest-Linux-x86_64.sh
+	rm Miniconda3-latest-Linux-x86_64.sh
 	PATH="/metag/miniconda3/bin:$PATH"
+	conda create -y --name metag
+    . /metag/miniconda3/bin/activate metag
 	conda config --add channels r
 	conda config --add channels defaults
 	conda config --add channels conda-forge
 	conda config --add channels bioconda
-	conda create -y --name metag
 	conda install datrie -y
 	conda install snakemake -y
-	conda install r-base -y
-
-	. /metag/miniconda3/bin/activate metag
+	conda install -c r r-base -y
+ 	conda install -c r r-essentials -y 
+ 	conda install -c r r-ggplot2 -y
 	pip install osfclient
+	ln -s /bin/sed /usr/bin/sed
 	
 	
 	wget https://github.com/singularityware/singularity/releases/download/2.6.1/singularity-2.6.1.tar.gz &&\
