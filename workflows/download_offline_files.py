@@ -95,6 +95,7 @@ def main_func(user_input, install_dir, file_list='config/offline_downloads.json'
     else:
         for workflow in user_input:
             download_file(workflow, data, install_dir)
+
         
         
 if __name__ == '__main__':
