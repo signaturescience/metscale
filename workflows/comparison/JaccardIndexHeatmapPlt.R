@@ -1,4 +1,3 @@
-.libPaths( c( .libPaths(), "../resources/packages/"))
 library("ggplot2")
 library("stringr")
 
