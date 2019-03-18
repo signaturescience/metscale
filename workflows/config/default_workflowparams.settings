@@ -229,6 +229,11 @@ config_default = {
             "pct_threshold"  : 1
         },
 
+        "contigs_kaiju_report" : {
+            "contigs_taxonomic_rank" : "genus",
+            "contigs_pct_threshold" : 1
+        },
+
         "sourmash" : { 
             #
             # URL base for SBT tree
