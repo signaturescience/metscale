@@ -591,8 +591,8 @@ def kaiju_filtered_report_output_name(wildcards):
     kaiju_filtered_report_out = kaiju_filtered_report_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
 
-print("kaiju_filtered_report_input_files: "+str(kaiju_filtered_report_input_files))
-print("kaiju_filtered_report_output_file: "+str(kaiju_filtered_report_output_file))
+#print("kaiju_filtered_report_input_files: "+str(kaiju_filtered_report_input_files))
+#print("kaiju_filtered_report_output_file: "+str(kaiju_filtered_report_output_file))
 rule kaiju_filtered_report:
     """
     Generate a kaiju report from *all* kaiju results,
@@ -641,8 +641,8 @@ def kaiju_filtered_report_output_name(wildcards):
     kaiju_filtered_report_out = kaiju_filtered_report_contigs_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
 
-print("kaiju_filtered_report_contigs_input_files: "+str(kaiju_filtered_report_contigs_input_files))
-print("kaiju_filtered_report_contigs_output_file: "+str(kaiju_filtered_report_contigs_output_file))
+#print("kaiju_filtered_report_contigs_input_files: "+str(kaiju_filtered_report_contigs_input_files))
+#print("kaiju_filtered_report_contigs_output_file: "+str(kaiju_filtered_report_contigs_output_file))
 rule kaiju_filtered_contigs_report:
     """
     Generate a kaiju report with contigs from *all* kaiju results,
@@ -688,6 +688,8 @@ def kaiju_filteredclass_report_output_name(wildcards):
     kaiju_filteredclass_report_out = kaiju_filteredclass_report_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_out
 
+print("kaiju_filteredclass_report_input_files: "+str(kaiju_filteredclass_report_input_files))
+print("kaiju_filteredclass_report_output_file: "+str(kaiju_filteredclass_report_output_file))
 rule kaiju_filteredclass_report:
     """
     Generate a kaiju report from *classified* kaiju results,
@@ -716,6 +718,57 @@ rule kaiju_filteredclass_report:
         '-o /{params.kaiju_filteredclass_report_output_wc} '
 
 
+#
+#
+#
+#
+#  we are here!
+###########################################
+# Taxonomic Classification: kaiju filtered and classified report from contigs 
+
+kaiju_filteredclass_contigs_report_suffix = '_genus_filtered{pct}_classified.summary'.format(
+            pct = filter_contigs_taxa_pct)
+
+kaiju_filteredclass_report_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+kaiju_filteredclass_report_contigs_output_file = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file)
+kaiju_filteredclass_report_contigs_output_file_sing = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file)
+
+def kaiju_filteredclass_report_contigs_input_name(wildcards):
+    kaiju_filteredclass_report_in = run_kaiju_output_file_sing.format(**wildcards)
+    return kaiju_filteredclass_report_in
+
+def kaiju_filteredclass_report_contigs_output_name(wildcards):
+    kaiju_filteredclass_report_out = kaiju_filteredclass_report_contigs_output_file_sing.format(**wildcards)
+    return kaiju_filteredclass_report_out
+
+print("kaiju_filteredclass_report_contigs_input_files: "+str(kaiju_filteredclass_report_contigs_input_files))
+print("kaiju_filteredclass_report_contigs_output_file: "+str(kaiju_filteredclass_report_contigs_output_file))
+rule kaiju_filteredclass_contigs_report:
+    """
+    Generate a kaiju report from *classified* kaiju results,
+    and filter taxa with a low (<X%) abundance.
+    """
+    input:
+        kaiju_filteredclass_report_contigs_input_files
+    output:
+        kaiju_filteredclass_report_contigs_output_file
+    message: 
+        '''--- Generating a kaiju report with filtered, classified taxa.'''
+    singularity:
+        kaiju_image
+    params:
+        kaiju_filteredclass_report_input_wc = kaiju_filteredclass_report_contigs_input_name,
+        kaiju_filteredclass_report_output_wc = kaiju_filteredclass_report_contigs_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-i /{params.kaiju_filteredclass_report_input_wc} '
+        '-r {contigs_tax_rank} '
+        '-m {filter_contigs_taxa_pct} '
+        '-u '
+        '-o /{params.kaiju_filteredclass_report_output_wc} '
 
 ############################################
 # Taxonomic Classification: generate krona HTML using all results
@@ -968,6 +1021,20 @@ rule taxclass_kaijureport_filteredclass_workflow:
                 sample = workflows['taxonomic_classification_kaijureport_filteredclass_workflow']['sample'],
                 qual = workflows['taxonomic_classification_kaijureport_filteredclass_workflow']['qual']
         )
+
+
+rule taxclass_kaijureport_contigs_filteredclass_workflow:
+    """
+    Run kaiju and generate a report from contigs filtered, classified
+    results (taxa with <X% abundance).
+    """
+    input:
+        expand( kaiju_filteredclass_report_contigs_output_file,
+                sample = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['assembler']
+        )
+
 
 rule taxclass_add_taxonnames_workflow:
     """
