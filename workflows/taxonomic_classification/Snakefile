@@ -1009,11 +1009,11 @@ visualize_krona_filtered_output_contigs_file_sing = re.sub(
 )
 
 
-def visualize_krona_filtered_input_func(wildcards):
-    return visualize_krona_filtered_input_file_sing.format(**wildcards)
+def visualize_krona_filtered_conitgs_input_func(wildcards):
+    return visualize_krona_filtered_contigs_input_file_sing.format(**wildcards)
 
-def visualize_krona_filtered_output_func(wildcards):
-    return visualize_krona_filtered_output_file_sing.format(**wildcards)
+def visualize_krona_filtered_contigs_output_func(wildcards):
+    return visualize_krona_filtered_output_contigs_file_sing.format(**wildcards)
 
 print("visualize_krona_filtered_contigs_input_file: "+str(visualize_krona_filtered_contigs_input_file))
 print("visualize_krona_filtered_contigs_output_file: "+str(visualize_krona_filtered_contigs_output_file))
@@ -1028,8 +1028,8 @@ rule visualize_krona_contigs_filtered:
     message:
         '''--- Creating krona report from filtered kaiju results.'''
     params:
-        visualize_krona_filtered_input_wc  = visualize_krona_filtered_input_func,
-        visualize_krona_filtered_output_wc = visualize_krona_filtered_output_func,
+        visualize_krona_filtered_input_wc  = visualize_krona_filtered_contigs_input_func,
+        visualize_krona_filtered_output_wc = visualize_krona_filtered_contigs_output_func,
     singularity:
         krona_image
     shell:
