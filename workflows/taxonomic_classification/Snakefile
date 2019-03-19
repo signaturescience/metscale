@@ -731,10 +731,10 @@ kaiju_filteredclass_contigs_report_suffix = '_genus_filtered{pct}_classified.sum
 
 kaiju_filteredclass_report_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
 kaiju_filteredclass_report_contigs_output_file = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file)
-kaiju_filteredclass_report_contigs_output_file_sing = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file)
+kaiju_filteredclass_report_contigs_output_file_sing = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file_sing)
 
 def kaiju_filteredclass_report_contigs_input_name(wildcards):
-    kaiju_filteredclass_report_in = run_kaiju_output_file_sing.format(**wildcards)
+    kaiju_filteredclass_report_in = run_kaiju_contigs_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_in
 
 def kaiju_filteredclass_report_contigs_output_name(wildcards):
@@ -753,7 +753,7 @@ rule kaiju_filteredclass_contigs_report:
     output:
         kaiju_filteredclass_report_contigs_output_file
     message: 
-        '''--- Generating a kaiju report with filtered, classified taxa.'''
+        '''--- Generating a kaiju report with filtered, classified taxa from contigs.'''
     singularity:
         kaiju_image
     params:
