@@ -92,6 +92,12 @@ config_default = {
             "qual" : ["2","30"],        
         },
 
+        "taxonomic_classification_add_taxonnames_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]       
+        },
+
         "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        

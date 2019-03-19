@@ -377,6 +377,59 @@ rule kaiju2krona:
 ############################################
 # Taxonomic Classification: kaiju add taxon names
 
+taxon_names_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+taxon_names_contigs_output_file = re.sub(r'\.out', '_names.out', run_kaiju_contigs_output_file)
+taxon_names_contigs_output_file_sing = re.sub(r'\.out', '_names.out', run_kaiju_contigs_output_file_sing)
+
+
+def taxon_names_contigs_input_file_sub(wildcards):
+    """
+    Wildcard substitution for (one of the) input files to the addTaxonNames
+    command. The other input files do not have wildcards, so it's only
+    the run_kaiju_output_file (which is the input to add taxon names) 
+    that requires wildcard substitution.
+    """
+    return run_kaiju_contigs_output_file_sing.format(**wildcards)
+
+def taxon_names_contigs_output_file_sub(wildcards):
+    """
+    Wildcard substitution of taxon names output.
+    The taxon names output is just the kaiju output name,
+    but replacing .out with .names.out.
+    """
+    return taxon_names_contigs_output_file_sing.format(**wildcards)
+
+print("taxon_names_contigs_input_files: "+str(taxon_names_contigs_input_files))
+print("taxon_names_contigs_output_file: "+str(taxon_names_contigs_output_file))
+rule add_taxon_names_2_contigs:
+    """
+    Use kaiju to add taxon names to contigs
+    """
+    input:
+        taxon_names_contigs_input_files
+    output:
+        taxon_names_contigs_output_file
+    message: 
+        '''--- Running kaiju to add taxon names.'''
+    singularity:
+        kaiju_image
+    params:
+        taxon_names_contigs_input_file_wc  = taxon_names_contigs_input_file_sub,
+        taxon_names_contigs_output_file_wc = taxon_names_contigs_output_file_sub
+    shell:
+        'addTaxonNames '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-u '
+        '-p '
+        '-i {params.taxon_names_contigs_input_file_wc} '
+        '-o {params.taxon_names_contigs_output_file_wc} '
+
+
+
+############################################
+# Taxonomic Classification: kaiju add taxon names from contigs
+
 taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 taxon_names_output_file = re.sub(r'\.out', '_names.out', run_kaiju_output_file)
 taxon_names_output_file_sing = re.sub(r'\.out', '_names.out', run_kaiju_output_file_sing)
@@ -423,6 +476,7 @@ rule add_taxon_names:
         '-p '
         '-i {params.taxon_names_input_file_wc} '
         '-o {params.taxon_names_output_file_wc} '
+
 
 
 ############################################
@@ -688,8 +742,8 @@ def kaiju_filteredclass_report_output_name(wildcards):
     kaiju_filteredclass_report_out = kaiju_filteredclass_report_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_out
 
-print("kaiju_filteredclass_report_input_files: "+str(kaiju_filteredclass_report_input_files))
-print("kaiju_filteredclass_report_output_file: "+str(kaiju_filteredclass_report_output_file))
+#print("kaiju_filteredclass_report_input_files: "+str(kaiju_filteredclass_report_input_files))
+#print("kaiju_filteredclass_report_output_file: "+str(kaiju_filteredclass_report_output_file))
 rule kaiju_filteredclass_report:
     """
     Generate a kaiju report from *classified* kaiju results,
@@ -718,11 +772,7 @@ rule kaiju_filteredclass_report:
         '-o /{params.kaiju_filteredclass_report_output_wc} '
 
 
-#
-#
-#
-#
-#  we are here!
+
 ###########################################
 # Taxonomic Classification: kaiju filtered and classified report from contigs 
 
@@ -741,8 +791,8 @@ def kaiju_filteredclass_report_contigs_output_name(wildcards):
     kaiju_filteredclass_report_out = kaiju_filteredclass_report_contigs_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_out
 
-print("kaiju_filteredclass_report_contigs_input_files: "+str(kaiju_filteredclass_report_contigs_input_files))
-print("kaiju_filteredclass_report_contigs_output_file: "+str(kaiju_filteredclass_report_contigs_output_file))
+#print("kaiju_filteredclass_report_contigs_input_files: "+str(kaiju_filteredclass_report_contigs_input_files))
+#print("kaiju_filteredclass_report_contigs_output_file: "+str(kaiju_filteredclass_report_contigs_output_file))
 rule kaiju_filteredclass_contigs_report:
     """
     Generate a kaiju report from *classified* kaiju results,
@@ -1045,6 +1095,18 @@ rule taxclass_add_taxonnames_workflow:
         expand( taxon_names_output_file,
                 sample = workflows['taxonomic_classification_add_taxonnames_workflow']['sample'],
                 qual = workflows['taxonomic_classification_add_taxonnames_workflow']['qual']
+        )
+
+rule taxclass_add_taxonnames_to_contigs_workflow:
+    """
+    Takes the output tsv from kaiju run (*.out) and adss the associated taxon names for each result (*.names.out)
+    Runs def run_kaiju -> def add_taxon_names
+    """
+    input:
+        expand( taxon_names_contigs_output_file,
+                sample = workflows['taxonomic_classification_add_taxonnames_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_add_taxonnames_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_add_taxonnames_contigs_workflow']['assembler']
         )
 
 rule taxclass_convert_kaiju_to_krona_workflow:
