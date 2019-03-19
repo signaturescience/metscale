@@ -738,11 +738,11 @@ kaiju_filtered_report_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_c
 kaiju_filtered_report_contigs_output_file = re.sub(r'\.out',kaiju_filtered_contigs_report_suffix, run_kaiju_contigs_output_file)
 kaiju_filtered_report_contigs_output_file_sing = re.sub(r'\.out',kaiju_filtered_contigs_report_suffix, run_kaiju_contigs_output_file_sing)
 
-def kaiju_filtered_report_input_name(wildcards):
+def kaiju_filtered_report_contigs_input_name(wildcards):
     kaiju_filtered_report_in = run_kaiju_contigs_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_in
 
-def kaiju_filtered_report_output_name(wildcards):
+def kaiju_filtered_report_contigs_output_name(wildcards):
     kaiju_filtered_report_out = kaiju_filtered_report_contigs_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
 
@@ -929,8 +929,8 @@ def visualize_krona_contigs_output_func_sing(wildcards):
     return visualize_krona_contigs_output_file_sing.format(**wildcards)
 
 
-print("visualize_krona_contigs_input_file: "+str(visualize_krona_contigs_input_file))
-print("visualize_krona_contigs_output_file: "+str(visualize_krona_contigs_output_file))
+#print("visualize_krona_contigs_input_file: "+str(visualize_krona_contigs_input_file))
+#print("visualize_krona_contigs_output_file: "+str(visualize_krona_contigs_output_file))
 rule visualize_contigs_krona:
     """
     Visualize all kaiju results using krona
@@ -972,7 +972,8 @@ def visualize_krona_filtered_input_func(wildcards):
 def visualize_krona_filtered_output_func(wildcards):
     return visualize_krona_filtered_output_file_sing.format(**wildcards)
 
-
+print("visualize_krona_filtered_input_file: "+str(visualize_krona_filtered_input_file))
+print("visualize_krona_filtered_output_file: "+str(visualize_krona_filtered_output_file))
 rule visualize_krona_filtered:
     """
     Visualize filtered (>X%) kaiju results using krona
@@ -993,6 +994,48 @@ rule visualize_krona_filtered:
         '-o /{params.visualize_krona_filtered_output_wc} '
         '/{params.visualize_krona_filtered_input_wc} '
 
+
+
+############################################
+# Taxonomic Classification: generate krona HTML using all >1% filter from contigs
+#TODO: The pct is hard coded in here
+visualize_krona_filtered_contigs_input_file = kaiju_filtered_report_contigs_output_file
+visualize_krona_filtered_contigs_output_file = re.sub(
+    r'.genus_filtered1_total.summary', '_genus_krona_filtered1_total.html', visualize_krona_filtered_contigs_input_file
+)
+visualize_krona_filtered_contigs_input_file_sing = kaiju_filtered_report_contigs_output_file_sing
+visualize_krona_filtered_output_contigs_file_sing = re.sub(
+    r'.genus_filtered1_total.summary', '_genus_krona_filtered1_total.html', visualize_krona_filtered_contigs_input_file_sing
+)
+
+
+def visualize_krona_filtered_input_func(wildcards):
+    return visualize_krona_filtered_input_file_sing.format(**wildcards)
+
+def visualize_krona_filtered_output_func(wildcards):
+    return visualize_krona_filtered_output_file_sing.format(**wildcards)
+
+print("visualize_krona_filtered_contigs_input_file: "+str(visualize_krona_filtered_contigs_input_file))
+print("visualize_krona_filtered_contigs_output_file: "+str(visualize_krona_filtered_contigs_output_file))
+rule visualize_krona_contigs_filtered:
+    """
+    Visualize filtered (>X%) kaiju results using krona
+    """
+    input:
+        visualize_krona_filtered_contigs_input_file
+    output:
+        visualize_krona_filtered_contigs_output_file
+    message:
+        '''--- Creating krona report from filtered kaiju results.'''
+    params:
+        visualize_krona_filtered_input_wc  = visualize_krona_filtered_input_func,
+        visualize_krona_filtered_output_wc = visualize_krona_filtered_output_func,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_krona_filtered_output_wc} '
+        '/{params.visualize_krona_filtered_input_wc} '
 
 
 ############################################
@@ -1267,6 +1310,17 @@ rule taxclass_visualize_krona_kaijureport_filtered_workflow:
         expand( visualize_krona_filtered_output_file,
                 sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['sample'],
                 qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['qual']
+        )
+
+rule taxclass_visualize_krona_kaijureport_filtered_contigs_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from kaiju filtered report
+    '''
+    input:
+        expand( visualize_krona_filtered_contigs_output_file,
+                sample = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow']['sample'],
+                qual = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow']['assembler']
         )
 
 rule taxclass_visualize_krona_kaijureport_filteredclass_workflow:

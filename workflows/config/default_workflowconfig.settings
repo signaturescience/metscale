@@ -123,12 +123,17 @@ config_default = {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
-
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
+        },
+        
+        "taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow" : {
