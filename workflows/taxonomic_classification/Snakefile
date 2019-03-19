@@ -757,18 +757,18 @@ rule kaiju_filteredclass_contigs_report:
     singularity:
         kaiju_image
     params:
-        kaiju_filteredclass_report_input_wc = kaiju_filteredclass_report_contigs_input_name,
-        kaiju_filteredclass_report_output_wc = kaiju_filteredclass_report_contigs_output_name
+        kaiju_filteredclass_report_contigs_input_wc = kaiju_filteredclass_report_contigs_input_name,
+        kaiju_filteredclass_report_contigs_output_wc = kaiju_filteredclass_report_contigs_output_name
     shell:
         'kaijuReport '
         '-v '
         '-t /{kaiju_dmp1_sing} '
         '-n /{kaiju_dmp2_sing} '
-        '-i /{params.kaiju_filteredclass_report_input_wc} '
+        '-i /{params.kaiju_filteredclass_report_contigs_input_wc} '
         '-r {contigs_tax_rank} '
         '-m {filter_contigs_taxa_pct} '
         '-u '
-        '-o /{params.kaiju_filteredclass_report_output_wc} '
+        '-o /{params.kaiju_filteredclass_report_contigs_output_wc} '
 
 ############################################
 # Taxonomic Classification: generate krona HTML using all results
