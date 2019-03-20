@@ -1094,7 +1094,7 @@ visualize_krona_filteredclass_contigs_output_file_sing = re.sub(
 )
 
 def visualize_krona_filteredclass_contigs_input_func(wildcards):
-    return visualize_krona_filtered_contigs_input_file_sing.format(**wildcards)
+    return visualize_krona_filteredclass_contigs_input_file_sing.format(**wildcards)
 
 def visualize_krona_filteredclass_contigs_output_func(wildcards):
     return visualize_krona_filteredclass_contigs_output_file_sing.format(**wildcards)
