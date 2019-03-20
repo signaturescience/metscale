@@ -7,7 +7,7 @@
 
     "workflows" : {
 
-        "taxonomic_classification_signatures_workflow" : {
+       "taxonomic_classification_signatures_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
@@ -23,6 +23,12 @@
             "qual" : ["2","30"],
         },
 
+        "taxonomic_classification_kaijureport_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]   
+        },
+
         "taxonomic_classification_kaijureport_filtered_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
@@ -33,34 +39,89 @@
             "qual" : ["2","30"],
         },
 
-        "taxonomic_classification_add_taxonnames_workflow" : {
+        "taxonomic_classification_kaijureport_contigs_filteredclass_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]  
+        },
+
+        "taxonomic_classification_kaijureport_contigs_filtered_workflow": {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]  
+        },
+
+        "taxonomic_classification_add_taxonnames_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_add_taxonnames_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]       
         },
 
         "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
             "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],
+            "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_kaiju_species_summary_workflow" : {
             "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],     
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_kaiju_species_summary_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_workflow" : {
             "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],     
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
             "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],     
-        },  
+            "qual" : ["2","30"],        
+        },
+        
+        "taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]
+        },
 
         "taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow" : {
             "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],     
-        },   
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow": {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]        
+            },
+
+        "taxonomic_classification_visualize_krona_species_summary_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],        
+        },
+
+        "taxonomic_classification_visualize_krona_species_summary_contigs_workflow" : {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"] 
+        },
+        
+           
     }
 }
