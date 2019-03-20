@@ -75,13 +75,13 @@ config_default = {
             "qual" : ["2","30"],
         },
 
-        "taxonomic_classification_kaijureport_filteredclass_contigs_workflow" : {
+        "taxonomic_classification_kaijureport_contigs_filteredclass_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]  
         },
 
-        "taxonomic_classification_kaijureport_filtered_contigs_workflow": {
+        "taxonomic_classification_kaijureport_contigs_filtered_workflow": {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]  
@@ -108,7 +108,7 @@ config_default = {
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_contigs_kaiju_species_summary_workflow" : {
+        "taxonomic_classification_kaiju_species_summary_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
@@ -119,7 +119,7 @@ config_default = {
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_contigs_visualize_krona_kaijureport_workflow" : {
+        "taxonomic_classification_visualize_krona_kaijureport_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
@@ -130,7 +130,7 @@ config_default = {
             "qual" : ["2","30"],        
         },
         
-        "taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow" : {
+        "taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
@@ -140,6 +140,12 @@ config_default = {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
+
+        "taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow": {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],  
+            "assembler" : ["megahit","metaspades"]        
+            },
 
         "taxonomic_classification_visualize_krona_species_summary_workflow" : {
             "sample"  : ["SRR606249_subset10"],

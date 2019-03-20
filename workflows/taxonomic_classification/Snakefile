@@ -972,8 +972,8 @@ def visualize_krona_filtered_input_func(wildcards):
 def visualize_krona_filtered_output_func(wildcards):
     return visualize_krona_filtered_output_file_sing.format(**wildcards)
 
-print("visualize_krona_filtered_input_file: "+str(visualize_krona_filtered_input_file))
-print("visualize_krona_filtered_output_file: "+str(visualize_krona_filtered_output_file))
+#print("visualize_krona_filtered_input_file: "+str(visualize_krona_filtered_input_file))
+#print("visualize_krona_filtered_output_file: "+str(visualize_krona_filtered_output_file))
 rule visualize_krona_filtered:
     """
     Visualize filtered (>X%) kaiju results using krona
@@ -1015,8 +1015,8 @@ def visualize_krona_filtered_contigs_input_func(wildcards):
 def visualize_krona_filtered_contigs_output_func(wildcards):
     return visualize_krona_filtered_output_contigs_file_sing.format(**wildcards)
 
-print("visualize_krona_filtered_contigs_input_file: "+str(visualize_krona_filtered_contigs_input_file))
-print("visualize_krona_filtered_contigs_output_file: "+str(visualize_krona_filtered_contigs_output_file))
+#print("visualize_krona_filtered_contigs_input_file: "+str(visualize_krona_filtered_contigs_input_file))
+#print("visualize_krona_filtered_contigs_output_file: "+str(visualize_krona_filtered_contigs_output_file))
 rule visualize_krona_contigs_filtered:
     """
     Visualize filtered (>X%) kaiju results using krona
@@ -1057,6 +1057,8 @@ def visualize_krona_filteredclass_input_func(wildcards):
 def visualize_krona_filteredclass_output_func(wildcards):
     return visualize_krona_filteredclass_output_file_sing.format(**wildcards)
 
+print("visualize_krona_filteredclass_input_file:"+str(visualize_krona_filteredclass_input_file))
+print("visualize_krona_filteredclass_output_file: "+str(visualize_krona_filteredclass_output_file))
 rule visualize_krona_filteredclass:
     """
     Visualize classified, filtered (>X%) kaiju results using krona
@@ -1070,6 +1072,48 @@ rule visualize_krona_filteredclass:
     params:
         visualize_krona_filteredclass_input_wc  = visualize_krona_filteredclass_input_func,
         visualize_krona_filteredclass_output_wc = visualize_krona_filteredclass_output_func,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_krona_filteredclass_output_wc} '
+        '/{params.visualize_krona_filteredclass_input_wc} '
+
+
+############################################
+# Taxonomic Classification: generate krona HTML using classified >1% filter from contigs
+
+visualize_krona_filteredclass_contigs_input_file = kaiju_filteredclass_report_contigs_output_file
+visualize_krona_filteredclass_contigs_output_file = re.sub(
+    r'.genus_filtered1_classified.summary', '_genus_krona_filtered1_classified.html', visualize_krona_filteredclass_contigs_input_file
+)
+
+visualize_krona_filteredclass_contigs_input_file_sing = kaiju_filteredclass_report_contigs_output_file_sing
+visualize_krona_filteredclass_contigs_output_file_sing = re.sub(
+    r'.genus_filtered1_classified.summary', '_genus_krona_filtered1_classified.html', visualize_krona_filteredclass_contigs_input_file_sing
+)
+
+def visualize_krona_filteredclass_contigs_input_func(wildcards):
+    return visualize_krona_filtered_contigs_input_file_sing.format(**wildcards)
+
+def visualize_krona_filteredclass_contigs_output_func(wildcards):
+    return visualize_krona_filteredclass_contigs_output_file_sing.format(**wildcards)
+
+print("visualize_krona_filteredclass_contigs_input_file: "+str(visualize_krona_filteredclass_contigs_input_file))
+print("visualize_krona_filteredclass_contigs_output_file: "+str(visualize_krona_filteredclass_contigs_output_file))
+rule visualize_krona_contigs_filteredclass:
+    """
+    Visualize classified, filtered (>X%) kaiju results using krona
+    """
+    input:
+        visualize_krona_filteredclass_contigs_input_file
+    output:
+        visualize_krona_filteredclass_contigs_output_file
+    message:
+        '''--- Creating krona report from classified, filtered kaiju results.'''
+    params:
+        visualize_krona_filteredclass_input_wc  = visualize_krona_filteredclass_contigs_input_func,
+        visualize_krona_filteredclass_output_wc = visualize_krona_filteredclass_contigs_output_func,
     singularity:
         krona_image
     shell:
@@ -1191,9 +1235,9 @@ rule taxclass_kaijureport_contigs_filtered_workflow:
     """
     input:
         expand( kaiju_filtered_report_contigs_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['assembler']
+                sample = workflows['taxonomic_classification_kaijureport_contigs_filtered_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_contigs_filtered_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_contigs_filtered_workflow']['assembler']
         )
 
 rule taxclass_kaijureport_filteredclass_workflow:
@@ -1215,9 +1259,9 @@ rule taxclass_kaijureport_contigs_filteredclass_workflow:
     """
     input:
         expand( kaiju_filteredclass_report_contigs_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['assembler']
+                sample = workflows['taxonomic_classification_kaijureport_contigs_filteredclass_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_contigs_filteredclass_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_contigs_filteredclass_workflow']['assembler']
         )
 
 
@@ -1276,9 +1320,9 @@ rule taxclass_kaiju_species_summary_contigs_workflow:
     """
     input:
         expand( kaiju_contigs_summary_output_file,
-                sample = workflows['taxonomic_classification_contigs_kaiju_species_summary_workflow']['sample'],
-                qual = workflows['taxonomic_classification_contigs_kaiju_species_summary_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_contigs_kaiju_species_summary_workflow']['assembler']
+                sample = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['assembler']
         )
 
 rule taxclass_visualize_krona_kaijureport_workflow:
@@ -1297,9 +1341,9 @@ rule taxclass_visualize_krona_kaijureport_contigs_workflow:
     '''
     input:
         expand( visualize_krona_contigs_output_file,
-                sample = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_workflow']['sample'],
-                qual = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_workflow']['assembler']
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['assembler']
         )
 
 rule taxclass_visualize_krona_kaijureport_filtered_workflow:
@@ -1314,13 +1358,13 @@ rule taxclass_visualize_krona_kaijureport_filtered_workflow:
 
 rule taxclass_visualize_krona_kaijureport_filtered_contigs_workflow:
     '''
-    Generates interactive krona plot (*.html) of the results from kaiju filtered report
+    Generates interactive krona plot (*.html) of the results from kaiju filtered report from contigs
     '''
     input:
         expand( visualize_krona_filtered_contigs_output_file,
-                sample = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow']['sample'],
-                qual = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_contigs_visualize_krona_kaijureport_filtered_workflow']['assembler']
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['assembler']
         )
 
 rule taxclass_visualize_krona_kaijureport_filteredclass_workflow:
@@ -1331,6 +1375,17 @@ rule taxclass_visualize_krona_kaijureport_filteredclass_workflow:
         expand( visualize_krona_filteredclass_output_file,
                 sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['sample'],
                 qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['qual']
+        )
+
+rule taxclass_visualize_krona_kaijureport_filteredclass_contigs_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from kaiju filtered, classified report from contigs
+    '''
+    input:
+        expand( visualize_krona_filteredclass_contigs_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
 
 
