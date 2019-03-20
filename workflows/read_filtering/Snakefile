@@ -362,8 +362,13 @@ subsample_interleave_input_sing = interleave_output_sing
 subsample_interleave_max_reads = readfilt['subsample_interleaving']['max_reads']
 subsample_interleave_percent = readfilt['subsample_interleaving']['percent']
 
-subsample_interleave_output = join(data_dir, readfilt['subsample_interleaving']['subsample_output_pattern'])
-subsample_interleave_output_sing = join(sing_dir, readfilt['subsample_interleaving']['subsample_output_pattern'])
+subsample_interleave_output = join(data_dir, readfilt['subsample_interleaving']['subsample_output_pattern'].format(
+    percent=readfilt['subsample_interleaving']['percent'],
+    sample='{sample}', qual='{qual}'))
+subsample_interleave_output_sing = join(sing_dir, readfilt['subsample_interleaving']['subsample_output_pattern'].format(
+    percent=readfilt['subsample_interleaving']['percent'],
+    sample='{sample}', qual='{qual}'))
+    
 
 
 def subsample_interleave_reads_inputs(wildcards):
@@ -376,7 +381,7 @@ def subsample_interleave_reads_output_sing(wildcards):
     return subsample_interleave_output_sing.format(**wildcards)
 
 
-
+print("subsample_interleave_output: "+str(subsample_interleave_output))
 rule subsample_interleaved_reads:
     """
     Sample from full interleaved reads
@@ -441,7 +446,7 @@ def split_interleaved_qa_outputs_fwd_sing(wildcards):
 
 def split_interleaved_qa_outputs_rev_sing(wildcards):
     return split_interleave_output_rev_sing.format(**wildcards)
-
+print("split_interleave_output: "+str(split_interleave_output))
 rule split_interleaved_reads:
     input:
         split_interleave_input

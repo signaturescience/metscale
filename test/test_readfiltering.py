@@ -55,8 +55,8 @@ class TestReadFiltering(unittest.TestCase):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_subsample_interleaved_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset_interleaved_reads.fq.gz")
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset_interleaved_reads.fq.gz")  
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_interleaved_reads.fq.gz")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_interleaved_reads.fq.gz")  
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
         
         
