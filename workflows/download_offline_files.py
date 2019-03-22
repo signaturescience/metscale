@@ -10,7 +10,7 @@ import time
 from socket import error as SocketError
 from snakemake.io import expand
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash', 'kaiju', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
+workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
 
 def reporthook(count, block_size, total_size):
     global start_time
@@ -24,10 +24,11 @@ def reporthook(count, block_size, total_size):
     sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
-    
+
+ 
 def download_file(workflow, data, install_dir):
     if workflow in data.keys():
-        for file_name, url_string in data[workflow].items():
+        for file_name, url_string in data[workflow].items():   
             try:
                 url = urlparse(url_string)
             except Exception as e:  #we don't care since some of the JSONS are not URL's
