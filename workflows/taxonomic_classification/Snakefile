@@ -732,6 +732,8 @@ def kaiju_filtered_report_contigs_output_name(wildcards):
     kaiju_filtered_report_out = kaiju_filtered_report_contigs_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
 
+print("run_kaiju_contigs_output_file: "+str(run_kaiju_contigs_output_file))
+print("kaiju_filtered_report_contigs_input_files: "+str(kaiju_filtered_report_contigs_input_files))
 rule kaiju_filtered_contigs_report:
     """
     Generate a kaiju report with contigs from *all* kaiju results,
@@ -746,8 +748,8 @@ rule kaiju_filtered_contigs_report:
     singularity:
         kaiju_image
     params:
-        kaiju_filtered_report_input_wc = kaiju_filtered_report_input_name,
-        kaiju_filtered_report_output_wc = kaiju_filtered_report_output_name
+        kaiju_filtered_report_input_wc = kaiju_filtered_report_contigs_input_name,
+        kaiju_filtered_report_output_wc = kaiju_filtered_report_contigs_output_name
     shell:
         'kaijuReport '
         '-v '
