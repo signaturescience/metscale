@@ -732,8 +732,6 @@ def kaiju_filtered_report_contigs_output_name(wildcards):
     kaiju_filtered_report_out = kaiju_filtered_report_contigs_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
 
-print("run_kaiju_contigs_output_file: "+str(run_kaiju_contigs_output_file))
-print("kaiju_filtered_report_contigs_input_files: "+str(kaiju_filtered_report_contigs_input_files))
 rule kaiju_filtered_contigs_report:
     """
     Generate a kaiju report with contigs from *all* kaiju results,
@@ -1242,16 +1240,16 @@ rule taxclass_kaijureport_filtered_workflow:
                 qual = workflows['taxonomic_classification_kaijureport_filtered_workflow']['qual']
         )
 
-rule taxclass_kaijureport_contigs_filtered_workflow:
+rule taxclass_kaijureport_filtered_contigs_workflow:
     """
     Run kaiju and generate a report from contigs filtered
     results (taxa with <X% abundance).
     """
     input:
         expand( kaiju_filtered_report_contigs_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_contigs_filtered_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_contigs_filtered_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_contigs_filtered_workflow']['assembler']
+                sample = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['assembler']
         )
 
 rule taxclass_kaijureport_filteredclass_workflow:
@@ -1266,16 +1264,16 @@ rule taxclass_kaijureport_filteredclass_workflow:
         )
 
 
-rule taxclass_kaijureport_contigs_filteredclass_workflow:
+rule taxclass_kaijureport_filteredclass_contigs_workflow:
     """
     Run kaiju and generate a report from contigs filtered, classified
     results (taxa with <X% abundance).
     """
     input:
         expand( kaiju_filteredclass_report_contigs_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_contigs_filteredclass_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_contigs_filteredclass_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_contigs_filteredclass_workflow']['assembler']
+                sample = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
 
 
