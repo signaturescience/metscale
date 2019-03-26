@@ -18,7 +18,7 @@ class TestFunctionalInference(unittest.TestCase):
         os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
         
     def test_1_functional_inference_prokka_with_megahit_workflow(self):
-        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_inference_prokka_with_megahit_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_prokka_with_megahit_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filedir_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30_megahit.prokka_annotation")
@@ -26,7 +26,7 @@ class TestFunctionalInference(unittest.TestCase):
         self.assertTrue(os.path.isdir(filedir_1) and os.path.isdir(filedir_2))
         
     def test_2_functional_inference_prokka_with_metaspades_workflow(self):
-        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_inference_prokka_with_metaspades_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_prokka_with_metaspades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filedir_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30_metaspades.prokka_annotation")
@@ -34,7 +34,7 @@ class TestFunctionalInference(unittest.TestCase):
         self.assertTrue(os.path.isdir(filedir_1) and os.path.isdir(filedir_2))
         
     def test_3_functional_inference_abricate_with_megahit_workflow(self):
-        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_inference_abricate_with_megahit_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_abricate_with_megahit_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30_megahit_abricate.csv")
@@ -42,7 +42,7 @@ class TestFunctionalInference(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))        
      
     def test_4_functional_inference_abricate_with_metaspades_workflow(self):    
-        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_inference_abricate_with_metaspades_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_abricate_with_metaspades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim30_metaspades_abricate.csv")
@@ -50,7 +50,7 @@ class TestFunctionalInference(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
         
     def test_5_functional_inference_with_srst2_workflow(self):    
-        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json ffunctional_inference_with_srst2_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_with_srst2_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_trim2.srst2__genes__ARGannot.r1__results.txt")

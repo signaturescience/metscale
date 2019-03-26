@@ -253,8 +253,8 @@ rule functional_prokka_with_megahit_workflow:
     """
     input:
         expand( prokka_with_megahit_output_dir,
-                sample = workflows['functional_inference_prokka_with_megahit_workflow']['sample'],
-                qual = workflows['functional_inference_prokka_with_megahit_workflow']['qual']
+                sample = workflows['functional_prokka_with_megahit_workflow']['sample'],
+                qual = workflows['functional_prokka_with_megahit_workflow']['qual']
         )
 
 
@@ -264,8 +264,8 @@ rule functional_prokka_with_metaspades_workflow:
     """
     input:
         expand( prokka_with_metaspades_output_dir,
-                sample = workflows['functional_inference_prokka_with_metaspades_workflow']['sample'],
-                qual = workflows['functional_inference_prokka_with_metaspades_workflow']['qual']
+                sample = workflows['functional_prokka_with_metaspades_workflow']['sample'],
+                qual = workflows['functional_prokka_with_metaspades_workflow']['qual']
         )
 
 rule functional_abricate_with_megahit_workflow:
@@ -274,8 +274,8 @@ rule functional_abricate_with_megahit_workflow:
     """
     input:
         expand( abricate_with_megahit_output,
-                sample = workflows['functional_inference_abricate_with_megahit_workflow']['sample'],
-                qual = workflows['functional_inference_abricate_with_megahit_workflow']['qual']
+                sample = workflows['functional_abricate_with_megahit_workflow']['sample'],
+                qual = workflows['functional_abricate_with_megahit_workflow']['qual']
         )
 
 rule functional_abricate_with_metaspades_workflow:
@@ -284,8 +284,8 @@ rule functional_abricate_with_metaspades_workflow:
     """
     input:
         expand( abricate_with_metaspades_output,
-                sample = workflows['functional_inference_abricate_with_metaspades_workflow']['sample'],
-                qual = workflows['functional_inference_abricate_with_metaspades_workflow']['qual']
+                sample = workflows['functional_abricate_with_metaspades_workflow']['sample'],
+                qual = workflows['functional_abricate_with_metaspades_workflow']['qual']
         )
 
 
@@ -295,8 +295,8 @@ rule functional_with_srst2_workflow:
     '''
     input:
        expand( srst2_output,
-                sample    = workflows['functional_inference_with_srst2_workflow']['sample'],
-                qual      = workflows['functional_inference_with_srst2_workflow']['qual'],
+                sample    = workflows['functional_with_srst2_workflow']['sample'],
+                qual      = workflows['functional_with_srst2_workflow']['qual'],
                 direction = directions,
         )
 

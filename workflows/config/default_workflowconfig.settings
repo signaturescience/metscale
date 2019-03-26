@@ -43,116 +43,116 @@ config_default = {
             "kmers" : [21,31,51]
         },
 
-        "taxonomic_classification_signatures_workflow" : {
+        "tax_class_signatures_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
-        "taxonomic_classification_gather_workflow" : {
+        "tax_class_gather_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "kvalues" : ["21","31","51"]
         },
 
-        "taxonomic_classification_kaijureport_workflow" : {
+        "tax_class_kaijureport_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
-        "taxonomic_classification_kaijureport_contigs_workflow" : {
+        "tax_class_kaijureport_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]   
         },
 
-        "taxonomic_classification_kaijureport_filtered_workflow" : {
+        "tax_class_kaijureport_filtered_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
-        "taxonomic_classification_kaijureport_filteredclass_workflow" : {
+        "tax_class_kaijureport_filteredclass_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
-        "taxonomic_classification_kaijureport_filteredclass_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
-            "qual" : ["2","30"],
-            "assembler" : ["megahit","metaspades"]  
-        },
-
-        "taxonomic_classification_kaijureport_filtered_contigs_workflow": {
+        "tax_class_kaijureport_filteredclass_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]  
         },
 
-        "taxonomic_classification_add_taxonnames_workflow" : {
+        "tax_class_kaijureport_filtered_contigs_workflow": {
+            "sample"  : ["SRR606249_subset10"],
+            "qual" : ["2","30"],
+            "assembler" : ["megahit","metaspades"]  
+        },
+
+        "tax_class_add_taxonnames_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_add_taxonnames_contigs_workflow" : {
+        "tax_class_add_taxonnames_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]       
         },
 
-        "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
+        "tax_class_convert_kaiju_to_krona_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_kaiju_species_summary_workflow" : {
+        "tax_class_kaiju_species_summary_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_kaiju_species_summary_contigs_workflow" : {
+        "tax_class_kaiju_species_summary_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
         },
 
-        "taxonomic_classification_visualize_krona_kaijureport_workflow" : {
+        "tax_class_visualize_krona_kaijureport_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_visualize_krona_kaijureport_contigs_workflow" : {
+        "tax_class_visualize_krona_kaijureport_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
         },
 
-        "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
+        "tax_class_visualize_krona_kaijureport_filtered_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
         
-        "taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow" : {
+        "tax_class_visualize_krona_kaijureport_filtered_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
         },
 
-        "taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow" : {
+        "tax_class_visualize_krona_kaijureport_filteredclass_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow": {
+        "tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow": {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]        
             },
 
-        "taxonomic_classification_visualize_krona_species_summary_workflow" : {
+        "tax_class_visualize_krona_species_summary_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
-        "taxonomic_classification_visualize_krona_species_summary_contigs_workflow" : {
+        "tax_class_visualize_krona_species_summary_contigs_workflow" : {
             "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"] 
@@ -231,7 +231,7 @@ config_default = {
             "kvalue"    : ["21","31","51"],
         },
 
-        "functional_inference_prokka_with_megahit_workflow" : {
+        "functional_prokka_with_megahit_workflow" : {
             #
             # these parameters determine which contig samples 
             # from megahit to run prokka on
@@ -239,7 +239,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "functional_inference_prokka_with_metaspades_workflow" : {
+        "functional_prokka_with_metaspades_workflow" : {
             #
             # these parameters determine which contig samples 
             # from metaspades to run prokka on
@@ -247,7 +247,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "functional_inference_abricate_with_megahit_workflow" : {
+        "functional_abricate_with_megahit_workflow" : {
             #
             # these parameters determine which contig samples 
             # from megahit to run abricate on
@@ -255,7 +255,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "functional_inference_abricate_with_metaspades_workflow" : {
+        "functional_abricate_with_metaspades_workflow" : {
             #
             # these parameters determine which contig samples 
             # from metaspades to run abricate on
@@ -263,7 +263,7 @@ config_default = {
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
-        "functional_inference_with_srst2_workflow" : {
+        "functional_with_srst2_workflow" : {
             #
             # these paramters determine srst2 input
             #
