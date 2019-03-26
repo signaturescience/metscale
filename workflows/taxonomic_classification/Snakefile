@@ -271,6 +271,57 @@ rule run_kaiju:
         '-z {threads}'
 
 
+
+
+############################################
+# Taxonomic Classification: run kaiju on contigs
+run_kaiju_contig_input_files = [kaiju_dmp1, kaiju_dmp2, kaiju_fmi]
+run_kaiju_contig_input_files.append(join(data_dir, assembly['assembly_patterns']['assembly_pattern']))
+
+run_kaiju_contig_input_files_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+
+
+run_kaiju_contigs_output_file = join(data_dir, taxclass['kaiju']['contig_out'])
+run_kaiju_contigs_output_file_sing = join(sing_dir, taxclass['kaiju']['contig_out'])
+
+def run_contigs_output_sing(wildcards):
+    kaiju_output_sing = run_kaiju_contigs_output_file_sing.format(**wildcards)
+    return kaiju_output_sing
+
+def run_contigs_input_sing(wildcards):
+    kaiju_input_sing = run_kaiju_contig_input_files_sing.format(**wildcards)
+    return kaiju_input_sing
+
+tax_class_contigs_kaiju_threads = taxclass['kaiju']['threads']
+
+rule run_contigs_kaiju:
+    """
+    Run kaiju after downloading and unpacking the kaiju database with contigs. 
+    """
+    input:
+        run_kaiju_contig_input_files
+    output:
+        run_kaiju_contigs_output_file
+    message: 
+        '''--- Running kaiju with contigs.'''
+    singularity: 
+        kaiju_image
+    threads:
+        tax_class_contigs_kaiju_threads
+    params:
+        contig_wc = run_contigs_input_sing,
+        run_contigs_kaiju_output_file_wc = run_contigs_output_sing
+    shell:
+        'kaiju '
+        '-x '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-f /{kaiju_fmi_sing} '
+        '-i /{params.contig_wc} '
+        '-o /{params.run_contigs_kaiju_output_file_wc} '
+        '-z {threads}'
+
+
 ############################################
 # Taxonomic Classification: kaiju format to krona format
 
@@ -324,6 +375,58 @@ rule kaiju2krona:
 ############################################
 # Taxonomic Classification: kaiju add taxon names
 
+taxon_names_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+taxon_names_contigs_output_file = re.sub(r'\.out', '_names.out', run_kaiju_contigs_output_file)
+taxon_names_contigs_output_file_sing = re.sub(r'\.out', '_names.out', run_kaiju_contigs_output_file_sing)
+
+
+def taxon_names_contigs_input_file_sub(wildcards):
+    """
+    Wildcard substitution for (one of the) input files to the addTaxonNames
+    command. The other input files do not have wildcards, so it's only
+    the run_kaiju_output_file (which is the input to add taxon names) 
+    that requires wildcard substitution.
+    """
+    return run_kaiju_contigs_output_file_sing.format(**wildcards)
+
+def taxon_names_contigs_output_file_sub(wildcards):
+    """
+    Wildcard substitution of taxon names output.
+    The taxon names output is just the kaiju output name,
+    but replacing .out with .names.out.
+    """
+    return taxon_names_contigs_output_file_sing.format(**wildcards)
+
+
+rule add_taxon_names_2_contigs:
+    """
+    Use kaiju to add taxon names to contigs
+    """
+    input:
+        taxon_names_contigs_input_files
+    output:
+        taxon_names_contigs_output_file
+    message: 
+        '''--- Running kaiju to add taxon names to contigs.'''
+    singularity:
+        kaiju_image
+    params:
+        taxon_names_contigs_input_file_wc  = taxon_names_contigs_input_file_sub,
+        taxon_names_contigs_output_file_wc = taxon_names_contigs_output_file_sub
+    shell:
+        'addTaxonNames '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-u '
+        '-p '
+        '-i {params.taxon_names_contigs_input_file_wc} '
+        '-o {params.taxon_names_contigs_output_file_wc} '
+
+
+
+############################################
+# Taxonomic Classification: kaiju add taxon names from contigs
+
 taxon_names_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
 taxon_names_output_file = re.sub(r'\.out', '_names.out', run_kaiju_output_file)
 taxon_names_output_file_sing = re.sub(r'\.out', '_names.out', run_kaiju_output_file_sing)
@@ -372,6 +475,7 @@ rule add_taxon_names:
         '-o {params.taxon_names_output_file_wc} '
 
 
+
 ############################################
 # Taxonomic Classification:  kaiju species summary 
 kaiju_summary_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_output_file]
@@ -393,7 +497,8 @@ def kaiju_species_output_file_sub(wildcards):
     return kaiju_summary_output_file_sing.format(**wildcards)
 
 
-
+#print("kaiju_summary_input_files: "+str(kaiju_summary_input_files))
+#print("kaiju_summary_output_file: "+str(kaiju_summary_output_file))
 rule kaiju_species_summary_report:
     """
     Generate a kaiju summary report from kaiju results
@@ -417,6 +522,55 @@ rule kaiju_species_summary_report:
         '-i /{params.kaiju_report_input_wc} '
         '-r species '
         '-o /{params.kaiju_report_output_wc} '
+
+
+
+
+############################################
+# Taxonomic Classification:  kaiju species summary from contigs
+kaiju_contigs_summary_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+kaiju_contigs_summary_output_file = re.sub(r'\.kaiju.out', '.kaiju_out_species.summary', run_kaiju_contigs_output_file)
+kaiju_contigs_summary_output_file_sing = re.sub(r'\.kaiju.out', '.kaiju_out_species.summary', run_kaiju_contigs_output_file_sing)
+
+
+def kaiju_contigs_species_input_file_sub(wildcards):
+    """
+    Wildcard substitution for (one of the) input files to the kaijuReport
+    command. 
+    """
+    return run_kaiju_contigs_output_file_sing.format(**wildcards)
+
+def kaiju_contigs_species_output_file_sub(wildcards):
+    """
+    Wildcard substitution of kaijuReport output.
+    """
+    return kaiju_contigs_summary_output_file_sing.format(**wildcards)
+
+
+rule kaiju_contigs_species_summary_report:
+    """
+    Generate a kaiju summary report from kaiju results with contigs
+    """
+    input:
+        kaiju_contigs_summary_input_files
+    output:
+        kaiju_contigs_summary_output_file
+    message: 
+        '''--- Generating a kaiju report from contigs.'''
+    singularity:
+        kaiju_image
+    params:
+        kaiju_contigs_report_input_wc = kaiju_contigs_species_input_file_sub,
+        kaiju_contigs_report_output_wc = kaiju_contigs_species_output_file_sub
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-i /{params.kaiju_contigs_report_input_wc} '
+        '-r species '
+        '-o /{params.kaiju_contigs_report_output_wc} '
+
 
 
 ############################################
@@ -461,6 +615,55 @@ rule kaiju_report:
 
 
 
+###############################################
+# Taxonomic Classification: kaiju report for contigs
+
+kaiju_contigs_report_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+
+run_kaiju_contigs_output_file = join(data_dir, taxclass['kaiju']['contig_out'])
+run_kaiju_output_contigs_file_sing = join(sing_dir, taxclass['kaiju']['contig_out'])
+
+
+kaiju_contigs_report_output_file = re.sub(r'\.out','_genus.summary',run_kaiju_contigs_output_file)
+kaiju_contigs_report_output_file_sing = re.sub(r'\.out','_genus.summary',run_kaiju_output_contigs_file_sing)
+contigs_tax_rank = taxclass['contigs_kaiju_report']['contigs_taxonomic_rank']
+
+def kaiju_report_input_name(wildcards):
+    kaiju_report_in = run_kaiju_output_contigs_file_sing.format(**wildcards)
+    return kaiju_report_in
+
+def kaiju_report_output_name(wildcards):
+    kaiju_report_out = kaiju_contigs_report_output_file_sing.format(**wildcards)
+    return kaiju_report_out
+
+rule kaiju_contigs_report:
+    """
+    Generate a kaiju report from kaiju results from contigs
+    """
+    input:
+        kaiju_contigs_report_input_files
+    output:
+        kaiju_contigs_report_output_file
+    message: 
+        '''--- Generating a kaiju report from contigs.'''
+    singularity:
+        kaiju_image
+    params:
+        kaiju_report_input_wc = kaiju_report_input_name,
+        kaiju_report_output_wc = kaiju_report_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-i /{params.kaiju_report_input_wc} '
+        '-r {contigs_tax_rank} '
+        '-o /{params.kaiju_report_output_wc} '
+
+
+
+
+
 ############################################
 # Taxonomic Classification: kaiju filtered report 
 
@@ -480,7 +683,6 @@ def kaiju_filtered_report_input_name(wildcards):
 def kaiju_filtered_report_output_name(wildcards):
     kaiju_filtered_report_out = kaiju_filtered_report_output_file_sing.format(**wildcards)
     return kaiju_filtered_report_out
-
 
 rule kaiju_filtered_report:
     """
@@ -509,6 +711,54 @@ rule kaiju_filtered_report:
         '-o /{params.kaiju_filtered_report_output_wc} '
 
 
+
+############################################
+# Taxonomic Classification: kaiju filtered contigs report 
+
+filter_contigs_taxa_pct = taxclass['contigs_kaiju_report']['contigs_pct_threshold']
+
+kaiju_filtered_contigs_report_suffix = '_genus_filtered{pct}_total.summary'.format(
+            pct = filter_taxa_pct)
+
+kaiju_filtered_report_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+kaiju_filtered_report_contigs_output_file = re.sub(r'\.out',kaiju_filtered_contigs_report_suffix, run_kaiju_contigs_output_file)
+kaiju_filtered_report_contigs_output_file_sing = re.sub(r'\.out',kaiju_filtered_contigs_report_suffix, run_kaiju_contigs_output_file_sing)
+
+def kaiju_filtered_report_contigs_input_name(wildcards):
+    kaiju_filtered_report_in = run_kaiju_contigs_output_file_sing.format(**wildcards)
+    return kaiju_filtered_report_in
+
+def kaiju_filtered_report_contigs_output_name(wildcards):
+    kaiju_filtered_report_out = kaiju_filtered_report_contigs_output_file_sing.format(**wildcards)
+    return kaiju_filtered_report_out
+
+rule kaiju_filtered_contigs_report:
+    """
+    Generate a kaiju report with contigs from *all* kaiju results,
+    and filter taxa with a low (less than X percent) abundance from contigs.
+    """
+    input:
+        kaiju_filtered_report_contigs_input_files
+    output:
+        kaiju_filtered_report_contigs_output_file
+    message: 
+        '''--- Generating a kaiju report with filtered taxa from contigs.'''
+    singularity:
+        kaiju_image
+    params:
+        kaiju_filtered_report_input_wc = kaiju_filtered_report_contigs_input_name,
+        kaiju_filtered_report_output_wc = kaiju_filtered_report_contigs_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-i /{params.kaiju_filtered_report_input_wc} '
+        '-r {contigs_tax_rank} '
+        '-m {filter_contigs_taxa_pct} '
+        '-o /{params.kaiju_filtered_report_output_wc} '
+
+
 ############################################
 # Taxonomic Classification: kaiju filtered and classified report 
 
@@ -526,6 +776,7 @@ def kaiju_filteredclass_report_input_name(wildcards):
 def kaiju_filteredclass_report_output_name(wildcards):
     kaiju_filteredclass_report_out = kaiju_filteredclass_report_output_file_sing.format(**wildcards)
     return kaiju_filteredclass_report_out
+
 
 rule kaiju_filteredclass_report:
     """
@@ -555,6 +806,51 @@ rule kaiju_filteredclass_report:
         '-o /{params.kaiju_filteredclass_report_output_wc} '
 
 
+
+###########################################
+# Taxonomic Classification: kaiju filtered and classified report from contigs 
+
+kaiju_filteredclass_contigs_report_suffix = '_genus_filtered{pct}_classified.summary'.format(
+            pct = filter_contigs_taxa_pct)
+
+kaiju_filteredclass_report_contigs_input_files = [kaiju_dmp1, kaiju_dmp2, run_kaiju_contigs_output_file]
+kaiju_filteredclass_report_contigs_output_file = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file)
+kaiju_filteredclass_report_contigs_output_file_sing = re.sub(r'\.out',kaiju_filteredclass_contigs_report_suffix, run_kaiju_contigs_output_file_sing)
+
+def kaiju_filteredclass_report_contigs_input_name(wildcards):
+    kaiju_filteredclass_report_in = run_kaiju_contigs_output_file_sing.format(**wildcards)
+    return kaiju_filteredclass_report_in
+
+def kaiju_filteredclass_report_contigs_output_name(wildcards):
+    kaiju_filteredclass_report_out = kaiju_filteredclass_report_contigs_output_file_sing.format(**wildcards)
+    return kaiju_filteredclass_report_out
+
+rule kaiju_filteredclass_contigs_report:
+    """
+    Generate a kaiju report from *classified* kaiju results,
+    and filter taxa with a low (<X%) abundance from contigs.
+    """
+    input:
+        kaiju_filteredclass_report_contigs_input_files
+    output:
+        kaiju_filteredclass_report_contigs_output_file
+    message: 
+        '''--- Generating a kaiju report with filtered, classified taxa from contigs.'''
+    singularity:
+        kaiju_image
+    params:
+        kaiju_filteredclass_report_contigs_input_wc = kaiju_filteredclass_report_contigs_input_name,
+        kaiju_filteredclass_report_contigs_output_wc = kaiju_filteredclass_report_contigs_output_name
+    shell:
+        'kaijuReport '
+        '-v '
+        '-t /{kaiju_dmp1_sing} '
+        '-n /{kaiju_dmp2_sing} '
+        '-i /{params.kaiju_filteredclass_report_contigs_input_wc} '
+        '-r {contigs_tax_rank} '
+        '-m {filter_contigs_taxa_pct} '
+        '-u '
+        '-o /{params.kaiju_filteredclass_report_contigs_output_wc} '
 
 ############################################
 # Taxonomic Classification: generate krona HTML using all results
@@ -595,6 +891,44 @@ rule visualize_krona:
         '/{params.visualize_krona_input_wc} '
 
 
+############################################
+# Taxonomic Classification: generate krona HTML using all results with contigs
+
+
+visualize_krona_contigs_input_file = kaiju_contigs_report_output_file
+visualize_krona_contigs_output_file = re.sub( r'.genus.summary', '_genus_krona.html', visualize_krona_contigs_input_file)
+visualize_krona_contigs_input_file_sing = kaiju_contigs_report_output_file_sing
+visualize_krona_contigs_output_file_sing = re.sub( r'.genus.summary', '_genus_krona.html', visualize_krona_contigs_input_file_sing)
+
+krona_image = container_image_name(biocontainers, 'krona')
+
+
+def visualize_krona_contigs_input_func_sing(wildcards):
+    return visualize_krona_contigs_input_file_sing.format(**wildcards)
+
+def visualize_krona_contigs_output_func_sing(wildcards):
+    return visualize_krona_contigs_output_file_sing.format(**wildcards)
+
+rule visualize_contigs_krona:
+    """
+    Visualize all kaiju results using krona with contigs
+    """
+    input:
+       visualize_krona_contigs_input_file
+    output:
+        visualize_krona_contigs_output_file
+    message:
+        '''--- Creating krona report from all contigs kaiju results.'''
+    params:
+        visualize_krona_contigs_input_wc = visualize_krona_contigs_input_func_sing,
+        visualize_krona_contigs_output_wc = visualize_krona_contigs_output_func_sing,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_krona_contigs_output_wc} '
+        '/{params.visualize_krona_contigs_input_wc} '
+
 
 
 ############################################
@@ -616,10 +950,9 @@ def visualize_krona_filtered_input_func(wildcards):
 def visualize_krona_filtered_output_func(wildcards):
     return visualize_krona_filtered_output_file_sing.format(**wildcards)
 
-
 rule visualize_krona_filtered:
     """
-    Visualize filtered (>X%) kaiju results using krona
+    Visualize filtered (>X%) kaiju results using krona 
     """
     input:
         visualize_krona_filtered_input_file
@@ -637,6 +970,47 @@ rule visualize_krona_filtered:
         '-o /{params.visualize_krona_filtered_output_wc} '
         '/{params.visualize_krona_filtered_input_wc} '
 
+
+
+############################################
+# Taxonomic Classification: generate krona HTML using all >1% filter from contigs
+#TODO: The pct is hard coded in here
+visualize_krona_filtered_contigs_input_file = kaiju_filtered_report_contigs_output_file
+visualize_krona_filtered_contigs_output_file = re.sub(
+    r'.genus_filtered1_total.summary', '_genus_krona_filtered1_total.html', visualize_krona_filtered_contigs_input_file
+)
+visualize_krona_filtered_contigs_input_file_sing = kaiju_filtered_report_contigs_output_file_sing
+visualize_krona_filtered_output_contigs_file_sing = re.sub(
+    r'.genus_filtered1_total.summary', '_genus_krona_filtered1_total.html', visualize_krona_filtered_contigs_input_file_sing
+)
+
+
+def visualize_krona_filtered_contigs_input_func(wildcards):
+    return visualize_krona_filtered_contigs_input_file_sing.format(**wildcards)
+
+def visualize_krona_filtered_contigs_output_func(wildcards):
+    return visualize_krona_filtered_output_contigs_file_sing.format(**wildcards)
+
+
+rule visualize_krona_contigs_filtered:
+    """
+    Visualize filtered (>X%) kaiju results using krona with contigs
+    """
+    input:
+        visualize_krona_filtered_contigs_input_file
+    output:
+        visualize_krona_filtered_contigs_output_file
+    message:
+        '''--- Creating krona report from filtered kaiju results with contigs.'''
+    params:
+        visualize_krona_filtered_input_wc  = visualize_krona_filtered_contigs_input_func,
+        visualize_krona_filtered_output_wc = visualize_krona_filtered_contigs_output_func,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_krona_filtered_output_wc} '
+        '/{params.visualize_krona_filtered_input_wc} '
 
 
 ############################################
@@ -671,6 +1045,46 @@ rule visualize_krona_filteredclass:
     params:
         visualize_krona_filteredclass_input_wc  = visualize_krona_filteredclass_input_func,
         visualize_krona_filteredclass_output_wc = visualize_krona_filteredclass_output_func,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_krona_filteredclass_output_wc} '
+        '/{params.visualize_krona_filteredclass_input_wc} '
+
+
+############################################
+# Taxonomic Classification: generate krona HTML using classified >1% filter from contigs
+
+visualize_krona_filteredclass_contigs_input_file = kaiju_filteredclass_report_contigs_output_file
+visualize_krona_filteredclass_contigs_output_file = re.sub(
+    r'.genus_filtered1_classified.summary', '_genus_krona_filtered1_classified.html', visualize_krona_filteredclass_contigs_input_file
+)
+
+visualize_krona_filteredclass_contigs_input_file_sing = kaiju_filteredclass_report_contigs_output_file_sing
+visualize_krona_filteredclass_contigs_output_file_sing = re.sub(
+    r'.genus_filtered1_classified.summary', '_genus_krona_filtered1_classified.html', visualize_krona_filteredclass_contigs_input_file_sing
+)
+
+def visualize_krona_filteredclass_contigs_input_func(wildcards):
+    return visualize_krona_filteredclass_contigs_input_file_sing.format(**wildcards)
+
+def visualize_krona_filteredclass_contigs_output_func(wildcards):
+    return visualize_krona_filteredclass_contigs_output_file_sing.format(**wildcards)
+
+rule visualize_krona_contigs_filteredclass:
+    """
+    Visualize classified, filtered (>X%) kaiju results using krona with contigs
+    """
+    input:
+        visualize_krona_filteredclass_contigs_input_file
+    output:
+        visualize_krona_filteredclass_contigs_output_file
+    message:
+        '''--- Creating krona report from classified, filtered kaiju results with contigs.'''
+    params:
+        visualize_krona_filteredclass_input_wc  = visualize_krona_filteredclass_contigs_input_func,
+        visualize_krona_filteredclass_output_wc = visualize_krona_filteredclass_contigs_output_func,
     singularity:
         krona_image
     shell:
@@ -718,6 +1132,47 @@ rule visualize_kaiju_species:
         '/{params.visualize_kaiju_species_input_wc} '
 
 
+############################################
+# Taxonomic Classification: generate krona HTML using species summary results from contigs
+
+visualize_kaiju_species_contigs_input_file = kaiju_contigs_summary_output_file
+visualize_kaiju_species_contigs_input_file_sing = kaiju_contigs_summary_output_file_sing
+visualize_kaiju_species_contigs_output_file = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_contigs_input_file)
+visualize_kaiju_species_contigs_output_file_sing = re.sub( r'.kaiju_out_species.summary', '.kaiju_species_krona.html', visualize_kaiju_species_contigs_input_file_sing)
+
+krona_image = container_image_name(biocontainers, 'krona')
+
+
+def visualize_kaiju_species_contigs_input_func_sing(wildcards):
+    return visualize_kaiju_species_contigs_input_file_sing.format(**wildcards)
+
+def visualize_kaiju_species_contigs_output_func_sing(wildcards):
+    return visualize_kaiju_species_contigs_output_file_sing.format(**wildcards)
+
+
+rule visualize_kaiju_species_contigs:
+    """
+    Visualize all kaiju species using krona from contigs
+    """
+    input:
+        visualize_kaiju_species_contigs_input_file
+    output:
+        visualize_kaiju_species_contigs_output_file
+    message:
+        '''--- Creating krona report from species summary report from contigs.'''
+    params:
+        visualize_kaiju_species_input_wc = visualize_kaiju_species_contigs_input_func_sing,
+        visualize_kaiju_species_output_wc = visualize_kaiju_species_contigs_output_func_sing,
+    singularity:
+        krona_image
+    shell:
+        'ktImportText '
+        '-o /{params.visualize_kaiju_species_output_wc} '
+        '/{params.visualize_kaiju_species_input_wc} '
+
+
+
+
 ###################################
 # Taxonomic Classification: build rules
 
@@ -754,12 +1209,23 @@ rule taxclass_gather_workflow:
 
 rule taxclass_kaijureport_workflow:
     """
-    Run kaiju and generate a report from all results.
+    Run kaiju and generate a report from all (except contigs)results.
     """
     input:
         expand( kaiju_report_output_file,
                 sample = workflows['taxonomic_classification_kaijureport_workflow']['sample'],
                 qual = workflows['taxonomic_classification_kaijureport_workflow']['qual']
+        )
+
+rule taxclass_kaijureport_contigs_workflow:
+    """
+    Run kaiju and generate a report from all contigs results.
+    """
+    input:
+        expand( kaiju_contigs_report_output_file,
+                sample = workflows['taxonomic_classification_kaijureport_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_contigs_workflow']['assembler']
         )
 
 
@@ -774,6 +1240,18 @@ rule taxclass_kaijureport_filtered_workflow:
                 qual = workflows['taxonomic_classification_kaijureport_filtered_workflow']['qual']
         )
 
+rule taxclass_kaijureport_filtered_contigs_workflow:
+    """
+    Run kaiju and generate a report from contigs filtered
+    results (taxa with <X% abundance).
+    """
+    input:
+        expand( kaiju_filtered_report_contigs_output_file,
+                sample = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['assembler']
+        )
+
 rule taxclass_kaijureport_filteredclass_workflow:
     """
     Run kaiju and generate a report from filtered, classified
@@ -785,6 +1263,20 @@ rule taxclass_kaijureport_filteredclass_workflow:
                 qual = workflows['taxonomic_classification_kaijureport_filteredclass_workflow']['qual']
         )
 
+
+rule taxclass_kaijureport_filteredclass_contigs_workflow:
+    """
+    Run kaiju and generate a report from contigs filtered, classified
+    results (taxa with <X% abundance).
+    """
+    input:
+        expand( kaiju_filteredclass_report_contigs_output_file,
+                sample = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['assembler']
+        )
+
+
 rule taxclass_add_taxonnames_workflow:
     """
     Takes the output tsv from kaiju run (*.out) and adss the associated taxon names for each result (*.names.out)
@@ -794,6 +1286,18 @@ rule taxclass_add_taxonnames_workflow:
         expand( taxon_names_output_file,
                 sample = workflows['taxonomic_classification_add_taxonnames_workflow']['sample'],
                 qual = workflows['taxonomic_classification_add_taxonnames_workflow']['qual']
+        )
+
+rule taxclass_add_taxonnames_to_contigs_workflow:
+    """
+    Takes the output tsv from contigs kaiju run (*.out) and adds the associated taxon names for each result (*.names.out)
+    Runs def run_kaiju -> def add_taxon_names
+    """
+    input:
+        expand( taxon_names_contigs_output_file,
+                sample = workflows['taxonomic_classification_add_taxonnames_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_add_taxonnames_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_add_taxonnames_contigs_workflow']['assembler']
         )
 
 rule taxclass_convert_kaiju_to_krona_workflow:
@@ -820,6 +1324,19 @@ rule taxclass_kaiju_species_summary_workflow:
                 qual = workflows['taxonomic_classification_kaiju_species_summary_workflow']['qual']
         )
 
+rule taxclass_kaiju_species_summary_contigs_workflow:
+    """
+    Labels the contigs krona results down to the species level (default is the genus level
+    Create a kaiju species summary results file from contigs
+    Runs def run_kaiju -> def kaiju_species_summary_report
+    """
+    input:
+        expand( kaiju_contigs_summary_output_file,
+                sample = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['assembler']
+        )
+
 rule taxclass_visualize_krona_kaijureport_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju report
@@ -828,6 +1345,17 @@ rule taxclass_visualize_krona_kaijureport_workflow:
         expand( visualize_krona_output_file,
                 sample = workflows['taxonomic_classification_visualize_krona_kaijureport_workflow']['sample'],
                 qual = workflows['taxonomic_classification_visualize_krona_kaijureport_workflow']['qual']
+        )
+
+rule taxclass_visualize_krona_kaijureport_contigs_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from kaiju report from contigs
+    '''
+    input:
+        expand( visualize_krona_contigs_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['assembler']
         )
 
 rule taxclass_visualize_krona_kaijureport_filtered_workflow:
@@ -840,6 +1368,17 @@ rule taxclass_visualize_krona_kaijureport_filtered_workflow:
                 qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['qual']
         )
 
+rule taxclass_visualize_krona_kaijureport_filtered_contigs_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from kaiju filtered report from contigs
+    '''
+    input:
+        expand( visualize_krona_filtered_contigs_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['assembler']
+        )
+
 rule taxclass_visualize_krona_kaijureport_filteredclass_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju filtered, classified report
@@ -848,6 +1387,17 @@ rule taxclass_visualize_krona_kaijureport_filteredclass_workflow:
         expand( visualize_krona_filteredclass_output_file,
                 sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['sample'],
                 qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['qual']
+        )
+
+rule taxclass_visualize_krona_kaijureport_filteredclass_contigs_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from kaiju filtered, classified report from contigs
+    '''
+    input:
+        expand( visualize_krona_filteredclass_contigs_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
 
 
@@ -860,5 +1410,17 @@ rule taxclass_visualize_krona_species_summary_workflow:
                 sample = workflows['taxonomic_classification_visualize_krona_species_summary_workflow']['sample'],
                 qual = workflows['taxonomic_classification_visualize_krona_species_summary_workflow']['qual']
         )
+
+rule taxclass_visualize_krona_species_summary_contigs_workflow:
+    '''
+    Generates interactive krona plot (*.html) of the results from species summary report from contigs
+    '''
+    input:
+        expand( visualize_kaiju_species_contigs_output_file,
+                sample = workflows['taxonomic_classification_visualize_krona_species_summary_contigs_workflow']['sample'],
+                qual = workflows['taxonomic_classification_visualize_krona_species_summary_contigs_workflow']['qual'],
+                assembler = workflows['taxonomic_classification_visualize_krona_species_summary_contigs_workflow']['assembler']
+        )
+
 
 
