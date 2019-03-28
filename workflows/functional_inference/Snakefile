@@ -40,7 +40,7 @@ prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['
                             qual='{qual}'))
 prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-prefix_dir = inference['prokka_with_megahit']['prefix_pattern']
+prokka_with_megahit_prefix_files = inference['prokka_with_megahit']['prefix_pattern']
 prokka_megahit_threads = inference['prokka_with_megahit']['threads']
 
 
@@ -51,7 +51,8 @@ rule prokka_with_megahit:
         directory(prokka_with_megahit_output_dir)
     params:
         input_files = prokka_with_megahit_input_dir_sing,
-        output_dir = prokka_with_megahit_output_dir_sing
+        output_dir = prokka_with_megahit_output_dir_sing,
+        prefix_files = prokka_with_megahit_prefix_files
     threads:
         prokka_megahit_threads
     singularity:
@@ -63,7 +64,7 @@ rule prokka_with_megahit:
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer '
         '--outdir {params.output_dir} '
-        '--prefix {prefix_dir} '
+        '--prefix {params.prefix_files} '
         '--cpus {threads}'
 
 
@@ -80,7 +81,7 @@ prokka_with_metaspades_input_dir = join(data_dir,inference['prokka_with_metaspad
                             qual='{qual}'))
 prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-prefix_dir = inference['prokka_with_metaspades']['prefix_pattern']
+prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefix_pattern']
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
 
 
@@ -91,7 +92,8 @@ rule prokka_with_metaspades:
         directory(prokka_with_metaspades_output_dir)
     params:
         input_files = prokka_with_metaspades_input_dir_sing,
-        output_dir = prokka_with_metaspades_output_dir_sing
+        output_dir = prokka_with_metaspades_output_dir_sing,
+        prefix_files = prokka_with_metaspades_prefix_files
     threads:
         prokka_metaspades_threads
     singularity:
@@ -103,7 +105,7 @@ rule prokka_with_metaspades:
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer '
         '--outdir {params.output_dir} '
-        '--prefix {prefix_dir} '
+        '--prefix {params.prefix_files} '
         '--cpus {threads}'
 
 

@@ -381,7 +381,6 @@ def subsample_interleave_reads_output_sing(wildcards):
     return subsample_interleave_output_sing.format(**wildcards)
 
 
-print("subsample_interleave_output: "+str(subsample_interleave_output))
 rule subsample_interleaved_reads:
     """
     Sample from full interleaved reads
@@ -446,7 +445,7 @@ def split_interleaved_qa_outputs_fwd_sing(wildcards):
 
 def split_interleaved_qa_outputs_rev_sing(wildcards):
     return split_interleave_output_rev_sing.format(**wildcards)
-print("split_interleave_output: "+str(split_interleave_output))
+
 rule split_interleaved_reads:
     input:
         split_interleave_input
