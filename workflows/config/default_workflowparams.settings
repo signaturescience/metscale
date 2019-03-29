@@ -376,13 +376,13 @@ config_default = {
         "prokka_with_megahit" : {  
             "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
-            "prefix_pattern" : "{sample}_trim{qual}.megahit",
+            "prefix_pattern" : "{sample}_trim{qual}_megahit",
             "threads" : 8
         },
         "prokka_with_metaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
-            "prefix_pattern" : "{sample}_trim{qual}.metaspades",
+            "prefix_pattern" : "{sample}_trim{qual}_metaspades",
             "threads" : 8
         },
         "abricate_with_metaspades" : {
