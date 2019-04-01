@@ -520,7 +520,7 @@ rule convert_fastq_to_fasta:
     output: 
         fastq_to_fasta_output
     message: 
-        """--- Convert fastq to fata."""
+        """--- Convert fastq to fasta."""
     singularity:
         khmer_image
     params:
