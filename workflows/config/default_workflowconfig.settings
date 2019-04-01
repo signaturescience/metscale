@@ -254,6 +254,8 @@ config_default = {
             #
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
+            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            "db"        : ["card", "vfdb"],
         },
         "functional_inference_abricate_with_metaspades_workflow" : {
             #
@@ -262,6 +264,8 @@ config_default = {
             #
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
+            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            "db"        : ["card", "vfdb"],
         },
         "functional_inference_with_srst2_workflow" : {
             #
@@ -269,6 +273,8 @@ config_default = {
             #
             "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
+            #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
+            "db"        : ["ARGannot.r3.fasta", "ResFinder.fasta"]
         }
     }
 }

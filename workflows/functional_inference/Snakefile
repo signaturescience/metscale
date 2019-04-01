@@ -113,15 +113,16 @@ rule prokka_with_metaspades:
 # Functional Inference: abricate with megahit input
 
 abricate_image = container_image_name(biocontainers, 'abricate')
-abricate_with_megahit_db = inference['abricate_with_megahit']['db']
 abricate_with_megahit_output = join(data_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}', db=abricate_with_megahit_db))
+                            qual='{qual}', db='{db}'))
 abricate_with_megahit_output_sing = join(sing_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}', db=abricate_with_megahit_db))
+                            qual='{qual}', db='{db}'))
 abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
+abricate_with_megahit_db = '{db}'
+
 
 rule abricate_with_megahit:
     input:
@@ -130,12 +131,13 @@ rule abricate_with_megahit:
         abricate_with_megahit_output
     params:
         input_files = abricate_with_megahit_input_sing,
-        output_files = abricate_with_megahit_output_sing
+        output_files = abricate_with_megahit_output_sing,
+        gene_db = abricate_with_megahit_db
     singularity:
         abricate_image
     shell:
         'abricate --csv '
-        '--db {abricate_with_megahit_db} '
+        '--db {params.gene_db} '
         '{params.input_files}>'
         '{params.output_files} '
 
@@ -145,15 +147,17 @@ rule abricate_with_megahit:
 ###################################
 # Functional Inference: abricate with metaspades input
 
-abricate_with_metaspades_db = inference['abricate_with_metaspades']['db']
+
 abricate_with_metaspades_output = join(data_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}', db=abricate_with_metaspades_db))
+                            qual='{qual}', db='{db}'))
 abricate_with_metaspades_output_sing = join(sing_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
-                            qual='{qual}', db=abricate_with_metaspades_db))
+                            qual='{qual}', db='{db}'))
 abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
+abricate_with_metaspades_db = '{db}'
+
 
 rule abricate_with_metaspades:
     input:
@@ -162,12 +166,13 @@ rule abricate_with_metaspades:
         abricate_with_metaspades_output
     params:
         input_files = abricate_with_metaspades_input_sing,
-        output_files = abricate_with_metaspades_output_sing
+        output_files = abricate_with_metaspades_output_sing,
+        gene_db = abricate_with_metaspades_db
     singularity:
         abricate_image
     shell:
         'abricate --csv '
-        '--db {abricate_with_metaspades_db} '
+        '--db {params.gene_db} '
         '{params.input_files}>'
         '{params.output_files} '
 
@@ -204,27 +209,28 @@ def srst2_post_trimming_inputs_sing(wildcards):
     pre_inputs_wcs = " ".join(pre_inputs_wc)
     return pre_inputs_wc
 
-srst2_db_location = join(sing_dir, inference['srst2']['db'])
-srst2_db = inference['srst2']['db']
-srst2_output = join(data_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db=srst2_db))
-srst2_output = srst2_output + '__genes__' + srst2_db.split(".fasta",1)[0] + '__results.txt'
-srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db=srst2_db))
+srst2_db_location = join(sing_dir, '{db}')
+srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db='{db}'))
+#SRST2 likes to append some strings that are difficult to replicate with the db wildcard. So decided ti simpleify and just look for the log file.
+srst2_log_out = "data/{sample}_trim{qual}_{db}.srst2.log"
 
-def srst2_output_sub(wildcards):
+def srst2_output_sub_sing(wildcards):
     return srst2_output_sing.format(**wildcards)
 
 
 srst2_image = container_image_name(biocontainers, 'srst2')
 srst2_threads = inference['srst2']['threads']
 
+
+
 rule srst2_with_raw_reads:
     input:
        srst2_post_trimming_inputs
     output:
-        srst2_output
+        srst2_log_out
     params:
         input_files = srst2_post_trimming_inputs_sing,
-        output_files = srst2_output_sub,
+        output_files = srst2_output_sub_sing,
         db = srst2_db_location
     threads:
         srst2_threads
@@ -256,7 +262,7 @@ rule functional_prokka_with_megahit_workflow:
     input:
         expand( prokka_with_megahit_output_dir,
                 sample = workflows['functional_inference_prokka_with_megahit_workflow']['sample'],
-                qual = workflows['functional_inference_prokka_with_megahit_workflow']['qual']
+                qual   = workflows['functional_inference_prokka_with_megahit_workflow']['qual']
         )
 
 
@@ -267,7 +273,7 @@ rule functional_prokka_with_metaspades_workflow:
     input:
         expand( prokka_with_metaspades_output_dir,
                 sample = workflows['functional_inference_prokka_with_metaspades_workflow']['sample'],
-                qual = workflows['functional_inference_prokka_with_metaspades_workflow']['qual']
+                qual   = workflows['functional_inference_prokka_with_metaspades_workflow']['qual']
         )
 
 rule functional_abricate_with_megahit_workflow:
@@ -277,7 +283,8 @@ rule functional_abricate_with_megahit_workflow:
     input:
         expand( abricate_with_megahit_output,
                 sample = workflows['functional_inference_abricate_with_megahit_workflow']['sample'],
-                qual = workflows['functional_inference_abricate_with_megahit_workflow']['qual']
+                qual   = workflows['functional_inference_abricate_with_megahit_workflow']['qual'],
+                db     = workflows['functional_inference_abricate_with_megahit_workflow']['db'],
         )
 
 rule functional_abricate_with_metaspades_workflow:
@@ -287,7 +294,8 @@ rule functional_abricate_with_metaspades_workflow:
     input:
         expand( abricate_with_metaspades_output,
                 sample = workflows['functional_inference_abricate_with_metaspades_workflow']['sample'],
-                qual = workflows['functional_inference_abricate_with_metaspades_workflow']['qual']
+                qual   = workflows['functional_inference_abricate_with_metaspades_workflow']['qual'],
+                db     = workflows['functional_inference_abricate_with_metaspades_workflow']['db'],
         )
 
 
@@ -296,9 +304,10 @@ rule functional_with_srst2_workflow:
     Run srst2 on raw reads
     '''
     input:
-       expand( srst2_output,
+       expand( srst2_log_out,
                 sample    = workflows['functional_inference_with_srst2_workflow']['sample'],
                 qual      = workflows['functional_inference_with_srst2_workflow']['qual'],
+                db        = workflows['functional_inference_with_srst2_workflow']['db'],
                 direction = directions,
         )
 
