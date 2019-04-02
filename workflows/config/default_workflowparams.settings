@@ -388,16 +388,10 @@ config_default = {
         "abricate_with_metaspades" : {
             "output_pattern" : "{sample}_trim{qual}_metaspades.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
-            #database to run with abricate {card, ncbibetalactamase, vfdb, plasmidfinder,
-            # argannot, resfinder}
-            "db" : "card"
         },
         "abricate_with_megahit" : {
             "output_pattern" : "{sample}_trim{qual}_megahit.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
-            #database to run with abricate {card, ncbibetalactamase, vfdb, plasmidfinder,
-            # argannot, resfinder}
-            "db" : "card"
         },
         "direction_labels" : {
             "forward" : "1",
@@ -407,8 +401,6 @@ config_default = {
         "srst2" : {
             "threads" : 4,
             "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
-            #gene database to run with srst2 {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
-            "db" : "ARGannot.r3.fasta"
         }
 
     }
