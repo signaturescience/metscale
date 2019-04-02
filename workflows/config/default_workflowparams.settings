@@ -131,7 +131,6 @@ config_default = {
 
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
-            #"merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
              "merge_suffix"  : "_merge_scaled{scale}.k{kvalues}.fq.gz"
         },
         "compare_read_signatures" : {
@@ -142,7 +141,6 @@ config_default = {
             # csv_out is the single output file containing comparisons of all input files.
             # {kvalue} is replaced with the k value used in the comparison.
             # note that the file prefix does not need to be/should not be modified.
-            #"csv_out" : "SRR606249_allsamples_trim2and30_read_comparison.k{kvalue}.csv"
             "csv_out" : "{sample}_trim{qual}_read_comparison.k{kvalue}.csv"
         },
         "compute_assembly_signatures" : {
@@ -409,8 +407,14 @@ config_default = {
             "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
             #gene database to run with srst2 {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
             "db" : "ARGannot.r3.fasta"
-        }
+        },
+    },
 
+    "post_processing" : {
+        #params for the post processing workflow
+        "move_samples_to_dir" : {
+            "output_pattern" : "{sample}_finished"
+        },
     }
 }
 

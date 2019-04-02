@@ -593,8 +593,8 @@ quality_output_sing = [fq_fwd_trimmed_sing, fq_fwd_se_sing,
 adapter_file = join(data_dir, readfilt['adapter_file']['name'])
 adapter_file_sing = join(sing_dir, readfilt['adapter_file']['name'])
 
-quality_log = join(data_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
-quality_log_sing = join(sing_dir,'trimmomatic_pe_{sample}_trim{qual}.log')
+quality_log = join(data_dir,'{sample}_trim{qual}_trimmomatic_pe.log')
+quality_log_sing = join(sing_dir,'{sample}_trim{qual}_trimmomatic_pe.log')
 
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
