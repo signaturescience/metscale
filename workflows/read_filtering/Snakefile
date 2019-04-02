@@ -878,15 +878,15 @@ rule read_filtering_khmer_split_interleaved_reads_workflow:
                 direction = directions,
         )
 
-rule read_filtering_khmer_count_unique_reads_workflow:
+rule read_filtering_khmer_count_unique_kmers_workflow:
     '''
     Build rule: run unique-kmers python script return txt file
     '''
     input:
         expand( count_unique_reads_output,
-                sample      = workflows['read_filtering_khmer_count_unique_reads_workflow']['sample'],
-                qual        = workflows['read_filtering_khmer_count_unique_reads_workflow']['qual'],
-                kmers       = workflows['read_filtering_khmer_count_unique_reads_workflow']['kmers'],
+                sample      = workflows['read_filtering_khmer_count_unique_kmers_workflow']['sample'],
+                qual        = workflows['read_filtering_khmer_count_unique_kmers_workflow']['qual'],
+                kmers       = workflows['read_filtering_khmer_count_unique_kmers_workflow']['kmers'],
         )
 
 rule read_filtering_fastq_to_fasta_workflow:

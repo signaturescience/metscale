@@ -37,7 +37,7 @@ config_default = {
         },
 
 
-        "read_filtering_khmer_count_unique_reads_workflow" : {
+        "read_filtering_khmer_count_unique_kmers_workflow" : {
             "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
