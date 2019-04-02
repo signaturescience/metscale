@@ -4,41 +4,47 @@ config_default = {
 
     "workflows" : {
 
+        "sample_input_workflow" : {
+            # Global parameter for the sample input
+            # To run on. This replaces having samnples in every workflow
+            "sample"    : ["SRR606249_subset10"]
+        },
+
         "read_filtering_pretrim_workflow" : {
             #
             # These parameters determine which samples
             # the read filtering workflow will be run on.
             # 
-            "sample"    : ["SRR606249_subset10"]
+          #  "sample"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_posttrim_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
+           # "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
         "read_filtering_multiqc_workflow" : {
-            "sample"    : ["SRR606249_subset10"]
+            #"sample"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_khmer_interleave_reads_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
+            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
         "read_filtering_khmer_subsample_interleaved_reads_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
+            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
         "read_filtering_khmer_split_interleaved_reads_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
+            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
 
         "read_filtering_khmer_count_unique_reads_workflow" : {
-            "sample"    : ["SRR606249_subset10"],
+            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
         },
