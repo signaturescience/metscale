@@ -4,10 +4,10 @@ config_default = {
 
     "workflows" : {
 
-        "sample_input_workflow" : {
+        "samples_input_workflow" : {
             # Global parameter for the sample input
             # To run on. This replaces having samnples in every workflow
-            "sample"    : ["SRR606249_subset10"]
+            "samples"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_pretrim_workflow" : {
@@ -170,7 +170,7 @@ config_default = {
             # the assembly workflow will be run on.
             # (metaspades assembler only).
             # 
-            "sample"    : ["SRR606249_subset10"],
+        #    "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
@@ -180,7 +180,7 @@ config_default = {
             # the assembly workflow will be run on
             # (megahit assembler only).
             # 
-            "sample"    : ["SRR606249_subset10"],
+         #   "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
@@ -190,13 +190,13 @@ config_default = {
             # the assembly workflow will be run on
             # (all assemblers).
             # 
-            "sample"    : ["SRR606249_subset10"],
+         #   "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
         "assembly_quast_workflow" : {
             "assembler" : ["megahit","metaspades"],
-            "sample"    : ["SRR606249_subset10"],
+        #    "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
 
         },
@@ -206,7 +206,7 @@ config_default = {
             # which samples to run on
             # #which assembler to get input from
             #
-            "sample"    : ["SRR606249_subset10"],              
+        #    "sample"    : ["SRR606249_subset10"],              
             "multiqc_assembler" :  ["megahit","metaspades"],
         },
 
