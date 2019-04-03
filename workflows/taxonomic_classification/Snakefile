@@ -497,8 +497,6 @@ def kaiju_species_output_file_sub(wildcards):
     return kaiju_summary_output_file_sing.format(**wildcards)
 
 
-#print("kaiju_summary_input_files: "+str(kaiju_summary_input_files))
-#print("kaiju_summary_output_file: "+str(kaiju_summary_output_file))
 rule kaiju_species_summary_report:
     """
     Generate a kaiju summary report from kaiju results
@@ -1181,126 +1179,126 @@ workflows = config['workflows']
 directions = [readfilt['direction_labels']['forward'],
               readfilt['direction_labels']['reverse']]
 
-rule taxclass_signatures_workflow:
+rule tax_class_signatures_workflow:
     """
     Build rule: trigger calculation of signatures from reads.
     Note:This runs the comparison/compute_read_signatures_rule
     """
     input:
         expand(compute_read_sig_output,
-                sample  = workflows['taxonomic_classification_signatures_workflow']['sample'], 
-                qual    = workflows['taxonomic_classification_signatures_workflow']['qual'], 
+                sample  = workflows['tax_class_signatures_workflow']['sample'], 
+                qual    = workflows['tax_class_signatures_workflow']['qual'], 
         )
 
-rule taxclass_gather_workflow:
+rule tax_class_gather_workflow:
     """
     Gather and compare read signatures using sourmash gather
     """
     input:
         expand( compute_read_sig_output,
-                sample = workflows['taxonomic_classification_gather_workflow']['sample'],
-                qual = workflows['taxonomic_classification_gather_workflow']['qual']
+                sample = workflows['tax_class_gather_workflow']['sample'],
+                qual = workflows['tax_class_gather_workflow']['qual']
         ),
         expand( gather_csv,
-                sample = workflows['taxonomic_classification_gather_workflow']['sample'],
-                kvalue = workflows['taxonomic_classification_gather_workflow']['kvalues'],
-                qual = workflows['taxonomic_classification_gather_workflow']['qual']
+                sample = workflows['tax_class_gather_workflow']['sample'],
+                kvalue = workflows['tax_class_gather_workflow']['kvalues'],
+                qual = workflows['tax_class_gather_workflow']['qual']
         )
 
-rule taxclass_kaijureport_workflow:
+rule tax_class_kaijureport_workflow:
     """
     Run kaiju and generate a report from all (except contigs)results.
     """
     input:
         expand( kaiju_report_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_workflow']['qual']
+                sample = workflows['tax_class_kaijureport_workflow']['sample'],
+                qual = workflows['tax_class_kaijureport_workflow']['qual']
         )
 
-rule taxclass_kaijureport_contigs_workflow:
+rule tax_class_kaijureport_contigs_workflow:
     """
     Run kaiju and generate a report from all contigs results.
     """
     input:
         expand( kaiju_contigs_report_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_contigs_workflow']['assembler']
+                sample = workflows['tax_class_kaijureport_contigs_workflow']['sample'],
+                qual = workflows['tax_class_kaijureport_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_kaijureport_contigs_workflow']['assembler']
         )
 
 
-rule taxclass_kaijureport_filtered_workflow:
+rule tax_class_kaijureport_filtered_workflow:
     """
     Run kaiju and generate a report from filtered
     results (taxa with <X% abundance).
     """
     input:
         expand( kaiju_filtered_report_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_filtered_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_filtered_workflow']['qual']
+                sample = workflows['tax_class_kaijureport_filtered_workflow']['sample'],
+                qual = workflows['tax_class_kaijureport_filtered_workflow']['qual']
         )
 
-rule taxclass_kaijureport_filtered_contigs_workflow:
+rule tax_class_kaijureport_filtered_contigs_workflow:
     """
     Run kaiju and generate a report from contigs filtered
     results (taxa with <X% abundance).
     """
     input:
         expand( kaiju_filtered_report_contigs_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_filtered_contigs_workflow']['assembler']
+                sample = workflows['tax_class_kaijureport_filtered_contigs_workflow']['sample'],
+                qual = workflows['tax_class_kaijureport_filtered_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_kaijureport_filtered_contigs_workflow']['assembler']
         )
 
-rule taxclass_kaijureport_filteredclass_workflow:
+rule tax_class_kaijureport_filteredclass_workflow:
     """
     Run kaiju and generate a report from filtered, classified
     results (taxa with <X% abundance).
     """
     input:
         expand( kaiju_filteredclass_report_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_filteredclass_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_filteredclass_workflow']['qual']
+                sample = workflows['tax_class_kaijureport_filteredclass_workflow']['sample'],
+                qual = workflows['tax_class_kaijureport_filteredclass_workflow']['qual']
         )
 
 
-rule taxclass_kaijureport_filteredclass_contigs_workflow:
+rule tax_class_kaijureport_filteredclass_contigs_workflow:
     """
     Run kaiju and generate a report from contigs filtered, classified
     results (taxa with <X% abundance).
     """
     input:
         expand( kaiju_filteredclass_report_contigs_output_file,
-                sample = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaijureport_filteredclass_contigs_workflow']['assembler']
+                sample = workflows['tax_class_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['tax_class_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
 
 
-rule taxclass_add_taxonnames_workflow:
+rule tax_class_add_taxonnames_workflow:
     """
     Takes the output tsv from kaiju run (*.out) and adss the associated taxon names for each result (*.names.out)
     Runs def run_kaiju -> def add_taxon_names
     """
     input:
         expand( taxon_names_output_file,
-                sample = workflows['taxonomic_classification_add_taxonnames_workflow']['sample'],
-                qual = workflows['taxonomic_classification_add_taxonnames_workflow']['qual']
+                sample = workflows['tax_class_add_taxonnames_workflow']['sample'],
+                qual = workflows['tax_class_add_taxonnames_workflow']['qual']
         )
 
-rule taxclass_add_taxonnames_to_contigs_workflow:
+rule tax_class_add_taxonnames_to_contigs_workflow:
     """
     Takes the output tsv from contigs kaiju run (*.out) and adds the associated taxon names for each result (*.names.out)
     Runs def run_kaiju -> def add_taxon_names
     """
     input:
         expand( taxon_names_contigs_output_file,
-                sample = workflows['taxonomic_classification_add_taxonnames_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_add_taxonnames_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_add_taxonnames_contigs_workflow']['assembler']
+                sample = workflows['tax_class_add_taxonnames_contigs_workflow']['sample'],
+                qual = workflows['tax_class_add_taxonnames_workflow']['qual'],
+                assembler = workflows['tax_class_add_taxonnames_contigs_workflow']['assembler']
         )
 
-rule taxclass_convert_kaiju_to_krona_workflow:
+rule tax_class_convert_kaiju_to_krona_workflow:
     """
     converts kaiju output to krona input format (*.kaiju_out_krona)
     Create a krona file out of the kaiju results
@@ -1308,11 +1306,11 @@ rule taxclass_convert_kaiju_to_krona_workflow:
     """
     input:
         expand( kaiju2krona_output_file,
-                sample = workflows['taxonomic_classification_convert_kaiju_to_krona_workflow']['sample'],
-                qual = workflows['taxonomic_classification_convert_kaiju_to_krona_workflow']['qual']
+                sample = workflows['tax_class_convert_kaiju_to_krona_workflow']['sample'],
+                qual = workflows['tax_class_convert_kaiju_to_krona_workflow']['qual']
         )
 
-rule taxclass_kaiju_species_summary_workflow:
+rule tax_class_kaiju_species_summary_workflow:
     """
     Labels the krona results down to the species level (default is the genus level
     Create a kaiju species summary results file
@@ -1320,11 +1318,11 @@ rule taxclass_kaiju_species_summary_workflow:
     """
     input:
         expand( kaiju_summary_output_file,
-                sample = workflows['taxonomic_classification_kaiju_species_summary_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaiju_species_summary_workflow']['qual']
+                sample = workflows['tax_class_kaiju_species_summary_workflow']['sample'],
+                qual = workflows['tax_class_kaiju_species_summary_workflow']['qual']
         )
 
-rule taxclass_kaiju_species_summary_contigs_workflow:
+rule tax_class_kaiju_species_summary_contigs_workflow:
     """
     Labels the contigs krona results down to the species level (default is the genus level
     Create a kaiju species summary results file from contigs
@@ -1332,94 +1330,94 @@ rule taxclass_kaiju_species_summary_contigs_workflow:
     """
     input:
         expand( kaiju_contigs_summary_output_file,
-                sample = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_kaiju_species_summary_contigs_workflow']['assembler']
+                sample = workflows['tax_class_kaiju_species_summary_contigs_workflow']['sample'],
+                qual = workflows['tax_class_kaiju_species_summary_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_kaiju_species_summary_contigs_workflow']['assembler']
         )
 
-rule taxclass_visualize_krona_kaijureport_workflow:
+rule tax_class_visualize_krona_kaijureport_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju report
     '''
     input:
         expand( visualize_krona_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_workflow']['qual']
+                sample = workflows['tax_class_visualize_krona_kaijureport_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_kaijureport_workflow']['qual']
         )
 
-rule taxclass_visualize_krona_kaijureport_contigs_workflow:
+rule tax_class_visualize_krona_kaijureport_contigs_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju report from contigs
     '''
     input:
         expand( visualize_krona_contigs_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_contigs_workflow']['assembler']
+                sample = workflows['tax_class_visualize_krona_kaijureport_contigs_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_kaijureport_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_visualize_krona_kaijureport_contigs_workflow']['assembler']
         )
 
-rule taxclass_visualize_krona_kaijureport_filtered_workflow:
+rule tax_class_visualize_krona_kaijureport_filtered_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju filtered report
     '''
     input:
         expand( visualize_krona_filtered_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_workflow']['qual']
+                sample = workflows['tax_class_visualize_krona_kaijureport_filtered_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_kaijureport_filtered_workflow']['qual']
         )
 
-rule taxclass_visualize_krona_kaijureport_filtered_contigs_workflow:
+rule tax_class_visualize_krona_kaijureport_filtered_contigs_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju filtered report from contigs
     '''
     input:
         expand( visualize_krona_filtered_contigs_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow']['assembler']
+                sample = workflows['tax_class_visualize_krona_kaijureport_filtered_contigs_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_kaijureport_filtered_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_visualize_krona_kaijureport_filtered_contigs_workflow']['assembler']
         )
 
-rule taxclass_visualize_krona_kaijureport_filteredclass_workflow:
+rule tax_class_visualize_krona_kaijureport_filteredclass_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju filtered, classified report
     '''
     input:
         expand( visualize_krona_filteredclass_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow']['qual']
+                sample = workflows['tax_class_visualize_krona_kaijureport_filteredclass_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_kaijureport_filteredclass_workflow']['qual']
         )
 
-rule taxclass_visualize_krona_kaijureport_filteredclass_contigs_workflow:
+rule tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from kaiju filtered, classified report from contigs
     '''
     input:
         expand( visualize_krona_filteredclass_contigs_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow']['assembler']
+                sample = workflows['tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
 
 
-rule taxclass_visualize_krona_species_summary_workflow:
+rule tax_class_visualize_krona_species_summary_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from species summary report
     '''
     input:
         expand( visualize_kaiju_species_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_species_summary_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_species_summary_workflow']['qual']
+                sample = workflows['tax_class_visualize_krona_species_summary_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_species_summary_workflow']['qual']
         )
 
-rule taxclass_visualize_krona_species_summary_contigs_workflow:
+rule tax_class_visualize_krona_species_summary_contigs_workflow:
     '''
     Generates interactive krona plot (*.html) of the results from species summary report from contigs
     '''
     input:
         expand( visualize_kaiju_species_contigs_output_file,
-                sample = workflows['taxonomic_classification_visualize_krona_species_summary_contigs_workflow']['sample'],
-                qual = workflows['taxonomic_classification_visualize_krona_species_summary_contigs_workflow']['qual'],
-                assembler = workflows['taxonomic_classification_visualize_krona_species_summary_contigs_workflow']['assembler']
+                sample = workflows['tax_class_visualize_krona_species_summary_contigs_workflow']['sample'],
+                qual = workflows['tax_class_visualize_krona_species_summary_contigs_workflow']['qual'],
+                assembler = workflows['tax_class_visualize_krona_species_summary_contigs_workflow']['assembler']
         )
 
 
