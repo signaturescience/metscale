@@ -490,7 +490,7 @@ rule comparison_reads_assembly_workflow:
         )
 
 
-rule comparison_output_heatmap_plots_read_assembly_workflow:
+rule comparison_output_heatmap_plots_reads_assembly_workflow:
     """
     Build rule: create jaccard heat maps for read assembly CSV files
     """
