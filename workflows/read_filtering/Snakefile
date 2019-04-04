@@ -875,7 +875,7 @@ rule read_filtering_khmer_split_interleaved_reads_workflow:
         expand( split_interleave_output,
                 sample      = workflows['samples_input_workflow']['samples'],
                 qual        = workflows['read_filtering_khmer_split_interleaved_reads_workflow']['qual'],
-                direction = directions,
+                direction   = directions,
         )
 
 rule read_filtering_khmer_count_unique_reads_workflow:

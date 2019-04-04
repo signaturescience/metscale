@@ -126,12 +126,10 @@ config_default = {
             # should match the scale and k values above.
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            #"sig_suffix"    : "_scaled10k.k21_31_51.sig", 
             "sig_suffix"    : "_scaled{scale}.k{kvalues}.sig", 
 
             #
             # merge_suffix is used to replace .fq.gz with a merge file suffix
-            #"merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
              "merge_suffix"  : "_merge_scaled{scale}.k{kvalues}.fq.gz"
         },
         "compare_read_signatures" : {
@@ -161,7 +159,6 @@ config_default = {
         "compare_assembly_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            #"samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # csv_out is the single output file containing comparisons of all input files
@@ -171,7 +168,6 @@ config_default = {
         "compare_read_assembly_signatures" : {
             #
             # the samples, quality, assembler variables are used in expand() to form filenames
-            #"samples"   : ["SRR606249_subset10"],
             "assembler" : ["megahit","metaspades"],
             #
             # k values are passed to sourmash compare

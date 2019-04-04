@@ -497,8 +497,6 @@ def kaiju_species_output_file_sub(wildcards):
     return kaiju_summary_output_file_sing.format(**wildcards)
 
 
-#print("kaiju_summary_input_files: "+str(kaiju_summary_input_files))
-#print("kaiju_summary_output_file: "+str(kaiju_summary_output_file))
 rule kaiju_species_summary_report:
     """
     Generate a kaiju summary report from kaiju results

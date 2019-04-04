@@ -114,8 +114,7 @@ def compute_signature_inputs_fwd(wildcards):
 def compute_signature_inputs_rev(wildcards):
     return read_sig_input_rev_sing.format(**wildcards)
 
-print("compute_read_sig_inputs: "+str(compute_read_sig_inputs))
-print("compute_read_sig_output: "+str(compute_read_sig_output))
+
 rule compute_read_signatures:
     """
     Compute read signatures from trimmed data using sourmash.
@@ -175,8 +174,7 @@ assembly_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembl
 
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
-print("assembly_sig_input: "+str(assembly_sig_input))
-print("assembly_sig_output: "+str(assembly_sig_output))
+
 rule compute_assembly_signatures:
     """
     Compute assembly signatures using sourmash.
@@ -246,9 +244,7 @@ def compare_read_sigs_inputs_wc(wildcards):
     in_wc = " ".join(in_wc)
     return in_wc
 
-print("---------------------------")
-print("#1 compare_read_sigs_inputs: "+str(compare_read_sigs_inputs))
-print("#1 compare_read_sigs_output: "+str(compare_read_sigs_output))
+
 rule compare_read_signatures:
     """
     Compare signatures of specified reads.
@@ -314,9 +310,7 @@ def compare_assembly_sigs_inputs_wc(wildcards):
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
-print("--------------------------------")
-print("#2 compare_assembly_sigs_inputs: "+str(compare_assembly_sigs_inputs))
-print("#2 compare_assembly_sigs_output: "+str(compare_assembly_sigs_output))
+
 rule compare_assembly_signatures:
     """
     Compare different assembly signatures using sourmash.
@@ -385,9 +379,8 @@ def compare_ra_sigs_inputs_wc(wildcards):
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
-print("-----------------------------")
-print("#3 compare_ra_sigs_inputs: "+str(compare_ra_sigs_inputs))
-print("#3 compare_ra_sigs_output: "+str(compare_ra_sigs_output))
+
+
 rule compare_read_assembly_signatures:
     """
     Compare signatures of reads and assembly files.
