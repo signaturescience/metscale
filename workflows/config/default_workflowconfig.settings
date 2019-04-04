@@ -209,9 +209,10 @@ config_default = {
             # these parameters determine which reads
             # the comparison workflow will be run on
             # 
+            "kvalue"    : ["21","31","51"],
             "sample"    : ["SRR606249_subset10"],
            # "qual"      : ["2","30"],
-            "kvalue"    : ["21","31","51"],
+            
         },
 
         "comparison_assembly_workflow" : {

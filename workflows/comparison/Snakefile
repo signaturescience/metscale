@@ -217,12 +217,11 @@ read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures'][
 compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
                                 sample = workflows['comparison_reads_workflow']['sample'],
                                 qual = read_sig_qual_string,
-                                kvalue = '{kvalue}')
+                                kvalue_read = '{kvalue_read}')
 compare_read_sigs_output = [join(data_dir, file) for file in compare_read_sigs_output_name]
 compare_read_sigs_output_sing = [join(sing_dir, file) for file in compare_read_sigs_output_name]
 
 sourmash_compare_image = container_image_name(biocontainers, 'sourmash_compare')
-
 
 def compare_read_sigs_output_wc(wildcards):
     """
@@ -260,7 +259,7 @@ rule compare_read_signatures:
     shell:
         'sourmash compare '
         '{params.compare_reads_input_wc} '
-        '-k {wildcards.kvalue} '
+        '-k {wildcards.kvalue_read} '
         '--csv /{params.compare_reads_output_wc}'
 
 
@@ -284,7 +283,7 @@ compare_assembly_qual_string = 'and'.join(map(str,comparison['compute_assembly_s
 compare_assembly_sigs_output_name = expand(compare_assembly_sigs_output_name,
                                     sample = workflows['comparison_assembly_workflow']['sample'],
                                     qual = compare_assembly_qual_string,
-                                    kvalue = '{kvalue}')
+                                    kvalue_assembly = '{kvalue_assembly}')
 
 compare_assembly_sigs_output = [join(data_dir, file) for file in compare_assembly_sigs_output_name]
 compare_assembly_sigs_output_sing = [join(sing_dir, file) for file in compare_assembly_sigs_output_name]
@@ -327,7 +326,7 @@ rule compare_assembly_signatures:
     shell:
         'sourmash compare '
         '{params.compare_assembly_inputs_wc} '
-        '-k {wildcards.kvalue} '
+        '-k {wildcards.kvalue_assembly} '
         '--csv /{params.compare_assembly_output_wc}'
 
 
@@ -355,7 +354,7 @@ compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['cs
 ra_samples_string = 'and'.join(map(str,workflows['comparison_reads_workflow']['sample'] + workflows['comparison_assembly_workflow']['sample'])) 
 compare_ra_sigs_output_name = expand(compare_ra_sigs_output_name,
                                 sample = ra_samples_string,
-                                kvalue = '{kvalue}')
+                                kvalue_read_assembly = '{kvalue_read_assembly}')
 
 compare_ra_sigs_output = [join(data_dir, file) for file in compare_ra_sigs_output_name]
 compare_ra_sigs_output_sing = [join(sing_dir, file) for file in compare_ra_sigs_output_name]
@@ -396,9 +395,64 @@ rule compare_read_assembly_signatures:
     shell:
         'sourmash compare '
         '{params.compare_ra_inputs_wc} '
-        '-k {wildcards.kvalue} '
+        '-k {wildcards.kvalue_read_assembly} '
         '--csv /{params.compare_ra_output_wc}'
 
+
+##################################################
+# Comparison: create heatmap plots for read assembly csv files
+
+
+compare_csv_files_ra = compare_ra_sigs_output
+compare_heatmap_plots_output_ra = os.path.splitext(compare_csv_files_ra[0])[0]+'.png'
+
+rule create_jaccard_heatmap_plots_ra:
+    """
+    create heatmap plots of CSV outs
+    """
+    input:
+        compare_csv_files_ra
+    output:
+        compare_heatmap_plots_output_ra
+    script:
+        'JaccardIndexHeatmapPlt.R'
+
+
+##################################################
+# Comparison: create heatmap plots for reads csv files
+
+
+compare_csv_files_reads = compare_read_sigs_output
+compare_heatmap_plots_output_reads = os.path.splitext(compare_csv_files_reads[0])[0]+'.png'
+
+rule create_jaccard_heatmap_plots_reads:
+    """
+    create heatmap plots of CSV outs
+    """
+    input:
+        compare_csv_files_reads
+    output:
+        compare_heatmap_plots_output_reads
+    script:
+        'JaccardIndexHeatmapPlt.R'
+
+##################################################
+# Comparison: create heatmap plots for assembly csv files
+
+
+compare_csv_files_assembly = compare_assembly_sigs_output
+compare_heatmap_plots_output_assembly = os.path.splitext(compare_csv_files_assembly[0])[0]+'.png'
+
+rule create_jaccard_heatmap_plots_assembly:
+    """
+    create heatmap plots of CSV outs
+    """
+    input:
+        compare_csv_files_assembly
+    output:
+        compare_heatmap_plots_output_assembly
+    script:
+        'JaccardIndexHeatmapPlt.R'
 
 
 
@@ -413,7 +467,7 @@ rule comparison_reads_workflow:
     """
     input:
         expand( compare_read_sigs_output,
-                kvalue      = workflows['comparison_reads_workflow']['kvalue']
+                kvalue_read = workflows['comparison_reads_workflow']['kvalue']
        )
 
 
@@ -423,7 +477,7 @@ rule comparison_assembly_workflow:
     """
     input:
         expand( compare_assembly_sigs_output,
-                kvalue = workflows['comparison_assembly_workflow']['kvalue']
+                kvalue_assembly = workflows['comparison_assembly_workflow']['kvalue']
         )
 
 rule comparison_reads_assembly_workflow:
@@ -432,6 +486,50 @@ rule comparison_reads_assembly_workflow:
     """
     input:
         expand( compare_ra_sigs_output,
-                kvalue = workflows['comparison_reads_assembly_workflow']['kvalue']
+                kvalue_read_assembly = workflows['comparison_reads_assembly_workflow']['kvalue']
         )
 
+
+rule comparison_output_heatmap_plots_read_assembly_workflow:
+    """
+    Build rule: create jaccard heat maps for read assembly CSV files
+    """
+    input:
+        expand( compare_heatmap_plots_output_ra,
+            kvalue_read_assembly = workflows['comparison_reads_assembly_workflow']['kvalue']
+    )
+
+
+rule comparison_output_heatmap_plots_reads_workflow:
+    """
+    Build rule: create jaccard heat maps for reads CSV files
+    """
+    input:
+        expand( compare_heatmap_plots_output_reads,
+            kvalue_read = workflows['comparison_reads_workflow']['kvalue']
+    )
+
+
+rule comparison_output_heatmap_plots_assembly_workflow:
+    """
+    Build rule: create jaccard heat maps for assembly CSV files
+    """
+    input:
+        expand( compare_heatmap_plots_output_assembly,
+            kvalue_assembly = workflows['comparison_assembly_workflow']['kvalue']
+    )
+
+rule comparison_output_heatmap_plots_all_workflow:
+    """
+    Build rule: create jaccard heat maps for all CSV files
+    """
+    input:
+        expand( compare_heatmap_plots_output_assembly,
+            kvalue_assembly = workflows['comparison_assembly_workflow']['kvalue']
+        ),
+        expand( compare_heatmap_plots_output_reads,
+            kvalue_read = workflows['comparison_reads_workflow']['kvalue']
+        ),
+        expand( compare_heatmap_plots_output_ra,
+            kvalue_read_assembly = workflows['comparison_reads_assembly_workflow']['kvalue']
+        )
