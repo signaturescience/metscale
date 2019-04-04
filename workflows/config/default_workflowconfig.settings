@@ -11,202 +11,182 @@ config_default = {
         },
 
         "read_filtering_pretrim_workflow" : {
-            #
-            # These parameters determine which samples
-            # the read filtering workflow will be run on.
-            # 
-          #  "sample"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_posttrim_workflow" : {
-           # "sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
         "read_filtering_multiqc_workflow" : {
-            #"sample"    : ["SRR606249_subset10"]
         },
 
         "read_filtering_khmer_interleave_reads_workflow" : {
-            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
         "read_filtering_khmer_subsample_interleaved_reads_workflow" : {
-            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
         "read_filtering_khmer_split_interleaved_reads_workflow" : {
-            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"]
         },
 
 
         "read_filtering_khmer_count_unique_reads_workflow" : {
-            #"sample"    : ["SRR606249_subset10"],
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
         },
 
         "taxonomic_classification_signatures_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_gather_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "kvalues" : ["21","31","51"]
         },
 
         "taxonomic_classification_kaijureport_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+         #   "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]   
         },
 
         "taxonomic_classification_kaijureport_filtered_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+         #   "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_filteredclass_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+         #   "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
         },
 
         "taxonomic_classification_kaijureport_filteredclass_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+         #   "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]  
         },
 
         "taxonomic_classification_kaijureport_filtered_contigs_workflow": {
-            "sample"  : ["SRR606249_subset10"],
+          #  "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"]  
         },
 
         "taxonomic_classification_add_taxonnames_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_add_taxonnames_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]       
         },
 
         "taxonomic_classification_convert_kaiju_to_krona_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_kaiju_species_summary_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_kaiju_species_summary_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_filtered_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
         
         "taxonomic_classification_visualize_krona_kaijureport_filtered_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_filteredclass_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_visualize_krona_kaijureport_filteredclass_contigs_workflow": {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"]        
             },
 
         "taxonomic_classification_visualize_krona_species_summary_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],        
         },
 
         "taxonomic_classification_visualize_krona_species_summary_contigs_workflow" : {
-            "sample"  : ["SRR606249_subset10"],
+        #    "sample"  : ["SRR606249_subset10"],
             "qual" : ["2","30"],  
             "assembler" : ["megahit","metaspades"] 
         },
 
         "assembly_metaspades_workflow" : {
             #
-            # these parameters determine which samples
             # the assembly workflow will be run on.
             # (metaspades assembler only).
             # 
-        #    "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
         "assembly_megahit_workflow" : {
             #
-            # these parameters determine which samples
             # the assembly workflow will be run on
             # (megahit assembler only).
             # 
-         #   "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
         "assembly_all_workflow" : {
             #
-            # these parameters determine which samples
             # the assembly workflow will be run on
             # (all assemblers).
             # 
-         #   "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
 
         "assembly_quast_workflow" : {
             "assembler" : ["megahit","metaspades"],
-        #    "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
 
         },
 
         "assembly_multiqc_workflow" : {
             #
-            # which samples to run on
             # #which assembler to get input from
-            #
-        #    "sample"    : ["SRR606249_subset10"],              
+            #              
             "multiqc_assembler" :  ["megahit","metaspades"],
         },
 
@@ -215,8 +195,6 @@ config_default = {
             # these parameters determine which reads
             # the comparison workflow will be run on
             # 
-            "sample"    : ["SRR606249_subset10"],
-           # "qual"      : ["2","30"],
             "kvalue"    : ["21","31","51"],
         },
 
@@ -225,7 +203,6 @@ config_default = {
             # these parameters determine which assembled reads
             # the comparison workflow will be run on
             # 
-            "sample"    : ["SRR606249_subset10"],
             "kvalue"    : ["21","31","51"],
         },
 
@@ -239,36 +216,32 @@ config_default = {
 
         "functional_inference_prokka_with_megahit_workflow" : {
             #
-            # these parameters determine which contig samples 
+            # these parameters determine which contig params 
             # from megahit to run prokka on
             #
-            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
         "functional_inference_prokka_with_metaspades_workflow" : {
             #
-            # these parameters determine which contig samples 
+            # these parameters determine which contig params
             # from metaspades to run prokka on
             #
-            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
         },
         "functional_inference_abricate_with_megahit_workflow" : {
             #
-            # these parameters determine which contig samples 
+            # these parameters determine which contig params 
             # from megahit to run abricate on
             #
-            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
             # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
             "db"        : ["card", "vfdb"],
         },
         "functional_inference_abricate_with_metaspades_workflow" : {
             #
-            # these parameters determine which contig samples 
+            # these parameters determine which contig params 
             # from metaspades to run abricate on
-            #
-            "sample"    : ["SRR606249_subset10"],
+            #,
             "qual"      : ["2","30"],
             # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
             "db"        : ["card", "vfdb"],
@@ -277,7 +250,6 @@ config_default = {
             #
             # these paramters determine srst2 input
             #
-            "sample"    : ["SRR606249_subset10"],
             "qual"      : ["2","30"],
             #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
             "db"        : ["ARGannot.r3.fasta", "ResFinder.fasta"]

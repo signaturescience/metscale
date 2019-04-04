@@ -114,7 +114,8 @@ def compute_signature_inputs_fwd(wildcards):
 def compute_signature_inputs_rev(wildcards):
     return read_sig_input_rev_sing.format(**wildcards)
 
-
+print("compute_read_sig_inputs: "+str(compute_read_sig_inputs))
+print("compute_read_sig_output: "+str(compute_read_sig_output))
 rule compute_read_signatures:
     """
     Compute read signatures from trimmed data using sourmash.
@@ -174,7 +175,8 @@ assembly_sig_kvalues_cmd = ",".join([str(j) for j in comparison['compute_assembl
 
 sourmash_compute_image = container_image_name(biocontainers, 'sourmash')
 
-
+print("assembly_sig_input: "+str(assembly_sig_input))
+print("assembly_sig_output: "+str(assembly_sig_output))
 rule compute_assembly_signatures:
     """
     Compute assembly signatures using sourmash.
@@ -204,8 +206,8 @@ rule compute_assembly_signatures:
 
 compare_read_sigs_input_names = expand( 
                 compute_read_sig_output_name,
-                sample = workflows['comparison_reads_workflow']['sample'],
-                qual = comparison['compute_read_signatures']['qual'])
+                sample = workflows['samples_input_workflow']['samples'],
+                qual   = comparison['compute_read_signatures']['qual'])
 
 # Turn filename X into data/X
 compare_read_sigs_inputs = [join(data_dir,k) for k in compare_read_sigs_input_names]
@@ -215,8 +217,8 @@ compare_read_sigs_inputs_sing = [join(sing_dir,k) for k in compare_read_sigs_inp
 compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
 read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures']['qual'])) 
 compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
-                                sample = workflows['comparison_reads_workflow']['sample'],
-                                qual = read_sig_qual_string,
+                                sample = workflows['samples_input_workflow']['samples'],
+                                qual   = read_sig_qual_string,
                                 kvalue = '{kvalue}')
 compare_read_sigs_output = [join(data_dir, file) for file in compare_read_sigs_output_name]
 compare_read_sigs_output_sing = [join(sing_dir, file) for file in compare_read_sigs_output_name]
@@ -244,6 +246,9 @@ def compare_read_sigs_inputs_wc(wildcards):
     in_wc = " ".join(in_wc)
     return in_wc
 
+print("---------------------------")
+print("#1 compare_read_sigs_inputs: "+str(compare_read_sigs_inputs))
+print("#1 compare_read_sigs_output: "+str(compare_read_sigs_output))
 rule compare_read_signatures:
     """
     Compare signatures of specified reads.
@@ -270,8 +275,8 @@ rule compare_read_signatures:
 # We already have the assembly sig name
 compare_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample = workflows['comparison_assembly_workflow']['sample'],
-            qual = comparison['compute_assembly_signatures']['qual'],
+            sample    = workflows['samples_input_workflow']['samples'],
+            qual      = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
 
 # Turn filename X into data/assembly/X
@@ -282,8 +287,8 @@ compare_assembly_sigs_inputs_sing = [join(sing_dir, k) for k in compare_assembly
 compare_assembly_sigs_output_name = comparison['compare_assembly_signatures']['csv_out']
 compare_assembly_qual_string = 'and'.join(map(str,comparison['compute_assembly_signatures']['qual'])) 
 compare_assembly_sigs_output_name = expand(compare_assembly_sigs_output_name,
-                                    sample = workflows['comparison_assembly_workflow']['sample'],
-                                    qual = compare_assembly_qual_string,
+                                    sample = workflows['samples_input_workflow']['samples'],
+                                    qual   = compare_assembly_qual_string,
                                     kvalue = '{kvalue}')
 
 compare_assembly_sigs_output = [join(data_dir, file) for file in compare_assembly_sigs_output_name]
@@ -309,8 +314,9 @@ def compare_assembly_sigs_inputs_wc(wildcards):
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
-
-
+print("--------------------------------")
+print("#2 compare_assembly_sigs_inputs: "+str(compare_assembly_sigs_inputs))
+print("#2 compare_assembly_sigs_output: "+str(compare_assembly_sigs_output))
 rule compare_assembly_signatures:
     """
     Compare different assembly signatures using sourmash.
@@ -336,14 +342,14 @@ rule compare_assembly_signatures:
 
 compare_ra_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample = workflows['comparison_assembly_workflow']['sample'],
-            qual = comparison['compute_assembly_signatures']['qual'],
+            sample    = workflows['samples_input_workflow']['samples'],
+            qual      = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler']
 )
 compare_ra_read_sigs_input_names = expand(
             compute_read_sig_output_name,
-            sample = workflows['comparison_reads_workflow']['sample'],
-            qual = comparison['compute_read_signatures']['qual']
+            sample = workflows['samples_input_workflow']['samples'],
+            qual   = comparison['compute_read_signatures']['qual']
 )
 compare_ra_sigs_inputs =  [join(data_dir, file) for file in compare_ra_read_sigs_input_names]
 compare_ra_sigs_inputs += [join(data_dir, file) for file in compare_ra_assembly_sigs_input_names]
@@ -352,7 +358,7 @@ compare_ra_sigs_inputs_sing += [join(sing_dir, file) for file in compare_ra_asse
 
 # User specifies CSV output file.
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
-ra_samples_string = 'and'.join(map(str,workflows['comparison_reads_workflow']['sample'] + workflows['comparison_assembly_workflow']['sample'])) 
+ra_samples_string = 'and'.join(map(str,workflows['samples_input_workflow']['samples'] + workflows['samples_input_workflow']['samples'])) 
 compare_ra_sigs_output_name = expand(compare_ra_sigs_output_name,
                                 sample = ra_samples_string,
                                 kvalue = '{kvalue}')
@@ -379,7 +385,9 @@ def compare_ra_sigs_inputs_wc(wildcards):
     in_wc = ["/%s"%(x) for x in in_wc]
     in_wc = " ".join(in_wc)
     return in_wc
-
+print("-----------------------------")
+print("#3 compare_ra_sigs_inputs: "+str(compare_ra_sigs_inputs))
+print("#3 compare_ra_sigs_output: "+str(compare_ra_sigs_output))
 rule compare_read_assembly_signatures:
     """
     Compare signatures of reads and assembly files.
