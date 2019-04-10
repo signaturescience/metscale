@@ -1,0 +1,11 @@
+Identifier,Lowest_Rank,Lowest_NCBI_TaxID,Lowest_NCBI_Tax_Name,GenBank_ID,Reads,Abundance
+zymo_01,Species,287,Pseudomonas aeruginosa,na,na,12
+zymo_02,Species,562,Escherichia coli,na,na,12
+zymo_03,Species,28901,Salmonella enterica,na,na,12
+zymo_04,Species,1613,Lactobacillus fermentum,na,na,12
+zymo_05,Species,1351,Enterococcus faecalis,na,na,12
+zymo_06,Species,1280,Staphylococcus aureus,na,na,12
+zymo_07,Species,1639,Listeria monocytogenes,na,na,12
+zymo_08,Species,1423,Bacillus subtilis,na,na,12
+zymo_09,Species,4932,Saccharomyces cerevisiae,na,na,2
+zymo_10,Species,5207,Cryptococcus neoformans,na,na,2
