@@ -1,0 +1,65 @@
+Identifier,Lowest_Rank,Lowest_NCBI_TaxID,Lowest_NCBI_Tax_Name,GenBank_ID,Reads,Abundance
+Shakya_01,Species,160233,Ignicoccus hospitalis,na,na,0.04
+Shakya_02,Species,111955,Sulfolobus tokodaii,na,na,0.123
+Shakya_03,Strain_No_Rank,178306,Pyrobaculum aerophilum str. IM2,na,na,0.17
+Shakya_04,Species,121277,Pyrobaculum arsenaticum,na,na,0.127
+Shakya_05,Species,181486,Pyrobaculum calidifontis,na,na,0.175
+Shakya_06,Species,2234,Archaeoglobus fulgidus,na,na,0.478
+Shakya_07,Species,2246,Haloferax volcanii,na,na,0.192
+Shakya_08,Species,2190,Methanocaldococcus jannaschii,na,na,0.159
+Shakya_09,Strain_No_Rank,402880,Methanococcus maripaludis C5,na,na,0.383
+Shakya_10,Strain_No_Rank,267377,Methanococcus maripaludis S2,na,na,0.269
+Shakya_11,Strain_No_Rank,188937,Methanosarcina acetivorans C2A,na,na,0.083
+Shakya_12,Species,2320,Methanopyrus kandleri,na,na,0.084
+Shakya_13,Species,2261,Pyrococcus furiosus,na,na,0.057
+Shakya_14,Species,53953,Pyrococcus horikoshii,na,na,0.207
+Shakya_15,Species,379547,Aciduliprofundum boonei,na,na,0.288
+Shakya_16,Species,160232,Nanoarchaeum equitans,na,na,1.422
+Shakya_17,Species,33075,Acidobacterium capsulatum,na,na,4.614
+Shakya_18,Species,168697,Salinispora arenicola,na,na,0.901
+Shakya_19,Species,168695,Salinispora tropica,na,na,0.745
+Shakya_20,Species,380749,Hydrogenobaculum sp. Y04AAS1,na,na,0.819
+Shakya_21,Strain_No_Rank,123214,Persephonella marina EX-H1,na,na,1.562
+Shakya_22,Species,436114,Sulfurihydrogenibium sp. YO3AOP1,na,na,1.836
+Shakya_23,Strain_No_Rank,432331,Sulfurihydrogenibium yellowstonense SS-5,na,na,0.346
+Shakya_24,Species,818,Bacteroides thetaiotaomicron,na,na,0.926
+Shakya_25,Species,821,Bacteroides vulgatus,na,na,0.568
+Shakya_26,Species,837,Porphyromonas gingivalis,na,na,1.387
+Shakya_27,Species,1097,Chlorobaculum tepidum,na,na,1.739
+Shakya_28,Species,1092,Chlorobium limicola,na,na,2.455
+Shakya_29,Species,1096,Chlorobium phaeobacteroides,na,na,1.722
+Shakya_30,Species,1094,Chlorobium phaeovibrioides,na,na,7.626
+Shakya_31,Species,34090,Pelodictyon phaeoclathratiforme,na,na,1.136
+Shakya_32,Strain_No_Rank,324602,Chloroflexus aurantiacus J-10-fl,na,na,0.854
+Shakya_33,Species,65,Herpetosiphon aurantiacus,na,na,0.591
+Shakya_34,Species,103690,Nostoc sp. PCC 7120,na,na,0.677
+Shakya_35,Strain_No_Rank,243230,Deinococcus radiodurans R1,na,na,0.298
+Shakya_36,Strain_No_Rank,300852,Thermus thermophilus HB8,na,na,1.635
+Shakya_37,Species,513050,Dictyoglomus turgidum,na,na,0.786
+Shakya_38,Species,1351,Enterococcus faecalis,na,na,1.18
+Shakya_39,Species,1515,Hungateiclostridium thermocellum,na,na,3.113
+Shakya_40,Species,496866,Thermoanaerobacter pseudethanolicus,na,na,0.994
+Shakya_41,Species,31899,Caldicellulosiruptor bescii,na,na,0.768
+Shakya_42,Species,44001,Caldicellulosiruptor saccharolyticus,na,na,1.058
+Shakya_43,Subspecies,76856,Fusobacterium nucleatum subsp. nucleatum,na,na,0.582
+Shakya_44,Species,173480,Gemmatimonas aurantiaca,na,na,1.747
+Shakya_45,Species,265606,Rhodopirellula baltica,na,na,5.407
+Shakya_46,Species,89184,Ruegeria pomeroyi,na,na,1.048
+Shakya_47,Species,52598,Sulfitobacter sp. EE-36,na,na,2.516
+Shakya_48,Species,314267,Sulfitobacter sp. NAS-14.1,na,na,7.881
+Shakya_49,Species,542,Zymomonas mobilis,na,na,0.445
+Shakya_50,Species,518,Bordetella bronchiseptica,na,na,0.713
+Shakya_51,Strain_No_Rank,266265,Paraburkholderia xenovorans LB400,na,na,0.341
+Shakya_52,Species,34029,Leptothrix cholodnii,na,na,0.695
+Shakya_53,Species,915,Nitrosomonas europaea,na,na,5.616
+Shakya_54,Species,901,Desulfovibrio piger,na,na,5.037
+Shakya_55,Strain_No_Rank,391774,Desulfovibrio vulgaris DP4,na,na,0.826
+Shakya_56,Strain_No_Rank,243231,Geobacter sulfurreducens PCA,na,na,1.222
+Shakya_57,Species,844,Wolinella succinogenes,na,na,1.679
+Shakya_58,Strain_No_Rank,402882,Shewanella baltica OS185,na,na,0.404
+Shakya_59,Strain_No_Rank,407976,Shewanella baltica OS223,na,na,0.241
+Shakya_60,Species,158,Treponema denticola,na,na,2.265
+Shakya_61,Strain_No_Rank,309803,Thermotoga neapolitana DSM 4359,na,na,3.699
+Shakya_62,Strain_No_Rank,390874,Thermotoga petrophila RKU-1,na,na,3.893
+Shakya_63,Species,126740,Thermotoga sp. RQ2,na,na,7.84
+Shakya_64,Species,239935,Akkermansia muciniphila,na,na,1.28
