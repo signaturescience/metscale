@@ -1,0 +1,22 @@
+4.545454545	Archaea	Euryarchaeota	Methanobacteria	Methanobacteriales	Methanobacteriaceae	Methanobrevibacter		Methanobrevibacter smithii
+4.545454545	Bacteria	Actinobacteria	Actinobacteria	Actinomycetales	Actinomycetaceae	Schaalia		Schaalia odontolytica
+4.545454545	Bacteria	Actinobacteria	Actinobacteria	Propionibacteriales	Propionibacteriaceae	Cutibacterium		Cutibacterium acnes
+4.545454545	Bacteria	Bacteroidetes	Bacteroidia	Bacteroidales	Bacteroidaceae	Bacteroides		Bacteroides vulgatus
+4.545454545	Bacteria	Deinococcus-Thermus	Deinococci	Deinococcales	Deinococcaceae	Deinococcus		Deinococcus radiodurans
+4.545454545	Bacteria	Firmicutes	Bacilli	Bacillales	Bacillaceae	Bacillus	Bacillus cereus group	Bacillus cereus
+4.545454545	Bacteria	Firmicutes	Bacilli	Bacillales	Listeriaceae	Listeria		Listeria monocytogenes
+4.545454545	Bacteria	Firmicutes	Bacilli	Bacillales	Staphylococcaceae	Staphylococcus		Staphylococcus aureus
+4.545454545	Bacteria	Firmicutes	Bacilli	Bacillales	Staphylococcaceae	Staphylococcus		Staphylococcus epidermidis
+4.545454545	Bacteria	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus		Enterococcus faecalis
+4.545454545	Bacteria	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus		Lactobacillus gasseri
+4.545454545	Bacteria	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus		Streptococcus agalactiae
+4.545454545	Bacteria	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus		Streptococcus mutans
+4.545454545	Bacteria	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus		Streptococcus pneumoniae
+4.545454545	Bacteria	Firmicutes	Clostridia	Clostridiales	Clostridiaceae	Clostridium		Clostridium beijerinckii
+4.545454545	Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae	Rhodobacter		Rhodobacter sphaeroides
+4.545454545	Bacteria	Proteobacteria	Betaproteobacteria	Neisseriales	Neisseriaceae	Neisseria		Neisseria meningitidis
+4.545454545	Bacteria	Proteobacteria	Epsilonproteobacteria	Campylobacterales	Helicobacteraceae	Helicobacter		Helicobacter pylori
+4.545454545	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia		Escherichia coli
+4.545454545	Bacteria	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Moraxellaceae	Acinetobacter	Acinetobacter calcoaceticus/baumannii complex	Acinetobacter baumannii
+4.545454545	Bacteria	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae	Pseudomonas	Pseudomonas aeruginosa group	Pseudomonas aeruginosa
+4.545454545	Eukaryota	Ascomycota	Saccharomycetes	Saccharomycetales	Debaryomycetaceae	Candida		Candida albicans

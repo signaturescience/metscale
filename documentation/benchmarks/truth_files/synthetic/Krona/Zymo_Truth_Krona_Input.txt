@@ -1,0 +1,10 @@
+12	Bacteria	Firmicutes	Bacilli	Bacillales	Bacillaceae	Bacillus		Bacillus subtilis
+12	Bacteria	Firmicutes	Bacilli	Bacillales	Listeriaceae	Listeria		Listeria monocytogenes
+12	Bacteria	Firmicutes	Bacilli	Bacillales	Staphylococcaceae	Staphylococcus		Staphylococcus aureus
+12	Bacteria	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus		Enterococcus faecalis
+12	Bacteria	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus		Lactobacillus fermentum
+12	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia		Escherichia coli
+12	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Salmonella		Salmonella enterica
+12	Bacteria	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae	Pseudomonas	Pseudomonas aeruginosa group	Pseudomonas aeruginosa
+2	Eukaryota	Basidiomycota	Tremellomycetes	Tremellales	Cryptococcaceae	Cryptococcus	Cryptococcus neoformans species complex	Cryptococcus neoformans
+2	Eukaryota	Ascomycota	Saccharomycetes	Saccharomycetales	Saccharomycetaceae	Saccharomyces		Saccharomyces cerevisiae
