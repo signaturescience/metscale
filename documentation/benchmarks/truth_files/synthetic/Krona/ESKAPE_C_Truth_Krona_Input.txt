@@ -1,0 +1,16 @@
+6.25	Bacteria	Actinobacteria	Actinobacteria	Corynebacteriales	Corynebacteriaceae	Corynebacterium		Corynebacterium matruchotii
+6.25	Bacteria	Actinobacteria	Actinobacteria	Micrococcales	Brevibacteriaceae	Brevibacterium		Brevibacterium linens
+6.25	Bacteria	Actinobacteria	Actinobacteria	Micrococcales	Micrococcaceae	Micrococcus		Micrococcus luteus
+6.25	Bacteria	Actinobacteria	Actinobacteria	Propionibacteriales	Propionibacteriaceae	Cutibacterium		Cutibacterium acnes
+6.25	Bacteria	Firmicutes	Bacilli	Bacillales	Staphylococcaceae	Staphylococcus		Staphylococcus aureus
+6.25	Bacteria	Firmicutes	Bacilli	Bacillales	Staphylococcaceae	Staphylococcus		Staphylococcus epidermidis
+6.25	Bacteria	Firmicutes	Bacilli	Lactobacillales	Enterococcaceae	Enterococcus		Enterococcus faecium
+6.25	Bacteria	Firmicutes	Bacilli	Lactobacillales	Lactobacillaceae	Lactobacillus		Lactobacillus gasseri
+6.25	Bacteria	Firmicutes	Bacilli	Lactobacillales	Streptococcaceae	Streptococcus		Streptococcus pyogenes
+6.25	Bacteria	Firmicutes	Clostridia	Clostridiales	Peptostreptococcaceae	Clostridioides		Clostridioides difficile
+6.25	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Enterobacter	Enterobacter cloacae complex	Enterobacter cloacae
+6.25	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Escherichia		Escherichia coli
+6.25	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Klebsiella		Klebsiella aerogenes
+6.25	Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacterales	Enterobacteriaceae	Klebsiella		Klebsiella pneumoniae
+6.25	Bacteria	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Moraxellaceae	Acinetobacter	Acinetobacter calcoaceticus/baumannii complex	Acinetobacter baumannii
+6.25	Bacteria	Proteobacteria	Gammaproteobacteria	Pseudomonadales	Pseudomonadaceae	Pseudomonas	Pseudomonas aeruginosa group	Pseudomonas aeruginosa

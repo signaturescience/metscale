@@ -1,0 +1,17 @@
+Abundance,Superkingdom_TaxID,Superkingdom_Name,Phylum_TaxID,Phylum_Name,Class_TaxID,Class_Name,Order_TaxID,Order_Name,Family_TaxID,Family_Name,Genus_TaxID,Genus_Name,Species_Group_TaxID,Species_Group_Name,Species_TaxID,Species_Name
+6.25,2,Bacteria,201174,Actinobacteria,1760,Actinobacteria,85007,Corynebacteriales,1653,Corynebacteriaceae,1716,Corynebacterium,,,43768,Corynebacterium matruchotii
+6.25,2,Bacteria,201174,Actinobacteria,1760,Actinobacteria,85006,Micrococcales,85019,Brevibacteriaceae,1696,Brevibacterium,,,1703,Brevibacterium linens
+6.25,2,Bacteria,201174,Actinobacteria,1760,Actinobacteria,85006,Micrococcales,1268,Micrococcaceae,1269,Micrococcus,,,1270,Micrococcus luteus
+6.25,2,Bacteria,201174,Actinobacteria,1760,Actinobacteria,85009,Propionibacteriales,31957,Propionibacteriaceae,1912216,Cutibacterium,,,1747,Cutibacterium acnes
+6.25,2,Bacteria,1239,Firmicutes,91061,Bacilli,1385,Bacillales,90964,Staphylococcaceae,1279,Staphylococcus,,,1280,Staphylococcus aureus
+6.25,2,Bacteria,1239,Firmicutes,91061,Bacilli,1385,Bacillales,90964,Staphylococcaceae,1279,Staphylococcus,,,1282,Staphylococcus epidermidis
+6.25,2,Bacteria,1239,Firmicutes,91061,Bacilli,186826,Lactobacillales,81852,Enterococcaceae,1350,Enterococcus,,,1352,Enterococcus faecium
+6.25,2,Bacteria,1239,Firmicutes,91061,Bacilli,186826,Lactobacillales,33958,Lactobacillaceae,1578,Lactobacillus,,,1596,Lactobacillus gasseri
+6.25,2,Bacteria,1239,Firmicutes,91061,Bacilli,186826,Lactobacillales,1300,Streptococcaceae,1301,Streptococcus,,,1314,Streptococcus pyogenes
+6.25,2,Bacteria,1239,Firmicutes,186801,Clostridia,186802,Clostridiales,186804,Peptostreptococcaceae,1870884,Clostridioides,,,1496,Clostridioides difficile
+6.25,2,Bacteria,1224,Proteobacteria,1236,Gammaproteobacteria,91347,Enterobacterales,543,Enterobacteriaceae,547,Enterobacter,354276,Enterobacter cloacae complex,550,Enterobacter cloacae
+6.25,2,Bacteria,1224,Proteobacteria,1236,Gammaproteobacteria,91347,Enterobacterales,543,Enterobacteriaceae,561,Escherichia,,,562,Escherichia coli
+6.25,2,Bacteria,1224,Proteobacteria,1236,Gammaproteobacteria,91347,Enterobacterales,543,Enterobacteriaceae,570,Klebsiella,,,548,Klebsiella aerogenes
+6.25,2,Bacteria,1224,Proteobacteria,1236,Gammaproteobacteria,91347,Enterobacterales,543,Enterobacteriaceae,570,Klebsiella,,,573,Klebsiella pneumoniae
+6.25,2,Bacteria,1224,Proteobacteria,1236,Gammaproteobacteria,72274,Pseudomonadales,468,Moraxellaceae,469,Acinetobacter,909768,Acinetobacter calcoaceticus/baumannii complex,470,Acinetobacter baumannii
+6.25,2,Bacteria,1224,Proteobacteria,1236,Gammaproteobacteria,72274,Pseudomonadales,135621,Pseudomonadaceae,286,Pseudomonas,136841,Pseudomonas aeruginosa group,287,Pseudomonas aeruginosa
