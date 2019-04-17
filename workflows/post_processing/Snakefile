@@ -40,7 +40,7 @@ post_processing = config['post_processing']
 
 
 output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
-out_dir_sample = workflows['read_filtering_khmer_subsample_interleaved_reads_workflow']['sample']
+out_dir_sample = workflows['samples_input_workflow']['samples']
 output_dir = expand(output_dir_pattern, sample=out_dir_sample)[0]
 output_dir = join(data_dir, output_dir)
 

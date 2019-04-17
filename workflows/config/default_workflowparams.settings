@@ -126,7 +126,6 @@ config_default = {
             # should match the scale and k values above.
             #
             # sig_suffix is used to replace .fq.gz with a signature suffix
-            #"sig_suffix"    : "_scaled10k.k21_31_51.sig", 
             "sig_suffix"    : "_scaled{scale}.k{kvalues}.sig", 
 
             #
