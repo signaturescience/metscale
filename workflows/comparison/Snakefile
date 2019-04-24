@@ -353,7 +353,7 @@ compare_ra_sigs_inputs_sing += [join(sing_dir, file) for file in compare_ra_asse
 
 # User specifies CSV output file.
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
-ra_samples_string = 'and'.join(map(str,sample    = sample_input_files, + sample    = sample_input_files,)) 
+ra_samples_string = 'and'.join(map(str,sample_input_files + sample_input_files)) 
 compare_ra_sigs_output_name = expand(compare_ra_sigs_output_name,
                                 sample = ra_samples_string,
                                 kvalue_read_assembly = '{kvalue_read_assembly}')
