@@ -204,7 +204,7 @@ rule compute_assembly_signatures:
 
 compare_read_sigs_input_names = expand( 
                 compute_read_sig_output_name,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = comparison['compute_read_signatures']['qual'])
 
 # Turn filename X into data/X
@@ -215,7 +215,7 @@ compare_read_sigs_inputs_sing = [join(sing_dir,k) for k in compare_read_sigs_inp
 compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
 read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures']['qual'])) 
 compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
-                                sample = workflows['samples_input_workflow']['samples'],
+                                sample    = sample_input_files,
                                 qual = read_sig_qual_string,
                                 kvalue_read = '{kvalue_read}')
 
@@ -271,7 +271,7 @@ rule compare_read_signatures:
 # We already have the assembly sig name
 compare_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample    = workflows['samples_input_workflow']['samples'],
+            sample    = sample_input_files,
             qual      = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
 
@@ -283,7 +283,7 @@ compare_assembly_sigs_inputs_sing = [join(sing_dir, k) for k in compare_assembly
 compare_assembly_sigs_output_name = comparison['compare_assembly_signatures']['csv_out']
 compare_assembly_qual_string = 'and'.join(map(str,comparison['compute_assembly_signatures']['qual'])) 
 compare_assembly_sigs_output_name = expand(compare_assembly_sigs_output_name,
-                                    sample = workflows['samples_input_workflow']['samples'],
+                                    sample    = sample_input_files,
                                     qual = compare_assembly_qual_string,
                                     kvalue_assembly = '{kvalue_assembly}')
 
@@ -337,13 +337,13 @@ rule compare_assembly_signatures:
 
 compare_ra_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample    = workflows['samples_input_workflow']['samples'],
+            sample    = sample_input_files,
             qual      = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler']
 )
 compare_ra_read_sigs_input_names = expand(
             compute_read_sig_output_name,
-            sample = workflows['samples_input_workflow']['samples'],
+            sample    = sample_input_files,
             qual   = comparison['compute_read_signatures']['qual']
 )
 compare_ra_sigs_inputs =  [join(data_dir, file) for file in compare_ra_read_sigs_input_names]
@@ -353,7 +353,7 @@ compare_ra_sigs_inputs_sing += [join(sing_dir, file) for file in compare_ra_asse
 
 # User specifies CSV output file.
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
-ra_samples_string = 'and'.join(map(str,workflows['samples_input_workflow']['samples'] + workflows['samples_input_workflow']['samples'])) 
+ra_samples_string = 'and'.join(map(str,sample    = sample_input_files, + sample    = sample_input_files,)) 
 compare_ra_sigs_output_name = expand(compare_ra_sigs_output_name,
                                 sample = ra_samples_string,
                                 kvalue_read_assembly = '{kvalue_read_assembly}')

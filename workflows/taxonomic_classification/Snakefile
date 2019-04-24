@@ -1186,7 +1186,7 @@ rule tax_class_signatures_workflow:
     """
     input:
         expand(compute_read_sig_output,
-                sample  = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual    = workflows['tax_class_signatures_workflow']['qual'], 
         )
 
@@ -1197,11 +1197,11 @@ rule tax_class_gather_workflow:
     """
     input:
         expand( compute_read_sig_output,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual = workflows['tax_class_gather_workflow']['qual']
         ),
         expand( gather_csv,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 kvalue = workflows['tax_class_gather_workflow']['kvalues'],
                 qual = workflows['tax_class_gather_workflow']['qual']
         )
@@ -1213,7 +1213,7 @@ rule tax_class_kaijureport_workflow:
     """
     input:
         expand( kaiju_report_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_kaijureport_workflow']['qual']
         )
 
@@ -1224,7 +1224,7 @@ rule tax_class_kaijureport_contigs_workflow:
     """
     input:
         expand( kaiju_contigs_report_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_kaijureport_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_kaijureport_contigs_workflow']['assembler']
         )
@@ -1237,7 +1237,7 @@ rule tax_class_kaijureport_filtered_workflow:
     """
     input:
         expand( kaiju_filtered_report_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_kaijureport_filtered_workflow']['qual']
         )
 
@@ -1249,7 +1249,7 @@ rule tax_class_kaijureport_filtered_contigs_workflow:
     """
     input:
         expand( kaiju_filtered_report_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_kaijureport_filtered_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_kaijureport_filtered_contigs_workflow']['assembler']
         )
@@ -1262,7 +1262,7 @@ rule tax_class_kaijureport_filteredclass_workflow:
     """
     input:
         expand( kaiju_filteredclass_report_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_kaijureport_filteredclass_workflow']['qual']
         )
 
@@ -1274,7 +1274,7 @@ rule tax_class_kaijureport_filteredclass_contigs_workflow:
     """
     input:
         expand( kaiju_filteredclass_report_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_kaijureport_filteredclass_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
@@ -1287,7 +1287,7 @@ rule tax_class_add_taxonnames_workflow:
     """
     input:
         expand( taxon_names_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_add_taxonnames_workflow']['qual']
         )
 
@@ -1299,7 +1299,7 @@ rule tax_class_add_taxonnames_to_contigs_workflow:
     """
     input:
         expand( taxon_names_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_add_taxonnames_workflow']['qual'],
                 assembler = workflows['tax_class_add_taxonnames_contigs_workflow']['assembler']
         )
@@ -1313,7 +1313,7 @@ rule tax_class_convert_kaiju_to_krona_workflow:
     """
     input:
         expand( kaiju2krona_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_convert_kaiju_to_krona_workflow']['qual']
         )
 
@@ -1326,7 +1326,7 @@ rule tax_class_kaiju_species_summary_workflow:
     """
     input:
         expand( kaiju_summary_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_kaiju_species_summary_workflow']['qual']
         )
 
@@ -1339,7 +1339,7 @@ rule tax_class_kaiju_species_summary_contigs_workflow:
     """
     input:
         expand( kaiju_contigs_summary_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_kaiju_species_summary_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_kaiju_species_summary_contigs_workflow']['assembler']
         )
@@ -1351,7 +1351,7 @@ rule tax_class_visualize_krona_kaijureport_workflow:
     '''
     input:
         expand( visualize_krona_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_visualize_krona_kaijureport_workflow']['qual']
         )
 
@@ -1362,7 +1362,7 @@ rule tax_class_visualize_krona_kaijureport_contigs_workflow:
     '''
     input:
         expand( visualize_krona_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_visualize_krona_kaijureport_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_visualize_krona_kaijureport_contigs_workflow']['assembler']
         )
@@ -1374,7 +1374,7 @@ rule tax_class_visualize_krona_kaijureport_filtered_workflow:
     '''
     input:
         expand( visualize_krona_filtered_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_visualize_krona_kaijureport_filtered_workflow']['qual']
         )
 
@@ -1385,7 +1385,7 @@ rule tax_class_visualize_krona_kaijureport_filtered_contigs_workflow:
     '''
     input:
         expand( visualize_krona_filtered_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_visualize_krona_kaijureport_filtered_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_visualize_krona_kaijureport_filtered_contigs_workflow']['assembler']
         )
@@ -1397,7 +1397,7 @@ rule tax_class_visualize_krona_kaijureport_filteredclass_workflow:
     '''
     input:
         expand( visualize_krona_filteredclass_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_visualize_krona_kaijureport_filteredclass_workflow']['qual']
         )
 
@@ -1408,7 +1408,7 @@ rule tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow:
     '''
     input:
         expand( visualize_krona_filteredclass_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow']['assembler']
         )
@@ -1420,7 +1420,7 @@ rule tax_class_visualize_krona_species_summary_workflow:
     '''
     input:
         expand( visualize_kaiju_species_output_file,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['tax_class_visualize_krona_species_summary_workflow']['qual']
         )
 
@@ -1431,7 +1431,7 @@ rule tax_class_visualize_krona_species_summary_contigs_workflow:
     '''
     input:
         expand( visualize_kaiju_species_contigs_output_file,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['tax_class_visualize_krona_species_summary_contigs_workflow']['qual'],
                 assembler = workflows['tax_class_visualize_krona_species_summary_contigs_workflow']['assembler']
         )
