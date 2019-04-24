@@ -297,7 +297,7 @@ rule assembly_metaspades_workflow:
     """
     input:
         expand( assembly_metaspades_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['assembly_metaspades_workflow']['qual'],
                 direction = directions,
         )
@@ -308,7 +308,7 @@ rule assembly_megahit_workflow:
     """
     input:
         expand( assembly_megahit_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['assembly_megahit_workflow']['qual'],
                 direction = directions,
         )
@@ -319,12 +319,12 @@ rule assembly_all_workflow:
     """
     input:
         expand( assembly_metaspades_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['assembly_all_workflow']['qual'],
                 direction = directions,
         ),
         expand( assembly_megahit_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['assembly_all_workflow']['qual'],
                 direction = directions,
         )
@@ -332,7 +332,7 @@ rule assembly_all_workflow:
 rule assembly_quast_workflow:
     input:
         expand( assembly_quast_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['assembly_quast_workflow']['qual'],
                 assembler = workflows['assembly_quast_workflow']['assembler'],
         )
@@ -340,6 +340,6 @@ rule assembly_quast_workflow:
 rule assembly_multiqc_workflow:
     input:
         expand( assembly_multiqc_output_dir,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 assembler = workflows['assembly_multiqc_workflow']['multiqc_assembler'],
         )
