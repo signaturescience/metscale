@@ -279,14 +279,14 @@ config_default = {
             # filename pattern for pre-trimmed reads
             # Note: the read files section listing URLS for read files
             # MUST match the pre_trimmming_pattern.
-            "pre_trimming_pattern"  : "{sample}_{direction}_reads.fq.gz",
+            "pre_trimming_pattern"  : "{sample}_{direction}_reads",
             #"pre_trimming_pattern"  : "{sample}_S0_L0_R{direction}_001.fastq.gz",
             #"pre_trimming_pattern"  : "{sample}_S{barcode}_L{lane}_R{direction}_001.fq.gz",
             # we are searching for the illumina file pattern.
-            "pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fq.gz",
+            "pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
             #
             # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}.fq.gz",
+            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
             #number of threads to use.
             "threads" : 2
         },
@@ -307,8 +307,8 @@ config_default = {
             # suffix for quality trimming files (replaces .fq.gz)
             "trim_suffix" : "se",
             #use for SRR dataset with .fq.gz file extensions  <--TO CHANGE
-            "sample_file_ext" : ".fq.gz"
-            #"sample_file_ext" : ".fastq.gz"
+            #"sample_file_ext" : ".fq.gz"
+            "sample_file_ext" : ".fastq.gz"
         },
 
         "multiqc" :{
