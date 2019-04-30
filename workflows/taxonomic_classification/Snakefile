@@ -198,20 +198,20 @@ rule unpack_kaijudb:
 ############################################
 # Taxonomic Classification: run kaiju
 
-fq_fwd = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['forward']))
-fq_rev = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_rev = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['reverse']))
 
-fq_fwd_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['forward']))
-fq_rev_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['reverse']))

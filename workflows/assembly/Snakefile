@@ -41,8 +41,8 @@ readfilt = config['read_filtering']
 # We have to explicitly expand {direction} to _1 and _2.
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
-assembly_metaspades_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
-assembly_metaspades_input_pattern_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_metaspades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_metaspades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 
 assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
@@ -119,8 +119,8 @@ rule assembly_metaspades:
 ###################################
 # Assembly: megahit
 
-assembly_megahit_input_pattern = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'])
-assembly_megahit_input_pattern_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'])
+assembly_megahit_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_megahit_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 
 assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 

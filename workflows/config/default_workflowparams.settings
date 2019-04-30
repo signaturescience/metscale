@@ -304,7 +304,7 @@ config_default = {
 
         "quality_trimming" : {
             # 
-            # suffix for quality trimming files (replaces .fq.gz)
+            # suffix for quality trimming files (replaces file extension)
             "trim_suffix" : "se",
             #use for SRR dataset with .fq.gz file extensions  <--TO CHANGE
             #"sample_file_ext" : ".fq.gz"
