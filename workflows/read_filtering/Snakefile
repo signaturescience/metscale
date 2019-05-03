@@ -49,17 +49,16 @@ for sample in all_sample_names:
     input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
     input_file_pattern = re.sub(r"\*", sample, input_file_pattern, 1)
     input_file_pattern = join(data_dir, input_file_pattern)
-    #print(input_file_pattern)
     sample_input_files.extend(glob.glob(input_file_pattern))
-print("sample_input_files1: "+str(sample_input_files))
-#Know we need to remove file extension and data_dir
+
+#nnow we need to remove file extension and data_dir
 file_names = []
 for file in sample_input_files:
     file_path_no_dir = file.replace(data_dir+'/','')
     file_names.append(file_path_no_dir.replace(readfilt["quality_trimming"]["sample_file_ext"],''))
 sample_input_files = file_names
-print("sample_input_files2: "+str(sample_input_files))
-test_value = "AAAAA"
+
+
 ###################################
 # Pretrimming code needed for convert_illumina_to_internal_format and pre_trimming_quality_assessment
 
@@ -86,7 +85,6 @@ pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing,
 pre_trimming_inputs = [ fq_fwd_pre_trimmed, 
                         fq_rev_pre_trimmed]
 
-print("###: "+str(fq_fwd_pre_trimmed))
 
 ###################################
 # Convert illumina files to internal file formats
@@ -102,8 +100,7 @@ def create_output_internal_format_fwd(wildcards):
 def create_output_internal_format_rev(wildcards):
    return fq_rev_pre_trimmed.format(**wildcards)
 
-print("pre_trimming_inputs: "+str(pre_trimming_inputs))
-#pre_trimming_inputs =  ['data/{sample}_1_reads.fastq.gz', 'data/{sample}_2_reads.fastq.gz']
+
 rule convert_illumina_to_internal_format:
     '''
     Convert the illumina file format to out internal file format
@@ -114,10 +111,12 @@ rule convert_illumina_to_internal_format:
         pre_trimming_inputs
     params:
         dest_fwd = create_output_internal_format_fwd,
-        dest_rev = create_output_internal_format_rev
+        dest_rev = create_output_internal_format_rev,
+        search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"],
+        replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
     run:
         src_fwd_str = str(input)
-        src_rev_str = src_fwd_str.replace("R1", "R2")
+        src_rev_str = src_fwd_str.replace(params.search_pattern, params.replace_pattern)
         shutil.copy(src_fwd_str, params.dest_fwd)
         shutil.copy(src_rev_str, params.dest_rev)
 
@@ -148,10 +147,6 @@ pre_trimming_outputs = [pre_trimming_output_fwd,
 
 pre_trimming_outputs_sing = [pre_trimming_output_fwd_sing,
                         pre_trimming_output_rev_sing]
-print("sample_file_ext: "+str(sample_file_ext))
-print("target_ext: "+str(target_ext))
-print("fq_fwd_pre_trimmed: "+str(fq_fwd_pre_trimmed))
-print("fq_fwd_pre_trimmed input for pre_trimming_quality_assessment output: "+str(pre_trimming_output_fwd))
 
 fastqc_image = container_image_name(biocontainers, 'fastqc')
 
@@ -173,8 +168,7 @@ def pre_trimming_qa_outputs(wildcards):
     pre_outputs_wcs = " ".join(pre_outputs_wc)
     return pre_outputs_wcs
 
-print("pre_trimming_quality_assessment/pre_trimming_inputs: "+str(pre_trimming_inputs))
-print("pre_trimming_quality_assessment/pre_trimming_outputs: "+str(pre_trimming_outputs))
+
 rule pre_trimming_quality_assessment:
     """
     Perform a pre-trimming quality check of the reads from the sequencer.
@@ -230,9 +224,6 @@ target_suffix = readfilt['quality_assessment']['fastqc_suffix']
 target_ext = "_%s.zip"%(target_suffix)
 
 sample_file_ext = readfilt['quality_trimming']['sample_file_ext']
-print("fq_fwd_post_trimmed: "+str(fq_fwd_post_trimmed))
-print("sample_file_ext: "+sample_file_ext)
-print("target_ext "+target_ext)
 post_trimming_output_fwd = re.sub(sample_file_ext, target_ext, fq_fwd_post_trimmed)
 post_trimming_output_rev = re.sub(sample_file_ext, target_ext, fq_rev_post_trimmed)
 
@@ -260,8 +251,7 @@ def post_trimming_qa_outputs(wildcards):
     post_outputs_wcs = " ".join(post_outputs_wc)
     return post_outputs_wcs
 
-print("post_trimming_quality_assessment/post_trimming_inputs: "+str(post_trimming_inputs))
-print("post_trimming_quality_assessment/post_trimming_outputs: "+str(post_trimming_outputs))
+
 rule post_trimming_quality_assessment:
     """
     Perform a post-trimming quality check 
@@ -352,8 +342,7 @@ def interleave_reads_logfile(wildcards):
     # wildcard substitution
     return interleave_reads_log.format(**wildcards)
 
-#print("interleave_reads/interleave_input: "+str(interleave_input))
-#print("interleave_reads/interleave_output: "+str(interleave_output))
+
 rule interleave_reads:
     """
     Interleave paired-end reads using khmer.
@@ -469,6 +458,7 @@ def split_interleaved_qa_outputs_fwd_sing(wildcards):
 
 def split_interleaved_qa_outputs_rev_sing(wildcards):
     return split_interleave_output_rev_sing.format(**wildcards)
+
 
 rule split_interleaved_reads:
     input:
@@ -609,25 +599,16 @@ trimmmo_threads = readfilt['adapter_file']['threads']
 #fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
 #fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
 
-
 #fq_fwd_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed_sing)
 #fq_rev_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed_sing)
 
-
 fq_fwd_se = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_fwd_trimmed)
 fq_rev_se = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_rev_trimmed)
-#print("fq_fwd_trimmed: "+str(fq_fwd_trimmed))
-#print("trim_target_ext: "+str(trim_target_ext))
-#print("sample_file_ext: "+str(sample_file_ext))
-
 
 fq_fwd_se_sing = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_fwd_trimmed_sing)
 fq_rev_se_sing = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_rev_trimmed_sing)
 
-#print("fq_fwd_trimmed: "+str(fq_fwd_trimmed))
-#print("fq_rev_trimmed: "+str(fq_rev_trimmed))
-#print("fq_fwd_se: "+str(fq_fwd_se))
-#print("fq_rev_se: "+str(fq_rev_se))
+
 quality_output = [fq_fwd_trimmed, fq_fwd_se,
                   fq_rev_trimmed, fq_rev_se]
 
@@ -679,9 +660,6 @@ def quality_trimming_quality_output(wildcards):
     return quality_output_wcs
 
 
-print("quality_trimming/quality_input: "+str(quality_input))
-#print("adapter_file: "+str(adapter_file))
-print("quality_trimming/quality_output: "+str(quality_output))
 rule quality_trimming:
     """
     Trim reads from the sequencer by dropping low-quality reads.

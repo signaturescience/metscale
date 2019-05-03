@@ -213,14 +213,13 @@ compare_read_sigs_inputs_sing = [join(sing_dir,k) for k in compare_read_sigs_inp
 
 # User specifies CSV output file.
 compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
-print("compare_read_sigs_output_name: "+str(compare_read_sigs_output_name))
 read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures']['qual'])) 
-print("#sample_input_files: "+str(sample_input_files))
+
 compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
                                 sample    = sample_input_files,
                                 qual = read_sig_qual_string,
                                 kvalue_read = '{kvalue_read}')
-print("#compare_read_sigs_output_name: "+str(compare_read_sigs_output_name))
+
 
 compare_read_sigs_output = [join(data_dir, file) for file in compare_read_sigs_output_name]
 compare_read_sigs_output_sing = [join(sing_dir, file) for file in compare_read_sigs_output_name]
@@ -407,7 +406,6 @@ rule compare_read_assembly_signatures:
 
 ##################################################
 # Comparison: create heatmap plots for read assembly csv files
-
 compare_csv_files_ra = compare_ra_sigs_output
 compare_heatmap_plots_output_ra = os.path.splitext(compare_csv_files_ra[0])[0]+'.png'
 
