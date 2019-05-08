@@ -417,6 +417,8 @@ rule create_jaccard_heatmap_plots_ra:
         compare_csv_files_ra
     output:
         compare_heatmap_plots_output_ra
+    params:
+        file_ext = readfilt['quality_trimming']['sample_file_ext']
     script:
         'JaccardIndexHeatmapPlt.R'
 
@@ -436,6 +438,8 @@ rule create_jaccard_heatmap_plots_reads:
         compare_csv_files_reads
     output:
         compare_heatmap_plots_output_reads
+    params:
+        file_ext = readfilt['quality_trimming']['sample_file_ext']
     script:
         'JaccardIndexHeatmapPlt.R'
 
@@ -454,6 +458,8 @@ rule create_jaccard_heatmap_plots_assembly:
         compare_csv_files_assembly
     output:
         compare_heatmap_plots_output_assembly
+    params:
+        file_ext = readfilt['quality_trimming']['sample_file_ext']
     script:
         'JaccardIndexHeatmapPlt.R'
 

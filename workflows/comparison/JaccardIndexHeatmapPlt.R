@@ -3,10 +3,12 @@ library("stringr")
 
 
 options(stringsAsFactors = FALSE)
+options(warn=-1)
 
 # Select the file to load
 file_name <- snakemake@input[[1]]
-file_name
+file_ext <- snakemake@params
+
 
 # Check that the data are in comma separated format (csv).
 if (!grepl(".csv", file_name)) {
@@ -31,7 +33,7 @@ for (nc in 1:n_col) {
   } else if (grepl("metaspades", cn, ignore.case = T) & grepl("trim[0-9]?[0-9]", cn)) {
     trim_num <- unlist(str_extract_all(cn, "trim[0-9]?[0-9]"))
     colnames(jac_ind)[nc] <- paste("metaSPAdes", trim_num, sep = "_")
-  } else if (grepl("fq", cn, ignore.case = T) & grepl("trim[0-9]?[0-9]", cn)) {
+  } else if (grepl(file_ext, cn, ignore.case = T) & grepl("trim[0-9]?[0-9]", cn)) {
     trim_num <- unlist(str_extract_all(cn, "trim[0-9]?[0-9]"))
     colnames(jac_ind)[nc] <- paste("reads", trim_num, sep = "_")
   } else {
