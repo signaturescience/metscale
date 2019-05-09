@@ -183,19 +183,19 @@ rule abricate_with_metaspades:
 ###################################
 # Functional Inference: SRST2
 
-srst2_fwd_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+srst2_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}', qual='{qual}'))
-srst2_rev_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+srst2_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}', qual='{qual}'))
 srst2_post_trimming_inputs = [ srst2_fwd_post_trimmed, 
                         srst2_rev_post_trimmed]
 
-srst2_fwd_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+srst2_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}', qual='{qual}'))
-srst2_rev_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}', qual='{qual}'))
 srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 
@@ -260,7 +260,7 @@ rule functional_prokka_with_megahit_workflow:
     """
     input:
         expand( prokka_with_megahit_output_dir,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['functional_prokka_with_megahit_workflow']['qual']
         )
 
@@ -271,7 +271,7 @@ rule functional_prokka_with_metaspades_workflow:
     """
     input:
         expand( prokka_with_metaspades_output_dir,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['functional_prokka_with_metaspades_workflow']['qual']
         )
 
@@ -282,7 +282,7 @@ rule functional_abricate_with_megahit_workflow:
     """
     input:
         expand( abricate_with_megahit_output,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['functional_abricate_with_megahit_workflow']['qual'],
                 db     = workflows['functional_abricate_with_megahit_workflow']['db'],
         )
@@ -294,7 +294,7 @@ rule functional_abricate_with_metaspades_workflow:
     """
     input:
         expand( abricate_with_metaspades_output,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = workflows['functional_abricate_with_metaspades_workflow']['qual'],
                 db     = workflows['functional_abricate_with_metaspades_workflow']['db'],
         )
@@ -306,7 +306,7 @@ rule functional_with_srst2_workflow:
     '''
     input:
        expand( srst2_log_out,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['functional_with_srst2_workflow']['qual'],
                 db        = workflows['functional_with_srst2_workflow']['db'],
                 direction = directions,

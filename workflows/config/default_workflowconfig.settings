@@ -7,7 +7,7 @@ config_default = {
         "samples_input_workflow" : {
             # Global parameter for the sample input
             # To run on. This replaces having samnples in every workflow
-            "samples"    : ["SRR606249_subset10"]
+            "samples"    : ["SRR606249"]
         },
 
         "read_filtering_pretrim_workflow" : {

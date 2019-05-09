@@ -9,7 +9,7 @@ Documentation: docs/workflow_readfilt.md
 #from utils import container_image_is_external, container_image_name
 from common.utils  import container_image_is_external, container_image_name 
 from os.path import join, isfile, dirname
-import os, re, gzip, io
+import os, re, gzip, io, glob, shutil
 import pdb
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
@@ -39,83 +39,45 @@ readfilt = config['read_filtering']
 
 
 ###################################
-# Read Filtering: fetch reads
+# Code to get samples input files based on sample name and glob file pattern
 
+#Using user defined params get input file list
+workflows = config['workflows']
+all_sample_names = workflows['samples_input_workflow']['samples']
+sample_input_files = []
+for sample in all_sample_names:
+    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    input_file_pattern = re.sub(r"\*", sample, input_file_pattern, 1)
+    input_file_pattern = join(data_dir, input_file_pattern)
+    sample_input_files.extend(glob.glob(input_file_pattern))
 
-pre_trimming_pattern = readfilt['read_patterns']['pre_trimming_pattern']
-pre_trimming_relative_path = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'])
-
-def download_reads_read_data_url(wildcards):
-    """
-    Given a set of wildcards, return the URL where the 
-    pre-trimmed reads can be downloaded.
-    """
-    # Get the filename only from the relative path, and do wildcard substitution
-    pre_trimming_name = pre_trimming_pattern.format(**wildcards)
-
-    # Get the URL where this file is available
-    read_data_url = config['files'][pre_trimming_name]
-    return read_data_url
-
-def download_reads_read_data_file(wildcards):
-    """
-    Return the pre-trimming file that matches the given wildcards
-    """
-    # Get the relative path and do wildcard substitution
-    return pre_trimming_relative_path.format(**wildcards)
-
-rule download_reads:
-    """
-    Fetch user-requested files from OSF containing reads that will be used in
-    the read filtering process.
-
-    Note that this defines wildcard-based download rules, rather than
-    downloading all files all at once, to keep things flexible and fast.
-    """
-    output:
-        pre_trimming_relative_path
-    message: 
-        '''--- Downloading reads.'''
-    params:
-        read_data_url = download_reads_read_data_url,
-        read_data_file = download_reads_read_data_file
-    shell:
-        'wget -O {params.read_data_file} {params.read_data_url}'
-
-
-
-adapter_output = join(data_dir, readfilt['adapter_file']['name'])
-adapter_url = readfilt['adapter_file']['url']
-
-rule download_read_adapters:
-    """
-    Download FASTA read adapaters (TruSeq2-PE sequencer by default).
-    """
-    output:
-        adapter_output
-    message:
-        '''--- Downloading adapter file.'''
-    shell:
-        'wget -O {adapter_output} {adapter_url}'
+#nnow we need to remove file extension and data_dir
+file_names = []
+for file in sample_input_files:
+    file_path_no_dir = file.replace(data_dir+'/','')
+    file_names.append(file_path_no_dir.replace(readfilt["quality_trimming"]["sample_file_ext"],''))
+sample_input_files = file_names
 
 
 ###################################
-# Read Filtering: pre trimming
+# Pretrimming code needed for convert_illumina_to_internal_format and pre_trimming_quality_assessment
 
-fq_fwd_pre_trimmed = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+
+fq_fwd_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
-fq_rev_pre_trimmed = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+fq_rev_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
-                        
-fq_fwd_pre_trimmed_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+
+fq_fwd_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
-fq_rev_pre_trimmed_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+
+fq_rev_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
-trimmed_threads = readfilt['read_patterns']['threads']
+
                      
 pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing, 
                         fq_rev_pre_trimmed_sing]
@@ -123,22 +85,68 @@ pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing,
 pre_trimming_inputs = [ fq_fwd_pre_trimmed, 
                         fq_rev_pre_trimmed]
 
+
+###################################
+# Convert illumina files to internal file formats
+
+
+def convert_illumina_input_files(wildcards):
+    input_file = join(data_dir, wildcards.sample + readfilt["quality_trimming"]["sample_file_ext"])
+    return input_file
+    
+def create_output_internal_format_fwd(wildcards):
+   return fq_fwd_pre_trimmed.format(**wildcards)
+
+def create_output_internal_format_rev(wildcards):
+   return fq_rev_pre_trimmed.format(**wildcards)
+
+
+rule convert_illumina_to_internal_format:
+    '''
+    Convert the illumina file format to out internal file format
+    '''
+    input:
+        convert_illumina_input_files
+    output:
+        pre_trimming_inputs
+    params:
+        dest_fwd = create_output_internal_format_fwd,
+        dest_rev = create_output_internal_format_rev,
+        search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"],
+        replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
+    run:
+        src_fwd_str = str(input)
+        src_rev_str = src_fwd_str.replace(params.search_pattern, params.replace_pattern)
+        shutil.copy(src_fwd_str, params.dest_fwd)
+        shutil.copy(src_rev_str, params.dest_rev)
+
+
+
+
+
+
+###################################
+# Read Filtering: pre trimming
+
+trimmed_threads = readfilt['read_patterns']['threads']
+
 target_suffix = readfilt['quality_assessment']['fastqc_suffix']
 target_ext = "_%s.zip"%(target_suffix)
 
-pre_trimming_output_fwd = re.sub('\.fq\.gz', target_ext, fq_fwd_pre_trimmed)
-pre_trimming_output_rev = re.sub('\.fq\.gz', target_ext, fq_rev_pre_trimmed)
+sample_file_ext = readfilt['quality_trimming']['sample_file_ext']
 
-pre_trimming_output_fwd_sing = re.sub('\.fq\.gz', target_ext, fq_fwd_pre_trimmed_sing)
-pre_trimming_output_rev_sing = re.sub('\.fq\.gz', target_ext, fq_rev_pre_trimmed_sing)
+
+pre_trimming_output_fwd = re.sub(sample_file_ext, target_ext, fq_fwd_pre_trimmed)
+pre_trimming_output_rev = re.sub(sample_file_ext, target_ext, fq_rev_pre_trimmed)
+
+pre_trimming_output_fwd_sing = re.sub(sample_file_ext, target_ext, fq_fwd_pre_trimmed_sing)
+pre_trimming_output_rev_sing = re.sub(sample_file_ext, target_ext, fq_rev_pre_trimmed_sing)
 
 pre_trimming_outputs = [pre_trimming_output_fwd,
                         pre_trimming_output_rev]
 
 pre_trimming_outputs_sing = [pre_trimming_output_fwd_sing,
                         pre_trimming_output_rev_sing]
-
-
 
 fastqc_image = container_image_name(biocontainers, 'fastqc')
 
@@ -189,20 +197,21 @@ rule pre_trimming_quality_assessment:
 # Read Filtering: post trimming
 
 
-fq_fwd_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['forward'],
                             sample='{sample}',
                             qual='{qual}'))
-fq_rev_post_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['reverse'],
                             sample='{sample}',
                             qual='{qual}'))
                             
-fq_fwd_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['forward'],
                             sample='{sample}',
                             qual='{qual}'))
-fq_rev_post_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+
+fq_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['reverse'],
                             sample='{sample}',
                             qual='{qual}'))
@@ -214,8 +223,9 @@ post_trimming_inputs = [fq_fwd_post_trimmed, fq_rev_post_trimmed]
 target_suffix = readfilt['quality_assessment']['fastqc_suffix']
 target_ext = "_%s.zip"%(target_suffix)
 
-post_trimming_output_fwd = re.sub('\.fq\.gz', target_ext, fq_fwd_post_trimmed)
-post_trimming_output_rev = re.sub('\.fq\.gz', target_ext, fq_rev_post_trimmed)
+sample_file_ext = readfilt['quality_trimming']['sample_file_ext']
+post_trimming_output_fwd = re.sub(sample_file_ext, target_ext, fq_fwd_post_trimmed)
+post_trimming_output_rev = re.sub(sample_file_ext, target_ext, fq_rev_post_trimmed)
 
 post_trimming_outputs = [post_trimming_output_fwd,
                          post_trimming_output_rev]
@@ -272,19 +282,22 @@ rule post_trimming_quality_assessment:
 # Read Filtering: interleave
 
 # These are strings containing templates of .fq.gz file names.
-fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
-fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+
+fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
-fq_fwd_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+
+fq_fwd_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
-fq_rev_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+
+fq_rev_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
@@ -415,23 +428,23 @@ split_interleave_input = subsample_interleave_output
 split_interleave_input_sing = subsample_interleave_output_sing
 
 
-split_interleave_output_rev = join(data_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+split_interleave_output_rev = join(data_dir, (readfilt['split_interleaved_reads']['split_interleaved_output_pattern']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         percent=readfilt['subsample_interleaving']['percent'],
                         sample='{sample}',
                         qual='{qual}'))
-split_interleave_output_fwd = join(data_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+split_interleave_output_fwd = join(data_dir, (readfilt['split_interleaved_reads']['split_interleaved_output_pattern']).format(
                         direction=readfilt['direction_labels']['forward'],
                         percent=readfilt['subsample_interleaving']['percent'],
                         sample='{sample}',
                         qual='{qual}'))
 
-split_interleave_output_rev_sing = join(sing_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+split_interleave_output_rev_sing = join(sing_dir, (readfilt['split_interleaved_reads']['split_interleaved_output_pattern']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         percent=readfilt['subsample_interleaving']['percent'],
                         sample='{sample}',
                         qual='{qual}'))
-split_interleave_output_fwd_sing = join(sing_dir, readfilt['split_interleaved_reads']['split_interleaved_output_pattern'].format(
+split_interleave_output_fwd_sing = join(sing_dir, (readfilt['split_interleaved_reads']['split_interleaved_output_pattern']).format(
                         direction=readfilt['direction_labels']['forward'],
                         percent=readfilt['subsample_interleaving']['percent'],
                         sample='{sample}',
@@ -445,6 +458,7 @@ def split_interleaved_qa_outputs_fwd_sing(wildcards):
 
 def split_interleaved_qa_outputs_rev_sing(wildcards):
     return split_interleave_output_rev_sing.format(**wildcards)
+
 
 rule split_interleaved_reads:
     input:
@@ -539,57 +553,68 @@ rule convert_fastq_to_fasta:
 # We use this trick several times in these rules.
 # 
 
-fq_fwd = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+fq_fwd = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['forward'],
                     sample='{sample}'))
-fq_rev = join(data_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+
+fq_rev = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['reverse'],
                     sample='{sample}'))
                     
-fq_fwd_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+fq_fwd_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['forward'],
                     sample='{sample}'))
-fq_rev_sing = join(sing_dir, readfilt['read_patterns']['pre_trimming_pattern'].format(
+            
+fq_rev_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['reverse'],
                     sample='{sample}'))
 
 quality_input = [fq_fwd, fq_rev]
 quality_input_sing = [fq_fwd_sing, fq_rev_sing]
 
-fq_fwd_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
-fq_rev_trimmed_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+
+fq_rev_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_fwd_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+fq_fwd_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
-fq_rev_trimmed = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+
+fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
                       
 trim_target_ext = readfilt['quality_trimming']['trim_suffix']
+sample_file_ext = readfilt['quality_trimming']['sample_file_ext']
 trimmmo_threads = readfilt['adapter_file']['threads']
 
-fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
-fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
+#fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
+#fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
 
+#fq_fwd_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed_sing)
+#fq_rev_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed_sing)
 
-fq_fwd_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed_sing)
-fq_rev_se_sing = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed_sing)
+fq_fwd_se = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_fwd_trimmed)
+fq_rev_se = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_rev_trimmed)
+
+fq_fwd_se_sing = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_fwd_trimmed_sing)
+fq_rev_se_sing = re.sub(sample_file_ext,"_%s"%(trim_target_ext),fq_rev_trimmed_sing)
+
 
 quality_output = [fq_fwd_trimmed, fq_fwd_se,
                   fq_rev_trimmed, fq_rev_se]
 
 quality_output_sing = [fq_fwd_trimmed_sing, fq_fwd_se_sing,
                   fq_rev_trimmed_sing, fq_rev_se_sing]
-                  
+                 
 adapter_file = join(data_dir, readfilt['adapter_file']['name'])
 adapter_file_sing = join(sing_dir, readfilt['adapter_file']['name'])
 
@@ -809,10 +834,11 @@ I think this happens somewhere in def collect_potential_dependencies(self, job)
 ###################################
 # Read Filtering: build rules
 
-workflows = config['workflows']
 
 directions = [readfilt['direction_labels']['forward'],
               readfilt['direction_labels']['reverse']]
+
+
 
 rule read_filtering_pretrim_workflow:
     """
@@ -820,10 +846,9 @@ rule read_filtering_pretrim_workflow:
     """
     input:
         expand( pre_trimming_outputs,
-                sample    = workflows['samples_input_workflow']['samples'],
-                direction = directions
+                sample    = sample_input_files,
+                direction = directions,
         )
-
 
 rule read_filtering_posttrim_workflow:
     """
@@ -831,7 +856,7 @@ rule read_filtering_posttrim_workflow:
     """
     input:
         expand( post_trimming_outputs,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['read_filtering_posttrim_workflow']['qual'],
                 direction = directions, 
         )
@@ -843,7 +868,7 @@ rule read_filtering_multiqc_workflow:
     """
     input:
         expand( read_filtering_multiqc_output_dir,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
         )
 
 
@@ -853,11 +878,10 @@ rule read_filtering_khmer_interleave_reads_workflow:
     '''
     input:
         expand( interleave_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 direction = directions,
                 qual      = workflows['read_filtering_khmer_interleave_reads_workflow']['qual'],
         )
-
 
 rule read_filtering_khmer_subsample_interleaved_reads_workflow:
     '''
@@ -865,10 +889,9 @@ rule read_filtering_khmer_subsample_interleaved_reads_workflow:
     '''
     input:
         expand( subsample_interleave_output,
-                sample    = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual      = workflows['read_filtering_khmer_subsample_interleaved_reads_workflow']['qual'],
         )
-
 
 rule read_filtering_khmer_split_interleaved_reads_workflow:
     '''
@@ -876,11 +899,10 @@ rule read_filtering_khmer_split_interleaved_reads_workflow:
     '''
     input:
         expand( split_interleave_output,
-                sample      = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual        = workflows['read_filtering_khmer_split_interleaved_reads_workflow']['qual'],
-                direction   = directions,
+                direction = directions,
         )
-
 
 rule read_filtering_khmer_count_unique_kmers_workflow:
     '''
@@ -888,11 +910,10 @@ rule read_filtering_khmer_count_unique_kmers_workflow:
     '''
     input:
         expand( count_unique_reads_output,
-                sample      = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual        = workflows['read_filtering_khmer_count_unique_kmers_workflow']['qual'],
                 kmers       = workflows['read_filtering_khmer_count_unique_kmers_workflow']['kmers'],
         )
-
 
 rule read_filtering_fastq_to_fasta_workflow:
     '''

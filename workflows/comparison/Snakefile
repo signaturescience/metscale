@@ -41,22 +41,22 @@ comparison = config['comparison']
 # Comparison: compute read signatures
 
 # input is fwd/rev reads
-read_sig_input_fwd = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+read_sig_input_fwd = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['forward']))
-read_sig_input_rev = join(data_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+read_sig_input_rev = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['reverse']))
 compute_read_sig_inputs  = [read_sig_input_fwd,
                     read_sig_input_rev]
 
-read_sig_input_fwd_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+read_sig_input_fwd_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['forward']))
-read_sig_input_rev_sing = join(sing_dir, readfilt['read_patterns']['post_trimming_pattern'].format(
+read_sig_input_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['reverse']))
@@ -65,7 +65,7 @@ read_sig_input_rev_sing = join(sing_dir, readfilt['read_patterns']['post_trimmin
 # signature file output replaces .fq.gz with sig_suffix variable
 # (also remove direction)
 read_base_output_name = re.sub('_{direction}', '', 
-                        readfilt['read_patterns']['post_trimming_pattern'])
+                        (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 compute_read_sig_output_name = re.sub(r'.fq.gz',  comparison['compute_read_signatures']['sig_suffix'], read_base_output_name)
 
 #TODO: Have kvalues in both workflowconfig and workflowparams. Because of this.
@@ -204,7 +204,7 @@ rule compute_assembly_signatures:
 
 compare_read_sigs_input_names = expand( 
                 compute_read_sig_output_name,
-                sample = workflows['samples_input_workflow']['samples'],
+                sample    = sample_input_files,
                 qual   = comparison['compute_read_signatures']['qual'])
 
 # Turn filename X into data/X
@@ -214,10 +214,12 @@ compare_read_sigs_inputs_sing = [join(sing_dir,k) for k in compare_read_sigs_inp
 # User specifies CSV output file.
 compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
 read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures']['qual'])) 
+
 compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
-                                sample = workflows['samples_input_workflow']['samples'],
+                                sample    = sample_input_files,
                                 qual = read_sig_qual_string,
                                 kvalue_read = '{kvalue_read}')
+
 
 compare_read_sigs_output = [join(data_dir, file) for file in compare_read_sigs_output_name]
 compare_read_sigs_output_sing = [join(sing_dir, file) for file in compare_read_sigs_output_name]
@@ -271,7 +273,7 @@ rule compare_read_signatures:
 # We already have the assembly sig name
 compare_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample    = workflows['samples_input_workflow']['samples'],
+            sample    = sample_input_files,
             qual      = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler'])
 
@@ -283,7 +285,7 @@ compare_assembly_sigs_inputs_sing = [join(sing_dir, k) for k in compare_assembly
 compare_assembly_sigs_output_name = comparison['compare_assembly_signatures']['csv_out']
 compare_assembly_qual_string = 'and'.join(map(str,comparison['compute_assembly_signatures']['qual'])) 
 compare_assembly_sigs_output_name = expand(compare_assembly_sigs_output_name,
-                                    sample = workflows['samples_input_workflow']['samples'],
+                                    sample    = sample_input_files,
                                     qual = compare_assembly_qual_string,
                                     kvalue_assembly = '{kvalue_assembly}')
 
@@ -337,13 +339,13 @@ rule compare_assembly_signatures:
 
 compare_ra_assembly_sigs_input_names = expand(
             assembly_sig_output_name,
-            sample    = workflows['samples_input_workflow']['samples'],
+            sample    = sample_input_files,
             qual      = comparison['compute_assembly_signatures']['qual'],
             assembler = comparison['compare_assembly_signatures']['assembler']
 )
 compare_ra_read_sigs_input_names = expand(
             compute_read_sig_output_name,
-            sample = workflows['samples_input_workflow']['samples'],
+            sample    = sample_input_files,
             qual   = comparison['compute_read_signatures']['qual']
 )
 compare_ra_sigs_inputs =  [join(data_dir, file) for file in compare_ra_read_sigs_input_names]
@@ -353,7 +355,7 @@ compare_ra_sigs_inputs_sing += [join(sing_dir, file) for file in compare_ra_asse
 
 # User specifies CSV output file.
 compare_ra_sigs_output_name = comparison['compare_read_assembly_signatures']['csv_out']
-ra_samples_string = 'and'.join(map(str,workflows['samples_input_workflow']['samples'] + workflows['samples_input_workflow']['samples'])) 
+ra_samples_string = 'and'.join(map(str,sample_input_files + sample_input_files)) 
 compare_ra_sigs_output_name = expand(compare_ra_sigs_output_name,
                                 sample = ra_samples_string,
                                 kvalue_read_assembly = '{kvalue_read_assembly}')
@@ -404,8 +406,6 @@ rule compare_read_assembly_signatures:
 
 ##################################################
 # Comparison: create heatmap plots for read assembly csv files
-
-
 compare_csv_files_ra = compare_ra_sigs_output
 compare_heatmap_plots_output_ra = os.path.splitext(compare_csv_files_ra[0])[0]+'.png'
 
@@ -428,7 +428,12 @@ rule create_jaccard_heatmap_plots_ra:
 
 
 compare_csv_files_reads = compare_read_sigs_output
-compare_heatmap_plots_output_reads = os.path.splitext(compare_csv_files_reads[0])[0]+'.png'
+#I set this in here so if there are no input files given I don't error out.
+#We just want to end gracefully.
+if not compare_csv_files_reads:
+    compare_heatmap_plots_output_reads = "dummy.png"
+else:
+    compare_heatmap_plots_output_reads = os.path.splitext(compare_csv_files_reads[0])[0]+'.png'
 
 rule create_jaccard_heatmap_plots_reads:
     """
@@ -448,7 +453,12 @@ rule create_jaccard_heatmap_plots_reads:
 
 
 compare_csv_files_assembly = compare_assembly_sigs_output
-compare_heatmap_plots_output_assembly = os.path.splitext(compare_csv_files_assembly[0])[0]+'.png'
+#I set this in here so if there are no input files given I don't error out.
+#We just want to end gracefully.
+if not compare_csv_files_assembly:
+    compare_heatmap_plots_output_assembly = "dummy.png"
+else:
+    compare_heatmap_plots_output_assembly = os.path.splitext(compare_csv_files_assembly[0])[0]+'.png'
 
 rule create_jaccard_heatmap_plots_assembly:
     """
