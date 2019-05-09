@@ -289,7 +289,7 @@ config_default = {
             # file pattern to locate reverse end string
             # We are searching from the right of the file name for the unique file pattern
             # that located the reverse threads
-            #for illumina that would be R1
+            #for illumina that would be R1 for reverse_pe_pattern_search R2 for reverse_pe_pattern_replace
             #For the test shakya dataset that is 1_
             "reverse_pe_pattern_search"  : "1_",
             "reverse_pe_pattern_replace" : "2_",
@@ -312,7 +312,7 @@ config_default = {
             # 
             # suffix for quality trimming files (replaces file extension)
             "trim_suffix" : "se",
-            #use for SRR dataset with .fq.gz file extensions  <--TO CHANGE
+            #use for SRR dataset with .fq.gz file extensions 
             "sample_file_ext" : ".fq.gz"
             #"sample_file_ext" : ".fastq.gz"
         },
