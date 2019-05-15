@@ -44,23 +44,50 @@ out_dir_sample = workflows['samples_input_workflow']['samples']
 output_dir = expand(output_dir_pattern, sample=out_dir_sample)[0]
 output_dir = join(data_dir, output_dir)
 
-input_string_pattern = "data/" + str(out_dir_sample[0])+"*"
-input_files = glob.glob(input_string_pattern)
+
+def get_input_files(wildcards):
+    input_files = []
+    sample_input = wildcards
+    search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"]
+    replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"]
+
+    #forward string pattern
+    input_file_pattern1 = join(data_dir,"{sample}*")
+    input_file_pattern = expand(input_file_pattern1, sample = sample_input)
+    input_files.extend(glob.glob(str(input_file_pattern[0])))
+
+    #reverse string pattern
+    input_rev_str = str(sample_input).replace(search_pattern, replace_pattern)
+    input_rev_str_pattern = join(data_dir,input_rev_str)
+    input_rev_str_pattern = input_rev_str_pattern+"*"
+    input_files.extend(glob.glob(input_rev_str_pattern))
+    return input_files
 
 
 rule move_samples_to_dir_workflow:
     '''
     move files to seperate dir after processing
     '''
+    input:
+        get_input_files
     output:
         directory(output_dir)
     params:
-        input_f = input_files,
         output_dir = output_dir
     message: 
         '--- Moving files to samples dir'
     shell:
-        "post_processing/move_completed_files.sh {params.output_dir} {params.input_f}"
+        "post_processing/move_completed_files.sh {params.output_dir} {input}"
 
 
 
+
+
+rule post_processing_move_samples_dir_workflow:
+    '''
+    Build rule: Take forward and reversed trimmed reads and run interleave-reads
+    '''
+    input:
+        expand( output_dir,
+                sample    = sample_input_files,
+            )
