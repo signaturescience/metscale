@@ -238,6 +238,7 @@ rule srst2_with_raw_reads:
     shell:
         'srst2 '
         '--input_pe {params.input_files} '
+        '--merge_pair '
         '--output {params.output_files} '
         '--log --gene_db {params.db} '
         '--threads {threads} '
