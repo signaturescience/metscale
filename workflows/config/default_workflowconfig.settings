@@ -230,7 +230,7 @@ config_default = {
             #
             "qual"      : ["2","30"],
             #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta, AMRVF2.fasta}
-            "db"        : ["ARGannot.r3.fasta", "AMRVF2.fasta"]
+            "db"        : ["ARGannot.r3.fasta"]
         }
     }
 }
