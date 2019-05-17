@@ -47,7 +47,8 @@
         "ARGannot.r3.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ARGannot_r3.fasta",
         "ResFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ResFinder.fasta",
         "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
-        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta"
+        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta",
+        "AMRVF1_PROKKA_DB.fasta" : "file:///resources/AMRVF1_PROKKA_DB.fasta"
 
     }
 }
