@@ -225,12 +225,13 @@ def srst2_input_files(wildcards):
     for num, file in enumerate(srst2_post_trimming_inputs):
         in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
         input_file = in_file[0]
-        print(input_file)
         if (num ==0):  #forward 
             srst2_input_file = data_dir + '/' + '0_1' + readfilt['quality_trimming']['sample_file_ext']     
         else:   #reverse
             srst2_input_file = data_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
-        shutil.copyfile(input_file,srst2_input_file )
+        if (os.path.isfile(input_file)):
+            print("COPY OPERATION")
+            shutil.copyfile(input_file,srst2_input_file)
         srst2_input_list.append(srst2_input_file)
     return srst2_input_list
 
@@ -243,6 +244,9 @@ def srst2_input_files_sing(wildcards):
             srst2_input_file = sing_dir + '/' + '0_1' + readfilt['quality_trimming']['sample_file_ext']     
         else:   #reverse
             srst2_input_file = sing_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
+        if (os.path.isfile(input_file)):
+            print("COPY OPERATION")
+            shutil.copyfile(input_file,srst2_input_file)
         srst2_input_list.append(srst2_input_file)
     return srst2_input_list
 
@@ -253,7 +257,7 @@ srst2_threads = inference['srst2']['threads']
 
 rule srst2_with_raw_reads:
     input:
-       srst2_post_trimming_inputs = srst2_input_files
+       srst2_post_trimming_inputs
     output:
         srst2_log_out
     params:
@@ -271,8 +275,8 @@ rule srst2_with_raw_reads:
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
-        '&& '
-        'rm {params.input_files}'
+ #       '&& '
+ #       'rm {params.input_files}'
         
 
   
