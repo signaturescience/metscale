@@ -217,18 +217,47 @@ srst2_log_out = "data/{sample}_trim{qual}_{db}.srst2.log"
 def srst2_output_sub_sing(wildcards):
     return srst2_output_sing.format(**wildcards)
 
+#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a generic filename
+#to create a copy of input files then delete them.
+
+def srst2_input_files(wildcards):
+    srst2_input_list = []
+    for num, file in enumerate(srst2_post_trimming_inputs):
+        in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
+        input_file = in_file[0]
+        print(input_file)
+        if (num ==0):  #forward 
+            srst2_input_file = data_dir + '/' + '0_1' + readfilt['quality_trimming']['sample_file_ext']     
+        else:   #reverse
+            srst2_input_file = data_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
+        shutil.copyfile(input_file,srst2_input_file )
+        srst2_input_list.append(srst2_input_file)
+    return srst2_input_list
+
+def srst2_input_files_sing(wildcards):
+    srst2_input_list = []
+    for num, file in enumerate(srst2_post_trimming_inputs):
+        in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
+        input_file = in_file[0]
+        if (num ==0):  #forward 
+            srst2_input_file = sing_dir + '/' + '0_1' + readfilt['quality_trimming']['sample_file_ext']     
+        else:   #reverse
+            srst2_input_file = sing_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
+        srst2_input_list.append(srst2_input_file)
+    return srst2_input_list
+
+
 
 srst2_image = container_image_name(biocontainers, 'srst2')
 srst2_threads = inference['srst2']['threads']
 
-
 rule srst2_with_raw_reads:
     input:
-       srst2_post_trimming_inputs
+       srst2_post_trimming_inputs = srst2_input_files
     output:
         srst2_log_out
     params:
-        input_files = srst2_post_trimming_inputs_sing,
+        input_files = srst2_input_files_sing,
         output_files = srst2_output_sub_sing,
         db = srst2_db_location
     threads:
@@ -242,6 +271,9 @@ rule srst2_with_raw_reads:
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
+        '&& '
+        'rm {params.input_files}'
+        
 
   
 
