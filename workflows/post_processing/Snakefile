@@ -1,19 +1,13 @@
 '''
-Author: Phillip Brooks, Charles Reid
-Affiliation: UC Davis Lab for Data Intensive Biology
+Author: Chris Grahlmann
+Affiliation: Signature Science
 
-Date: 2019-04-01
+Date: 2019-05-01
 Documentation: docs/workflow_comparison.md
 '''
 
-from common.utils  import container_image_is_external, container_image_name
-from os.path import join, isfile, dirname
-import os, re, glob
-from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
-HTTP = HTTPRemoteProvider()
-
-
-
+from os.path import join
+import  glob
 
 ##################################################
 # Post processing rules
@@ -40,9 +34,7 @@ post_processing = config['post_processing']
 
 
 output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
-out_dir_sample = workflows['samples_input_workflow']['samples']
-output_dir = expand(output_dir_pattern, sample=out_dir_sample)[0]
-output_dir = join(data_dir, output_dir)
+output_dir = join(data_dir, output_dir_pattern)
 
 
 def get_input_files(wildcards):
@@ -64,20 +56,19 @@ def get_input_files(wildcards):
     return input_files
 
 
-rule move_samples_to_dir_workflow:
+rule move_samples_to_dir:
     '''
     move files to seperate dir after processing
     '''
-    input:
-        get_input_files
     output:
         directory(output_dir)
     params:
-        output_dir = output_dir
+        output_dir = output_dir,
+        input_files = get_input_files
     message: 
         '--- Moving files to samples dir'
     shell:
-        "post_processing/move_completed_files.sh {params.output_dir} {input}"
+        "post_processing/move_completed_files.sh {params.output_dir} {params.input_files}"
 
 
 
@@ -90,4 +81,4 @@ rule post_processing_move_samples_dir_workflow:
     input:
         expand( output_dir,
                 sample    = sample_input_files,
-            )
+        )
