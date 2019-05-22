@@ -8,6 +8,279 @@ config_default = {
     "sing_dir" : "/tmp",
     "assembly_dir" : "assembly",
 
+    "read_filtering" : {
+        # 
+        # The read filtering workflow actually builds the rules to download 
+        # the read_files by using the pre_trimming_pattern.
+        "read_patterns" : {
+            #
+            # filename pattern for pre-trimmed reads
+            # Note: the read files section listing URLS for read files
+            # MUST match the pre_trimmming_pattern.
+            "pre_trimming_pattern"  : "{sample}_{direction}_reads",
+            "pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
+            # Below is glop_pattern for illumina naming conventions
+            #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
+            # filename pattern for post-trimmed reads
+            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
+            # file pattern to locate reverse end string
+            # We are searching from the right of the file name for the unique file pattern
+            # that located the reverse threads
+            #For the test shakya dataset that is 1_
+            "reverse_pe_pattern_search"  : "1_",
+            "reverse_pe_pattern_replace" : "2_",
+            #for illumina that would be R1 for reverse_pe_pattern_search R2 for reverse_pe_pattern_replace
+            #number of threads to use.
+            "threads" : 2
+        },
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
+        "quality_assessment" : {
+            #
+            # optional, modifiers for the .fq.gz --> .zip --> results workflow
+            "fastqc_suffix": "fastqc",
+        },
+        "quality_trimming" : {
+            # 
+            # suffix for quality trimming files (replaces file extension)
+            "trim_suffix" : "se",
+            #use for SRR dataset with .fq.gz file extensions 
+            "sample_file_ext" : ".fq.gz"
+            #use the following for illumina naming conventions with .fastq.gz file extensions
+            #"sample_file_ext" : ".fastq.gz"
+        },
+        "multiqc" :{
+            # multiqc output dir pattern
+            "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}_fastqc_multiqc_report",
+            # multiqc input file pattern
+            "multiqc_input_pattern" : "{sample}_trim{qual}_{direction}_fastqc.zip",
+        }, 
+        # Set the read adapter file
+        "adapter_file" : {
+            # 
+            # name and URL for the sequencer adapter file
+            "name" : "adapters_combined_256_unique.fasta",
+            "url"  : "https://raw.githubusercontent.com/signaturescience/metagenomics/master/resources/adapters_combined_256_unique.fasta",
+            "threads" : 4
+        },
+        "interleaving" : {
+            # 
+            # output pattern for khmer interleave reads
+            "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+        },
+        "subsample_interleaving" : {
+             #
+             #output of subset percentage (10 = 10%, don't use zero!)
+             "percent" : 10,
+             "subsample_output_pattern" : "{sample}_trim{qual}_subset{percent}_interleaved_reads.fq.gz",
+             "max_reads" : 100000000
+        },
+        "split_interleaved_reads" : {
+            #
+            #output file pattern
+            "split_interleaved_output_pattern" : "{sample}_trim{qual}_subset{percent}_{direction}.fq.gz"
+        },
+        "count_unique_reads" : {
+            #
+            #input file pattern. Right now set to the output from interleaving
+            "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+            #input pattern from the subsample interleave
+            #"input_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
+            #output file pattern.
+            "output_pattern" : "{sample}_trim{qual}_interleaved_uniqueK{kmers}.txt",
+        },
+        "convert_fastq_fasta" : {
+            #
+            #input fastq file
+            "input_pattern" : "{file}.fq.gz",
+            "output_pattern" : "{file}.fa",
+            "output_dir" : "fasta"
+        },
+    },
+
+    "assembly" : {
+        "assembly_patterns" : {
+            # 
+            # filename pattern for metaspades output and threads to run
+            "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+            "metaspades_threads" : 8,
+            #
+            # filename pattern for megahit output amd threads to run
+            "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            "megahit_threads" : 8,
+            #
+            # general assembler output filename pattern/input for quast
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
+            #
+            # quast output filename pattern and threads to run
+            "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
+            "quast_threads" : 4,
+            #
+            # multiqc output dir pattern
+            "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
+            #multiqc input file. Taken from quast output file.
+            "quast_output_multiqc_input_file" : "report.tsv",
+            #multiqc output file
+            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
+        }
+    },
+
+    "comparison" : {
+        "compute_read_signatures" : {
+            #
+            # specify scale and k values for computing signatures
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            #
+            # the signature file suffixes specified below 
+            # should match the scale and k values above.
+            #
+            # sig_suffix is used to replace .fq.gz with a signature suffix
+            "sig_suffix"    : "_scaled{scale}.k{kvalues}.sig", 
+            #
+            # merge_suffix is used to replace .fq.gz with a merge file suffix
+             "merge_suffix"  : "_merge_scaled{scale}.k{kvalues}.fq.gz"
+        },
+        "compare_read_signatures" : {
+            #
+            # the samples and quality variables are used in expand() to form filenames
+            # 
+            # csv_out is the single output file containing comparisons of all input files.
+            # {kvalue_read} is replaced with the k value used in the comparison.
+            # note that the file prefix does not need to be/should not be modified.
+
+            "csv_out" : "{sample}_trim{qual}_read_comparison.k{kvalue_read}.csv"
+        },
+        "compute_assembly_signatures" : {
+            # 
+            # specify scale and k values for computing signatures
+            "scale"         : 10000,
+            "kvalues"       : [21,31,51],
+            "qual"          : ["2","30"],
+            #
+            # sig_suffix is used to replace .fq.gz with a signature suffix
+            "sig_suffix" : "_scaled{scale}.k{kvalues}.sig",
+            #
+            # merge_suffix is used to replace .fq.gz with a merge file suffix
+            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
+        },
+        "compare_assembly_signatures" : {
+            #
+            # the samples and quality variables are used in expand() to form filenames
+            "assembler" : ["megahit","metaspades"],
+            #
+            # csv_out is the single output file containing comparisons of all input files
+            # {kvalue} is replaced with the k value used in the comparison
+            "csv_out"   : "{sample}_trim{qual}_assembly_comparison.k{kvalue_assembly}.csv"
+        },
+        "compare_read_assembly_signatures" : {
+            #
+            # the samples, quality, assembler variables are used in expand() to form filenames
+            "assembler" : ["megahit","metaspades"],
+            #
+            # k values are passed to sourmash compare
+            "kvalues"   : [21, 31, 51],
+            #
+            # csv_out is the single output file containing
+            # comparison results among all of the above files.
+            "csv_out"   : "{sample}_read_assembly_comparison.k{kvalue_read_assembly}.csv"
+        }
+    },
+
+    "taxonomic_classification" : {
+        "filter_taxa" : {
+            #
+            # percent threshold for taxa filtering
+            "pct_threshold" : 1
+        },
+        "kaiju" : {
+            "dmp1" : "nodes.dmp",
+            "dmp2" : "names.dmp",
+            "fmi"  : "kaiju_db_nr_euk.fmi",
+            "tar"  : "kaiju_index_nr_euk.tgz",
+            "url"  : "http://kaiju.binf.ku.dk/database",
+            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
+            "out"  : "{sample}_trim{qual}.kaiju.out",
+            "contig_out" : "{sample}_trim{qual}_{assembler}.kaiju.out",
+            "threads" : 8
+        },
+        "kaiju_report" : {
+            #
+            # specify the taxonomic rank for kaiju report to use
+            "taxonomic_rank" : "genus",
+            #
+            # if the user asks for a kaiju report with filtered taxa,
+            # use this as the percent threshold
+            "pct_threshold"  : 1
+        },
+        "contigs_kaiju_report" : {
+            "contigs_taxonomic_rank" : "genus",
+            "contigs_pct_threshold" : 1
+        },
+        "sourmash" : { 
+            #
+            # URL base for SBT tree
+            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
+            # 
+            # name of SBT tar file
+            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
+            #
+            # name of SBT file when unpacked
+            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
+            #
+            # names of valid databases
+            "databases" : ["genbank","refseq"],
+            #
+            # output csv name for sourmash gather procedure
+            "gather_csv_out"        : "{sample}_trim{qual}_k{kvalue}.gather_output.csv",
+            "gather_unassigned_out" : "{sample}_trim{qual}_k{kvalue}.gather_unassigned.csv",
+            "gather_matches_out"    : "{sample}_trim{qual}_k{kvalue}.gather_matches.csv"
+        },
+        "visualize_krona" : {
+            #
+            # .summary will be replaced with .html for the final report
+            "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
+        }
+    },
+
+    "functional_inference" : {
+        #params for functional inference workflow
+        "prokka_with_megahit" : {  
+            "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
+            "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            "prefix_pattern" : "{sample}_trim{qual}_megahit",
+            "threads" : 8
+        },
+        "prokka_with_metaspades" : {
+            "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
+            "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+            "prefix_pattern" : "{sample}_trim{qual}_metaspades",
+            "threads" : 8
+        },
+        "abricate_with_metaspades" : {
+            "output_pattern" : "{sample}_trim{qual}_metaspades.abricate_{db}.csv",
+            "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+        },
+        "abricate_with_megahit" : {
+            "output_pattern" : "{sample}_trim{qual}_megahit.abricate_{db}.csv",
+            "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+        },
+        "direction_labels" : {
+            "forward" : "1",
+            "reverse" : "2"
+        },
+        #input param for srst2 is pulled from read filtering post_trimming_pattern
+        "srst2" : {
+            "threads" : 4,
+            "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
+        }
+    },
+
     "biocontainers" : {
         "megahit" : {
             "use_local" : True,
@@ -114,300 +387,6 @@ config_default = {
         }
     },
 
-    "comparison" : {
-        "compute_read_signatures" : {
-            #
-            # specify scale and k values for computing signatures
-            "scale"         : 10000,
-            "kvalues"       : [21,31,51],
-            "qual"          : ["2","30"],
-            #
-            # the signature file suffixes specified below 
-            # should match the scale and k values above.
-            #
-            # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix"    : "_scaled{scale}.k{kvalues}.sig", 
-
-            #
-            # merge_suffix is used to replace .fq.gz with a merge file suffix
-             "merge_suffix"  : "_merge_scaled{scale}.k{kvalues}.fq.gz"
-        },
-        "compare_read_signatures" : {
-            #
-            # the samples and quality variables are used in expand() to form filenames
-            # 
-            # csv_out is the single output file containing comparisons of all input files.
-            # {kvalue_read} is replaced with the k value used in the comparison.
-            # note that the file prefix does not need to be/should not be modified.
-
-            "csv_out" : "{sample}_trim{qual}_read_comparison.k{kvalue_read}.csv"
-        },
-        "compute_assembly_signatures" : {
-            # 
-            # specify scale and k values for computing signatures
-            "scale"         : 10000,
-            "kvalues"       : [21,31,51],
-            "qual"          : ["2","30"],
-            #
-            # sig_suffix is used to replace .fq.gz with a signature suffix
-            "sig_suffix" : "_scaled{scale}.k{kvalues}.sig",
-            #
-            # merge_suffix is used to replace .fq.gz with a merge file suffix
-            "merge_suffix"  : "_scaled10k.k21_31_51.fq.gz"
-        },
-        "compare_assembly_signatures" : {
-            #
-            # the samples and quality variables are used in expand() to form filenames
-            "assembler" : ["megahit","metaspades"],
-            #
-            # csv_out is the single output file containing comparisons of all input files
-            # {kvalue} is replaced with the k value used in the comparison
-            "csv_out"   : "{sample}_trim{qual}_assembly_comparison.k{kvalue_assembly}.csv"
-        },
-        "compare_read_assembly_signatures" : {
-            #
-            # the samples, quality, assembler variables are used in expand() to form filenames
-            "assembler" : ["megahit","metaspades"],
-            #
-            # k values are passed to sourmash compare
-            "kvalues"   : [21, 31, 51],
-            #
-            # csv_out is the single output file containing
-            # comparison results among all of the above files.
-            "csv_out"   : "{sample}_read_assembly_comparison.k{kvalue_read_assembly}.csv"
-        }
-    },
-
-
-    "assembly" : {
-        "assembly_patterns" : {
-            # 
-            # filename pattern for metaspades output and threads to run
-            "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
-            "metaspades_threads" : 8,
-            #
-            # filename pattern for megahit output amd threads to run
-            "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
-            "megahit_threads" : 8,
-            #
-            # general assembler output filename pattern/input for quast
-            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
-            #
-            # quast output filename pattern and threads to run
-            "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
-            "quast_threads" : 4,
-            #
-            # multiqc output dir pattern
-            "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
-            #multiqc input file. Taken from quast output file.
-            "quast_output_multiqc_input_file" : "report.tsv",
-            #multiqc output file
-            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
-        }
-    },
-
-
-    "taxonomic_classification" : {
-
-        "filter_taxa" : {
-            #
-            # percent threshold for taxa filtering
-            "pct_threshold" : 1
-        },
-
-        "kaiju" : {
-            "dmp1" : "nodes.dmp",
-            "dmp2" : "names.dmp",
-            "fmi"  : "kaiju_db_nr_euk.fmi",
-            "tar"  : "kaiju_index_nr_euk.tgz",
-            "url"  : "http://kaiju.binf.ku.dk/database",
-            #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
-            "out"  : "{sample}_trim{qual}.kaiju.out",
-            "contig_out" : "{sample}_trim{qual}_{assembler}.kaiju.out",
-            "threads" : 8
-        },
-
-        "kaiju_report" : {
-            #
-            # specify the taxonomic rank for kaiju report to use
-            "taxonomic_rank" : "genus",
-            #
-            # if the user asks for a kaiju report with filtered taxa,
-            # use this as the percent threshold
-            "pct_threshold"  : 1
-        },
-
-        "contigs_kaiju_report" : {
-            "contigs_taxonomic_rank" : "genus",
-            "contigs_pct_threshold" : 1
-        },
-
-        "sourmash" : { 
-            #
-            # URL base for SBT tree
-            "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
-            # 
-            # name of SBT tar file
-            "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
-            #
-            # name of SBT file when unpacked
-            "sbtunpack" : "{database}-k{kvalue}.sbt.json",
-            #
-            # names of valid databases
-            "databases" : ["genbank","refseq"],
-            #
-            # output csv name for sourmash gather procedure
-            "gather_csv_out"        : "{sample}_trim{qual}_k{kvalue}.gather_output.csv",
-            "gather_unassigned_out" : "{sample}_trim{qual}_k{kvalue}.gather_unassigned.csv",
-            "gather_matches_out"    : "{sample}_trim{qual}_k{kvalue}.gather_matches.csv"
-        },
-
-        "visualize_krona" : {
-            #
-            # .summary will be replaced with .html for the final report
-            "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
-        }
-    },
-
-
-    "read_filtering" : {
-        # 
-        # The read filtering workflow actually builds the rules to download 
-        # the read_files by using the pre_trimming_pattern.
-        "read_patterns" : {
-            #
-            # filename pattern for pre-trimmed reads
-            # Note: the read files section listing URLS for read files
-            # MUST match the pre_trimmming_pattern.
-            "pre_trimming_pattern"  : "{sample}_{direction}_reads",
-            # we are searching for the illumina file pattern.
-            #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
-            "pre_trimming_glob_pattern"  : "*_subset??_1_reads.fq.gz",
-            #
-            # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
-            # file pattern to locate reverse end string
-            # We are searching from the right of the file name for the unique file pattern
-            # that located the reverse threads
-            #for illumina that would be R1 for reverse_pe_pattern_search R2 for reverse_pe_pattern_replace
-            #For the test shakya dataset that is 1_
-            "reverse_pe_pattern_search"  : "1_",
-            "reverse_pe_pattern_replace" : "2_",
-            #number of threads to use.
-            "threads" : 2
-        },
-
-        "direction_labels" : {
-            "forward" : "1",
-            "reverse" : "2"
-        },
-
-        "quality_assessment" : {
-            #
-            # optional, modifiers for the .fq.gz --> .zip --> results workflow
-            "fastqc_suffix": "fastqc",
-        },
-
-        "quality_trimming" : {
-            # 
-            # suffix for quality trimming files (replaces file extension)
-            "trim_suffix" : "se",
-            #use for SRR dataset with .fq.gz file extensions 
-            "sample_file_ext" : ".fq.gz"
-            #"sample_file_ext" : ".fastq.gz"
-        },
-
-        "multiqc" :{
-            # multiqc output dir pattern
-            "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
-            #multiqc output file
-            "multiqc_pattern_report_file" : "{sample}_fastqc_multiqc_report",
-            # multiqc input file pattern
-            "multiqc_input_pattern" : "{sample}_trim{qual}_{direction}_fastqc.zip",
-
-        }, 
-
-        # Set the read adapter file
-        "adapter_file" : {
-            # 
-            # name and URL for the sequencer adapter file
-            "name" : "adapters_combined_256_unique.fasta",
-            "url"  : "https://raw.githubusercontent.com/signaturescience/metagenomics/master/resources/adapters_combined_256_unique.fasta",
-            "threads" : 4
-        },
-
-        "interleaving" : {
-            # 
-            # output pattern for khmer interleave reads
-            "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
-        },
-
-        "subsample_interleaving" : {
-             #
-             #output of subset percentage (10 = 10%, don't use zero!)
-             "percent" : 10,
-             "subsample_output_pattern" : "{sample}_trim{qual}_subset{percent}_interleaved_reads.fq.gz",
-             "max_reads" : 100000000
-        },
-
-        "split_interleaved_reads" : {
-            #
-            #output file pattern
-            "split_interleaved_output_pattern" : "{sample}_trim{qual}_subset{percent}_{direction}.fq.gz"
-        },
-
-        "count_unique_reads" : {
-            #
-            #input file pattern. Right now set to the output from interleaving
-            "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
-            #input pattern from the subsample interleave
-            #"input_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
-            #output file pattern.
-            "output_pattern" : "{sample}_trim{qual}_interleaved_uniqueK{kmers}.txt",
-        },
-
-        "convert_fastq_fasta" : {
-            #
-            #input fastq file
-            "input_pattern" : "{file}.fq.gz",
-            "output_pattern" : "{file}.fa",
-            "output_dir" : "fasta"
-        },
-    },
-
-    "functional_inference" : {
-        #params for functional inference workflow
-        "prokka_with_megahit" : {  
-            "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
-            "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
-            "prefix_pattern" : "{sample}_trim{qual}_megahit",
-            "threads" : 8
-        },
-        "prokka_with_metaspades" : {
-            "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
-            "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
-            "prefix_pattern" : "{sample}_trim{qual}_metaspades",
-            "threads" : 8
-        },
-        "abricate_with_metaspades" : {
-            "output_pattern" : "{sample}_trim{qual}_metaspades.abricate_{db}.csv",
-            "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
-        },
-        "abricate_with_megahit" : {
-            "output_pattern" : "{sample}_trim{qual}_megahit.abricate_{db}.csv",
-            "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
-        },
-        "direction_labels" : {
-            "forward" : "1",
-            "reverse" : "2"
-        },
-        #input param for srst2 is pulled from read filtering post_trimming_pattern
-        "srst2" : {
-            "threads" : 4,
-            "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
-        }
-    },
-
     "post_processing" : {
         #params for the post processing workflow
         "move_samples_to_dir" : {
@@ -418,4 +397,3 @@ config_default = {
 
 update_config(config_default, config)
 config = config_default
-
