@@ -8,7 +8,6 @@ wildcard_constraints:
     sample="\w+",
     direction="\d+"
 
-include: "config/default_datafiles.settings"
 include: "config/default_workflowparams.settings"
 include: "config/default_workflowconfig.settings"
 
