@@ -7,8 +7,10 @@ Documentation: docs/workflow_assembly.md
 '''
 
 from common.utils  import container_image_is_external, container_image_name
-from os.path import join, isfile, dirname
+from os.path import join, isfile, dirname, islink
 import os, re
+import hashlib
+from shutil import copyfile
 
 
 
@@ -202,12 +204,38 @@ srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing,
                         srst2_rev_post_trimmed_sing]
 
 def srst2_post_trimming_inputs_sing(wildcards):
+    print("ENTER srst2_post_trimming_inputs_sing")
     # input already includes data/ prefix
-    pre_inputs_wc = [x.format(**wildcards) for x in srst2_post_trimming_inputs_list]
+    pre_inputs_wc = [x.format(**wildcards) for x in srst2_post_trimming_inputs]
+
     # for containers, turn prefix data/ into /data/
-    pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
-    pre_inputs_wcs = " ".join(pre_inputs_wc)
-    return pre_inputs_wc
+    #pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
+
+    file_seed = pre_inputs_wc[0]
+    unique_filename_obj = hashlib.md5(file_seed.encode())
+    unique_filename = unique_filename_obj.hexdigest()
+    unique_filename = unique_filename[:-16] 
+    print("unique_filename: "+str(unique_filename))
+    srst2_input_sing = []
+    for num, file in enumerate(pre_inputs_wc, start=1):
+        dst_file = join(data_dir, unique_filename + '_'+ str(num) +readfilt['quality_trimming']['sample_file_ext'])
+        file = file.replace(data_dir +"/", "")
+        srst2_input_sing.append(dst_file)
+        print(file + " " + dst_file)
+    #    if (not isfile(dst_file)):
+    #        copyfile(file, dst_file)
+
+        if (not islink(dst_file)):
+            os.symlink(file, dst_file)
+       
+
+    #pre_inputs_wcs = " ".join(pre_inputs_wc)
+    srst2_input_sing = [ file.replace(data_dir, sing_dir) for file in srst2_input_sing ]
+    pre_inputs_wcs = " ".join(srst2_input_sing)
+    print("pre_inputs_wcs: " +str(pre_inputs_wcs))
+    #print(str(srst2_input_sing))
+
+    return pre_inputs_wcs
 
 srst2_db_location = join(sing_dir, '{db}')
 srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db='{db}'))
@@ -238,11 +266,15 @@ rule srst2_with_raw_reads:
     shell:
         'srst2 '
         '--input_pe {params.input_files} '
+        '--forward _1 '
+        '--reverse _2 '
         '--merge_pair '
         '--output {params.output_files} '
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
+        '&& '
+        'rm {params.input_files}'
 
   
 
