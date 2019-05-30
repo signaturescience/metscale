@@ -1,6 +1,5 @@
 from snakemake.utils import update_config
-#This is for airgapped systems or other systems that need to use only local biocontainers.
-# Note: don"t include http:// or https://
+
 config_default = {
 
     # the name of the directory where everything is being stored
@@ -10,28 +9,36 @@ config_default = {
 
     "read_filtering" : {
         # 
-        # The read filtering workflow actually builds the rules to download 
-        # the read_files by using the pre_trimming_pattern.
         "read_patterns" : {
             #
             # filename pattern for pre-trimmed reads
-            # Note: the read files section listing URLS for read files
-            # MUST match the pre_trimmming_pattern.
             "pre_trimming_pattern"  : "{sample}_{direction}_reads",
+            #
+            #shakya glob pattern
             "pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
-            # Below is glop_pattern for illumina naming conventions
+            # Illumina glob pattern
             #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
-            # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
             # file pattern to locate reverse end string
-            # We are searching from the right of the file name for the unique file pattern
-            # that located the reverse threads
-            #For the test shakya dataset that is 1_
+            # We are searching from the right of the filename for the unique file pattern
+            # that locates the reverse reads
+            #For the shakya dataset that is 1_ for reverse_pe_pattern_search (forward read) 2_ for reverse_pe_pattern_replace (reverse read)
+            #For illumina that would be R1 for reverse_pe_pattern_search(forward read) R2 for reverse_pe_pattern_replace (reverse read)
             "reverse_pe_pattern_search"  : "1_",
             "reverse_pe_pattern_replace" : "2_",
-            #for illumina that would be R1 for reverse_pe_pattern_search R2 for reverse_pe_pattern_replace
+            #
+            # filename pattern for post-trimmed reads
+            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
             #number of threads to use.
             "threads" : 2
+        },
+        "quality_trimming" : {
+            # 
+            # suffix for quality trimming files (replaces file extension)
+            "trim_suffix" : "se",
+            #use for shakya dataset with .fq.gz file extensions 
+            "sample_file_ext" : ".fq.gz"
+            #use the following for illumina naming conventions with .fastq.gz file extensions
+            #"sample_file_ext" : ".fastq.gz"
         },
         "direction_labels" : {
             "forward" : "1",
@@ -41,15 +48,6 @@ config_default = {
             #
             # optional, modifiers for the .fq.gz --> .zip --> results workflow
             "fastqc_suffix": "fastqc",
-        },
-        "quality_trimming" : {
-            # 
-            # suffix for quality trimming files (replaces file extension)
-            "trim_suffix" : "se",
-            #use for SRR dataset with .fq.gz file extensions 
-            "sample_file_ext" : ".fq.gz"
-            #use the following for illumina naming conventions with .fastq.gz file extensions
-            #"sample_file_ext" : ".fastq.gz"
         },
         "multiqc" :{
             # multiqc output dir pattern
@@ -281,6 +279,16 @@ config_default = {
         }
     },
 
+    "post_processing" : {
+        #params for the post processing workflow
+        "move_samples_to_dir" : {
+            #file pattern to move files to in post processing
+            "output_pattern" : "{sample}_finished"
+        },
+    },
+
+    #This is for airgapped systems or other systems that need to use only local biocontainers.
+    # Note: don"t include http:// or https://
     "biocontainers" : {
         "megahit" : {
             "use_local" : True,
@@ -385,14 +393,8 @@ config_default = {
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"
         }
-    },
-
-    "post_processing" : {
-        #params for the post processing workflow
-        "move_samples_to_dir" : {
-            "output_pattern" : "{sample}_finished"
-        },
     }
+
 }
 
 update_config(config_default, config)
