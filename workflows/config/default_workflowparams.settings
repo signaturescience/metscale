@@ -18,26 +18,27 @@ config_default = {
             "pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
             # Illumina glob pattern
             #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
+            #
             # file pattern to locate reverse end string
-            # We are searching from the right of the filename for the unique file pattern
-            # that locates the reverse reads
-            #For the shakya dataset that is 1_ for reverse_pe_pattern_search (forward read) 2_ for reverse_pe_pattern_replace (reverse read)
-            #For illumina that would be R1 for reverse_pe_pattern_search(forward read) R2 for reverse_pe_pattern_replace (reverse read)
+            # we are searching from the right of the filename for the unique file pattern that is locates the reverse reads
+            # for the shakya dataset that is 1_ for reverse_pe_pattern_search (forward read) 2_ for reverse_pe_pattern_replace (reverse read)
+            # for Illumina that would be R1 for reverse_pe_pattern_search(forward read) R2 for reverse_pe_pattern_replace (reverse read)
             "reverse_pe_pattern_search"  : "1_",
             "reverse_pe_pattern_replace" : "2_",
             #
             # filename pattern for post-trimmed reads
             "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
-            #number of threads to use.
+            #
+            # number of threads to use.
             "threads" : 2
         },
         "quality_trimming" : {
             # 
             # suffix for quality trimming files (replaces file extension)
             "trim_suffix" : "se",
-            #use for shakya dataset with .fq.gz file extensions 
+            # use for shakya dataset with .fq.gz file extensions 
             "sample_file_ext" : ".fq.gz"
-            #use the following for illumina naming conventions with .fastq.gz file extensions
+            # use the following for Illumina naming conventions with .fastq.gz file extensions
             #"sample_file_ext" : ".fastq.gz"
         },
         "direction_labels" : {
@@ -52,7 +53,7 @@ config_default = {
         "multiqc" :{
             # multiqc output dir pattern
             "multiqc_pattern_report" : "{sample}_fastqc_multiqc_report_data",
-            #multiqc output file
+            # multiqc output file
             "multiqc_pattern_report_file" : "{sample}_fastqc_multiqc_report",
             # multiqc input file pattern
             "multiqc_input_pattern" : "{sample}_trim{qual}_{direction}_fastqc.zip",
@@ -72,28 +73,28 @@ config_default = {
         },
         "subsample_interleaving" : {
              #
-             #output of subset percentage (10 = 10%, don't use zero!)
+             # output of subset percentage (10 = 10%, don't use zero!)
              "percent" : 10,
              "subsample_output_pattern" : "{sample}_trim{qual}_subset{percent}_interleaved_reads.fq.gz",
              "max_reads" : 100000000
         },
         "split_interleaved_reads" : {
             #
-            #output file pattern
+            # output file pattern
             "split_interleaved_output_pattern" : "{sample}_trim{qual}_subset{percent}_{direction}.fq.gz"
         },
         "count_unique_reads" : {
             #
-            #input file pattern. Right now set to the output from interleaving
+            # input file pattern. Right now set to the output from interleaving
             "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
-            #input pattern from the subsample interleave
+            # input pattern from the subsample interleave
             #"input_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
-            #output file pattern.
+            # output file pattern.
             "output_pattern" : "{sample}_trim{qual}_interleaved_uniqueK{kmers}.txt",
         },
         "convert_fastq_fasta" : {
             #
-            #input fastq file
+            # input fastq file
             "input_pattern" : "{file}.fq.gz",
             "output_pattern" : "{file}.fa",
             "output_dir" : "fasta"
@@ -120,9 +121,9 @@ config_default = {
             #
             # multiqc output dir pattern
             "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
-            #multiqc input file. Taken from quast output file.
+            # multiqc input file. Taken from quast output file.
             "quast_output_multiqc_input_file" : "report.tsv",
-            #multiqc output file
+            # multiqc output file
             "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
         }
     },
@@ -247,7 +248,7 @@ config_default = {
     },
 
     "functional_inference" : {
-        #params for functional inference workflow
+        # params for functional inference workflow
         "prokka_with_megahit" : {  
             "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
@@ -272,7 +273,7 @@ config_default = {
             "forward" : "1",
             "reverse" : "2"
         },
-        #input param for srst2 is pulled from read filtering post_trimming_pattern
+        # input param for srst2 is pulled from read filtering post_trimming_pattern
         "srst2" : {
             "threads" : 4,
             "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
@@ -280,16 +281,49 @@ config_default = {
     },
 
     "post_processing" : {
-        #params for the post processing workflow
+        # params for the post processing workflow
         "move_samples_to_dir" : {
-            #file pattern to move files to in post processing
+            # file pattern to move files to in post processing
             "output_pattern" : "{sample}_finished"
         },
     },
 
-    #This is for airgapped systems or other systems that need to use only local biocontainers.
+    # This is for airgapped systems or other systems that need to use only local biocontainers.
     # Note: don"t include http:// or https://
     "biocontainers" : {
+        "osf" : {
+            "use_local" : False,
+            "quayurl" : "quay.io/centerforopenscience/osf",
+            "version" : "master"
+        },
+        "trimmomatic" : {
+            "use_local" : True,
+            "filename" : "trimmomatic-0.36--5.simg",
+            "quayurl" : "quay.io/biocontainers/trimmomatic",
+            "location" : "../container_images/",
+            "version" : "0.36--5"
+        },
+        "fastqc" : {
+            "use_local" : True,
+            "filename" : "fastqc-0.11.7--pl5.22.0_2.simg",
+            "quayurl" : "quay.io/biocontainers/fastqc",
+            "location" : "../container_images/",
+            "version" : "0.11.7--pl5.22.0_2"
+        },
+        "multiqc" : {
+            "use_local" : True,
+            "filename" : "multiqc-1.4--py35_0.simg",
+            "quayurl" : "quay.io/biocontainers/multiqc",
+            "location" : "../container_images/",
+            "version" : "1.4--py35_0"
+        },
+        "khmer" : {
+            "use_local" : True,
+            "filename" : "khmer-2.1--py35_0.simg",
+            "quayurl" : "quay.io/biocontainers/khmer",
+            "location" : "../container_images/",
+            "version" : "2.1--py35_0"
+        },
         "megahit" : {
             "use_local" : True,
             "filename" : "megahit-1.1.2--py35_0.simg",
@@ -304,12 +338,12 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/spades",
             "version" : "3.11.1--py36_zlib1.2.8_0"
         },
-        "trimmomatic" : {
+        "quast" : {
             "use_local" : True,
-            "filename" : "trimmomatic-0.36--5.simg",
-            "quayurl" : "quay.io/biocontainers/trimmomatic",
+            "filename" : "quast-4.5--boost1.61_1.simg",
+            "quayurl" : "quay.io/biocontainers/quast",
             "location" : "../container_images/",
-            "version" : "0.36--5"
+            "version" : "4.5--boost1.61_1"
         },
         "sourmash" : {
             "use_local" : True,
@@ -325,13 +359,6 @@ config_default = {
             "location" : "../container_images/",
             "version" : "2.0.0a3--py36_0"
         },
-        "khmer" : {
-            "use_local" : True,
-            "filename" : "khmer-2.1--py35_0.simg",
-            "quayurl" : "quay.io/biocontainers/khmer",
-            "location" : "../container_images/",
-            "version" : "2.1--py35_0"
-        },
         "kaiju" : {
             "use_local" : True,
             "filename" : "kaiju-1.6.1--pl5.22.0_0.simg",
@@ -345,32 +372,6 @@ config_default = {
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
-        },
-        "quast" : {
-            "use_local" : True,
-            "filename" : "quast-4.5--boost1.61_1.simg",
-            "quayurl" : "quay.io/biocontainers/quast",
-            "location" : "../container_images/",
-            "version" : "4.5--boost1.61_1"
-        },
-        "multiqc" : {
-            "use_local" : True,
-            "filename" : "multiqc-1.4--py35_0.simg",
-            "quayurl" : "quay.io/biocontainers/multiqc",
-            "location" : "../container_images/",
-            "version" : "1.4--py35_0"
-        },
-        "osf" : {
-            "use_local" : False,
-            "quayurl" : "quay.io/centerforopenscience/osf",
-            "version" : "master"
-        },
-        "fastqc" : {
-            "use_local" : True,
-            "filename" : "fastqc-0.11.7--pl5.22.0_2.simg",
-            "quayurl" : "quay.io/biocontainers/fastqc",
-            "location" : "../container_images/",
-            "version" : "0.11.7--pl5.22.0_2"
         },
         "prokka" : {
             "use_local" : True,

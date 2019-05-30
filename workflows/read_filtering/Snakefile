@@ -57,7 +57,8 @@ for file in sample_input_files:
     file_path_no_dir = file.replace(data_dir+'/','')
     file_names.append(file_path_no_dir.replace(readfilt["quality_trimming"]["sample_file_ext"],''))
 sample_input_files = file_names
-
+if (sample_input_files == []):
+    print("Warning: No input files found!")
 
 ###################################
 # Pretrimming code needed for convert_illumina_to_internal_format and pre_trimming_quality_assessment
