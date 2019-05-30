@@ -1,0 +1,10 @@
+-t
+1
+-1
+/tmp/SRR606249_subset10_trim2_1.fq.gz
+-2
+/tmp/SRR606249_subset10_trim2_2.fq.gz
+--out-prefix=SRR606249_subset10_trim2.megahit
+-o
+//tmp/SRR606249_subset10_trim2.megahit
+MEGAHIT_TEMP_DIR: //tmp/SRR606249_subset10_trim2.megahit/tmp/

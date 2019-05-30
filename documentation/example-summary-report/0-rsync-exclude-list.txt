@@ -1,0 +1,16 @@
+.[a-z]*
+*.fa
+*.fq.gz
+kaiju_db_nr_euk.fmi
+*.dmp
+*fastg
+*gfa
+*fasta
+*fastq
+*.metaspades/
+*faa
+*ffn
+*fna
+*fsa
+*gbk
+*gff

@@ -1,0 +1,37 @@
+        %	    reads	genus
+-------------------------------------------
+ 9.054843	   456752	Rhodopirellula
+ 7.459235	   376265	Thermotoga
+ 4.659967	   235062	Sulfitobacter
+ 4.163901	   210039	Pyrobaculum
+ 3.720984	   187697	Gemmatimonas
+ 3.622635	   182736	Chlorobium
+ 3.384167	   170707	Pyrococcus
+ 2.886019	   145579	Acidobacterium
+ 2.883184	   145436	Nitrosomonas
+ 2.477537	   124974	Geobacter
+ 2.469924	   124590	Archaeoglobus
+ 2.357282	   118908	Sulfolobus
+ 2.117724	   106824	Bacteroides
+ 2.015668	   101676	Desulfovibrio
+ 1.928619	    97285	Caldicellulosiruptor
+ 1.692034	    85351	Salinispora
+ 1.641085	    82781	Treponema
+ 1.605302	    80976	Chloroflexus
+ 1.475432	    74425	Methanococcus
+ 1.437806	    72527	Nostoc
+ 1.377817	    69501	Herpetosiphon
+ 1.369114	    69062	Nanoarchaeum
+ 1.364951	    68852	Persephonella
+ 1.364198	    68814	Hydrogenobaculum
+ 1.174081	    59224	Sulfurihydrogenibium
+ 1.050853	    53008	Ruminiclostridium
+ 1.030453	    51979	Aciduliprofundum
+ 1.022563	    51581	Leptothrix
+ 1.015823	    51241	Thermus
+-------------------------------------------
+ 0.003132	      158	Viruses
+ 7.169659	   361658	cannot be assigned to a genus 
+14.508323	   731841	belong to a genus with less than 1% of all reads
+-------------------------------------------
+ 4.495683	   226775	unclassified

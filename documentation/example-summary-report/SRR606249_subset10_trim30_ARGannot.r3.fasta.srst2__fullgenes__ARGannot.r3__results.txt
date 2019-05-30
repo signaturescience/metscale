@@ -1,0 +1,14 @@
+Sample	DB	gene	allele	coverage	depth	diffs	uncertainty	divergence	length	maxMAF	clusterid	seqid	annotation
+SRR606249_subset10_trim30	ARGannot.r3	TlrC2_MLS	TlrC_576	1.417	0.958	1600holes	edge0.0	0.0	1623	0.0	25	576	no;no;TlrC;MLS;NC_016113;804890-803268;1623
+SRR606249_subset10_trim30	ARGannot.r3	MsrD_MLS	MsrD_296	30.669	1.344	1015holes	edge0.0	0.0	1464	0.0	39	296	no;no;MsrD;MLS;AF274302;2462-3925;1464
+SRR606249_subset10_trim30	ARGannot.r3	TEM-1D_Bla	TEM-197_1034	36.934	1.066	543holes	edge0.0	0.0	861	0.0	205	1034	no;no;TEM-197;Bla;HQ877606;1-861;861
+SRR606249_subset10_trim30	ARGannot.r3	TetO_Tet	TetO_834	19.948	0.997	4snp1537holes	edge0.0	1.044	1920	0.0	14	834	no;no;TetO;Tet;M18896;207-2126;1920
+SRR606249_subset10_trim30	ARGannot.r3	AmpC1_Ecoli_Bla	AmpC1_1670	9.195	0.992	1185holes	edge0.0	0.0	1305	0.0	49	1670	no;no;AmpC1;Bla;FN649414;2765051-2766355;1305
+SRR606249_subset10_trim30	ARGannot.r3	LsaA_MLS	LsaA_298	87.575	2.755	24snp186holes	edge1.0	1.831	1497	0.5	33	298	no;no;LsaA;MLS;AY225127;41-1537;1497
+SRR606249_subset10_trim30	ARGannot.r3	OqxB_Flq	OqxB_49	5.645	1.324	14snp2975holes	edge0.0	7.865	3153	0.5	0	49	no;no;OqxB;Flq;EU370913;47851-51003;3153
+SRR606249_subset10_trim30	ARGannot.r3	Aac6-Ii_AGly	Aac6-Ii_591	13.479	0.987	10snp475holes	edge0.0	13.514	549	0.0	402	591	no;no;Aac6-Ii;AGly;L12710;169-717;549
+SRR606249_subset10_trim30	ARGannot.r3	MphD_MLS	MphD_1613	85.372	3.258	5snp122holes	edge0.0	0.702	834	0.0	228	1613	no;no;MphD;MLS;NC_017312;2292413-2291580;834
+SRR606249_subset10_trim30	ARGannot.r3	AphA2_AGly	AphA2_1492	18.868	0.993	645holes	edge0.0	0.0	795	0.0	281	1492	no;no;AphA2;AGly;X57709;1-795;795
+SRR606249_subset10_trim30	ARGannot.r3	Aph3''Ia_AGly	Aph3''Ia_1217	23.529	0.995	1snp624holes	edge0.0	0.521	816	0.0	251	1217	
+SRR606249_subset10_trim30	ARGannot.r3	CatB1_Phe	CatB1_607	11.429	0.986	8snp2indel557holes	edge0.0	10.959	630	0.0	375	607	no;no;CatB1;Phe;M58472;148-777;630
+SRR606249_subset10_trim30	ARGannot.r3	CarA_MLS	CarA_580	2.114	0.972	1snp1621holes	edge0.0	2.857	1656	0.0	21	580	no;no;CarA;MLS;M80346;411-2066;1656
