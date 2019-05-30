@@ -1,0 +1,22 @@
+Assembly	SRR606249_subset10_trim2.megahit.contigs
+# contigs (>= 0 bp)	108640
+# contigs (>= 1000 bp)	24957
+# contigs (>= 5000 bp)	3192
+# contigs (>= 10000 bp)	1305
+# contigs (>= 25000 bp)	327
+# contigs (>= 50000 bp)	98
+Total length (>= 0 bp)	127602974
+Total length (>= 1000 bp)	84237459
+Total length (>= 5000 bp)	43878763
+Total length (>= 10000 bp)	30827601
+Total length (>= 25000 bp)	16313625
+Total length (>= 50000 bp)	8499140
+# contigs	61775
+Largest contig	264437
+Total length	109606033
+GC (%)	49.65
+N50	2884
+N75	1062
+L50	6128
+L75	22984
+# N's per 100 kbp	0.00
