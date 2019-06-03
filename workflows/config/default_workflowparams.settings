@@ -264,10 +264,18 @@ config_default = {
         "abricate_with_metaspades" : {
             "output_pattern" : "{sample}_trim{qual}_metaspades.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+            # set by default to use internal DB's
+            "db_dir" : "/opt/abricate/db/"
+            #use external dirs
+            #"db_dir" : "sing_dir"
         },
         "abricate_with_megahit" : {
             "output_pattern" : "{sample}_trim{qual}_megahit.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            # set by default to use internal DB's
+            "db_dir" : "/opt/abricate/db/"
+            #use external dirs
+            #"db_dir" : "sing_dir"
         },
         "direction_labels" : {
             "forward" : "1",
