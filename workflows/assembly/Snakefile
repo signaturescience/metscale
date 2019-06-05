@@ -34,13 +34,13 @@ readfilt = config['read_filtering']
 # tasks.
 
 
-###################################
-# Assembly: metaspades
+
 
 # Post trimming pattern uses the {direction} wildcard.
 # We have to explicitly expand {direction} to _1 and _2.
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
+#Used for both spades and metaspades rules
 assembly_metaspades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 assembly_metaspades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 
@@ -66,7 +66,8 @@ assembly_metaspades_input_rev_sing = assembly_metaspades_input_pattern_sing.form
             qual='{qual}'
 )
 
-
+###################################
+# Assembly: metaspades
 
 assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['metaspades_pattern'])
 assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
@@ -80,7 +81,6 @@ spades_image = container_image_name(biocontainers, 'spades')
 
 def assembly_metaspades_outprefix_sub(wildcards):
     return assembly_metaspades_outprefix.format(**wildcards)
-
 
 rule assembly_metaspades:
     """
@@ -114,6 +114,60 @@ rule assembly_metaspades:
         '-o /{sing_dir}/{params.assembly_metaspades_outprefix_wc} '
         '&& '
         'mv /{sing_dir}/{params.assembly_metaspades_outprefix_wc}/contigs.fasta /{params.metaspades_output_expanded} '
+
+
+
+###################################
+# Assembly: spades
+assembly_spades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_output = join(data_dir, assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['spades_pattern'])
+
+assembly_spades_logfile = re.sub('contigs.fa','log',assembly_spades_output)
+assembly_spades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_spades_output)
+assembly_spades_threads =  assembly['assembly_patterns']['spades_threads']
+assembly_spades_kmer = assembly['assembly_patterns']['kmer']
+assembly_spades_kmer = ",".join(map(str, assembly_spades_kmer))
+
+def assembly_spades_outprefix_sub(wildcards):
+    return assembly_spades_outprefix.format(**wildcards)
+
+
+
+rule assembly_spades:
+    """
+    Perform read assembly of trimmed reads using spades.
+    """
+    input:
+        fwd = assembly_metaspades_input_fwd,
+        rev = assembly_metaspades_input_rev
+    output:
+        assembly_spades_output
+    params:
+        assembly_spades_outprefix_wc = assembly_spades_outprefix_sub,
+        fwd_sing = assembly_metaspades_input_fwd_sing,
+        rev_sing = assembly_metaspades_input_rev_sing,
+        spades_output_expanded = assembly_spades_output_sing,
+        kmer = assembly_spades_kmer
+    message: 
+         '--- Assembling quality trimmed reads of isolates with SPAdes'
+    singularity: 
+        spades_image
+    threads: 
+        assembly_spades_threads
+    log: 
+        assembly_spades_logfile
+    benchmark:
+        assembly_spades_benchfile
+    shell:
+        'spades.py -t {threads} '
+        '-k {params.kmer} '
+         '-1 {params.fwd_sing} '
+         '-2 {params.rev_sing} '
+        '-o /{sing_dir}/{params.assembly_spades_outprefix_wc} '
+        '&& '
+        'mv /{sing_dir}/{params.assembly_spades_outprefix_wc}/contigs.fasta /{params.spades_output_expanded} '
+
 
 
 ###################################
@@ -299,6 +353,18 @@ rule assembly_metaspades_workflow:
         expand( assembly_metaspades_output,
                 sample    = sample_input_files,
                 qual      = workflows['assembly_metaspades_workflow']['qual'],
+                direction = directions,
+        )
+
+
+rule assembly_spades_workflow:
+    """
+    Build rule: trigger the spades assembly step on isolates.
+    """
+    input:
+        expand( assembly_spades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_spades_workflow']['qual'],
                 direction = directions,
         )
 

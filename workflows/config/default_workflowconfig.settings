@@ -7,7 +7,7 @@ config_default = {
         "samples_input_workflow" : {
             # Global parameter for the sample input to run on.
             # This replaces having samnples in every workflow
-            "samples"    : ["SRR606249_subset10"]
+            "samples"    : ["SRR3112300"]
         },
         "read_filtering_pretrim_workflow" : {
         },
@@ -32,6 +32,11 @@ config_default = {
         "assembly_metaspades_workflow" : {
             # the assembly workflow will be run on.
             # (metaspades assembler only).
+            "qual"      : ["2","30"],
+        },
+        "assembly_spades_workflow" : {
+            # the assembly workflow will be run on.
+            # (spades assembler only).
             "qual"      : ["2","30"],
         },
         "assembly_megahit_workflow" : {

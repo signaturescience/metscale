@@ -112,6 +112,11 @@ config_default = {
             "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "megahit_threads" : 8,
             #
+            # filename pattern for spades output and threads to run
+            "spades_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
+            "kmer" : [21, 33, 55],
+            "spades_threads" : 8,            
+            #
             # general assembler output filename pattern/input for quast
             "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
