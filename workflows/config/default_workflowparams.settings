@@ -115,7 +115,11 @@ config_default = {
             # filename pattern for spades output and threads to run
             "spades_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
             "kmer" : [21, 33, 55],
-            "spades_threads" : 8,            
+            "spades_threads" : 8, 
+            # 
+            # filename pattern for plasmidspades output and threads to run
+            "plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades.contigs.fa",
+            "plasmidspades_threads" : 8,           
             #
             # general assembler output filename pattern/input for quast
             "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",

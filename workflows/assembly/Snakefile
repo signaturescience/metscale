@@ -40,27 +40,27 @@ readfilt = config['read_filtering']
 # We have to explicitly expand {direction} to _1 and _2.
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
-#Used for both spades and metaspades rules
-assembly_metaspades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
-assembly_metaspades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+#Used for both spades and metaspades and plasmidspades rules
+assembly_all_spades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_all_spades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 
-assembly_metaspades_input_fwd = assembly_metaspades_input_pattern.format(
+assembly_all_spades_input_fwd = assembly_all_spades_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
             qual='{qual}'
 )
-assembly_metaspades_input_rev = assembly_metaspades_input_pattern.format(
+assembly_all_spades_input_rev = assembly_all_spades_input_pattern.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
             qual='{qual}'
 )
 
-assembly_metaspades_input_fwd_sing = assembly_metaspades_input_pattern_sing.format(
+assembly_all_spades_input_fwd_sing = assembly_all_spades_input_pattern_sing.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
             qual='{qual}'
 )
-assembly_metaspades_input_rev_sing = assembly_metaspades_input_pattern_sing.format(
+assembly_all_spades_input_rev_sing = assembly_all_spades_input_pattern_sing.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
             qual='{qual}'
@@ -87,14 +87,14 @@ rule assembly_metaspades:
     Perform read assembly of trimmed reads using metaspades.
     """
     input:
-        fwd = assembly_metaspades_input_fwd,
-        rev = assembly_metaspades_input_rev
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
     output:
         assembly_metaspades_output
     params:
         assembly_metaspades_outprefix_wc = assembly_metaspades_outprefix_sub,
-        fwd_sing = assembly_metaspades_input_fwd_sing,
-        rev_sing = assembly_metaspades_input_rev_sing,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
         metaspades_output_expanded = assembly_metaspades_output_sing
     message: 
          '--- Assembling quality trimmed reads with SPAdes'
@@ -139,14 +139,14 @@ rule assembly_spades:
     Perform read assembly of trimmed reads using spades.
     """
     input:
-        fwd = assembly_metaspades_input_fwd,
-        rev = assembly_metaspades_input_rev
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
     output:
         assembly_spades_output
     params:
         assembly_spades_outprefix_wc = assembly_spades_outprefix_sub,
-        fwd_sing = assembly_metaspades_input_fwd_sing,
-        rev_sing = assembly_metaspades_input_rev_sing,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
         spades_output_expanded = assembly_spades_output_sing,
         kmer = assembly_spades_kmer
     message: 
@@ -167,6 +167,58 @@ rule assembly_spades:
         '-o /{sing_dir}/{params.assembly_spades_outprefix_wc} '
         '&& '
         'mv /{sing_dir}/{params.assembly_spades_outprefix_wc}/contigs.fasta /{params.spades_output_expanded} '
+
+
+
+###################################
+# Assembly:plasmid spades
+assembly_plasmidspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['plasmidspades_pattern'])
+assembly_plasmidspades_output = join(data_dir, assembly['assembly_patterns']['plasmidspades_pattern'])
+assembly_plasmidspades_output_sing = join(sing_dir, assembly['assembly_patterns']['plasmidspades_pattern'])
+
+assembly_plasmidspades_logfile = re.sub('contigs.fa','log',assembly_plasmidspades_output)
+assembly_plasmidspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_plasmidspades_output)
+assembly_plasmidspades_threads =  assembly['assembly_patterns']['plasmidspades_threads']
+
+def assembly_plasmidspades_outprefix_sub(wildcards):
+    return assembly_plasmidspades_outprefix.format(**wildcards)
+
+
+
+rule assembly_plasmidspades:
+    """
+    Perform read assembly of trimmed reads using plasmidspades.
+    """
+    input:
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
+    output:
+        assembly_plasmidspades_output
+    params:
+        assembly_plasmidspades_outprefix_wc = assembly_plasmidspades_outprefix_sub,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
+        spades_plasmidoutput_expanded = assembly_plasmidspades_output_sing,
+    message: 
+         '--- Assembling quality trimmed reads of isolates with plasmidSPAdes'
+    singularity: 
+        spades_image
+    threads: 
+        assembly_plasmidspades_threads
+    log: 
+        assembly_plasmidspades_logfile
+    benchmark:
+        assembly_plasmidspades_benchfile
+    shell:
+        'spades.py -t {threads} '
+         '-1 {params.fwd_sing} '
+         '-2 {params.rev_sing} '
+        '-o /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc} '
+        '&& '
+        'mv /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc}/contigs.fasta /{params.spades_plasmidoutput_expanded} '
+
+
+
 
 
 
@@ -365,6 +417,18 @@ rule assembly_spades_workflow:
         expand( assembly_spades_output,
                 sample    = sample_input_files,
                 qual      = workflows['assembly_spades_workflow']['qual'],
+                direction = directions,
+        )
+
+
+rule assembly_plasmidspades_workflow:
+    """
+    Build rule: trigger the spades assembly step on isolates.
+    """
+    input:
+        expand( assembly_plasmidspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_plasmidspades_workflow']['qual'],
                 direction = directions,
         )
 
