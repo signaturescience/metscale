@@ -244,6 +244,20 @@ config_default = {
             #
             # .summary will be replaced with .html for the final report
             "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
+        },
+        "kraken2" : {
+            #
+            # kraken2 output results
+            "kraken2_output" : "{sample}_trim{qual}_kraken2.report",
+            "threads" : 6,
+            # db to run against, this is the default DB downloaded from download python script.
+            "db" : "minikraken2_v2_8GB_201904_UPDATE",
+            "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified#.fq.gz",
+            "class_out" : "{sample}_trim{qual}_kraken2_classified#.fq.gz",
+            # confidence score between 0 and 1
+            "confidence" : 0,
+            "report" : "{sample}_trim{qual}_kraken2.report"
+
         }
     },
 
@@ -372,6 +386,13 @@ config_default = {
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
+        },
+        "kraken2" : {
+            "use_local" : True,
+            "filename" : "kraken2-2.0.8_beta--pl526h6bb024c_0.simg",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/kraken2",
+            "version" : "2.0.8_beta--pl526h6bb024c_0"
         },
         "prokka" : {
             "use_local" : True,

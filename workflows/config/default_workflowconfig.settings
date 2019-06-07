@@ -140,6 +140,9 @@ config_default = {
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"] 
         },
+        "tax_class_kraken2_workflow" : {
+            "qual" : ["2","30"],        
+        },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 
             # from megahit to run prokka on

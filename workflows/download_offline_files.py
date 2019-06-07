@@ -2,6 +2,7 @@ import json
 import subprocess
 from shutil import copyfile
 import urllib.request
+import urllib
 from urllib.parse import urlparse
 import os
 import sys
@@ -53,7 +54,7 @@ def download_file(workflow, data, install_dir):
                                 os.remove(install_dir+ "/"+file)
                             except OSError:
                                 pass
-            elif (url.scheme == "http" or url.scheme == "https"):      #download via http
+            elif (url.scheme == "http" or url.scheme == "https" or url.scheme == "ftp"):      #download via http, ftp
                 if not (os.path.isfile(os.path.join(install_dir, file_name))):
                     print("Downloading " +file_name + " from " + url_string)
                     try:
@@ -71,10 +72,11 @@ def download_file(workflow, data, install_dir):
                     sing_command = "singularity pull "+url_string
                     subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
                     os.rename(file_name, "../container_images/"+file_name)  
-            elif (url.scheme =="file"):         #copy file from local location
+            elif (url.scheme == "file"):         #copy file from local location
                 if not (os.path.isfile(os.path.join(install_dir, file_name))):
                     print("Copying "+ file_name)
                     copyfile(".."+ url.path, install_dir+ "/"+ file_name)
+
                         
                          
     
