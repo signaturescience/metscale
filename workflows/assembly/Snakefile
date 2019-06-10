@@ -127,10 +127,6 @@ assembly_spades_logfile = re.sub('contigs.fa','log',assembly_spades_output)
 assembly_spades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_spades_output)
 assembly_spades_threads =  assembly['assembly_patterns']['spades_threads']
 
-
-#assembly_spades_kmer = assembly['assembly_patterns']['kmer']
-#assembly_spades_kmer = ",".join(map(str, assembly_spades_kmer))
-
 def assembly_spades_outprefix_sub(wildcards):
     return assembly_spades_outprefix.format(**wildcards)
 
@@ -150,7 +146,6 @@ rule assembly_spades:
         fwd_sing = assembly_all_spades_input_fwd_sing,
         rev_sing = assembly_all_spades_input_rev_sing,
         spades_output_expanded = assembly_spades_output_sing,
-        #kmer = assembly_spades_kmer
     message: 
          '--- Assembling quality trimmed reads of isolates with SPAdes'
     singularity: 
