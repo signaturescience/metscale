@@ -1207,7 +1207,8 @@ kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
 
 kraken2_image = container_image_name(biocontainers, 'kraken2')
 kraken2_threads = taxclass['kraken2']['threads'] 
-kraken2_db = join(sing_dir, taxclass['kraken2']['db'])
+kraken2_db_sing = join(sing_dir, taxclass['kraken2']['db'])
+kraken2_db = join(data_dir, taxclass['kraken2']['db'])
 kraken2_unclass_out = join(sing_dir, taxclass['kraken2']['unclass_out'])
 kraken2_class_out = join(sing_dir, taxclass['kraken2']['class_out'])
 kraken2_confidence = taxclass['kraken2']['confidence']
@@ -1220,7 +1221,7 @@ rule kraken2:
     """
     input:
         fwd = kraken2_input_fwd,
-        rev = kraken2_input_rev
+        rev = kraken2_input_rev,
     output:
         kraken2_ouput
     message:
@@ -1232,7 +1233,7 @@ rule kraken2:
     params:
         fwd_sing = kraken2_input_fwd_sing,
         rev_sing = kraken2_input_rev_sing,
-        db = kraken2_db,
+        db_sing = kraken2_db_sing,
         unclass_out = kraken2_unclass_out,
         class_out = kraken2_class_out,
         out_sing = kraken2_ouput_sing,
@@ -1240,7 +1241,7 @@ rule kraken2:
         report = kraken2_report
     shell:
         'kraken2 '
-        '--db {params.db} '
+        '--db {params.db_sing} '
         '--threads {threads} '
         '--paired {params.fwd_sing} {params.rev_sing} '
         '--use-names '

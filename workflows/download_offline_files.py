@@ -59,6 +59,10 @@ def download_file(workflow, data, install_dir):
                     print("Downloading " +file_name + " from " + url_string)
                     try:
                         urllib.request.urlretrieve(url_string, install_dir+ "/"+file_name, reporthook)
+                        if (file_name.endswith('.tgz')):
+                            #tar -xzvf {input}  -C {data_dir} && rm -f {input}
+                            untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
+                            subprocess.run([untar_command], shell=True)   
                     except SocketError as e:
                         print("Error downloading file " + file_name + " Retry script.")
                         print(e)
