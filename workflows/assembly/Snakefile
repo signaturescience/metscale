@@ -126,8 +126,10 @@ assembly_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['spad
 assembly_spades_logfile = re.sub('contigs.fa','log',assembly_spades_output)
 assembly_spades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_spades_output)
 assembly_spades_threads =  assembly['assembly_patterns']['spades_threads']
-assembly_spades_kmer = assembly['assembly_patterns']['kmer']
-assembly_spades_kmer = ",".join(map(str, assembly_spades_kmer))
+
+
+#assembly_spades_kmer = assembly['assembly_patterns']['kmer']
+#assembly_spades_kmer = ",".join(map(str, assembly_spades_kmer))
 
 def assembly_spades_outprefix_sub(wildcards):
     return assembly_spades_outprefix.format(**wildcards)
@@ -148,7 +150,7 @@ rule assembly_spades:
         fwd_sing = assembly_all_spades_input_fwd_sing,
         rev_sing = assembly_all_spades_input_rev_sing,
         spades_output_expanded = assembly_spades_output_sing,
-        kmer = assembly_spades_kmer
+        #kmer = assembly_spades_kmer
     message: 
          '--- Assembling quality trimmed reads of isolates with SPAdes'
     singularity: 
@@ -161,7 +163,7 @@ rule assembly_spades:
         assembly_spades_benchfile
     shell:
         'spades.py -t {threads} '
-        '-k {params.kmer} '
+        '-k {wildcards.kvalue} '
          '-1 {params.fwd_sing} '
          '-2 {params.rev_sing} '
         '-o /{sing_dir}/{params.assembly_spades_outprefix_wc} '
@@ -417,6 +419,7 @@ rule assembly_spades_workflow:
         expand( assembly_spades_output,
                 sample    = sample_input_files,
                 qual      = workflows['assembly_spades_workflow']['qual'],
+                kvalue    = workflows['assembly_spades_workflow']['kvalue'],
                 direction = directions,
         )
 
