@@ -1170,6 +1170,9 @@ rule visualize_kaiju_species_contigs:
 
 
 
+
+#TODO: unpack kraken 2 DB
+
 ############################################
 # Taxonomic Classification: kraken2
 
