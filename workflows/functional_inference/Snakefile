@@ -123,6 +123,11 @@ abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahi
                             qual='{qual}'))
 abricate_with_megahit_db = '{db}'
 
+def get_db_dir_megahit(wildcards):
+    abricate_db_dir = inference['abricate_with_megahit']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
 
 rule abricate_with_megahit:
     input:
@@ -132,11 +137,13 @@ rule abricate_with_megahit:
     params:
         input_files = abricate_with_megahit_input_sing,
         output_files = abricate_with_megahit_output_sing,
-        gene_db = abricate_with_megahit_db
+        gene_db = abricate_with_megahit_db,
+        db_dir = get_db_dir_megahit
     singularity:
         abricate_image
     shell:
         'abricate --csv '
+        '-datadir {params.db_dir} '
         '--db {params.gene_db} '
         '{params.input_files}>'
         '{params.output_files} '
@@ -159,6 +166,13 @@ abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_met
 abricate_with_metaspades_db = '{db}'
 
 
+def get_db_dir_metaspades(wildcards):
+    abricate_db_dir = inference['abricate_with_metaspades']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
+
+
 rule abricate_with_metaspades:
     input:
         abricate_with_metaspades_input
@@ -167,11 +181,13 @@ rule abricate_with_metaspades:
     params:
         input_files = abricate_with_metaspades_input_sing,
         output_files = abricate_with_metaspades_output_sing,
-        gene_db = abricate_with_metaspades_db
+        gene_db = abricate_with_metaspades_db,
+        db_dir = get_db_dir_metaspades
     singularity:
         abricate_image
     shell:
         'abricate --csv '
+        '-datadir {params.db_dir} '
         '--db {params.gene_db} '
         '{params.input_files}>'
         '{params.output_files} '

@@ -38,7 +38,6 @@ config_default = {
             # the assembly workflow will be run on.
             # (spades assembler only).
             "qual"      : ["2","30"],
-            "kvalue"    : [21,31 ,51],
         },
         "assembly_plasmidspades_workflow" : {
             # the assembly workflow will be run on.
@@ -172,13 +171,15 @@ config_default = {
             # these parameters determine which contig params 
             # from metaspades to run abricate on
             "qual"      : ["2","30"],
-            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            #to use custom/external DB file "AMRVF2"
             "db"        : ["card", "vfdb"],
+            #"db"        : ["AMRVF2"],
         },
         "functional_with_srst2_workflow" : {
             # these paramters determine srst2 input
             "qual"      : ["2","30"],
-            #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
+            #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta} or external DBs
             "db"        : ["ARGannot.r3.fasta", "ResFinder.fasta"]
         }
     }

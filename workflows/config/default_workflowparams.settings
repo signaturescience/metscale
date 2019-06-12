@@ -112,8 +112,9 @@ config_default = {
             "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "megahit_threads" : 8,
             #
-            # filename pattern for spades output and threads to run
-            "spades_pattern" : "{sample}_trim{qual}_k{kvalue}.spades.contigs.fa",
+            # filename pattern for spades output and threads to run. Note I use the string kmer to do a replace with the kmer values listed.
+            "spades_pattern" : "{sample}_trim{qual}_kkmer.spades.contigs.fa",
+            "kmer" : [21, 33, 55],
             "spades_threads" : 8, 
             # 
             # filename pattern for plasmidspades output and threads to run
@@ -272,10 +273,18 @@ config_default = {
         "abricate_with_metaspades" : {
             "output_pattern" : "{sample}_trim{qual}_metaspades.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
+            # set by default to use internal DB's
+            "db_dir" : "/opt/abricate/db/"
+            #use external dirs
+            #"db_dir" : "sing_dir"
         },
         "abricate_with_megahit" : {
             "output_pattern" : "{sample}_trim{qual}_megahit.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            # set by default to use internal DB's
+            "db_dir" : "/opt/abricate/db/"
+            #use external dirs
+            #"db_dir" : "sing_dir"
         },
         "direction_labels" : {
             "forward" : "1",
