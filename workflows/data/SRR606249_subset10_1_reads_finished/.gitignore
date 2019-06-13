@@ -1,5 +1,6 @@
 *metaspades/
 *megahit/
+*.bam
 *.fa
 *_se
 *trimmomatic*.log
