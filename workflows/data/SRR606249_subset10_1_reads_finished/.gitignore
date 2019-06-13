@@ -1,0 +1,14 @@
+*metaspades/
+*megahit/
+*.err
+*.faa
+*.ffn
+*.fna
+*.fsa
+*.gbk
+*.gff
+*.sqn
+*.tbl
+*.gz
+.DS_Store
+.snakemake_timestamp
