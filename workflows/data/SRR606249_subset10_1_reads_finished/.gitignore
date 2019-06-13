@@ -1,5 +1,9 @@
 *metaspades/
 *megahit/
+*.fa
+*_se
+*trimmomatic*.log
+*.kaiju.out
 *.err
 *.faa
 *.ffn
