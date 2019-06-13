@@ -1254,6 +1254,103 @@ rule kraken2:
 
 
 
+
+############################################
+# Taxonomic Classification: krakenUniq
+
+
+krakenuniq_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+krakenuniq_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+krakenuniq_input_fwd = krakenuniq_input_pattern.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+krakenuniq_input_rev = krakenuniq_input_pattern.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+krakenuniq_input_fwd_sing = krakenuniq_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+krakenuniq_input_rev_sing = krakenuniq_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+krakenuniq_ouput = join(data_dir, taxclass['krakenuniq']['krakenuniq_output'] )
+krakenuniq_ouput_sing = join(sing_dir, taxclass['krakenuniq']['krakenuniq_output'] )
+
+
+krakenuniq_image = container_image_name(biocontainers, 'krakenuniq')
+krakenuniq_threads = taxclass['krakenuniq']['threads'] 
+krakenuniq_db_sing = join(sing_dir, taxclass['krakenuniq']['db'])
+krakenuniq_db = join(data_dir, taxclass['krakenuniq']['db'])
+krakenuniq_unclass_out = join(sing_dir, taxclass['krakenuniq']['unclass_out'])
+krakenuniq_class_out = join(sing_dir, taxclass['krakenuniq']['class_out'])
+krakenuniq_report = join(sing_dir, taxclass['krakenuniq']['report'])
+krakenuniq_hll_precision = taxclass['krakenuniq']['hll_precision'] 
+
+
+print("krakenuniq_input_fwd: "+str(krakenuniq_input_fwd))
+print("krakenuniq_input_rev: "+str(krakenuniq_input_rev))
+print("krakenuniq_ouput: "+str(krakenuniq_ouput))
+print("krakenuniq_db_sing: "+str(krakenuniq_db_sing))
+print("krakenuniq_unclass_out: "+str(krakenuniq_unclass_out))
+print("krakenuniq_class_out: "+str(krakenuniq_class_out))
+print("krakenuniq_report: "+str(krakenuniq_report))
+
+
+
+rule krakenuniq:
+    """
+    we do something with krakenuniq here
+    """
+    input:
+        fwd = krakenuniq_input_fwd,
+        rev = krakenuniq_input_rev,
+    output:
+        krakenuniq_ouput
+    message:
+        '''--- Running krakenuniq.'''
+    threads:
+        krakenuniq_threads
+    singularity:
+        krakenuniq_image
+    params:
+        fwd_sing = krakenuniq_input_fwd_sing,
+        rev_sing = krakenuniq_input_rev_sing,
+        db_sing = krakenuniq_db_sing,
+        unclass_out = krakenuniq_unclass_out,
+        class_out = krakenuniq_class_out,
+        out_sing = krakenuniq_ouput_sing,
+        report = krakenuniq_report,
+        precision = krakenuniq_hll_precision
+    shell:
+        'krakenuniq '
+        '--paired {params.fwd_sing} {params.rev_sing} '
+        '--db {params.db_sing} '
+        '--threads {threads} '
+        '--hll-precision {params.precision} '
+        '--report-file {params.report} '
+        '--unclassified-out {params.unclass_out} '
+        '--classified-out {params.class_out} '
+        '--output {params.out_sing}'
+        
+
+        
+
+        
+
+
+
+
 ###################################
 # Taxonomic Classification: build rules
 
@@ -1528,6 +1625,18 @@ rule tax_class_kraken2_workflow:
         expand( kraken2_ouput,
                 sample    = sample_input_files,
                 qual      = workflows['tax_class_kraken2_workflow']['qual'],
+                direction = directions,
+        )
+
+
+rule tax_class_krakenuniq_workflow:
+    '''
+    krakenuniq workflow
+    '''
+    input:
+        expand( krakenuniq_ouput,
+                sample    = sample_input_files,
+                qual      = workflows['tax_class_krakenuniq_workflow']['qual'],
                 direction = directions,
         )
 

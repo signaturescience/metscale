@@ -258,6 +258,20 @@ config_default = {
             "confidence" : 0,
             "report" : "{sample}_trim{qual}_kraken2.report"
 
+        },
+        "krakenuniq" : {
+            #
+            # krakenuniq output results
+            "krakenuniq_output" : "{sample}_trim{qual}_krakenuniq_out",
+            "threads" : 6,
+            # db to run against, this is the default DB downloaded from download python script.
+            "db" : "minikraken_20171019_8GB",
+            "unclass_out" : "{sample}_trim{qual}_krakenuniq_unclassified",
+            "class_out" : "{sample}_trim{qual}_krakenuniq_classified",
+            # hhl-precision score between 10 and 18
+            "hll_precision" : 10,
+            "report" : "{sample}_trim{qual}_krakenuniq_report"
+
         }
     },
 
@@ -393,6 +407,13 @@ config_default = {
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/kraken2",
             "version" : "2.0.8_beta--pl526h6bb024c_0"
+        },
+        "krakenuniq" : {
+            "use_local" : True,
+            "filename" : "krakenuniq-0.5.8--pl526he860b03_0.simg",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/krakenuniq",
+            "version" : "0.5.8--pl526he860b03_0"
         },
         "prokka" : {
             "use_local" : True,
