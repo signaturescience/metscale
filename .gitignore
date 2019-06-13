@@ -1,6 +1,14 @@
+# OSX Stuff
+.DS_Store*
+._*
+.Trashes
+
+# R stuff
+.Rhistory
 
 # Ignore snakemake files
 .snakemake
+.snakemake_timestamp
 
 # Ignore singularity images
 *.simg
