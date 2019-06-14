@@ -1214,7 +1214,6 @@ kraken2_class_out = join(sing_dir, taxclass['kraken2']['class_out'])
 kraken2_confidence = taxclass['kraken2']['confidence']
 kraken2_report = join(sing_dir, taxclass['kraken2']['report'])
 
-
 rule kraken2:
     """
     we do something with kraken2 here
@@ -1296,15 +1295,6 @@ krakenuniq_unclass_out = join(sing_dir, taxclass['krakenuniq']['unclass_out'])
 krakenuniq_class_out = join(sing_dir, taxclass['krakenuniq']['class_out'])
 krakenuniq_report = join(sing_dir, taxclass['krakenuniq']['report'])
 krakenuniq_hll_precision = taxclass['krakenuniq']['hll_precision'] 
-
-
-print("krakenuniq_input_fwd: "+str(krakenuniq_input_fwd))
-print("krakenuniq_input_rev: "+str(krakenuniq_input_rev))
-print("krakenuniq_ouput: "+str(krakenuniq_ouput))
-print("krakenuniq_db_sing: "+str(krakenuniq_db_sing))
-print("krakenuniq_unclass_out: "+str(krakenuniq_unclass_out))
-print("krakenuniq_class_out: "+str(krakenuniq_class_out))
-print("krakenuniq_report: "+str(krakenuniq_report))
 
 
 

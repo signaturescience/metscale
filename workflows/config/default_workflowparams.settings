@@ -248,7 +248,7 @@ config_default = {
         "kraken2" : {
             #
             # kraken2 output results
-            "kraken2_output" : "{sample}_trim{qual}_kraken2.report",
+            "kraken2_output" : "{sample}_trim{qual}_kraken2out.txt",
             "threads" : 6,
             # db to run against, this is the default DB downloaded from download python script.
             "db" : "minikraken2_v2_8GB_201904_UPDATE",

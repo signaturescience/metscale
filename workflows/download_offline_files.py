@@ -68,7 +68,7 @@ def download_file(workflow, data, install_dir):
                         try:
                             os.remove(install_dir+ "/"+file_name)
                         except OSError:
-                            pass
+                            print("Error unable to delete  " + file_name)
             elif (url.scheme == 'docker'):    #download singularity image
                 if not (os.path.isfile("../container_images/"+file_name)):
                     print("Downloading singularity image " +file_name)
