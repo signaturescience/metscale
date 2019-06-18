@@ -1182,23 +1182,31 @@ kraken2_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_tri
 kraken2_input_fwd = kraken2_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
 )
 kraken2_input_rev = kraken2_input_pattern.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
 )
 
 kraken2_input_fwd_sing = kraken2_input_pattern_sing.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
 )
 kraken2_input_rev_sing = kraken2_input_pattern_sing.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
 )
 
 kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] )
@@ -1207,12 +1215,11 @@ kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
 
 kraken2_image = container_image_name(biocontainers, 'kraken2')
 kraken2_threads = taxclass['kraken2']['threads'] 
-kraken2_db_sing = join(sing_dir, taxclass['kraken2']['db'])
-kraken2_db = join(data_dir, taxclass['kraken2']['db'])
 kraken2_unclass_out = join(sing_dir, taxclass['kraken2']['unclass_out'])
 kraken2_class_out = join(sing_dir, taxclass['kraken2']['class_out'])
-kraken2_confidence = taxclass['kraken2']['confidence']
 kraken2_report = join(sing_dir, taxclass['kraken2']['report'])
+kraken2_db_sing = join(sing_dir, '{db}')
+
 
 rule kraken2:
     """
@@ -1236,7 +1243,6 @@ rule kraken2:
         unclass_out = kraken2_unclass_out,
         class_out = kraken2_class_out,
         out_sing = kraken2_ouput_sing,
-        confidence = kraken2_confidence, 
         report = kraken2_report
     shell:
         'kraken2 '
@@ -1244,7 +1250,7 @@ rule kraken2:
         '--threads {threads} '
         '--paired {params.fwd_sing} {params.rev_sing} '
         '--use-names '
-        '--confidence {params.confidence} '
+        '--confidence {wildcards.conf} '
         '--report {params.report} '
         '--unclassified-out {params.unclass_out} '
         '--classified-out {params.class_out} '
@@ -1264,23 +1270,31 @@ krakenuniq_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_
 krakenuniq_input_fwd = krakenuniq_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
 )
 krakenuniq_input_rev = krakenuniq_input_pattern.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
 )
 
 krakenuniq_input_fwd_sing = krakenuniq_input_pattern_sing.format(
             direction=readfilt['direction_labels']['forward'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
 )
 krakenuniq_input_rev_sing = krakenuniq_input_pattern_sing.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
-            qual='{qual}'
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
 )
 
 krakenuniq_ouput = join(data_dir, taxclass['krakenuniq']['krakenuniq_output'] )
@@ -1289,12 +1303,11 @@ krakenuniq_ouput_sing = join(sing_dir, taxclass['krakenuniq']['krakenuniq_output
 
 krakenuniq_image = container_image_name(biocontainers, 'krakenuniq')
 krakenuniq_threads = taxclass['krakenuniq']['threads'] 
-krakenuniq_db_sing = join(sing_dir, taxclass['krakenuniq']['db'])
-krakenuniq_db = join(data_dir, taxclass['krakenuniq']['db'])
 krakenuniq_unclass_out = join(sing_dir, taxclass['krakenuniq']['unclass_out'])
 krakenuniq_class_out = join(sing_dir, taxclass['krakenuniq']['class_out'])
 krakenuniq_report = join(sing_dir, taxclass['krakenuniq']['report'])
-krakenuniq_hll_precision = taxclass['krakenuniq']['hll_precision'] 
+krakenuniq_db_sing = join(sing_dir, '{db}')
+
 
 
 
@@ -1321,13 +1334,12 @@ rule krakenuniq:
         class_out = krakenuniq_class_out,
         out_sing = krakenuniq_ouput_sing,
         report = krakenuniq_report,
-        precision = krakenuniq_hll_precision
     shell:
         'krakenuniq '
         '--paired {params.fwd_sing} {params.rev_sing} '
         '--db {params.db_sing} '
         '--threads {threads} '
-        '--hll-precision {params.precision} '
+        '--hll-precision {wildcards.hll_prec} '
         '--report-file {params.report} '
         '--unclassified-out {params.unclass_out} '
         '--classified-out {params.class_out} '
@@ -1616,6 +1628,8 @@ rule tax_class_kraken2_workflow:
                 sample    = sample_input_files,
                 qual      = workflows['tax_class_kraken2_workflow']['qual'],
                 direction = directions,
+                db        = workflows['tax_class_kraken2_workflow']['db'],
+                conf      = workflows['tax_class_kraken2_workflow']['confidence'],
         )
 
 
@@ -1628,5 +1642,7 @@ rule tax_class_krakenuniq_workflow:
                 sample    = sample_input_files,
                 qual      = workflows['tax_class_krakenuniq_workflow']['qual'],
                 direction = directions,
+                db        = workflows['tax_class_krakenuniq_workflow']['db'],
+                hll_prec       = workflows['tax_class_krakenuniq_workflow']['hll_precision'],
         )
 

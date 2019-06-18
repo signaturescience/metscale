@@ -248,29 +248,21 @@ config_default = {
         "kraken2" : {
             #
             # kraken2 output results
-            "kraken2_output" : "{sample}_trim{qual}_kraken2out.txt",
+            "kraken2_output" : "{sample}_trim{qual}_kraken2out_{db}_confidence{conf}.txt",
             "threads" : 6,
-            # db to run against, this is the default DB downloaded from download python script.
-            "db" : "minikraken2_v2_8GB_201904_UPDATE",
-            "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified#.fq.gz",
-            "class_out" : "{sample}_trim{qual}_kraken2_classified#.fq.gz",
-            # confidence score between 0 and 1
-            "confidence" : 0,
-            "report" : "{sample}_trim{qual}_kraken2.report"
+            "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified_{db}_confidence{conf}#.fq.gz",
+            "class_out" : "{sample}_trim{qual}_kraken2_classified_{db}_confidence{conf}#.fq.gz",
+            "report" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.report"
 
         },
         "krakenuniq" : {
             #
             # krakenuniq output results
-            "krakenuniq_output" : "{sample}_trim{qual}_krakenuniq_out",
+            "krakenuniq_output" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_out",
             "threads" : 6,
-            # db to run against, this is the default DB downloaded from download python script.
-            "db" : "minikraken_20171019_8GB",
-            "unclass_out" : "{sample}_trim{qual}_krakenuniq_unclassified",
-            "class_out" : "{sample}_trim{qual}_krakenuniq_classified",
-            # hhl-precision score between 10 and 18
-            "hll_precision" : 10,
-            "report" : "{sample}_trim{qual}_krakenuniq_report"
+            "unclass_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_unclassified",
+            "class_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_classified",
+            "report" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_report"
 
         }
     },
