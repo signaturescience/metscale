@@ -1,0 +1,22 @@
+Assembly	SRR606249_subset10_1_reads_trim2.metaspades.contigs
+# contigs (>= 0 bp)	176202
+# contigs (>= 1000 bp)	26247
+# contigs (>= 5000 bp)	3072
+# contigs (>= 10000 bp)	1276
+# contigs (>= 25000 bp)	340
+# contigs (>= 50000 bp)	117
+Total length (>= 0 bp)	149130139
+Total length (>= 1000 bp)	86531655
+Total length (>= 5000 bp)	43999551
+Total length (>= 10000 bp)	31598052
+Total length (>= 25000 bp)	17715767
+Total length (>= 50000 bp)	10040951
+# contigs	67099
+Largest contig	221137
+Total length	114622322
+GC (%)	49.62
+N50	2644
+N75	1014
+L50	6829
+L75	25686
+# N's per 100 kbp	0.00

@@ -1,0 +1,2 @@
+Sample	VanR-G	aph(3')-I	aph(3')-IIa	blaTEM	car(A)	fusA	lsa(A)	msr(D)	oqxB	tet(O)
+0	VanR-G*?	aph(3')-Ic*?	aph(3')-IIa*?	blaTEM-116*?	car(A)*?	fusA10*?	lsa(A)*?	msr(D)_2*?	oqxB*?	tet(O)_3*?
