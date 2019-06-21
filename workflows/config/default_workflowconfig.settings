@@ -58,6 +58,16 @@ config_default = {
             "assembler" : ["megahit","metaspades"],
             "qual"      : ["2","30"],
         },
+        "assembly_metaquast_workflow" : {
+            "assembler" : ["megahit","metaspades"],
+            "qual"      : ["2","30"],
+        },
+        "assembly_quast_spades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "assembly_quast_plasmidspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
         "assembly_multiqc_workflow" : {
             # #which assembler to get input from
             "multiqc_assembler" :  ["megahit","metaspades"],
