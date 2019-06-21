@@ -353,8 +353,11 @@ assembly_metaquast_threads = assembly['assembly_patterns']['metaquast_threads']
 metaquast_image = container_image_name(biocontainers, 'quast')
 
 
-print("assembly_metaquast_input: "+str(assembly_metaquast_input))
-print("assembly_metaquast_output: "+str(assembly_metaquast_output))
+assembly_metaquast_ref = assembly['assembly_patterns']['metaquast_ref']
+assembly_metaquast_ref_str =  sing_dir + "/" + assembly_metaquast_ref
+
+print("####assembly_metaquast_input: "+str(assembly_metaquast_input))
+print("####assembly_metaquast_output: "+str(assembly_metaquast_output))
 rule assembly_statistics_metaquast:
     """
     Compute assembly statistics with metaquast
@@ -364,16 +367,17 @@ rule assembly_statistics_metaquast:
     output:
         assembly_metaquast_output
     params:
-        quast_input_sing = assembly_metaquast_input_sing,
-        quast_output_sing = assembly_metaquast_output_sing
+        metaquast_input_sing = assembly_metaquast_input_sing,
+        metaquast_output_sing = assembly_metaquast_output_sing,
+        metaquast_ref_db = assembly_metaquast_ref_str
     message: 
         '--- Calculating assembly statistics with metaquast'
     threads:
         assembly_metaquast_threads
     singularity:
-        quast_image
+        metaquast_image
     shell:
-        'quast.py {params.quast_input_sing} -t {threads} -o {params.quast_output_sing}'
+        'metaquast.py {params.metaquast_input_sing} -R {params.metaquast_ref_db}-t {threads} -o {params.metaquast_output_sing}'
 
 
 ###################################
@@ -589,7 +593,7 @@ rule assembly_quast_workflow:
 
 rule assembly_metaquast_workflow:
     input:
-        expand( assembly_quast_output,
+        expand( assembly_metaquast_output,
                 sample    = sample_input_files,
                 qual      = workflows['assembly_metaquast_workflow']['qual'],
                 assembler = workflows['assembly_metaquast_workflow']['assembler'],
