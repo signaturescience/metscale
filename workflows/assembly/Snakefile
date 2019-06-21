@@ -377,7 +377,7 @@ rule assembly_statistics_metaquast:
     singularity:
         metaquast_image
     shell:
-        'metaquast.py {params.metaquast_input_sing} -R {params.metaquast_ref_db}-t {threads} -o {params.metaquast_output_sing}'
+        'metaquast.py {params.metaquast_input_sing} -R {params.metaquast_ref_db} -t {threads} -o {params.metaquast_output_sing}'
 
 
 ###################################
