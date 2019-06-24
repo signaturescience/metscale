@@ -34,15 +34,15 @@
             "qual"   : ["2","30"],
             "kmers" : [21,31,51],
         },
+        "assembly_metaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
         "assembly_plasmidspades_workflow" : {
             "qual"      : ["2","30"],
          },
         "assembly_spades_workflow" : {
             "qual"      : ["2","30"],
              "kmers" : [21,33,55],
-        },
-        "assembly_metaspades_workflow" : {
-            "qual"      : ["2","30"],
         },
         "assembly_megahit_workflow" : {
             "qual"      : ["2","30"],

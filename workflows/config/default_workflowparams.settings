@@ -105,6 +105,9 @@ config_default = {
         #TODO break into smaller sections like the other areas
         "assembly_patterns" : {
             # 
+            # general assembler output filename pattern/input for quast
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
+            #
             # filename pattern for metaspades output and threads to run
             "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "metaspades_threads" : 8,
@@ -122,8 +125,6 @@ config_default = {
             "plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades.contigs.fa",
             "plasmidspades_threads" : 8,           
             #
-            # general assembler output filename pattern/input for quast
-            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
             # quast output filename pattern and threads to run
             "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
@@ -133,11 +134,12 @@ config_default = {
             "metaquast_pattern" : "{sample}_trim{qual}.{assembler}_metaquast/",
             "metaquast_threads" : 4,
             "metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            "metaquast_output_multiqc_input_file" : "report.html",
+            #
             # multiqc output dir pattern
             "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
             # multiqc input file. Taken from quast output file.
             "quast_output_multiqc_input_file" : "report.tsv",
-            #
             # multiqc output file
             "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report",
             #

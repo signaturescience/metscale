@@ -143,7 +143,7 @@ assembly_spades_kmer = ",".join(map(str, assembly_spades_kmer))
 def assembly_spades_outprefix_sub(wildcards):
     return assembly_spades_outprefix.format(**wildcards)
 
-#print("assembly_spades_output: "+str(assembly_spades_output))
+
 rule assembly_spades:
     """
     Perform read assembly of trimmed reads using spades.
@@ -194,7 +194,6 @@ def assembly_plasmidspades_outprefix_sub(wildcards):
     return assembly_plasmidspades_outprefix.format(**wildcards)
 
 
-#print("assembly_plasmidspades_output: "+str(assembly_plasmidspades_output))
 rule assembly_plasmidspades:
     """
     Perform read assembly of trimmed reads using plasmidspades.
@@ -319,8 +318,6 @@ assembly_quast_threads = assembly['assembly_patterns']['quast_threads']
 quast_image = container_image_name(biocontainers, 'quast')
 
 
-print("assembly_quast_input: "+str(assembly_quast_input))
-print("assembly_quast_output: "+str(assembly_quast_output))
 rule assembly_statistics_quast:
     """
     Compute assembly statistics with quast
@@ -347,7 +344,7 @@ rule assembly_statistics_quast:
 
 assembly_metaquast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
 assembly_metaquast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
-assembly_metaquast_output = join(data_dir, assembly['assembly_patterns']['metaquast_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
+assembly_metaquast_output = join(data_dir, assembly['assembly_patterns']['metaquast_pattern'],assembly['assembly_patterns']['metaquast_output_multiqc_input_file'] )
 assembly_metaquast_output_sing = join(sing_dir, assembly['assembly_patterns']['metaquast_pattern'])
 assembly_metaquast_threads = assembly['assembly_patterns']['metaquast_threads']
 metaquast_image = container_image_name(biocontainers, 'quast')
@@ -356,8 +353,7 @@ metaquast_image = container_image_name(biocontainers, 'quast')
 assembly_metaquast_ref = assembly['assembly_patterns']['metaquast_ref']
 assembly_metaquast_ref_str =  sing_dir + "/" + assembly_metaquast_ref
 
-print("####assembly_metaquast_input: "+str(assembly_metaquast_input))
-print("####assembly_metaquast_output: "+str(assembly_metaquast_output))
+
 rule assembly_statistics_metaquast:
     """
     Compute assembly statistics with metaquast
@@ -428,9 +424,7 @@ assembly_quast_plasmidspades_threads = assembly['assembly_patterns']['quast_plas
 assembly_quast_plasmidspades_ref = assembly['assembly_patterns']['quast_plasmidspades_ref']
 assembly_quast_plasmidspades_ref_str =  sing_dir + "/" + assembly_quast_plasmidspades_ref
 
-#
-#print("assembly_quast_plasmidspades_output: "+str(assembly_quast_plasmidspades_output))
-#print("assembly_quast_plasmidspades_output_sing: "+str(assembly_quast_plasmidspades_output_sing))
+
 
 rule assemly_statistics_quast_plasmidspades:
     """
