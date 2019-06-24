@@ -136,6 +136,16 @@
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"], 
         },
+        "tax_class_kraken2_workflow" : {
+            "qual" : ["2","30"],
+            "db" : "minikraken2_v2_8GB_201904_UPDATE",
+            "confidence" : 0,
+        },
+        "tax_class_krakenuniq_workflow" : {
+            "qual" : ["2","30"],
+            "db" : "minikraken_20171019_8GB",
+            "hll_precision" : 10  
+        },
         "functional_prokka_with_megahit_workflow" : {
             "qual"      : ["2","30"],
         },

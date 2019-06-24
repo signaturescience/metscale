@@ -1171,6 +1171,188 @@ rule visualize_kaiju_species_contigs:
 
 
 
+
+############################################
+# Taxonomic Classification: kraken2
+
+
+kraken2_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+kraken2_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+kraken2_input_fwd = kraken2_input_pattern.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
+)
+kraken2_input_rev = kraken2_input_pattern.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
+)
+
+kraken2_input_fwd_sing = kraken2_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
+)
+kraken2_input_rev_sing = kraken2_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db ='{db}',
+            conf='{conf}'
+)
+
+kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] )
+kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
+
+
+kraken2_image = container_image_name(biocontainers, 'kraken2')
+kraken2_threads = taxclass['kraken2']['threads'] 
+kraken2_unclass_out = join(sing_dir, taxclass['kraken2']['unclass_out'])
+kraken2_class_out = join(sing_dir, taxclass['kraken2']['class_out'])
+kraken2_report = join(sing_dir, taxclass['kraken2']['report'])
+kraken2_db_sing = join(sing_dir, '{db}')
+
+
+rule kraken2:
+    """
+    we do something with kraken2 here
+    """
+    input:
+        fwd = kraken2_input_fwd,
+        rev = kraken2_input_rev,
+    output:
+        kraken2_ouput
+    message:
+        '''--- Running kraken2.'''
+    threads:
+        kraken2_threads
+    singularity:
+        kraken2_image
+    params:
+        fwd_sing = kraken2_input_fwd_sing,
+        rev_sing = kraken2_input_rev_sing,
+        db_sing = kraken2_db_sing,
+        unclass_out = kraken2_unclass_out,
+        class_out = kraken2_class_out,
+        out_sing = kraken2_ouput_sing,
+        report = kraken2_report
+    shell:
+        'kraken2 '
+        '--db {params.db_sing} '
+        '--threads {threads} '
+        '--paired {params.fwd_sing} {params.rev_sing} '
+        '--use-names '
+        '--confidence {wildcards.conf} '
+        '--report {params.report} '
+        '--unclassified-out {params.unclass_out} '
+        '--classified-out {params.class_out} '
+        '--output {params.out_sing}'
+
+
+
+
+
+############################################
+# Taxonomic Classification: krakenUniq
+
+
+krakenuniq_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+krakenuniq_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+krakenuniq_input_fwd = krakenuniq_input_pattern.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
+)
+krakenuniq_input_rev = krakenuniq_input_pattern.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
+)
+
+krakenuniq_input_fwd_sing = krakenuniq_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
+)
+krakenuniq_input_rev_sing = krakenuniq_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}',
+            db = '{db}',
+            hll_prec = '{hll}'
+)
+
+krakenuniq_ouput = join(data_dir, taxclass['krakenuniq']['krakenuniq_output'] )
+krakenuniq_ouput_sing = join(sing_dir, taxclass['krakenuniq']['krakenuniq_output'] )
+
+
+krakenuniq_image = container_image_name(biocontainers, 'krakenuniq')
+krakenuniq_threads = taxclass['krakenuniq']['threads'] 
+krakenuniq_unclass_out = join(sing_dir, taxclass['krakenuniq']['unclass_out'])
+krakenuniq_class_out = join(sing_dir, taxclass['krakenuniq']['class_out'])
+krakenuniq_report = join(sing_dir, taxclass['krakenuniq']['report'])
+krakenuniq_db_sing = join(sing_dir, '{db}')
+
+
+
+
+rule krakenuniq:
+    """
+    we do something with krakenuniq here
+    """
+    input:
+        fwd = krakenuniq_input_fwd,
+        rev = krakenuniq_input_rev,
+    output:
+        krakenuniq_ouput
+    message:
+        '''--- Running krakenuniq.'''
+    threads:
+        krakenuniq_threads
+    singularity:
+        krakenuniq_image
+    params:
+        fwd_sing = krakenuniq_input_fwd_sing,
+        rev_sing = krakenuniq_input_rev_sing,
+        db_sing = krakenuniq_db_sing,
+        unclass_out = krakenuniq_unclass_out,
+        class_out = krakenuniq_class_out,
+        out_sing = krakenuniq_ouput_sing,
+        report = krakenuniq_report,
+    shell:
+        'krakenuniq '
+        '--paired {params.fwd_sing} {params.rev_sing} '
+        '--db {params.db_sing} '
+        '--threads {threads} '
+        '--hll-precision {wildcards.hll_prec} '
+        '--report-file {params.report} '
+        '--unclassified-out {params.unclass_out} '
+        '--classified-out {params.class_out} '
+        '--output {params.out_sing}'
+        
+
+        
+
+        
+
+
+
+
 ###################################
 # Taxonomic Classification: build rules
 
@@ -1437,4 +1619,30 @@ rule tax_class_visualize_krona_species_summary_contigs_workflow:
         )
 
 
+rule tax_class_kraken2_workflow:
+    '''
+    kraken2 workflow
+    '''
+    input:
+        expand( kraken2_ouput,
+                sample    = sample_input_files,
+                qual      = workflows['tax_class_kraken2_workflow']['qual'],
+                direction = directions,
+                db        = workflows['tax_class_kraken2_workflow']['db'],
+                conf      = workflows['tax_class_kraken2_workflow']['confidence'],
+        )
+
+
+rule tax_class_krakenuniq_workflow:
+    '''
+    krakenuniq workflow
+    '''
+    input:
+        expand( krakenuniq_ouput,
+                sample    = sample_input_files,
+                qual      = workflows['tax_class_krakenuniq_workflow']['qual'],
+                direction = directions,
+                db        = workflows['tax_class_krakenuniq_workflow']['db'],
+                hll_prec       = workflows['tax_class_krakenuniq_workflow']['hll_precision'],
+        )
 

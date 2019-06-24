@@ -253,6 +253,26 @@ config_default = {
             #
             # .summary will be replaced with .html for the final report
             "input_summary"  : "{sample}_trim{qual}_kaiju_output.summary",
+        },
+        "kraken2" : {
+            #
+            # kraken2 output results
+            "kraken2_output" : "{sample}_trim{qual}_kraken2out_{db}_confidence{conf}.txt",
+            "threads" : 6,
+            "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified_{db}_confidence{conf}#.fq.gz",
+            "class_out" : "{sample}_trim{qual}_kraken2_classified_{db}_confidence{conf}#.fq.gz",
+            "report" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.report"
+
+        },
+        "krakenuniq" : {
+            #
+            # krakenuniq output results
+            "krakenuniq_output" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_out",
+            "threads" : 6,
+            "unclass_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_unclassified",
+            "class_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_classified",
+            "report" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_report"
+
         }
     },
 
@@ -389,6 +409,20 @@ config_default = {
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
+        },
+        "kraken2" : {
+            "use_local" : True,
+            "filename" : "kraken2-2.0.8_beta--pl526h6bb024c_0.simg",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/kraken2",
+            "version" : "2.0.8_beta--pl526h6bb024c_0"
+        },
+        "krakenuniq" : {
+            "use_local" : True,
+            "filename" : "krakenuniq-0.5.8--pl526he860b03_0.simg",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/krakenuniq",
+            "version" : "0.5.8--pl526he860b03_0"
         },
         "prokka" : {
             "use_local" : True,
