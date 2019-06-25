@@ -109,6 +109,62 @@ rule prokka_with_metaspades:
         '--cpus {threads}'
 
 
+
+
+###################################
+# Functional Inference: prokka with spades input for isolates
+
+prokka_with_spades_output_dir = join(data_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_spades_output_dir_sing = join(sing_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#prokka_with_spades_input_dir = join(data_dir,inference['prokka_with_spades']['input_pattern'].format(sample='{sample}',
+#                            qual='{qual}'))
+#prokka_with_spades_input_dir_sing = join(sing_dir,inference['prokka_with_spades']['input_pattern'].format(sample='{sample}',
+#                            qual='{qual}'))
+
+prokka_with_spades_input = assembly_spades_output
+prokka_with_spades_input_sing = assembly_spades_output_sing
+
+prokka_with_spades_prefix_files = inference['prokka_with_spades']['prefix_pattern']
+prokka_with_spades_input_db = inference['prokka_with_spades']['input_db']
+prokka_spades_threads = inference['prokka_with_spades']['threads']
+
+
+
+print("prokka_with_spades_input_dir "+str(prokka_with_spades_input))
+print("prokka_with_spades_input_sing: "+str(prokka_with_spades_input_sing))
+print("prokka_with_spades_output_dir: "+str(prokka_with_spades_output_dir))
+print("prokka_with_spades_prefix_files: "+str(prokka_with_spades_prefix_files))
+
+rule prokka_with_spades:
+    input:
+        prokka_with_spades_input
+    output:
+        directory(prokka_with_spades_output_dir)
+    params:
+        input_files = prokka_with_spades_input_sing,
+        output_dir = prokka_with_spades_output_dir_sing,
+        prefix_files = prokka_with_spades_prefix_files,
+        input_db = prokka_with_spades_input_db
+    threads:
+        prokka_spades_threads
+    singularity:
+        prokka_image
+    shell:
+        'export LC_ALL=C '
+        '&& '
+        'prokka '
+        '{params.input_files} '
+        '--proteins {params.input_db} '
+        '--notrna --rnammer '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads}'
+
+
+
+
 ###################################
 # Functional Inference: abricate with megahit input
 
@@ -302,6 +358,17 @@ rule functional_prokka_with_metaspades_workflow:
                 sample    = sample_input_files,
                 qual   = workflows['functional_prokka_with_metaspades_workflow']['qual']
         )
+
+rule functional_prokka_with_spades_workflow:
+    """
+    Run prokka with spades contigs
+    """
+    input:
+        expand( prokka_with_spades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_with_spades_workflow']['qual']
+        )
+
 
 
 rule functional_abricate_with_megahit_workflow:
