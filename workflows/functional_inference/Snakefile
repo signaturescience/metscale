@@ -136,12 +136,6 @@ prokka_with_spades_input_db = inference['prokka_with_spades']['input_db']
 prokka_spades_threads = inference['prokka_with_spades']['threads']
 
 
-
-print("prokka_with_spades_input_dir "+str(prokka_with_spades_input))
-print("prokka_with_spades_input_sing: "+str(prokka_with_spades_input_sing))
-print("prokka_with_spades_output_dir: "+str(prokka_with_spades_output_dir))
-print("prokka_with_spades_prefix_files: "+str(prokka_with_spades_prefix_files))
-
 rule prokka_with_spades:
     input:
         prokka_with_spades_input

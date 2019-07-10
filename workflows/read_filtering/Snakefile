@@ -102,9 +102,9 @@ def create_output_internal_format_rev(wildcards):
    return fq_rev_pre_trimmed.format(**wildcards)
 
 
-rule convert_illumina_to_internal_format:
+rule convert_external_to_internal_format:
     '''
-    Convert the illumina file format to out internal file format
+    Convert the external file format to our internal file format
     '''
     input:
         convert_illumina_input_files
@@ -117,7 +117,7 @@ rule convert_illumina_to_internal_format:
         replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
     run:
         src_fwd_str = str(input)
-        src_rev_str = src_fwd_str.replace(params.search_pattern, params.replace_pattern)
+        src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
         shutil.copy(src_fwd_str, params.dest_fwd)
         shutil.copy(src_rev_str, params.dest_rev)
 
