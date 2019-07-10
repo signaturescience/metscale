@@ -42,6 +42,7 @@ prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahi
                             qual='{qual}'))
 prokka_with_megahit_prefix_files = inference['prokka_with_megahit']['prefix_pattern']
 prokka_megahit_threads = inference['prokka_with_megahit']['threads']
+prokka_with_megahit_input_db = inference['prokka_with_megahit']['input_db']
 
 
 rule prokka_with_megahit:
@@ -52,7 +53,8 @@ rule prokka_with_megahit:
     params:
         input_files = prokka_with_megahit_input_dir_sing,
         output_dir = prokka_with_megahit_output_dir_sing,
-        prefix_files = prokka_with_megahit_prefix_files
+        prefix_files = prokka_with_megahit_prefix_files,
+        input_db = prokka_with_megahit_input_db
     threads:
         prokka_megahit_threads
     singularity:
@@ -61,6 +63,7 @@ rule prokka_with_megahit:
     	'export LC_ALL=C '
     	'&& '
         'prokka '
+        '--proteins {params.input_db} '
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer '
         '--outdir {params.output_dir} '
@@ -83,7 +86,7 @@ prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_met
                             qual='{qual}'))
 prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefix_pattern']
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
-
+prokka_with_metaspades_input_db = inference['prokka_with_metaspades']['input_db']
 
 rule prokka_with_metaspades:
     input:
@@ -93,7 +96,8 @@ rule prokka_with_metaspades:
     params:
         input_files = prokka_with_metaspades_input_dir_sing,
         output_dir = prokka_with_metaspades_output_dir_sing,
-        prefix_files = prokka_with_metaspades_prefix_files
+        prefix_files = prokka_with_metaspades_prefix_files,
+        input_db = prokka_with_metaspades_input_db
     threads:
         prokka_metaspades_threads
     singularity:
@@ -102,6 +106,7 @@ rule prokka_with_metaspades:
     	'export LC_ALL=C '
     	'&& '
         'prokka '
+        '--proteins {params.input_db} '
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer '
         '--outdir {params.output_dir} '
