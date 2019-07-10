@@ -30,7 +30,7 @@ output:
       collapsed: false
       smooth_scroll: false
 params:
-  id: "SRR606249_subset10_1_reads"
+  rmd: "report.Rmd"
 ---
 
 ```{r setup, message=FALSE, warning=FALSE}
@@ -42,7 +42,7 @@ opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 theme_set(theme_bw())
 
 # Set sample name (parameterized)
-id <- params$id
+id <- snakemake@params
 ```
 
 <big>

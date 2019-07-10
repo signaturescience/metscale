@@ -34,7 +34,7 @@ post_processing = config['post_processing']
 
 
 output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
-output_dir = join(data_dir, output_dir_pattern)
+samples_output_dir = join(data_dir, output_dir_pattern)
 
 
 def get_input_files(wildcards):
@@ -61,9 +61,9 @@ rule move_samples_to_dir:
     move files to seperate dir after processing
     '''
     output:
-        directory(output_dir)
+        directory(samples_output_dir)
     params:
-        output_dir = output_dir,
+        output_dir = samples_output_dir,
         input_files = get_input_files
     message: 
         '--- Moving files to samples dir'
@@ -72,13 +72,39 @@ rule move_samples_to_dir:
 
 
 
+html_output_file = samples_output_dir + "/0-summary-report.html"
+print("html_output_file: "+ str(html_output_file))
+rule generate_r_script:
+    '''
+    generate R script for final reports
+    '''
+    output:
+        html_output_file
+    params:
+        sample_input_name = sample
+    script:
+        "0-summary-report.Rmd"
+
+       
+
+
 
 
 rule post_processing_move_samples_dir_workflow:
     '''
-    Build rule: Take forward and reversed trimmed reads and run interleave-reads
+    Build rule: Move all output files to subdir
     '''
     input:
-        expand( output_dir,
+        expand( samples_output_dir,
+                sample    = sample_input_files,
+        )
+
+
+rule post_processing_create_final_report_workflow:
+    '''
+    Build rule: Crate a final HTML report
+    '''
+    input:
+        expand( html_output_file,
                 sample    = sample_input_files,
         )
