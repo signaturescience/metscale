@@ -145,6 +145,9 @@
         "functional_prokka_with_metaspades_workflow" : {
             "qual"      : ["2","30"],
         },
+        "functional_prokka_with_spades_workflow" : {
+            "qual"      : ["2","30"],
+        },        
         "functional_abricate_with_megahit_workflow" : {
             "qual"      : ["2","30"],
             # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
