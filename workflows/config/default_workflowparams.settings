@@ -426,6 +426,13 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/kraken2",
             "version" : "2.0.8_beta--pl526h6bb024c_0"
         },
+        "braken" : {
+            "use_local" : True,
+            "filename" : "bracken-2.2--py27h2d50403_1.simg",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/kraken2",
+            "version" : "2.2--py27h2d50403_1"        
+        },
         "krakenuniq" : {
             "use_local" : True,
             "filename" : "krakenuniq-0.5.8--pl526he860b03_0.simg",
