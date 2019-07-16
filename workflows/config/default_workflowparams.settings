@@ -442,7 +442,7 @@ config_default = {
         },
         "abricate" : {
             "use_local" : True,
-            "filename" : "abricate.sif",
+            "filename" : "abricate_latest.sif",
             "location" : "../container_images/",
             "quayurl" : "thanhleviet/abricate",
             "version" : "latest"         
