@@ -5,35 +5,35 @@
     },
 
     "read_filtering": {
-        "fastqc-0.11.7--pl5.22.0_2.simg" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
-        "trimmomatic-0.36--5.simg" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
+        "fastqc_0.11.7--pl5.22.0_2.sif" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
+        "trimmomatic_0.36--5.sif" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
         "adapters_combined_256_unique.fasta": "file:///resources/adapters_combined_256_unique.fasta",
-        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
-        "khmer-2.1--py35_0.simg" : "docker://quay.io/biocontainers/khmer:2.1--py35_0"
+        "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
+        "khmer_2.1--py35_0.sif" : "docker://quay.io/biocontainers/khmer:2.1--py35_0"
     },
 
     "assembly": {
-        "megahit-1.1.2--py35_0.simg" : "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
-        "spades-3.11.1--py36_zlib1.2.8_0.simg" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0",
-        "quast-4.5--boost1.61_1.simg": "docker://quay.io/biocontainers/quast:4.5--boost1.61_1",
-        "multiqc-1.4--py35_0.simg" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
+        "megahit_1.1.2--py35_0.sif" : "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
+        "spades_3.11.1--py36_zlib1.2.8_0.sif" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0",
+        "quast_4.5--boost1.61_1.sif": "docker://quay.io/biocontainers/quast:4.5--boost1.61_1",
+        "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0"
     },
 
     "comparison": {
-    	"sourmash-2.0.0a3--py36_0.simg" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
+    	"sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
     },
 
     "taxonomic_classification": {
-        "kaiju-1.6.1--pl5.22.0_0.simg" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
-        "krona-2.7--pl5.22.0_1.simg" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
-        "kraken2-2.0.8_beta--pl526h6bb024c_0.simg" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
-        "krakenuniq-0.5.8--pl526he860b03_0.simg" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
+        "kaiju_1.6.1--pl5.22.0_0.sif" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
+        "krona_2.7--pl5.22.0_1.sif" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
+        "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
+        "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
         "minikraken2_v2_8GB_201904_UPDATE.tgz" : "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz"
     },
 
     "sourmash_db" : {
-        "sourmash-2.0.0a3--py36_0.simg" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
+        "sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
         "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
         "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
         "databases" : ["genbank","refseq"],
@@ -45,9 +45,9 @@
     },
 
     "functional_inference" : {
-        "prokka-1.13.3-01.simg" : "docker://ummidock/prokka:1.13.3-01",
-        "abricate.simg" : "docker://thanhleviet/abricate",
-        "SRST2-0.2.0--py27_2.simg" : "docker://quay.io/biocontainers/SRST2:0.2.0--py27_2",
+        "prokka_1.13.3-01.sif" : "docker://ummidock/prokka:1.13.3-01",
+        "abricate.sif" : "docker://thanhleviet/abricate",
+        "SRST2_0.2.0--py27_2.sif" : "docker://quay.io/biocontainers/SRST2:0.2.0--py27_2",
         "ARGannot.r3.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ARGannot_r3.fasta",
         "ResFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ResFinder.fasta",
         "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
