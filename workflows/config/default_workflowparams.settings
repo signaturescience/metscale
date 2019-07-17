@@ -449,7 +449,7 @@ config_default = {
         },
         "srst2" : {
             "use_local" : True,
-            "filename" : "SRST2_0.2.0--py27_2.sif",
+            "filename" : "srst2_0.2.0--py27_2.sif",
             "location" : "../container_images/",
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"
