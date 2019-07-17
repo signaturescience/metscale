@@ -428,9 +428,9 @@ config_default = {
         },
         "braken" : {
             "use_local" : True,
-            "filename" : "bracken-2.2--py27h2d50403_1.simg",
+            "filename" : "bracken_2.2--py27h2d50403_1.sif",
             "location" : "../container_images/",
-            "quayurl" : "quay.io/biocontainers/kraken2",
+            "quayurl" : "quay.io/biocontainers/braken",
             "version" : "2.2--py27h2d50403_1"        
         },
         "krakenuniq" : {
