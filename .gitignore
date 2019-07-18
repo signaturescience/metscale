@@ -13,6 +13,7 @@
 # Ignore singularity images
 *.simg
 *.img
+*.sif
 
 # Ignore data/ dirs
 workflows/read_filtering/data

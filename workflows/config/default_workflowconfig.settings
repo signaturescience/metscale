@@ -164,6 +164,13 @@ config_default = {
             # hll-precision score between 10 and 18
             "hll_precision" : 10  
         },
+        "tax_class_bracken_workflow" : {
+            "read_length" : 100,
+            "level" : "S",
+            "threshold" : 0,
+            #directory that has DB dir. defaults to default dir
+            "db" : ""
+        },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 
             # from megahit to run prokka on

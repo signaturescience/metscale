@@ -257,7 +257,7 @@ config_default = {
         "kraken2" : {
             #
             # kraken2 output results
-            "kraken2_output" : "{sample}_trim{qual}_kraken2out_{db}_confidence{conf}.txt",
+            "kraken2_output" : "{sample}_trim{qual}_kraken2out_{db}_confidence{conf}.report",
             "threads" : 6,
             "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified_{db}_confidence{conf}#.fq.gz",
             "class_out" : "{sample}_trim{qual}_kraken2_classified_{db}_confidence{conf}#.fq.gz",
@@ -271,6 +271,10 @@ config_default = {
             "unclass_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_unclassified",
             "class_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_classified",
             "report" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_report"
+        },
+        "bracken" : {
+            #bracken output filename
+            "bracken_output" : "_bracken_db_{bdb}_r_{read_length}_l_{level}_t_{threshold}"
         }
     },
 
@@ -424,11 +428,11 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/kraken2",
             "version" : "2.0.8_beta--pl526h6bb024c_0"
         },
-        "braken" : {
+        "bracken" : {
             "use_local" : True,
             "filename" : "bracken_2.2--py27h2d50403_1.sif",
             "location" : "../container_images/",
-            "quayurl" : "quay.io/biocontainers/braken",
+            "quayurl" : "quay.io/biocontainers/bracken",
             "version" : "2.2--py27h2d50403_1"        
         },
         "krakenuniq" : {
