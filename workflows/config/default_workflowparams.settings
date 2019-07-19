@@ -303,21 +303,21 @@ config_default = {
             "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_megahit",
-            "input_db" : "",
+            "input_db" : " ",
             "threads" : 8
         },
         "prokka_with_metaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_metaspades",
-            "input_db" : "",
+            "input_db" : " ",
             "threads" : 8
         },
         "prokka_with_spades" : {
             "outdir_pattern" : "{sample}_trim{qual}_spades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_spades",
-            "input_db" : "",
+            "input_db" : " ",
             "threads" : 8
         },
         "abricate_with_metaspades" : {
@@ -365,112 +365,112 @@ config_default = {
         },
         "trimmomatic" : {
             "use_local" : True,
-            "filename" : "trimmomatic-0.36--5.simg",
+            "filename" : "trimmomatic_0.36--5.sif",
             "quayurl" : "quay.io/biocontainers/trimmomatic",
             "location" : "../container_images/",
             "version" : "0.36--5"
         },
         "fastqc" : {
             "use_local" : True,
-            "filename" : "fastqc-0.11.7--pl5.22.0_2.simg",
+            "filename" : "fastqc_0.11.7--pl5.22.0_2.sif",
             "quayurl" : "quay.io/biocontainers/fastqc",
             "location" : "../container_images/",
             "version" : "0.11.7--pl5.22.0_2"
         },
         "multiqc" : {
             "use_local" : True,
-            "filename" : "multiqc-1.4--py35_0.simg",
+            "filename" : "multiqc_1.4--py35_0.sif",
             "quayurl" : "quay.io/biocontainers/multiqc",
             "location" : "../container_images/",
             "version" : "1.4--py35_0"
         },
         "khmer" : {
             "use_local" : True,
-            "filename" : "khmer-2.1--py35_0.simg",
+            "filename" : "khmer_2.1--py35_0.sif",
             "quayurl" : "quay.io/biocontainers/khmer",
             "location" : "../container_images/",
             "version" : "2.1--py35_0"
         },
         "megahit" : {
             "use_local" : True,
-            "filename" : "megahit-1.1.2--py35_0.simg",
+            "filename" : "megahit_1.1.2--py35_0.sif",
             "quayurl" : "quay.io/biocontainers/megahit",
             "location" : "../container_images/",
             "version" : "1.1.2--py35_0"
         },
         "spades" : {
             "use_local" : True,
-            "filename" : "spades-3.11.1--py36_zlib1.2.8_0.simg",
+            "filename" : "spades_3.11.1--py36_zlib1.2.8_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/spades",
             "version" : "3.11.1--py36_zlib1.2.8_0"
         },
         "quast" : {
             "use_local" : True,
-            "filename" : "quast-5.0.2--py27pl526ha92aebf_0.simg",
+            "filename" : "quast_4.5--boost1.61_1.sif",
             "quayurl" : "quay.io/biocontainers/quast",
             "location" : "../container_images/",
-            "version" : "5.0.2--py27pl526ha92aebf_0"
+            "version" : "4.5--boost1.61_1"
         },
         "sourmash" : {
             "use_local" : True,
-            "filename" : "sourmash-2.0.0a3--py36_0.simg",
+            "filename" : "sourmash_2.0.0a3--py36_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
             "version" : "2.0.0a3--py36_0"
         },
         "sourmash_compare" : {
             "use_local" : True,
-            "filename" : "sourmash-2.0.0a3--py36_0.simg",
+            "filename" : "sourmash_2.0.0a3--py36_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
             "version" : "2.0.0a3--py36_0"
         },
         "kaiju" : {
             "use_local" : True,
-            "filename" : "kaiju-1.6.1--pl5.22.0_0.simg",
+            "filename" : "kaiju_1.6.1--pl5.22.0_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/kaiju",
             "version" : "1.6.1--pl5.22.0_0"
         },
         "krona" : {
             "use_local" : True,
-            "filename" : "krona-2.7--pl5.22.0_1.simg",
+            "filename" : "krona_2.7--pl5.22.0_1.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krona",
             "version" : "2.7--pl5.22.0_1"
         },
         "kraken2" : {
             "use_local" : True,
-            "filename" : "kraken2-2.0.8_beta--pl526h6bb024c_0.simg",
+            "filename" : "kraken2_2.0.8_beta--pl526h6bb024c_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/kraken2",
             "version" : "2.0.8_beta--pl526h6bb024c_0"
         },
         "krakenuniq" : {
             "use_local" : True,
-            "filename" : "krakenuniq-0.5.8--pl526he860b03_0.simg",
+            "filename" : "krakenuniq_0.5.8--pl526he860b03_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krakenuniq",
             "version" : "0.5.8--pl526he860b03_0"
         },
         "prokka" : {
             "use_local" : True,
-            "filename" : "prokka-1.13.3-01.simg",
+            "filename" : "prokka_1.13.3-01.sif",
             "location" : "../container_images/",
             "quayurl" : "ummidock/prokka",
             "version" : "1.13.3-01"        
         },
         "abricate" : {
             "use_local" : True,
-            "filename" : "abricate.simg",
+            "filename" : "abricate_latest.sif",
             "location" : "../container_images/",
             "quayurl" : "thanhleviet/abricate",
             "version" : "latest"         
         },
         "srst2" : {
             "use_local" : True,
-            "filename" : "SRST2-0.2.0--py27_2.simg",
+            "filename" : "srst2_0.2.0--py27_2.sif",
             "location" : "../container_images/",
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"
