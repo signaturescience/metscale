@@ -102,8 +102,12 @@ config_default = {
     },
 
     "assembly" : {
+        #TODO break into smaller sections like the other areas
         "assembly_patterns" : {
             # 
+            # general assembler output filename pattern/input for quast
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
+            #
             # filename pattern for metaspades output and threads to run
             "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "metaspades_threads" : 8,
@@ -121,19 +125,36 @@ config_default = {
             "plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades.contigs.fa",
             "plasmidspades_threads" : 8,           
             #
-            # general assembler output filename pattern/input for quast
-            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
             # quast output filename pattern and threads to run
             "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
             "quast_threads" : 4,
+            #
+            #  metaquast output file pattern and threads to run
+            "metaquast_pattern" : "{sample}_trim{qual}.{assembler}_metaquast/",
+            "metaquast_threads" : 4,
+            "metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            "metaquast_output_multiqc_input_file" : "report.html",
             #
             # multiqc output dir pattern
             "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
             # multiqc input file. Taken from quast output file.
             "quast_output_multiqc_input_file" : "report.tsv",
             # multiqc output file
-            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
+            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report",
+            #
+            # quast with SPAdes output file pattern
+            "quast_spades_pattern" : "{sample}_trim{qual}.SPAdes_quast/",
+            "quast_spades_threads" : 4,
+            "quast_spades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            # 
+            # quast with plasmidSPAdes output file pattern
+            "quast_plasmidspades_pattern" : "{sample}_trim{qual}.plasmidSPAdes_quast",
+            "quast_plasmidspades_threads" : 4,
+            "quast_plasmidspades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            #
+
+
         }
     },
 
@@ -386,10 +407,10 @@ config_default = {
         },
         "quast" : {
             "use_local" : True,
-            "filename" : "quast-4.5--boost1.61_1.simg",
+            "filename" : "quast-5.0.2--py27pl526ha92aebf_0.simg",
             "quayurl" : "quay.io/biocontainers/quast",
             "location" : "../container_images/",
-            "version" : "4.5--boost1.61_1"
+            "version" : "5.0.2--py27pl526ha92aebf_0"
         },
         "sourmash" : {
             "use_local" : True,

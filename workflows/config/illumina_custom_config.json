@@ -37,14 +37,14 @@
             "qual"   : ["2","30"],
             "kmers" : [21,31,51],
         },
-        "assembly_plasmidspades_workflow" : {
+        "assembly_metaspades_workflow" : {
             "qual"      : ["2","30"],
         },
         "assembly_spades_workflow" : {
             "qual"      : ["2","30"],
             "kmers" : [21,33,51,75],
         },
-        "assembly_metaspades_workflow" : {
+        "assembly_plasmidspades_workflow" : {
             "qual"      : ["2","30"],
         },
         "assembly_megahit_workflow" : {
@@ -55,6 +55,16 @@
         },
         "assembly_quast_workflow" : {
             "assembler" : ["megahit","metaspades"],
+            "qual"      : ["2","30"],
+        },
+        "assembly_metaquast_workflow" : {
+            "assembler" : ["megahit","metaspades"],
+            "qual"      : ["2","30"],
+        },
+        "assembly_quast_spades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "assembly_quast_plasmidspades_workflow" : {
             "qual"      : ["2","30"],
         },
         "assembly_multiqc_workflow" : {
