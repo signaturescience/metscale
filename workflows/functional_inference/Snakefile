@@ -88,6 +88,7 @@ prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefi
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
 prokka_with_metaspades_input_db = inference['prokka_with_metaspades']['input_db']
 
+
 rule prokka_with_metaspades:
     input:
         prokka_with_metaspades_input_dir
@@ -106,12 +107,13 @@ rule prokka_with_metaspades:
     	'export LC_ALL=C '
     	'&& '
         'prokka '
-        '--proteins {params.input_db} '
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer '
+        '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
-        '--cpus {threads}'
+        '--cpus {threads} '
+
 
 
 

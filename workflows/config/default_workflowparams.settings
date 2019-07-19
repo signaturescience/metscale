@@ -282,21 +282,21 @@ config_default = {
             "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_megahit",
-            "input_db" : "",
+            "input_db" : " ",
             "threads" : 8
         },
         "prokka_with_metaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_metaspades",
-            "input_db" : "",
+            "input_db" : " ",
             "threads" : 8
         },
         "prokka_with_spades" : {
             "outdir_pattern" : "{sample}_trim{qual}_spades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_spades",
-            "input_db" : "",
+            "input_db" : " ",
             "threads" : 8
         },
         "abricate_with_metaspades" : {
