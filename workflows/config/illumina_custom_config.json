@@ -160,7 +160,7 @@
         "tax_class_krakenuniq_workflow" : {
             "qual" : ["2","30"],
             "db" : "minikraken_20171019_8GB",
-            "hll_precision" : 10  
+            "hll_precision" : 12  
         },
         "functional_prokka_with_megahit_workflow" : {
             "qual"      : ["2","30"],

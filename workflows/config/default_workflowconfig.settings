@@ -172,7 +172,7 @@ config_default = {
             # db to run against, this is the default DB downloaded from download python script.
             "db" : "minikraken_20171019_8GB",
             # hll-precision score between 10 and 18
-            "hll_precision" : 10  
+            "hll_precision" : 12  
         },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 
