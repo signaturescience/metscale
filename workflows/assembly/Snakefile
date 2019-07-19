@@ -600,14 +600,14 @@ rule assembly_multiqc_workflow:
                 assembler = workflows['assembly_multiqc_workflow']['multiqc_assembler'],
         )
 
-rule assembly_quast_reference_with_SPAdes_workflow:
+rule assembly_quast_reference_with_spades_workflow:
     input:
         expand( assembly_quast_spades_output,
                 sample    = sample_input_files,
                 qual      = workflows['assembly_quast_spades_workflow']['qual'],
         )
 
-rule assembly_quast_reference_with_plasmidSPAdes_workflow:
+rule assembly_quast_reference_with_plasmidspades_workflow:
     input:
         expand( assembly_quast_plasmidspades_output,
                 sample    = sample_input_files,
