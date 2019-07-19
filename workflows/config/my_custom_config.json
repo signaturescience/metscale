@@ -111,6 +111,9 @@
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"],
         },
+        "tax_class_convert_kaiju_to_krona_workflow" : {
+            "qual" : ["2","30"],        
+        },
         "tax_class_kaiju_species_summary_workflow" : {
             "qual" : ["2","30"],
         },
@@ -167,17 +170,14 @@
         },   
         "functional_abricate_with_megahit_workflow" : {
             "qual"      : ["2","30"],
-            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
             "db"        : ["card", "vfdb"],
         },
         "functional_abricate_with_metaspades_workflow" : {
             "qual"      : ["2","30"],
-            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
             "db"        : ["card", "vfdb"],
         },
         "functional_with_srst2_workflow" : {
             "qual"      : ["2","30"],
-            #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
             "db"        : ["ARGannot.r3.fasta"],
         },
     },
