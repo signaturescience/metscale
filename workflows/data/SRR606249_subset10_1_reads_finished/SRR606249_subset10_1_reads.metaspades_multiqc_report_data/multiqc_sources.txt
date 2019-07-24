@@ -1,3 +1,0 @@
-Module	Section	Sample Name	Source
-QUAST	all_sections	SRR606249_subset10_1_reads_trim2.metaspades.contigs	/tmp/SRR606249_subset10_1_reads_trim2.metaspades_quast/report.tsv
-QUAST	all_sections	SRR606249_subset10_1_reads_trim30.metaspades.contigs	/tmp/SRR606249_subset10_1_reads_trim30.metaspades_quast/report.tsv
