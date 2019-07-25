@@ -407,10 +407,10 @@ config_default = {
         },
         "quast" : {
             "use_local" : True,
-            "filename" : "quast_4.5--boost1.61_1.sif",
+            "filename" : "quast_5.0.2--py27pl526ha92aebf_0.sif",
             "quayurl" : "quay.io/biocontainers/quast",
             "location" : "../container_images/",
-            "version" : "4.5--boost1.61_1"
+            "version" : "py27pl526ha92aebf_0"
         },
         "sourmash" : {
             "use_local" : True,

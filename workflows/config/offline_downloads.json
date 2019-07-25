@@ -15,7 +15,7 @@
     "assembly": {
         "megahit_1.1.2--py35_0.sif" : "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
         "spades_3.11.1--py36_zlib1.2.8_0.sif" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0",
-        "quast_4.5--boost1.61_1.sif": "docker://quay.io/biocontainers/quast:4.5--boost1.61_1",
+        "quast_5.0.2--py27pl526ha92aebf_0.sif": "docker://quay.io/biocontainers/quast:5.0.2--py27pl526ha92aebf_0",
         "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
         "GCF_000008565.1_ASM856v1_genomic.fna.gz" : "file:///resources/GCF_000008565.1_ASM856v1_genomic.fna.gz"
     },
