@@ -1,3 +1,0 @@
-Module	Section	Sample Name	Source
-QUAST	all_sections	SRR606249_subset10_1_reads_trim2.megahit.contigs	/tmp/SRR606249_subset10_1_reads_trim2.megahit_quast/report.tsv
-QUAST	all_sections	SRR606249_subset10_1_reads_trim30.megahit.contigs	/tmp/SRR606249_subset10_1_reads_trim30.megahit_quast/report.tsv
