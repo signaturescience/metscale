@@ -144,12 +144,12 @@ config_default = {
             "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report",
             #
             # quast with SPAdes output file pattern
-            "quast_spades_pattern" : "{sample}_trim{qual}.SPAdes_quast/",
+            "quast_spades_pattern" : "{sample}_trim{qual}.spades_quast/",
             "quast_spades_threads" : 4,
             "quast_spades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
             # 
             # quast with plasmidSPAdes output file pattern
-            "quast_plasmidspades_pattern" : "{sample}_trim{qual}.plasmidSPAdes_quast",
+            "quast_plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades_quast",
             "quast_plasmidspades_threads" : 4,
             "quast_plasmidspades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
             #
