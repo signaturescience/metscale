@@ -1,0 +1,78 @@
+"Identifier","Lowest_Rank","Lowest_NCBI_TaxID","Lowest_NCBI_Tax_Name","GenBank_ID","Reads","Abundance"
+"ds-buccal_01","Subspecies",119602,"Streptococcus dysgalactiae subsp. Equisimilis","NZ_LAKV01000002.1",17351,NA
+"ds-buccal_01","Subspecies",119602,"Streptococcus dysgalactiae subsp. Equisimilis","NZ_LAKV01000001.1",32649,NA
+"ds-buccal_02","Strain_No_Rank",1381082,"Streptococcus equi subsp. zooepidemicus Sz4is","NZ_JAUE01000069.1",526,NA
+"ds-buccal_02","Strain_No_Rank",1381082,"Streptococcus equi subsp. zooepidemicus Sz4is","NZ_JAUE01000043.1",8609,NA
+"ds-buccal_02","Strain_No_Rank",1381082,"Streptococcus equi subsp. zooepidemicus Sz4is","NZ_JAUE01000033.1",18962,NA
+"ds-buccal_02","Strain_No_Rank",1381082,"Streptococcus equi subsp. zooepidemicus Sz4is","NZ_JAUE01000046.1",21903,NA
+"ds-buccal_03","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000096.1",692,NA
+"ds-buccal_03","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000094.1",3028,NA
+"ds-buccal_03","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000093.1",8078,NA
+"ds-buccal_03","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000092.1",13861,NA
+"ds-buccal_03","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000095.1",24341,NA
+"ds-buccal_04","Strain_No_Rank",516950,"Streptococcus pneumoniae CGSP14","NC_010582.1",50000,NA
+"ds-buccal_05","Strain_No_Rank",370552,"Streptococcus pyogenes MGAS10270","NC_008022.1",50000,NA
+"ds-buccal_06","Species",1304,"Streptococcus salivarius","NZ_JYOY01000001.1",1223,NA
+"ds-buccal_06","Species",1304,"Streptococcus salivarius","NZ_JYOY01000005.1",1683,NA
+"ds-buccal_06","Species",1304,"Streptococcus salivarius","NZ_JYOY01000002.1",1731,NA
+"ds-buccal_06","Species",1304,"Streptococcus salivarius","NZ_JYOY01000003.1",10761,NA
+"ds-buccal_06","Species",1304,"Streptococcus salivarius","NZ_JYOY01000004.1",15146,NA
+"ds-buccal_06","Species",1304,"Streptococcus salivarius","NZ_JYOY01000006.1",19456,NA
+"ds-buccal_07","Strain_No_Rank",888807,"Streptococcus sanguinis SK1 = NCTC 7863","NZ_GL878507.1",50000,NA
+"ds-buccal_08","Strain_No_Rank",1408178,"Streptococcus thermophilus ASCC 1275","NZ_CP006819.1",50000,NA
+"ds-buccal_09","Strain_No_Rank",546273,"Veillonella dispar ATCC 17748","NZ_GG667605.1",50000,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000040.1",5,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000048.1",9,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000061.1",12,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000043.1",25,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000030.1",26,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000057.1",26,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000042.1",30,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000062.1",30,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000059.1",31,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000016.1",32,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000032.1",32,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000046.1",34,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000020.1",36,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000045.1",39,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000025.1",45,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000035.1",45,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000033.1",52,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000038.1",78,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000024.1",117,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000027.1",199,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000026.1",204,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000028.1",281,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000023.1",339,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000017.1",809,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000018.1",1078,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000022.1",1533,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000009.1",3018,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000014.1",3292,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000012.1",4331,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000013.1",4871,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000015.1",4901,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000010.1",6633,NA
+"ds-buccal_10","Strain_No_Rank",546268,"Neisseria subflava NJ9703","NZ_ACEO02000011.1",17807,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000016.1",16,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000019.1",57,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000017.1",257,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000018.1",287,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000013.1",693,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000015.1",708,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000014.1",866,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000011.1",1737,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000012.1",2086,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000009.1",3536,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000008.1",3723,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000010.1",4565,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000007.1",5222,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000004.1",8344,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000005.1",8843,NA
+"ds-buccal_11","Strain_No_Rank",521005,"Haemophilus influenzae 7P49H1","NZ_ABWV01000006.1",9060,NA
+"ds-buccal_12","Species",729,"Haemophilus parainfluenzae","NZ_JVHG01000009.1",36,NA
+"ds-buccal_12","Species",729,"Haemophilus parainfluenzae","NZ_JVHG01000005.1",137,NA
+"ds-buccal_12","Species",729,"Haemophilus parainfluenzae","NZ_JVHG01000008.1",1636,NA
+"ds-buccal_12","Species",729,"Haemophilus parainfluenzae","NZ_JVHG01000007.1",12706,NA
+"ds-buccal_12","Species",729,"Haemophilus parainfluenzae","NZ_JVHG01000006.1",12996,NA
+"ds-buccal_12","Species",729,"Haemophilus parainfluenzae","NZ_JVHG01000010.1",22489,NA

@@ -1,0 +1,80 @@
+"Identifier","Lowest_Rank","Lowest_NCBI_TaxID","Lowest_NCBI_Tax_Name","GenBank_ID","Reads","Abundance"
+"ds-hous2_01","Strain_No_Rank",698965,"Corynebacterium diphtheriae CDCE 8392","NC_016785.1",25000,NA
+"ds-hous2_02","Strain_No_Rank",1310161,"Corynebacterium glutamicum MB001","NC_022040.1",25000,NA
+"ds-hous2_03","Strain_No_Rank",645127,"Corynebacterium kroppenstedtii DSM 44385","NC_012704.1",25000,NA
+"ds-hous2_04","Strain_No_Rank",1224163,"Corynebacterium maris DSM 45190","NC_021915.1",25000,NA
+"ds-hous2_05","Strain_No_Rank",1074485,"Corynebacterium pseudotuberculosis 316","NC_016932.1",25000,NA
+"ds-hous2_06","Strain_No_Rank",662755,"Corynebacterium resistens DSM 45100","NC_015673.1",25000,NA
+"ds-hous2_07","Strain_No_Rank",1200352,"Corynebacterium terpenotabidum Y-11","NC_021663.1",25000,NA
+"ds-hous2_08","Strain_No_Rank",504474,"Corynebacterium urealyticum DSM 7109","NC_010545.1",25000,NA
+"ds-hous2_09","Strain_No_Rank",858619,"Corynebacterium variabile DSM 44702","NC_015859.1",25000,NA
+"ds-hous2_10","Species",38289,"Corynebacterium jeikeium","NZ_JFCP01000016.1",25000,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000066.1",28,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000071.1",39,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000067.1",67,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000070.1",86,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000069.1",162,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000072.1",202,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000006.1",522,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000073.1",4818,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000068.1",8344,NA
+"ds-hous2_11","Species",169292,"Corynebacterium aurimucosum","NZ_JUOH01000065.1",10732,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383160.1",24,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383161.1",31,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383159.1",118,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383158.1",200,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383163.1",1340,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383164.1",2573,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383162.1",8857,NA
+"ds-hous2_12","Strain_No_Rank",765099,"Propionibacterium acnes HL005PA4","NZ_GL383157.1",11857,NA
+"ds-hous2_13","Strain_No_Rank",273036,"Staphylococcus aureus RF122","NC_007622.1",25000,NA
+"ds-hous2_14","Strain_No_Rank",525376,"Staphylococcus epidermidis W23144","NZ_GG696800.1",25000,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000072.1",335,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000068.1",694,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000069.1",1168,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000067.1",4813,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000070.1",5440,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000073.1",6096,NA
+"ds-hous2_15","Species",1318,"Streptococcus parasanguinis","NZ_JVSR01000071.1",6454,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000095.1",400,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000094.1",1831,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000089.1",1899,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000090.1",2183,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000093.1",2279,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000091.1",2345,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000092.1",6315,NA
+"ds-hous2_16","Strain_No_Rank",1154870,"Streptococcus agalactiae MRI Z1-039","NZ_ALSA01000096.1",7748,NA
+"ds-hous2_17","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000058.1",306,NA
+"ds-hous2_17","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000059.1",7427,NA
+"ds-hous2_17","Strain_No_Rank",1074120,"Streptococcus mutans TCI-125","NZ_AGKM01000057.1",17267,NA
+"ds-hous2_18","Strain_No_Rank",170187,"Streptococcus pneumoniae TIGR4","NC_003028.3",25000,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000115.1",10,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000102.1",133,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000112.1",135,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000104.1",220,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000096.1",230,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000100.1",368,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000110.1",429,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000099.1",452,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000103.1",477,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000086.1",496,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000113.1",546,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000085.1",550,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000093.1",557,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000114.1",654,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000098.1",672,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000090.1",746,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000101.1",748,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000087.1",773,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000088.1",1005,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000111.1",1011,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000095.1",1097,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000109.1",1164,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000089.1",1166,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000094.1",1264,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000092.1",1405,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000091.1",1427,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000106.1",1428,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000107.1",1956,NA
+"ds-hous2_19","Strain_No_Rank",710094,"Acinetobacter baumannii AB056","NZ_ADGZ01000108.1",3881,NA
+"ds-hous2_20","Strain_No_Rank",436717,"Acinetobacter oleivorans DR1","NC_014259.1",25000,NA
