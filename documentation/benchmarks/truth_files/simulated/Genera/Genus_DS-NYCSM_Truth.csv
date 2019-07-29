@@ -1,0 +1,14 @@
+"Genus_Name","Genus_ID","Reads"
+"Bacillus","1386",50000
+"Enterobacter","547",50000
+"Enterococcus","1350",50000
+"Escherichia","561",25000
+"Klebsiella","570",25000
+"Pseudoalteromonas","53246",25000
+"Pseudomonas","286",1e+05
+"Psychrobacter","497",25000
+"Shewanella","22",50000
+"Staphylococcus","1279",25000
+"Stenotrophomonas","40323",25000
+"Streptococcus","1301",25000
+"Yersinia","629",25000
