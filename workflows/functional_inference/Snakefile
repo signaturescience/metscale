@@ -325,7 +325,8 @@ def srst2_input_files_sing(wildcards):
         else:   #reverse
             srst2_input_file = data_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
         if (os.path.isfile(input_file)):
-            shutil.copyfile(input_file,srst2_input_file)
+            shutil.copyfile(input_file, srst2_input_file)
+            srst2_input_file.replace(data_dir, sing_dir)
         srst2_input_list.append(srst2_input_file)
     return srst2_input_list
 
