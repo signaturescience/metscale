@@ -312,7 +312,7 @@ srst2_threads = inference['srst2']['threads']
 def srst2_output_sub_sing(wildcards):
     return srst2_output_sing.format(**wildcards)
 
-#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a generic filename
+#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a generic hash filename
 #to create a copy of input files then delete them.
 
 def srst2_input_files_sing(wildcards):
@@ -321,9 +321,11 @@ def srst2_input_files_sing(wildcards):
         in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
         input_file = in_file[0]
         if (num ==0):  #forward 
-            srst2_input_file = data_dir + '/' + '0_1' + readfilt['quality_trimming']['sample_file_ext']     
+            result_file = hashlib.md5(input_file.encode())
+            hex_file = result_file.hexdigest()[:16]
+            srst2_input_file = data_dir + '/' + hex_file + '_1' + readfilt['quality_trimming']['sample_file_ext']     
         else:   #reverse
-            srst2_input_file = data_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
+            srst2_input_file = data_dir + '/' + hex_file + '_2' + readfilt['quality_trimming']['sample_file_ext']
         if (os.path.isfile(input_file)):
             shutil.copyfile(input_file, srst2_input_file)
             srst2_input_file = srst2_input_file.replace(data_dir, sing_dir)
