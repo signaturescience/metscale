@@ -1070,8 +1070,6 @@ def visualize_krona_filteredclass_contigs_input_func(wildcards):
 def visualize_krona_filteredclass_contigs_output_func(wildcards):
     return visualize_krona_filteredclass_contigs_output_file_sing.format(**wildcards)
 
-print("*visualize_krona_filteredclass_contigs_input_file: "+str(visualize_krona_filteredclass_contigs_input_file))
-print("*visualize_krona_filteredclass_contigs_output_file: "+str(visualize_krona_filteredclass_contigs_output_file))
 rule visualize_krona_contigs_filteredclass:
     """
     Visualize classified, filtered (>X%) kaiju results using krona with contigs
@@ -1149,8 +1147,7 @@ def visualize_kaiju_species_contigs_input_func_sing(wildcards):
 def visualize_kaiju_species_contigs_output_func_sing(wildcards):
     return visualize_kaiju_species_contigs_output_file_sing.format(**wildcards)
 
-print("visualize_kaiju_species_contigs_input_file: "+str(visualize_kaiju_species_contigs_input_file))
-print("visualize_kaiju_species_contigs_output_file: "+str(visualize_kaiju_species_contigs_output_file))
+
 rule visualize_kaiju_species_contigs:
     """
     Visualize all kaiju species using krona from contigs
@@ -1180,7 +1177,6 @@ rule visualize_kaiju_species_contigs:
 
 
 kraken2_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
-print("kraken2_input_pattern: "+str(kraken2_input_pattern))
 kraken2_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 
 kraken2_input_fwd = kraken2_input_pattern.format(
@@ -1190,7 +1186,7 @@ kraken2_input_fwd = kraken2_input_pattern.format(
             db ='{db}',
             conf='{conf}'
 )
-print("kraken2_input_fwd: "+str(kraken2_input_fwd))
+
 kraken2_input_rev = kraken2_input_pattern.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
@@ -1216,7 +1212,6 @@ kraken2_input_rev_sing = kraken2_input_pattern_sing.format(
 
 kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] )
 kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
-print("kraken2_ouput: "+str(kraken2_ouput))
 
 kraken2_image = container_image_name(biocontainers, 'kraken2')
 kraken2_threads = taxclass['kraken2']['threads'] 
@@ -1273,10 +1268,6 @@ bracken_input_raw_sing = kraken2_report_sing
 bracken_input = bracken_input_raw.replace('.report','')
 bracken_input_sing = bracken_input_raw_sing.replace('.report','')
 
-print("bracken_input: "+bracken_input)
-print("bracken_input_sing: "+str(bracken_input_sing))
-
-
 bracken_db_sing = join(sing_dir, '{db}')
 bracken_read_length = '{read_length}'
 bracken_level = '{level}'
@@ -1291,11 +1282,7 @@ bracken_output_raw = bracken_output_pattern.format(
              threshold = '{threshold}'
 )
 bracken_output = bracken_input + bracken_output_raw
-print("bracken_output: "+str(bracken_output))
-
-
 bracken_output_sing = bracken_input_sing + bracken_output_raw
-print("bracken_output_sing "+str(bracken_output_sing))
 
 bracken_image = container_image_name(biocontainers, 'bracken')
 
