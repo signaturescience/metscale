@@ -194,16 +194,18 @@ config_default = {
             # from megahit to run abricate on
             "qual"      : ["2","30"],
             # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            #to use custom/external DB file "customDBabricate"
             "db"        : ["card", "vfdb"],
+            #"db"        : ["customDBabricate"],
         },
         "functional_abricate_with_metaspades_workflow" : {
             # these parameters determine which contig params 
             # from metaspades to run abricate on
             "qual"      : ["2","30"],
             # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
-            #to use custom/external DB file "AMRVF2"
+            #to use custom/external DB file "customDBabricate"
             "db"        : ["card", "vfdb"],
-            #"db"        : ["AMRVF2"],
+            #"db"        : ["customDBabricate"],
         },
         "functional_with_srst2_workflow" : {
             # these paramters determine srst2 input

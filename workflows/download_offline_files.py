@@ -78,7 +78,11 @@ def download_file(workflow, data, install_dir):
             elif (url.scheme == "file"):         #copy file from local location
                 if not (os.path.isfile(os.path.join(install_dir, file_name))):
                     print("Copying "+ file_name)
-                    copyfile(".."+ url.path, install_dir+ "/"+ file_name)
+                    if (file_name.endswith('.tgz')):
+                        untar_command = "tar -zxvf " + ".." + url.path + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
+                        subprocess.run([untar_command], shell=True)   
+                    else:  
+                        copyfile(".."+ url.path, install_dir+ "/"+ file_name)
 
                         
                          
