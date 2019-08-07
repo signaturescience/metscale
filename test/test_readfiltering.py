@@ -22,70 +22,70 @@ class TestReadFiltering(unittest.TestCase):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_pretrim_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_fastqc.zip")
-        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_2_reads_fastqc.zip")
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_1_reads_fastqc.zip")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_2_reads_fastqc.zip")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
  
     def test_2_read_filtering_posttrim_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_posttrim_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_1.fq.gz")
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim2_2.fq.gz")
-        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim30_1.fq.gz")
-        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_trim30_2.fq.gz")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_2_fastqc.zip")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_1_fastqc.zip")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_2_fastqc.zip")
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_1_fastqc.zip")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )
         
     def test_3_read_filtering_multiqc_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_multiqc_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
-        filename = os.path.join(dirname, "data/SRR606249_subset10_fastqc_multiqc_report.html")
+        filename = os.path.join(dirname, "data/SRR606249_subset10_1_reads_fastqc_multiqc_report.html")
         self.assertTrue(os.path.isfile(filename) )
         
-    def test_4_read_filtering_khmer_interleave_reads(self):
+    def test_4_read_filtering_khmer_interleave_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_interleave_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_reads.fq.gz")
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_reads.fq.gz")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_interleaved_reads.fq.gz")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
         
-    def test_5_read_filtering_khmer_subsample_interleaved_reads(self):
+    def test_5_read_filtering_khmer_subsample_interleaved_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_subsample_interleaved_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_interleaved_reads.fq.gz")
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_interleaved_reads.fq.gz")  
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_subset10_interleaved_reads.fq.gz")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_subset10_interleaved_reads.fq.gz")  
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
         
         
-    def test_6_read_filtering_khmer_split_interleaved_reads(self):
+    def test_6_read_filtering_khmer_split_interleaved_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_split_interleaved_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_2.fq.gz") 
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_subset10_1.fq.gz") 
-        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_2.fq.gz") 
-        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_trim2_subset10_1.fq.gz")  
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_subset10_2.fq.gz") 
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_subset10_1.fq.gz") 
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_subset10_2.fq.gz") 
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_subset10_1.fq.gz")  
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )  
          
         
-    def test_7_read_filtering_khmer_cout_unique_reads(self):
+    def test_7_read_filtering_khmer_count_unique_kmers_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_count_unique_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
-        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_uniqueK21.txt")
-        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_uniqueK51.txt")
-        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_trim30_interleaved_uniqueK31.txt")
-        filename_4 = os.path.join(dirname, "data/SSRR606249_subset10_trim2_interleaved_uniqueK31.txt") 
-        filename_5 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_uniqueK21.txt")
-        filename_6 = os.path.join(dirname, "data/SRR606249_subset10_trim2_interleaved_uniqueK51.txt")     
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_interleaved_uniqueK51.txt")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_interleaved_uniqueK51.txt")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_interleaved_uniqueK21.txt")
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_interleaved_uniqueK31.txt") 
+        filename_5 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_interleaved_uniqueK31.txt")
+        filename_6 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_interleaved_uniqueK21.txt")     
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) and os.path.isfile(filename_5) and os.path.isfile(filename_6) ) 
         
 
         
-    def test_7_read_filtering_khmer_fastq_to_fasta(self):
+    def test_8_read_filtering_khmer_fastq_to_fasta_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_fastq_to_fasta_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
