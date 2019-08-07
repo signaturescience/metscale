@@ -169,7 +169,7 @@ config_default = {
             "level" : "S",
             "threshold" : 0,
             #directory that has DB dir. defaults to default dir
-            "db" : ""
+            "bdb" : "Bracken_Kraken2_DB"
         },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 

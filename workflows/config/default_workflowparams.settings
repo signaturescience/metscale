@@ -274,7 +274,7 @@ config_default = {
         },
         "bracken" : {
             #bracken output filename
-            "bracken_output" : "_bracken_db_{bdb}_r_{read_length}_l_{level}_t_{threshold}"
+            "bracken_output" : "_bracken_db-{bdb}_r-{read_length}_l-{level}_t-{threshold}",
         }
     },
 

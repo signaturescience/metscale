@@ -1268,23 +1268,22 @@ bracken_input_raw_sing = kraken2_report_sing
 bracken_input = bracken_input_raw.replace('.report','')
 bracken_input_sing = bracken_input_raw_sing.replace('.report','')
 
-bracken_db_sing = join(sing_dir, '{db}')
-bracken_read_length = '{read_length}'
-bracken_level = '{level}'
-bracken_threshold = '{threshold}'
-
-
 bracken_output_pattern = taxclass['bracken']['bracken_output']
 bracken_output_raw = bracken_output_pattern.format(
-             bdb = '{db}',
              read_length = '{read_length}',
              level = '{level}',
-             threshold = '{threshold}'
+             threshold = '{threshold}',
+             bdb = '{bdb}'
 )
+
 bracken_output = bracken_input + bracken_output_raw
 bracken_output_sing = bracken_input_sing + bracken_output_raw
 
 bracken_image = container_image_name(biocontainers, 'bracken')
+
+
+def get_braken_DB(wildcards):
+    return join(sing_dir, wildcards.bdb)
 
 rule bracken:
     """
@@ -1301,10 +1300,10 @@ rule bracken:
     params:
         bracken_input_sing = bracken_input_raw_sing,
         bracken_output = bracken_output_sing,
-        db_sing = bracken_db_sing,
-        read_length = bracken_read_length,
-        level = bracken_level,
-        threshold = bracken_threshold,
+        db_sing = get_braken_DB,
+        read_length = '{read_length}',
+        level = '{level}',
+        threshold = '{threshold}',
     shell:
         'bracken '
         ' -d {params.db_sing} '
@@ -1704,14 +1703,13 @@ rule tax_class_krakenuniq_workflow:
 rule tax_class_bracken_workflow:
     input:
         expand( bracken_output,
-            sample = sample_input_files,
-            bdb = workflows['tax_class_bracken_workflow']['db'],
+            sample      = sample_input_files,
+            bdb         = workflows['tax_class_bracken_workflow']['bdb'],
             read_length = workflows['tax_class_bracken_workflow']['read_length'],
-            level = workflows['tax_class_bracken_workflow']['level'],
-            threshold =  workflows['tax_class_bracken_workflow']['threshold'],
-            qual      = workflows['tax_class_kraken2_workflow']['qual'],
-            direction = directions,
-            db        = workflows['tax_class_kraken2_workflow']['db'],
-            conf      = workflows['tax_class_kraken2_workflow']['confidence'],
+            level       = workflows['tax_class_bracken_workflow']['level'],
+            threshold   = workflows['tax_class_bracken_workflow']['threshold'],
+            qual        = workflows['tax_class_kraken2_workflow']['qual'],
+            db          = workflows['tax_class_kraken2_workflow']['db'],
+            conf        = workflows['tax_class_kraken2_workflow']['confidence'],
         )
 
