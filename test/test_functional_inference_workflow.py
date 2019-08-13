@@ -60,7 +60,16 @@ class TestFunctionalInference(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and 
         os.path.isfile(filename_3) and os.path.isfile(filename_4))
        
-        
+    def test_6_functional_prokka_with_spades_workflow(self):    
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_prokka_with_spades_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname,  "data/")
+        filename_2 = os.path.join(dirname,  "data/")
+        filename_3 = os.path.join(dirname,  "data/") 
+        filename_4 = os.path.join(dirname,  "data/") 
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and 
+        os.path.isfile(filename_3) and os.path.isfile(filename_4))    
 
 
 

@@ -21,7 +21,7 @@ class TestAssembly(unittest.TestCase):
         filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.metaspades.contigs.fa")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
              
-    def test_2_assembly_workflow_megahit(self):
+    def test_2_assembly_megahit_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_megahit_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
@@ -38,8 +38,25 @@ class TestAssembly(unittest.TestCase):
         filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.metaspades.contigs.fa")
         filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.megahit.contigs.fa") 
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )  
-      
-    def test_4_assembly_quast_workflow(self): 
+     
+    def test_4_assembly_spades_workflow(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_spades_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname, "data/")
+        filename_2 = os.path.join(dirname, "data/")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
+        
+    def test_5_assembly_plasmaspades_workflow(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_plasmaspades_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname, "data/")
+        filename_2 = os.path.join(dirname, "data/")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
+        
+             
+    def test_6_assembly_quast_workflow(self): 
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
@@ -49,15 +66,39 @@ class TestAssembly(unittest.TestCase):
         filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.metaspades_quast/report.tsv")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )
 
-    def test_5_assembly_multiqc_workflow(self):
+    def test_7_assembly_multiqc_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_multiqc_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads.megahit_multiqc_report_data/multiqc.log")
         filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads.metaspades_multiqc_report_data/multiqc.log")        
-        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))  
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+            
+    def test_8_assembly_metaquast_workflow(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_metaquast_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname, "data/")
+        filename_2 = os.path.join(dirname, "data/")        
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
     
-
+    def test_9_assembly_quast_reference_with_spades_workflow(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_reference_with_spades_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname, "data/")
+        filename_2 = os.path.join(dirname, "data/")        
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+        
+    def test_10_assembly_quast_reference_with_plasmidspades_workflow(self):        
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_reference_with_plasmidspades_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname, "data/")
+        filename_2 = os.path.join(dirname, "data/")        
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+        
+        
 if __name__ == '__main__':
     unittest.main()        
  

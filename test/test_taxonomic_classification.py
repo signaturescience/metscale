@@ -233,6 +233,26 @@ class TestTaxonomicClassification(unittest.TestCase):
         filename_4 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_metaspades.kaiju_species_krona.html")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)and os.path.isfile(filename_3) and os.path.isfile(filename_4))              
 
+    def test_22_tax_class_kraken2_workflow(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_kraken2_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname,  "data/")
+        filename_2 = os.path.join(dirname,  "data/")
+        filename_3 = os.path.join(dirname,  "data/")
+        filename_4 = os.path.join(dirname,  "data/")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)and os.path.isfile(filename_3) and os.path.isfile(filename_4))
+ 
+    def test_23_tax_class_krakenuniq_workflow(self):
+        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_krakenuniq_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname,  "data/")
+        filename_2 = os.path.join(dirname,  "data/")
+        filename_3 = os.path.join(dirname,  "data/")
+        filename_4 = os.path.join(dirname,  "data/")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)and os.path.isfile(filename_3) and os.path.isfile(filename_4))
+    
 
 
 if __name__ == "__main__":
