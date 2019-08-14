@@ -44,27 +44,27 @@ class TestComparison(unittest.TestCase):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_output_heatmap_plots_reads_assembly_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")
-        filename_3 = os.path.join(dirname, "data/")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_readsandSRR606249_subset10_1_reads_read_assembly_comparison.k31.png")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_readsandSRR606249_subset10_1_reads_read_assembly_comparison.k51.png")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_readsandSRR606249_subset10_1_reads_read_assembly_comparison.k21.png")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
         
     def test_5_comparison_output_heatmap_plots_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_output_heatmap_plots_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")
-        filename_3 = os.path.join(dirname, "data/")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_read_comparison.k31.png")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_read_comparison.k51.png")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_read_comparison.k21.png")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
 
     def test_6_comparison_output_heatmap_plots_assembly_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_output_heatmap_plots_assembly_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")
-        filename_3 = os.path.join(dirname, "data/")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_assembly_comparison.k21.png")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_assembly_comparison.k51.png")
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_assembly_comparison.k31.png")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
         
 

@@ -43,16 +43,16 @@ class TestAssembly(unittest.TestCase):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_spades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_k21_33_55.spades.contigs.fa")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_k21_33_55.spades.contigs.fa")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
         
-    def test_5_assembly_plasmaspades_workflow(self):
-        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_plasmaspades_workflow"
+    def test_5_assembly_plasmidspades_workflow(self):
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_plasmidspades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.plasmidspades.contigs.fa")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.plasmidspades.contigs.fa")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
         
              
@@ -78,24 +78,26 @@ class TestAssembly(unittest.TestCase):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_metaquast_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")        
-        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.megahit_metaquast")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.megahit_metaquast")        
+        filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.metaspades_metaquast")
+        filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.metaspades_metaquast")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filenam3) and os.path.isfile(filename_4))
     
     def test_9_assembly_quast_reference_with_spades_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_reference_with_spades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")        
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.spades_quast")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.spades_quast")        
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
         
     def test_10_assembly_quast_reference_with_plasmidspades_workflow(self):        
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_assembly_workflow.json assembly_quast_reference_with_plasmidspades_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
-        filename_1 = os.path.join(dirname, "data/")
-        filename_2 = os.path.join(dirname, "data/")        
+        filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30.plasmidspades-quast")
+        filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2.plasmidspades-quast")        
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
         
         
