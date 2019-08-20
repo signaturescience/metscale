@@ -11,6 +11,7 @@ import test_readfiltering
 import test_assembly
 import test_comparison
 import test_taxonomic_classification
+import test_functional_inference
 from workflows.download_offline_files import main_func
 
 if __name__ == '__main__':
@@ -22,5 +23,7 @@ if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromModule(test_comparison)
     unittest.TextTestRunner(verbosity=0).run(suite)
     suite = unittest.TestLoader().loadTestsFromModule(test_taxonomic_classification)
-    unittest.TextTestRunner(verbosity=0).run(suite)    
+    unittest.TextTestRunner(verbosity=0).run(suite)
+    suite = unittest.TestLoader().loadTestsFromModule(test_functional_inference)
+    unittest.TextTestRunner(verbosity=0).run(suite)      
     
