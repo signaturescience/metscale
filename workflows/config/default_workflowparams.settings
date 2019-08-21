@@ -321,7 +321,8 @@ config_default = {
         # params for the post processing workflow
         "move_samples_to_dir" : {
             # file pattern to move files to in post processing
-            "output_pattern" : "{sample}_finished"
+            "output_pattern" : "{sample}_finished",
+            "out_pattern" : "{sample_mv}/0-summary-report.html"
         },
     },
 

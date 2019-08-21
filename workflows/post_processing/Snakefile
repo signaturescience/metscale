@@ -33,7 +33,25 @@ post_processing = config['post_processing']
 ##################################################
 
 
+#We need to get the files if they have been moved to the completed dir.
 output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
+file_ext = readfilt['quality_trimming']['sample_file_ext']
+
+workflows = config['workflows']
+#all_sample_names = workflows['samples_input_workflow']['samples']
+sample_files_dir_mv = []
+for sample in all_sample_names:
+    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    input_file_pattern = input_file_pattern.replace(file_ext,'')
+    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+    sample_file_dir = output_dir_pattern.replace("{sample}", sample_file)
+    sample_file_dir = join(data_dir, sample_file_dir)
+    if os.path.isdir(sample_file_dir):
+        sample_files_dir_mv.append(sample_file_dir)
+print("sample_files_dir_mv: "+str(sample_files_dir_mv))
+
+##########################################################
+
 samples_output_dir = join(data_dir, output_dir_pattern)
 
 
@@ -55,7 +73,7 @@ def get_input_files(wildcards):
     input_files.extend(glob.glob(input_rev_str_pattern))
     return input_files
 
-
+print("samples_output_dir: "+str(samples_output_dir))
 rule move_samples_to_dir:
     '''
     move files to seperate dir after processing
@@ -71,8 +89,10 @@ rule move_samples_to_dir:
         "post_processing/move_completed_files.sh {params.output_dir} {params.input_files}"
 
 
+##################################################
+# post processing: create the final HTML report
 
-html_output_file = samples_output_dir + "/0-summary-report.html"
+html_output_file = post_processing['move_samples_to_dir']['out_pattern']
 print("html_output_file: "+ str(html_output_file))
 rule generate_r_script:
     '''
@@ -80,13 +100,16 @@ rule generate_r_script:
     '''
     output:
         html_output_file
-    params:
-        sample_input_name = sample
+   # params:
+   #     input_dir = samples_output_dir
+   #     sample_input_name = sample_mv
     script:
         "0-summary-report.Rmd"
 
-       
+ 
 
+ ###################################
+# Post Processing: build rules      
 
 
 
@@ -106,5 +129,6 @@ rule post_processing_create_final_report_workflow:
     '''
     input:
         expand( html_output_file,
-                sample    = sample_input_files,
+                sample_mv    = sample_files_dir_mv,
+                #sample     = 'data/SRR606249_subset10_1_reads_finished',
         )

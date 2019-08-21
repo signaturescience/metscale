@@ -41,8 +41,11 @@ library(DT)
 opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 theme_set(theme_bw())
 
+
+# Get input dir
+input_dir <- snakemake@params[0]
 # Set sample name (parameterized)
-id <- snakemake@params
+id <- snakemake@params[1]
 ```
 
 <big>
