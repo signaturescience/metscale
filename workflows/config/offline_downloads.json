@@ -25,13 +25,17 @@
     },
 
     "taxonomic_classification": {
+        "bracken_2.2--py27h2d50403_1.sif" : "docker://quay.io/biocontainers/bracken:2.2--py27h2d50403_1",
         "kaiju_1.6.1--pl5.22.0_0.sif" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
         "krona_2.7--pl5.22.0_1.sif" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
         "sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
         "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
         "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
         "minikraken2_v2_8GB_201904_UPDATE.tgz" : "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz",
-        "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz"
+        "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
+        "database100mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database100mers.kmer_distrib",
+        "database150mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database150mers.kmer_distrib",
+        "database200mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database200mers.kmer_distrib"
     },
 
     "sourmash_db" : {
