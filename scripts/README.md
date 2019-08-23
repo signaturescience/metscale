@@ -1,1 +1,1 @@
-These are scripts that were created as a part of the Dahak project, and they are not currently being used by the workflows in this repository.
+This directory will contain the scripts needed to query the contents of reference databases that are commonly used with taxonomic classification tools.
