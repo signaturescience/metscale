@@ -40,15 +40,18 @@ file_ext = readfilt['quality_trimming']['sample_file_ext']
 workflows = config['workflows']
 #all_sample_names = workflows['samples_input_workflow']['samples']
 sample_files_dir_mv = []
+sample_files_mv = []
 for sample in all_sample_names:
     input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+    print("sample_file: "+str(sample_file))
     sample_file_dir = output_dir_pattern.replace("{sample}", sample_file)
     sample_file_dir = join(data_dir, sample_file_dir)
     if os.path.isdir(sample_file_dir):
         sample_files_dir_mv.append(sample_file_dir)
 print("sample_files_dir_mv: "+str(sample_files_dir_mv))
+
 
 ##########################################################
 
@@ -92,6 +95,22 @@ rule move_samples_to_dir:
 ##################################################
 # post processing: create the final HTML report
 
+
+
+def get_sample_filenames(wildcards):
+    finshed_file_pattern = post_processing['move_samples_to_dir']['output_pattern']
+    finshed_file_pattern = finshed_file_pattern.replace('{sample}','')
+    finished_file = wildcards.sample_mv.split(finshed_file_pattern)[0]
+    finished_file = finished_file.replace(data_dir,'')
+    finished_file = wildcards.sample_mv + finished_file
+    print("get_sample_filenames: "+str(finished_file))
+    return finished_file
+
+#This is not correct.
+def get_sample_dir(wildcards):
+    print("wildcards.sample_mv "+str(wildcards.sample_mv))
+    return wildcards.sample_mv
+
 html_output_file = post_processing['move_samples_to_dir']['out_pattern']
 print("html_output_file: "+ str(html_output_file))
 rule generate_r_script:
@@ -100,9 +119,9 @@ rule generate_r_script:
     '''
     output:
         html_output_file
-   # params:
-   #     input_dir = samples_output_dir
-   #     sample_input_name = sample_mv
+    params:
+        input_dir = get_sample_dir,  
+        input_files = get_sample_filenames
     script:
         "0-summary-report.Rmd"
 

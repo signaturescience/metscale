@@ -43,9 +43,9 @@ theme_set(theme_bw())
 
 
 # Get input dir
-input_dir <- snakemake@params[0]
+input_dir <- snakemake@params[1]
 # Set sample name (parameterized)
-id <- snakemake@params[1]
+id <- snakemake@params[2]
 ```
 
 <big>
