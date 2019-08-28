@@ -67,9 +67,9 @@ rule prokka_with_megahit:
         'prokka '
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
-        '--proteins {params.input_db} '
         '--cpus {threads}'
 
 
@@ -111,9 +111,9 @@ rule prokka_with_metaspades:
         'prokka '
         '{params.input_files} '
         '--metagenome --eval 1e-06 --notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
-        '--proteins {params.input_db} '
         '--cpus {threads} '
 
 
@@ -159,8 +159,8 @@ rule prokka_with_spades:
         '&& '
         'prokka '
         '{params.input_files} '
-        '--proteins {params.input_db} '
         '--notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
         '--cpus {threads}'
