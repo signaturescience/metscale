@@ -110,7 +110,7 @@ rule prokka_with_metaspades:
     	'&& '
         'prokka '
         '{params.input_files} '
-        '--metagenome --eval 1e-06 --notrna --rnammer --rawproduct '
+        '--metagenome --eval 1e-06 --notrna --rnammer --rawproduct --compliant '
         '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
