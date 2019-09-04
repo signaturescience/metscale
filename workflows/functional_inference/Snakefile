@@ -259,6 +259,7 @@ abricate_with_spades_output = join(data_dir,inference['abricate_with_spades']['o
                             qual='{qual}', db='{db}'))
 abricate_with_spades_output_sing = join(sing_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
                             qual='{qual}', db='{db}'))
+
 abricate_with_spades_input = join(data_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 abricate_with_spades_input_sing = join(sing_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
@@ -272,16 +273,16 @@ def get_db_dir_spades(wildcards):
         abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
     return abricate_db_dir
 
-print("abricate_with_spades_input: "+str(abricate_with_spades_input))
-print("abricate_with_spades_output: "+str(abricate_with_spades_output))
+#print("abricate_with_spades_input: "+str(abricate_with_spades_input))
+#print("abricate_with_spades_output: "+str(abricate_with_spades_output))
 
 rule abricate_with_spades:
     input:
-        abricate_with_spades_input
+        abricate_with_spades_input = assembly_spades_output
     output:
         abricate_with_spades_output
     params:
-        input_files = abricate_with_spades_input_sing,
+        input_files = assembly_spades_output_sing,
         output_files = abricate_with_spades_output_sing,
         gene_db = abricate_with_spades_db,
         db_dir = get_db_dir_spades
