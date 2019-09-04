@@ -214,6 +214,15 @@ config_default = {
             "db"        : ["card", "vfdb"],
             #"db"        : ["customDBabricate"],
         },
+        "functional_abricate_with_spades_workflow" : {
+            # these parameters determine which contig params 
+            # from spades to run abricate on
+            "qual"      : ["2","30"],
+            # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            #to use custom/external DB file "customDBabricate"
+            "db"        : ["card", "vfdb"],
+            #"db"        : ["customDBabricate"],
+        },
         "functional_with_srst2_workflow" : {
             # these paramters determine srst2 input
             "qual"      : ["2","30"],

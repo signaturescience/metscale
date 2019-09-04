@@ -252,6 +252,47 @@ rule abricate_with_metaspades:
         '{params.output_files} '
 
 
+###################################
+# Functional Inference: abricate with spades input
+
+abricate_with_spades_output = join(data_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_spades_output_sing = join(sing_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_spades_input = join(data_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_spades_input_sing = join(sing_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_spades_db = '{db}'
+
+
+def get_db_dir_spades(wildcards):
+    abricate_db_dir = inference['abricate_with_spades']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
+
+print("abricate_with_spades_input: "+str(abricate_with_spades_input))
+print("abricate_with_spades_output: "+str(abricate_with_spades_output))
+
+rule abricate_with_spades:
+    input:
+        abricate_with_spades_input
+    output:
+        abricate_with_spades_output
+    params:
+        input_files = abricate_with_spades_input_sing,
+        output_files = abricate_with_spades_output_sing,
+        gene_db = abricate_with_spades_db,
+        db_dir = get_db_dir_spades
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '-datadir {params.db_dir} '
+        '--db {params.gene_db} '
+        '{params.input_files}>'
+        '{params.output_files} '
 
 
 
@@ -425,6 +466,18 @@ rule functional_abricate_with_metaspades_workflow:
                 sample    = sample_input_files,
                 qual   = workflows['functional_abricate_with_metaspades_workflow']['qual'],
                 db     = workflows['functional_abricate_with_metaspades_workflow']['db'],
+        )
+
+
+rule functional_abricate_with_spades_workflow:
+    """
+    Run abricate with assembled spades contigs as input
+    """
+    input:
+        expand( abricate_with_spades_output,
+                sample    = sample_input_files,
+                qual   = workflows['functional_abricate_with_spades_workflow']['qual'],
+                db     = workflows['functional_abricate_with_spades_workflow']['db'],
         )
 
 
