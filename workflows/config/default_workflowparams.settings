@@ -133,7 +133,8 @@ config_default = {
             #  metaquast output file pattern and threads to run
             "metaquast_pattern" : "{sample}_trim{qual}.{assembler}_metaquast/",
             "metaquast_threads" : 4,
-            "metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            #"metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            "metaquast_ref" :  "Shakya_Refs",
             "metaquast_output_multiqc_input_file" : "report.html",
             #
             # multiqc output dir pattern
