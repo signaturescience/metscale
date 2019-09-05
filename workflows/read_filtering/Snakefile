@@ -514,7 +514,7 @@ rule count_unique_reads:
 
 ###################################
 # Read Filtering: convert fastq files to fasta
-'''
+
 files, = glob_wildcards("data/{file}.fq.gz")
 
 fastq_to_fasta_input = join(data_dir, readfilt['convert_fastq_fasta']['input_pattern'])
@@ -543,7 +543,7 @@ rule convert_fastq_to_fasta:
         convert_output = convert_fast_to_fasta_output_sing
     shell:  
         "fastq-to-fasta.py -o {params.convert_output} {params.convert_input}"
-'''
+
 
 ###################################
 # Read Filtering: quality trimming
@@ -917,3 +917,9 @@ rule read_filtering_khmer_count_unique_kmers_workflow:
         )
 
 
+rule read_filtering_fastq_to_fasta_workflow:
+    '''
+    build rule: convert fq.gz files to .fa files
+    '''
+    input:  
+        expand("data/{file}.fa", file=files)
