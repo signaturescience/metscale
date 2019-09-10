@@ -12,7 +12,7 @@
     },
     "workflows" : {
         "samples_input_workflow" : {
-            "samples"    : ["Sample_1","Sample_2","Sample_3"],
+            "samples"    : ["ERR2282009","ERR2282010","ERR2282011","ERR2282012","ERR2282013","ERR2282014","ERR2282015","ERR2282016","ERR2282017","ERR2282018","ERR2282019","ERR2282020","ERR2282021","ERR2282022"],
         },
         "read_filtering_pretrim_workflow" : {
         },
@@ -34,15 +34,15 @@
             "qual"   : ["2","30"],
             "kmers" : [21,31,51],
         },
-        "assembly_metaspades_workflow" : {
-            "qual"      : ["2","30"],
-        },
         "assembly_plasmidspades_workflow" : {
             "qual"      : ["2","30"],
          },
         "assembly_spades_workflow" : {
             "qual"      : ["2","30"],
              "kmers" : [21,33,55],
+        },
+        "assembly_metaspades_workflow" : {
+            "qual"      : ["2","30"],
         },
         "assembly_megahit_workflow" : {
             "qual"      : ["2","30"],
@@ -52,16 +52,6 @@
         },
         "assembly_quast_workflow" : {
             "assembler" : ["megahit","metaspades"],
-            "qual"      : ["2","30"],
-        },
-        "assembly_metaquast_workflow" : {
-            "assembler" : ["megahit","metaspades"],
-            "qual"      : ["2","30"],
-        },
-        "assembly_quast_spades_workflow" : {
-            "qual"      : ["2","30"],
-        },
-        "assembly_quast_plasmidspades_workflow" : {
             "qual"      : ["2","30"],
         },
         "assembly_multiqc_workflow" : {
@@ -110,9 +100,6 @@
         "tax_class_add_taxonnames_contigs_workflow" : {
             "qual" : ["2","30"],
             "assembler" : ["megahit","metaspades"],
-        },
-        "tax_class_convert_kaiju_to_krona_workflow" : {
-            "qual" : ["2","30"],        
         },
         "tax_class_kaiju_species_summary_workflow" : {
             "qual" : ["2","30"],
@@ -170,15 +157,18 @@
         },   
         "functional_abricate_with_megahit_workflow" : {
             "qual"      : ["2","30"],
-            "db"        : ["card", "vfdb"],
+            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            "db"        : ["card", "vfdb", "argannot", "resfinder", "ncbibetalactamase", "plasmidfinder"],
         },
         "functional_abricate_with_metaspades_workflow" : {
             "qual"      : ["2","30"],
-            "db"        : ["card", "vfdb"],
+            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            "db"        : ["card", "vfdb", "argannot", "resfinder", "ncbibetalactamase", "plasmidfinder"],
         },
         "functional_with_srst2_workflow" : {
             "qual"      : ["2","30"],
-            "db"        : ["ARGannot.r3.fasta"],
+            #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta}
+            "db"        : ["ARGannot.r3.fasta", "ResFinder.fasta", "PlasmidFinder.fasta", "EcOH.fasta"],
         },
     },
 }
