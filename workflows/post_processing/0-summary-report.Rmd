@@ -110,10 +110,12 @@ The tools within this workflow perform read filtering and adapter trimming with 
 ## General statistics
 
 ```{r}
-read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_general_stats.txt")) %>% 
-  set_names(~str_remove(., "FastQC_mqc-generalstats-")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="General QA statistics about samples in this run.")
+if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_general_stats.txt"))) {
+  read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_general_stats.txt")) %>% 
+    set_names(~str_remove(., "FastQC_mqc-generalstats-")) %>% 
+    mutate_if(is.double, round, 2) %>% 
+    DT::datatable(caption="General QA statistics about samples in this run.")
+}
 ```
 
 
@@ -150,13 +152,17 @@ glue::glue("- **[{x}]({x})**") %>%
 ## Detailed FastQC statistics
 
 ```{r}
-read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_fastqc.txt")) %>% 
-  DT::datatable(caption="Comprehensive information from FastQC (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_fastqc.txt"))) {
+  read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_fastqc.txt")) %>% 
+    DT::datatable(caption="Comprehensive information from FastQC (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ```{r}
-read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_sources.txt")) %>% 
-  DT::datatable(caption="MultiQC Data Sources")
+if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_sources.txt"))) {
+  read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_sources.txt")) %>% 
+    DT::datatable(caption="MultiQC Data Sources")
+}
 ```
 
 
@@ -231,49 +237,61 @@ glue::glue("- **[{x}]({x})**") %>%
 ### Trim2 k=21
 
 ```{r}
-read_csv(paste0(id, "_trim2_k21.gather_output.csv")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, "_trim2_k21.gather_output.csv"))) {
+  read_csv(paste0(id, "_trim2_k21.gather_output.csv")) %>% 
+    mutate_if(is.double, round, 2) %>% 
+    DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ### Trim2 k=31
 
 ```{r}
-read_csv(paste0(id,"_trim2_k31.gather_output.csv")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, "_trim2_k31.gather_output.csv"))) {
+  read_csv(paste0(id,"_trim2_k31.gather_output.csv")) %>% 
+    mutate_if(is.double, round, 2) %>% 
+    DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ### Trim2 k=51
 
 ```{r}
-read_csv(paste0(id,"_trim2_k51.gather_output.csv")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, "_trim2_k51.gather_output.csv"))) {
+  read_csv(paste0(id,"_trim2_k51.gather_output.csv")) %>% 
+    mutate_if(is.double, round, 2) %>% 
+    DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ### Trim30 k=21
 
 ```{r}
+if (file.exists(paste0(id, "_trim30_k21.gather_output.csv"))) {
 read_csv(paste0(id,"_trim30_k21.gather_output.csv")) %>% 
   mutate_if(is.double, round, 2) %>% 
   DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ### Trim30 k=31
 
 ```{r}
-read_csv(paste0(id,"_trim30_k31.gather_output.csv")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, "_trim30_k31.gather_output.csv"))) {
+  read_csv(paste0(id,"_trim30_k31.gather_output.csv")) %>% 
+    mutate_if(is.double, round, 2) %>% 
+    DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ### Trim30 k=51
 
 ```{r}
-read_csv(paste0(id,"_trim30_k51.gather_output.csv")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, "_trim30_k51.gather_output.csv"))) {
+  read_csv(paste0(id,"_trim30_k51.gather_output.csv")) %>% 
+    mutate_if(is.double, round, 2) %>% 
+    DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 
@@ -294,20 +312,23 @@ The tools within this workflow perform metagenome assemblies with the de novo as
 ### MEGAHIT
 
 ```{r}
-read_tsv(paste0(id, ".megahit_multiqc_report_data/multiqc_general_stats.txt")) %>% 
-  set_names(~str_remove(., "QUAST_mqc-generalstats-")) %>% 
-  select(Sample, Total_length, N50) %>% 
-  DT::datatable(caption="General assembly statistics about samples in this run from MEGAHIT.")
-  
+if (file.exists(paste0(id, ".megahit_multiqc_report_data/multiqc_general_stats.txt"))) {
+  read_tsv(paste0(id, ".megahit_multiqc_report_data/multiqc_general_stats.txt")) %>% 
+    set_names(~str_remove(., "QUAST_mqc-generalstats-")) %>% 
+    select(Sample, Total_length, N50) %>% 
+    DT::datatable(caption="General assembly statistics about samples in this run from MEGAHIT.")
+}
 ```
 
 ### MetaSPADES
 
 ```{r}
-read_tsv(paste0(id, ".metaspades_multiqc_report_data/multiqc_general_stats.txt")) %>% 
-  set_names(~str_remove(., "QUAST_mqc-generalstats-")) %>% 
-  select(Sample, Total_length, N50) %>% 
-  DT::datatable(caption="General assembly statistics about samples in this run from MetaSPADES.")
+if (file.exists(paste0(id, ".metaspades_multiqc_report_data/multiqc_general_stats.txt"))) {
+  read_tsv(paste0(id, ".metaspades_multiqc_report_data/multiqc_general_stats.txt")) %>% 
+    set_names(~str_remove(., "QUAST_mqc-generalstats-")) %>% 
+    select(Sample, Total_length, N50) %>% 
+    DT::datatable(caption="General assembly statistics about samples in this run from MetaSPADES.")
+}
 ```
 
 ## QUAST {.tabset .tabset-pills}
@@ -339,16 +360,19 @@ glue::glue("- **[{x}]({x})**") %>%
 ### MEGAHIT
 
 ```{r}
-read_tsv(paste0(id, ".megahit_multiqc_report_data/multiqc_quast.txt")) %>% 
-  DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
-  
+if (file.exists(paste0(id, ".megahit_multiqc_report_data/multiqc_quast.txt"))) {
+  read_tsv(paste0(id, ".megahit_multiqc_report_data/multiqc_quast.txt")) %>% 
+    DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 ### MetaSPADES
 
 ```{r}
-read_tsv(paste0(id, ".metaspades_multiqc_report_data/multiqc_quast.txt")) %>% 
-  DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
+if (file.exists(paste0(id, ".metaspades_multiqc_report_data/multiqc_quast.txt"))) {
+  read_tsv(paste0(id, ".metaspades_multiqc_report_data/multiqc_quast.txt")) %>% 
+    DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
+}
 ```
 
 

@@ -123,6 +123,7 @@ rule generate_r_script:
         input_dir = get_sample_dir,  
         input_files = get_sample_filenames
     script:
+        #'bash echo"OUTPUT"'
         "0-summary-report.Rmd"
 
  
