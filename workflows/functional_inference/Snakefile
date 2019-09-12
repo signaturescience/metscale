@@ -44,7 +44,7 @@ prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahi
                             qual='{qual}'))
 prokka_with_megahit_prefix_files = inference['prokka_with_megahit']['prefix_pattern']
 prokka_megahit_threads = inference['prokka_with_megahit']['threads']
-prokka_with_megahit_input_db = inference['prokka_with_megahit']['input_db']
+prokka_with_megahit_input_db = join(sing_dir,inference['prokka_with_megahit']['input_db'])
 
 
 rule prokka_with_megahit:
@@ -88,7 +88,7 @@ prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_met
                             qual='{qual}'))
 prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefix_pattern']
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
-prokka_with_metaspades_input_db = inference['prokka_with_metaspades']['input_db']
+prokka_with_metaspades_input_db = join(sing_dir,inference['prokka_with_metaspades']['input_db'])
 
 
 rule prokka_with_metaspades:
@@ -136,7 +136,7 @@ prokka_with_spades_input = assembly_spades_output
 prokka_with_spades_input_sing = assembly_spades_output_sing
 
 prokka_with_spades_prefix_files = inference['prokka_with_spades']['prefix_pattern']
-prokka_with_spades_input_db = inference['prokka_with_spades']['input_db']
+prokka_with_spades_input_db = join(sing_dir,inference['prokka_with_spades']['input_db'])
 prokka_spades_threads = inference['prokka_with_spades']['threads']
 
 
