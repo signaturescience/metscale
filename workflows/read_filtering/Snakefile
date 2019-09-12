@@ -916,11 +916,10 @@ rule read_filtering_khmer_count_unique_kmers_workflow:
                 kmers       = workflows['read_filtering_khmer_count_unique_kmers_workflow']['kmers'],
         )
 
+
 rule read_filtering_fastq_to_fasta_workflow:
     '''
     build rule: convert fq.gz files to .fa files
     '''
     input:  
         expand("data/{file}.fa", file=files)
-
-
