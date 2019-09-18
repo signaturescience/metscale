@@ -819,17 +819,6 @@ rule read_filtering_statistics_multiqc:
 ###     shell:
 ###         'wget -O {params.read_data_file} {params.read_data_url}'
 
-'''
-probably not
-There appears to be a bug in snakemake where when you call read_filtering_khmer_interleave_reads_workflow
-it makes the DAG it think it should also call download_reads as a dependency and gives it the incorrect
-wild cards that make it match the output of interleave_reads. This leads to an AmbiguousRuleExcpetion.
-I think this happens somewhere in def collect_potential_dependencies(self, job)
-'''
-#ruleorder: interleave_reads > download_reads
-#ruleorder: subsample_interleaved_reads > download_reads
-
-
 
 
 ###################################

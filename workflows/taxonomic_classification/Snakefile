@@ -1401,8 +1401,87 @@ rule krakenuniq:
 
         
 
-        
+############################################
+# Taxonomic Classification:  mash sketch
 
+
+print("read_filtering_khmer_interleave_reads_workflow Output -> input: "+str(interleave_output))
+#print("read_filtering_khmer_subsample_interleaved_reads_workflow output -> input: "+str(subsample_interleave_output))
+
+#input : SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz
+#output: data/SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz.msh
+
+
+mash_sketch_ouput = join(data_dir, taxclass['mash']['mash_sketch_out'] )
+mash_sketch_ouput_sing = join(sing_dir, taxclass['mash']['mash_sketch_out'])
+
+mash_sketch_input = interleave_output 
+mash_sketch_input_sing = mash_sketch_input.replace(data_dir, sing_dir)
+
+mash_image = container_image_name(biocontainers, 'mash')
+
+rule mash_sketch:
+    input:
+        mash_sketch_input
+    output:
+        mash_sketch_ouput
+    singularity:
+        mash_image
+    params:
+        mash_input = mash_sketch_input_sing
+    shell:
+        'mash '
+        'sketch -m 2 '
+        '{params.mash_input}'
+
+
+############################################
+# Taxonomic Classification:  mash dist with reference DB
+
+mash_db_input = mash_sketch_ouput
+mash_db_input_sing = mash_sketch_ouput_sing
+mash_db_output = join(data_dir, taxclass['mash']['mash_dist_out'] )
+mash_db_output_sing = join(sing_dir, taxclass['mash']['mash_dist_out'] )
+mash_db = join(sing_dir, 'RefSeq_10K_Sketches.msh' )
+
+rule mash_dist_db:
+    input:
+      mash_db_input
+    output:
+        mash_db_output
+    singularity:
+        mash_image
+    params:
+        mash_input = mash_db_input_sing,
+        mash_output = mash_db_output_sing,
+        mash_db_sing = mash_db
+    shell:
+        'mash dist '  
+        '{params.mash_db_sing} '
+        '{params.mash_input} '
+        '> {params.mash_output} '
+
+
+
+############################################
+# Taxonomic Classification:  sort mash dist results
+
+mash_sort_input = mash_db_output
+mash_sort_ouput_pattern = join(data_dir, taxclass['mash']['mash_sort_out'] )
+mash_sort_output = mash_sort_ouput_pattern.format(
+   sample='{sample}', qual='{qual}')
+
+#def mash_sort_ouput_sing(wildcards):
+#    return subsample_interleave_output_sing.format(**wildcards)
+
+rule mash_sort:
+    input:
+        mash_sort_input
+    output:
+        mash_sort_output
+    shell:
+        "sort -gk3 "
+        "{input} > {output} "
 
 
 
@@ -1711,5 +1790,16 @@ rule tax_class_bracken_workflow:
             qual        = workflows['tax_class_kraken2_workflow']['qual'],
             db          = workflows['tax_class_kraken2_workflow']['db'],
             conf        = workflows['tax_class_kraken2_workflow']['confidence'],
+        )
+
+
+rule tax_class_mash_dist_workflow:
+    '''
+    mash takes uncompressed interleaved files as input
+    '''
+    input:
+        expand( mash_sort_output,
+            sample      = sample_input_files,
+             qual       = workflows['tax_class_mash_workflow']['qual'],
         )
 

@@ -295,7 +295,15 @@ config_default = {
         },
         "bracken" : {
             #bracken output filename
-            "bracken_output" : "_bracken_db-{bdb}_r-{read_length}_l-{level}_t-{threshold}",
+            "bracken_output" : "_bracken_db-{bdb}_r-{read_length}_l-{level}_t-{threshold}"
+        },
+        "mash" : {
+            #output from mash sketch
+            "mash_sketch_out" : "{sample}_trim{qual}_interleaved_reads.fq.gz.msh",
+            #output from mash dist
+            "mash_dist_out" : "{sample}_trim{qual}_RefSeq_10K_Sketches_mash_distances.tab",
+            #output from sort
+            "mash_sort_out" : "{sample}__trim{qual}_RefSeq_10K_Sketches_mash_distances.sorted.tab"
         }
     },
 
@@ -484,6 +492,13 @@ config_default = {
             "location" : "../container_images/",
             "quayurl" : "thanhleviet/abricate",
             "version" : "latest"         
+        },
+        "mash" : {
+            "use_local" : True,
+            "filename" : "mash_2.2--h3d38be6_0.sif",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/mash",
+            "version" : "2.2--h3d38be6_0"         
         },
         "srst2" : {
             "use_local" : True,
