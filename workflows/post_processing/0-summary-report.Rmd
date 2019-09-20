@@ -119,6 +119,8 @@ if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_general_stats.tx
 ```
 
 
+
+
 ```{r}
 get_unique_kmers <- function(file) {
   read_lines(file) %>% 
@@ -126,7 +128,7 @@ get_unique_kmers <- function(file) {
     str_extract("\\d+") %>% 
     as.integer()
 }
-list.files(pattern="uniqueK\\d\\d\\.txt") %>% 
+list.files(pattern="uniqueK\\d\\d\\.txt", recursive=TRUE) %>% 
   tibble(file=.) %>% 
   mutate(sample=str_extract(file, ".+trim\\d+")) %>% 
   mutate(K=str_extract(file, "K\\d+")) %>% 
@@ -142,8 +144,9 @@ list.files(pattern="uniqueK\\d\\d\\.txt") %>%
 Click for links to comprehensive quality assessment reports:
 
 ```{r, results='asis'}
-x <- list.files(pattern="fastqc_multiqc_report\\.html$")
-glue::glue("- **[{x}]({x})**") %>% 
+x <- list.files(pattern="fastqc_multiqc_report\\.html$", recursive=TRUE)
+bx <- basename(x)
+glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
 ```
 
@@ -184,15 +187,16 @@ This workflow will perform taxonomic classification with sourmash version 2.0.0a
 Click for links to krona diagrams:
 
 ```{r, results='asis'}
-x <- list.files(pattern=".*krona.*html$")
-glue::glue("- **[{x}]({x})**") %>% 
+x <- list.files(pattern=".*krona.*html$", recursive=TRUE)
+bx <- basename(x)
+glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
 ```
 
 ### Direct Krona embedding 
-
+<!-- DOESNT DISPLAY BAD LINK -->
 ```{r, results='asis'}
-list.files(pattern="krona\\.html$") %>% 
+list.files(pattern="krona\\.html$", recursive=TRUE) %>% 
   paste0("\n", ., ":\n\n", '<iframe src="', ., '" width="1000" height="1000"></iframe>\n\n') %>% 
   cat()
 ```
@@ -204,8 +208,9 @@ list.files(pattern="krona\\.html$") %>%
 
 
 ```{r, results='asis'}
-x <- list.files(pattern="kaiju.+summary$")
-glue::glue("- **[{x}]({x})**") %>%
+x <- list.files(pattern="kaiju.+summary$", recursive=TRUE)
+bx <- basename(x)
+glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
 ```
 
@@ -228,8 +233,9 @@ for (i in x) {
 ### Direct links to spreadsheets
 
 ```{r, results='asis'}
-x <- list.files(pattern="gather_output.csv$")
-glue::glue("- **[{x}]({x})**") %>%
+x <- list.files(pattern="gather_output.csv$", recursive=TRUE)
+bx <- basename(x)
+glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
 ```
 
@@ -338,8 +344,9 @@ if (file.exists(paste0(id, ".metaspades_multiqc_report_data/multiqc_general_stat
 Click for links to comprehensive quality assessment reports:
 
 ```{r, results='asis'}
-x <- list.files(pattern="(megahit|metaspades)_multiqc_report\\.html$")
-glue::glue("- **[{x}]({x})**") %>% 
+x <- list.files(pattern="(megahit|metaspades)_multiqc_report\\.html$", recursive=TRUE)
+x1 <- file.path(getwd(), x)
+glue::glue("- **[{x1}]({x1})**") %>% 
   cat(sep="\n")
 ```
 
@@ -350,7 +357,8 @@ Individual QUAST reports:
 
 ```{r, results='asis'}
 x <- list.files(pattern="^report\\.html$", recursive=TRUE)
-glue::glue("- **[{x}]({x})**") %>% 
+x1 <- file.path(getwd(), x)
+glue::glue("- **[{x1}]({x1})**") %>%  
   cat(sep="\n")
 ```
 
@@ -387,11 +395,15 @@ In this workflow, sourmash version 2.0.0a3 performs multi-sample metagenome comp
 ![Comparison workflow](https://raw.githubusercontent.com/signaturescience/metagenomics/master/documentation/figures/Comparison_Flowchart.png)
 
 
+
+ 
 ## CSVs
 
 ```{r, results='asis'}
-x <- list.files(pattern="read_assembly_comparison", recursive=FALSE)
-glue::glue("- **[{x}]({x})**") %>% 
+x_csv <- list.files(pattern="read_assembly_comparison.+\\.csv", recursive=TRUE)
+bx_csv <- basename(x_csv)
+x <- file.path(getwd(), x_csv)
+glue::glue("- **[{x_csv}]({bx_csv})**")  %>% 
   cat(sep="\n")
 ```
 
@@ -400,9 +412,10 @@ glue::glue("- **[{x}]({x})**") %>%
 ### Direct links to images
 
 ```{r, results='asis'}
-x <- list.files(pattern="read_assembly_comparison.+\\.png$", recursive=TRUE)
-bx <- basename(x)
-glue::glue("- **[{bx}]({x})**") %>% 
+x_png <- list.files(pattern="read_assembly_comparison.+\\.png$", recursive=TRUE)
+bx_png <- basename(x_png)
+x_png_full <- file.path(getwd(), x_png)
+glue::glue("- **[{x_png}]({bx_png})**") %>% 
   cat(sep="\n")
 ```
 
@@ -410,7 +423,7 @@ glue::glue("- **[{bx}]({x})**") %>%
 ### Inline graphics (in the same order as above)
 
 ```{r}
-knitr::include_graphics(x)
+knitr::include_graphics(x_png_full)
 ```
 
 
@@ -429,13 +442,14 @@ This workflow will perform functional inference (i.e., gene and plasmid detectio
 ## Prokka
 
 Click below to access prokka results:
-
+<!-- DOESNT WORK -->
 ```{r, results='asis'}
 x <- list.dirs() %>% 
   grep(pattern = "prokka_annotation", x=., value=TRUE) %>% 
-  list.files(path=., pattern="\\.tsv", full.names = TRUE)
+  list.files(path=., pattern="\\.tsv", full.names = TRUE, recursive=TRUE)
+x1 <- file.path(getwd(), x)
 bx <- basename(x)
-glue::glue("- **[{bx}]({x})**") %>% 
+glue::glue("- **[{x1}]({x1})**") %>% 
   cat(sep="\n")
 ```
 
@@ -444,16 +458,18 @@ glue::glue("- **[{bx}]({x})**") %>%
 ### Abricate (contigs)
 
 ```{r, results='asis'}
-x <- list.files(pattern="card\\.csv$")
-glue::glue("- **[{x}]({x})**") %>% 
+x <- list.files(pattern="card\\.csv$", recursive=TRUE)
+bx <- basename(x)
+glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
 ```
 
 ### SRST2 (reads)
 
 ```{r, results='asis'}
-x <- list.files(pattern="srst2.*results\\.txt$")
-glue::glue("- **[{x}]({x})**") %>% 
+x <- list.files(pattern="srst2.*results\\.txt$", recursive=TRUE)
+bx <- basename(x)
+glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
 ```
 
