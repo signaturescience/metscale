@@ -1,6 +1,7 @@
 import json
 import subprocess
 from shutil import copyfile
+from distutils.dir_util import copy_tree
 import urllib.request
 import urllib
 from urllib.parse import urlparse
@@ -79,17 +80,33 @@ def download_file(workflow, data, install_dir):
                 if not (os.path.isfile("../container_images/"+file_name)):
                     print("Downloading singularity image " +file_name)
                     sing_command = "singularity pull "+url_string
-                    subprocess.run([sing_command], shell=True)   #TODO: Error handling for sing pull
-                    os.rename(file_name, "../container_images/"+file_name)  
+                    try:
+                        subprocess.run([sing_command], shell=True)   
+                        os.rename(file_name, "../container_images/"+file_name)
+                    except OSError as e:
+                            print("OS Error  " + file_name)
+                            print(e)
+            elif (url.scheme == "dir"):  #copy dir
+                if not (os.path.isdir(os.path.join(install_dir, file_name))):
+                    print("Copying "+ file_name)
+                    try:
+                        copy_tree(".."+ url.path, install_dir+"/"+file_name)
+                    except OSError as e:
+                        print('Directory not copied. Error: ' +str(e))
             elif (url.scheme == "file"):         #copy file from local location
                 if not (os.path.isfile(os.path.join(install_dir, file_name))):
                     print("Copying "+ file_name)
                     if (file_name.endswith('.tgz')):
                         untar_command = "tar -zxvf " + ".." + url.path + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
-                        subprocess.run([untar_command], shell=True)   
-                    else:  
-                        copyfile(".."+ url.path, install_dir+ "/"+ file_name)
-
+                        try:
+                            subprocess.run([untar_command], shell=True)
+                        except OSError as e:
+                            print('OS Error: ' +str(e))   
+                    else: 
+                        try: 
+                            copyfile(".."+ url.path, install_dir+ "/"+ file_name)
+                        except OSError as e:
+                            print('File not copied. Error: ' +str(e))
                         
                          
     
