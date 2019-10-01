@@ -196,8 +196,9 @@ glue::glue("- **[{x}]({bx})**") %>%
 ### Direct Krona embedding 
 <!-- DOESNT DISPLAY BAD LINK -->
 ```{r, results='asis'}
-list.files(pattern="krona\\.html$", recursive=TRUE) %>% 
-  paste0("\n", ., ":\n\n", '<iframe src="', ., '" width="1000" height="1000"></iframe>\n\n') %>% 
+x <- list.files(pattern=".*krona.*html$", recursive=TRUE)
+bx <- basename(x)
+  paste0("\n", bx, ":\n\n", '<iframe src="', bx, '" width="1000" height="1000"></iframe>\n\n') %>% 
   cat()
 ```
 
