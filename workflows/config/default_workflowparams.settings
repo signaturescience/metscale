@@ -425,17 +425,17 @@ config_default = {
         },
         "sourmash" : {
             "use_local" : True,
-            "filename" : "sourmash_2.0.0a3--py36_0.sif",
+            "filename" : "sourmash_2.1.0--py27he1b5a44_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
-            "version" : "2.0.0a3--py36_0"
+            "version" : "2.1.0--py27he1b5a44_0"
         },
         "sourmash_compare" : {
             "use_local" : True,
-            "filename" : "sourmash_2.0.0a3--py36_0.sif",
+            "filename" : "sourmash_2.1.0--py27he1b5a44_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
-            "version" : "2.0.0a3--py36_0"
+            "version" : "2.1.0--py27he1b5a44_0"
         },
         "kaiju" : {
             "use_local" : True,

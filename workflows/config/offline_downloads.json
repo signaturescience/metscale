@@ -22,7 +22,7 @@
     },
 
     "comparison": {
-    	"sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
+    	 "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0"
     },
 
     "taxonomic_classification": {
@@ -40,7 +40,7 @@
     },
 
     "sourmash_db" : {
-        "sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
+        "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
         "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
         "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
         "databases" : ["genbank","refseq"],
