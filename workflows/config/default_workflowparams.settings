@@ -301,9 +301,12 @@ config_default = {
             #output from mash sketch
             "mash_sketch_out" : "{sample}_trim{qual}_interleaved_reads.fq.gz.msh",
             #output from mash dist
-            "mash_dist_out" : "{sample}_trim{qual}_RefSeq_10K_Sketches_mash_distances.tab",
+            "mash_dist_out" : "{sample}_trim{qual}_{db}_mash_distances.tab",
             #output from sort
-            "mash_sort_out" : "{sample}__trim{qual}_RefSeq_10K_Sketches_mash_distances.sorted.tab"
+            "mash_dist_sort_out" : "{sample}__trim{qual}_{db}_mash_distances.sorted.tab",
+            #mash screen out
+            "mash_screen_out" : "{sample}_trim{qual}_{db}_mash_screen.tab",
+            "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
         }
     },
 

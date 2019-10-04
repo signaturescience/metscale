@@ -181,8 +181,15 @@ config_default = {
             #directory that has DB dir. defaults to default dir
             "bdb" : "Bracken_Kraken2_DB"
         },
-        "tax_class_mash_workflow" : {
+        "tax_class_mash_dist_workflow" : {
             "qual" : ["2","30"],
+            #mash db
+            "mash_db" : "RefSeq_10K_Sketches.msh",
+        },
+        "tax_class_mash_screen_workflow" : {
+            "qual" : ["2","30"],
+            #mash db
+            "mash_db" : "RefSeq_10K_Sketches.msh",
         },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 
