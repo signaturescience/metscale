@@ -1401,39 +1401,6 @@ rule krakenuniq:
 
         
 
-############################################
-# Taxonomic Classification:  mash sketch
-
-#DELETE THIS RULE
-#print("read_filtering_khmer_interleave_reads_workflow Output -> input: "+str(interleave_output))
-#print("read_filtering_khmer_subsample_interleaved_reads_workflow output -> input: "+str(subsample_interleave_output))
-
-#input : SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz
-#output: data/SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz.msh
-
-
-mash_sketch_ouput = join(data_dir, taxclass['mash']['mash_sketch_out'] )
-mash_sketch_ouput_sing = join(sing_dir, taxclass['mash']['mash_sketch_out'])
-
-mash_sketch_input = interleave_output 
-mash_sketch_input_sing = mash_sketch_input.replace(data_dir, sing_dir)
-
-mash_image = container_image_name(biocontainers, 'mash')
-
-rule mash_sketch:
-    input:
-        mash_sketch_input
-    output:
-        mash_sketch_ouput
-    singularity:
-        mash_image
-    params:
-        mash_input = mash_sketch_input_sing
-    shell:
-        'mash '
-        'sketch -m 2 '
-        '{params.mash_input}'
-#DELETE THIS RULE------------------------
 
 ############################################
 # Taxonomic Classification:  mash dist with reference DB
@@ -1453,6 +1420,8 @@ rule mash_dist_db:
         mash_dist_input
     output:
         mash_dist_output
+    message:
+        '''--- Running mash dist.'''
     singularity:
         mash_image
     params:
@@ -1506,6 +1475,8 @@ rule mash_screen_db:
         mash_screen_input
     output:
         mash_screen_output
+    message:
+        '''--- Running mash screen.'''
     singularity:
         mash_image
     params:
