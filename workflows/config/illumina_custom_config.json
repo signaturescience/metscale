@@ -162,6 +162,14 @@
             "db" : "minikraken_20171019_8GB",
             "hll_precision" : 12  
         },
+        "tax_class_mash_dist_workflow" : {
+            "qual" : ["2","30"],
+            "mash_db" : "RefSeq_10K_Sketches.msh",
+        },
+        "tax_class_mash_screen_workflow" : {
+            "qual" : ["2","30"],
+            "mash_db" : "RefSeq_10K_Sketches.msh",
+        },
         "functional_prokka_with_megahit_workflow" : {
             "qual"      : ["2","30"],
         },
