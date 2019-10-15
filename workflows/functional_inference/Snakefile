@@ -44,7 +44,13 @@ prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahi
                             qual='{qual}'))
 prokka_with_megahit_prefix_files = inference['prokka_with_megahit']['prefix_pattern']
 prokka_megahit_threads = inference['prokka_with_megahit']['threads']
-prokka_with_megahit_input_db = join(sing_dir,inference['prokka_with_megahit']['input_db'])
+
+
+def get_input_db_megahit(wildcards):
+    if (inference['prokka_with_megahit']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_with_megahit']['input_db'])
 
 
 rule prokka_with_megahit:
@@ -56,7 +62,7 @@ rule prokka_with_megahit:
         input_files = prokka_with_megahit_input_dir_sing,
         output_dir = prokka_with_megahit_output_dir_sing,
         prefix_files = prokka_with_megahit_prefix_files,
-        input_db = prokka_with_megahit_input_db
+        input_db = get_input_db_megahit
     threads:
         prokka_megahit_threads
     singularity:
@@ -88,7 +94,13 @@ prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_met
                             qual='{qual}'))
 prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefix_pattern']
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
-prokka_with_metaspades_input_db = join(sing_dir,inference['prokka_with_metaspades']['input_db'])
+
+
+def get_input_db_metaspades(wildcards):
+    if (inference['prokka_with_metaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_with_metaspades']['input_db'])
 
 
 rule prokka_with_metaspades:
@@ -100,7 +112,7 @@ rule prokka_with_metaspades:
         input_files = prokka_with_metaspades_input_dir_sing,
         output_dir = prokka_with_metaspades_output_dir_sing,
         prefix_files = prokka_with_metaspades_prefix_files,
-        input_db = prokka_with_metaspades_input_db
+        input_db = get_input_db_metaspades
     threads:
         prokka_metaspades_threads
     singularity:
@@ -127,18 +139,19 @@ prokka_with_spades_output_dir = join(data_dir,inference['prokka_with_spades']['o
                             qual='{qual}'))
 prokka_with_spades_output_dir_sing = join(sing_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-#prokka_with_spades_input_dir = join(data_dir,inference['prokka_with_spades']['input_pattern'].format(sample='{sample}',
-#                            qual='{qual}'))
-#prokka_with_spades_input_dir_sing = join(sing_dir,inference['prokka_with_spades']['input_pattern'].format(sample='{sample}',
-#                            qual='{qual}'))
+
 
 prokka_with_spades_input = assembly_spades_output
 prokka_with_spades_input_sing = assembly_spades_output_sing
 
 prokka_with_spades_prefix_files = inference['prokka_with_spades']['prefix_pattern']
-prokka_with_spades_input_db = join(sing_dir,inference['prokka_with_spades']['input_db'])
 prokka_spades_threads = inference['prokka_with_spades']['threads']
 
+def get_input_db_spades(wildcards):
+    if (inference['prokka_with_spades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_with_spades']['input_db'])
 
 rule prokka_with_spades:
     input:
@@ -149,7 +162,7 @@ rule prokka_with_spades:
         input_files = prokka_with_spades_input_sing,
         output_dir = prokka_with_spades_output_dir_sing,
         prefix_files = prokka_with_spades_prefix_files,
-        input_db = prokka_with_spades_input_db
+        input_db = get_input_db_spades
     threads:
         prokka_spades_threads
     singularity:
@@ -273,8 +286,6 @@ def get_db_dir_spades(wildcards):
         abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
     return abricate_db_dir
 
-#print("abricate_with_spades_input: "+str(abricate_with_spades_input))
-#print("abricate_with_spades_output: "+str(abricate_with_spades_output))
 
 rule abricate_with_spades:
     input:
