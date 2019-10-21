@@ -1413,6 +1413,7 @@ mash_dist_output = mash_dist_output.format(
     db = '{db}', sample='{sample}', qual='{qual}')
 mash_dist_output_sing = join(sing_dir, taxclass['mash']['mash_dist_out'] )
 mash_db = join(sing_dir, '{db}' )
+mash_image = container_image_name(biocontainers, 'mash')
 
 
 rule mash_dist_db:
