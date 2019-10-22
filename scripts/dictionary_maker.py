@@ -5,7 +5,7 @@
 import pickle
 import os
 import glob
-from sets import Set
+
 
 # purpose of this script
 """
@@ -20,7 +20,8 @@ public databases.
 
 ## Paths
 path_for_storing_pickles = "pickle_dir/"
-path = "/data/project_data/dhs_db/database_comparisons/scripts_for_informative_files/"
+path="/home/cgrahlmann/eclipse-workspace/mondavi/scripts/"
+#path = "/data/project_data/dhs_db/database_comparisons/scripts_for_informative_files/"
 
 ## outputfile names
 containment_dictionary_pickle = "containment_dict.p"
@@ -32,11 +33,11 @@ taxid_dict_pickle = "taxid_dict.p"
 wgsmap_dict_pickle = "wgsmap_dict.p"
 
 ## input file names for processing
-genebank_file = "genebank_livelist/GbAccList.0602.2019"
+genebank_file = "GbAccList.0602.2019"
 ##refseq_file = "RefSeq-release1_catalog"
 
-nucleo_file = "accession2taxid_files/nucl_gb.accession2taxid"
-wgsmap_file = "accession2taxid_files/nucl_wgs.accession2taxid"
+nucleo_file = "nucl_gb.accession2taxid"
+wgsmap_file = "nucl_wgs.accession2taxid"
 
 ## path to refseq directory
 refseq_dir = "refseq_archives"
@@ -50,10 +51,11 @@ genebank_file_open = open(path + genebank_file)
 
 nucleo_file_open = open(path + nucleo_file)
 #wgsmap_file_open = open(path + wgsmap_file)
-
+'''
 if 0:
     # reading in the files
     genebank_file_read = genebank_file_open.readlines()
+'''
 
 ##refseq_file_read = refseq_file_open.readlines()
 nucleo_file_read = nucleo_file_open.readlines()
@@ -68,18 +70,20 @@ taxid_dict = {}
 wgsmap_dict = {}
 
 #handle genbank versions? only a few files are available
+'''
 if 0:
     # parsing each of the files
-    print ("\n"+"genbank output:")
+    print("\n"+"genbank output:")
     for genebank_line in genebank_file_read:
         # parsing by comma delimits
         genebank_line = genebank_line.split(",")
     
         # Taking out indivdual columns
-
+'''
 wgs_counter = 0;
+'''
 if 0:
-    print ("\n"+"wgs mapping output:")
+    print("\n"+"wgs mapping output:")
     for wgsmap_line in wgsmap_file_read:
         # parsing by comma delimits
         wgsmap_line = wgsmap_line.split("\t")
@@ -92,7 +96,7 @@ if 0:
             wgsmap_dict[wgsmap_tax_id] = wgsmap_acc_id;
 
         wgs_counter += 1;
-
+'''
 
 
 krakenfiles = glob.glob(kraken_dir+"/*.map")
@@ -117,7 +121,7 @@ for kraken_file in krakenfiles:
             #print kraken_tax_id,
             kraken_dict[version][kraken_tax_id] = 1
 
-
+'''
 if 0:
     refseqfiles = []
     # r=root, d=directories, f = files
@@ -125,7 +129,7 @@ if 0:
         for refseqfile in f:
             refseqfiles.append(os.path.join(r, refseqfile))
         
-    print ("\n"+"refseq output:")
+    print("\n"+"refseq output:")
     for refseq_file in refseqfiles:
         version = refseq_file.split(".")[0].split("release")[-1]
         refseq_dict[version] = {}
@@ -142,12 +146,12 @@ if 0:
     
             refseq_dict[version][refseq_tax_id] = refseq_id
 
-    print ("IT SURVIVED THE MONSTEROUS REFSEQ!")
+    print("IT SURVIVED THE MONSTEROUS REFSEQ!")
 
 if 0:
     # parsing nucleotide DB
     nucleo_counter = 0;
-    print ("\n"+"nucleo:")
+    print("\n"+"nucleo:")
     for nucleo_line in nucleo_file_read:
         # parsing based on tab delimited format
         nucleo_line = nucleo_line.split("\t")
@@ -161,20 +165,24 @@ if 0:
             nucleo_dict[ncbi_tax_nucleo] = accession_nucelo
 
         nucleo_counter += 1;
-
+'''
         
 # saving the dicitonaries as pickled files
+'''
 if 0:
     pickle.dump(genebank_dict, open(path_for_storing_pickles + genebank_dict_pickle, "w" ) )
 
 if 0:
     for version in refect_dict.keys():
         pickle.dump(refseq_dict[version], open(path_for_storing_pickles + "v"+version+"."+refseq_dict_pickle, "w" ) )
+'''
 if 1:
     for version in kraken_dict.keys():
         pickle.dump(kraken_dict[version], open(path_for_storing_pickles + "kraken1_"+version+"."+kraken_dict_pickle, "w" ) )
+'''
 if 0:
     pickle.dump(nucleo_dict, open(path_for_storing_pickles + nucleo_dict_pickle, "w" ) )
+'''
 pickle.dump(taxid_dict, open(path_for_storing_pickles + taxid_dict_pickle, "w" ) )
 pickle.dump(wgsmap_dict, open(path_for_storing_pickles + wgsmap_dict_pickle, "w" ) )
 
@@ -187,14 +195,14 @@ if 1:
     for ver in vers:
         versions.append(ver.split(os.sep)[-1].split(".")[0])
 
-    print "Loading refseq pickle:"
+    print("Loading refseq pickle:")
     for version in versions:
         refseq_dict[version]  = pickle.load(open(path_for_storing_pickles +version+"."+refseq_dict_pickle, "rb" ))
         #print refseq_dict[version].keys()[-1]
 
 if 1:
 
-    print "Loading genbank pickle:"
+    print("Loading genbank pickle:")
     nucleo_dict  = pickle.load(open(path_for_storing_pickles + nucleo_dict_pickle, "rb" ))
 
 
@@ -206,20 +214,20 @@ if 1:
     taxids = []
     for key in nucleo_dict.keys():
         taxids.append(int(key))
-    all_sets["GenBank_060219"] = Set(taxids)
+    all_sets["GenBank_060219"] = set(taxids)
 for key in kraken_dict.keys():
     taxids = []
     for tid in kraken_dict[key].keys():
         taxids.append(int(tid))
-    all_sets["Kraken1_"+key] = Set(taxids)
+    all_sets["Kraken1_"+key] = set(taxids)
 for key in refseq_dict.keys():
     taxids = []
     for tid in refseq_dict[key].keys():
         taxids.append(int(tid))
-    all_sets["Refseq_"+key] = Set(taxids)
+    all_sets["Refseq_"+key] = set(taxids)
 
 
-print "Creating jaccard file:"
+print("Creating jaccard file:")
 outfile = open("dbs.jaccard.tsv",'w')
 if 1:
     outfile.write("\t")
@@ -239,7 +247,7 @@ outfile.close()
 #using the dictionaries to make the "containment dictionary"
 containment_dict = {} # should have {taxid_1: [DB_1, DB_3], taxid_2: [DB_1], ...
 
-print "Creating containment dict:"
+print("Creating containment dict:")
 ## Adding genbank taxonomy
 for wgs_key in nucleo_dict.keys():
     wgs_key = int(wgs_key)

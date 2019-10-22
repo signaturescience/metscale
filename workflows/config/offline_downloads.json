@@ -4,6 +4,12 @@
         "SRR606249_subset10_2_reads.fq.gz" :  "https://files.osf.io/v1/resources/dm938/providers/osfstorage/59f101f26c613b026330e53a"
     },
 
+    "scripts" : {
+        "GbAccList.0602.2019.gz" : "http://mirrors.vbi.vt.edu/mirrors/ftp.ncbi.nih.gov/genbank/livelists/GbAccList.0602.2019.gz",
+        "nucl_gb.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz",
+        "db_map_files.tar": "http://obj.umiacs.umd.edu/metadb/db_map_files.tar"
+    },
+
     "read_filtering": {
         "fastqc_0.11.7--pl5.22.0_2.sif" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
         "trimmomatic_0.36--5.sif" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",

@@ -13,7 +13,7 @@ from socket import error as SocketError
 from snakemake.io import expand
 
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
+workflows=['scripts', 'read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
 
 
 def reporthook(count, block_size, total_size):
@@ -32,6 +32,8 @@ def reporthook(count, block_size, total_size):
  
 def download_file(workflow, data, install_dir):
     if workflow in data.keys():
+        if (workflow == "scripts"): #overwrite installation dir
+            install_dir = "../scripts"
         for file_name, url_string in data[workflow].items():   
             try:
                 url = urlparse(url_string)
@@ -68,7 +70,10 @@ def download_file(workflow, data, install_dir):
                             urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
                         if (file_name.endswith('.tgz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
-                            subprocess.run([untar_command], shell=True)   
+                            subprocess.run([untar_command], shell=True)
+                        elif (file_name.endswith('.gz')):
+                            unzip_command = "gunzip -c " + install_dir+"/" + file_name + " > " + install_dir + "/" + os.path.splitext(file_name)[0] + " && rm -f " + install_dir+"/" + file_name
+                            subprocess.run([unzip_command], shell=True)                            
                     except SocketError as e:
                         print("Error downloading file " + file_name + " Retry script.")
                         print(e)
@@ -134,7 +139,7 @@ def main_func(user_input, install_dir, file_list='config/offline_downloads.json'
         
         
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of Dahak software. Requires config/offline_downloads.json")
+    parser = argparse.ArgumentParser(description="Script to download data required for offline processing of metagenomics software. Requires config/offline_downloads.json")
     parser.add_argument("--workflow", nargs='+', help="Download databases/images for inputed workflow", choices=workflows, type=str.lower, required=True)
     parser.add_argument("--data_dir", help="directory to copy non image files to", default="data")
     args = parser.parse_args()
