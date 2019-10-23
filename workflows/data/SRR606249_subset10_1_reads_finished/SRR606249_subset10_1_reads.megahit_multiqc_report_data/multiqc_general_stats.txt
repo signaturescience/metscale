@@ -1,3 +1,0 @@
-Sample	QUAST_mqc-generalstats-Total_length	QUAST_mqc-generalstats-N50
-SRR606249_subset10_1_reads_trim2.megahit.contigs	109630505.0	2886.0
-SRR606249_subset10_1_reads_trim30.megahit.contigs	97210488.0	2431.0

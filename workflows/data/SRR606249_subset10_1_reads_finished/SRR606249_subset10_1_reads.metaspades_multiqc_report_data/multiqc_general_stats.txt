@@ -1,3 +1,0 @@
-Sample	QUAST_mqc-generalstats-N50	QUAST_mqc-generalstats-Total_length
-SRR606249_subset10_1_reads_trim2.metaspades.contigs	2644.0	114622322.0
-SRR606249_subset10_1_reads_trim30.metaspades.contigs	2324.0	103089334.0

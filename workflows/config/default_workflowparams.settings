@@ -102,8 +102,12 @@ config_default = {
     },
 
     "assembly" : {
+        #TODO break into smaller sections like the other areas
         "assembly_patterns" : {
             # 
+            # general assembler output filename pattern/input for quast
+            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
+            #
             # filename pattern for metaspades output and threads to run
             "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "metaspades_threads" : 8,
@@ -121,19 +125,36 @@ config_default = {
             "plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades.contigs.fa",
             "plasmidspades_threads" : 8,           
             #
-            # general assembler output filename pattern/input for quast
-            "assembly_pattern" : "{sample}_trim{qual}.{assembler}.contigs.fa",
             #
             # quast output filename pattern and threads to run
             "quast_pattern" : "{sample}_trim{qual}.{assembler}_quast/",
             "quast_threads" : 4,
+            #
+            #  metaquast output file pattern and threads to run
+            "metaquast_pattern" : "{sample}_trim{qual}.{assembler}_metaquast/",
+            "metaquast_threads" : 4,
+            "metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            "metaquast_output_multiqc_input_file" : "report.html",
             #
             # multiqc output dir pattern
             "assembly_multiqc_pattern_report" : "{sample}.{assembler}_multiqc_report",
             # multiqc input file. Taken from quast output file.
             "quast_output_multiqc_input_file" : "report.tsv",
             # multiqc output file
-            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report"
+            "multiqc_pattern_report_file" : "{sample}.{assembler}_multiqc_fastqc_report",
+            #
+            # quast with SPAdes output file pattern
+            "quast_spades_pattern" : "{sample}_trim{qual}.spades_quast/",
+            "quast_spades_threads" : 4,
+            "quast_spades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            # 
+            # quast with plasmidSPAdes output file pattern
+            "quast_plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades_quast",
+            "quast_plasmidspades_threads" : 4,
+            "quast_plasmidspades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            #
+
+
         }
     },
 
@@ -257,12 +278,11 @@ config_default = {
         "kraken2" : {
             #
             # kraken2 output results
-            "kraken2_output" : "{sample}_trim{qual}_kraken2out_{db}_confidence{conf}.txt",
+            "kraken2_output" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.report",
             "threads" : 6,
             "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified_{db}_confidence{conf}#.fq.gz",
             "class_out" : "{sample}_trim{qual}_kraken2_classified_{db}_confidence{conf}#.fq.gz",
             "report" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.report"
-
         },
         "krakenuniq" : {
             #
@@ -272,7 +292,21 @@ config_default = {
             "unclass_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_unclassified",
             "class_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_classified",
             "report" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_report"
-
+        },
+        "bracken" : {
+            #bracken output filename
+            "bracken_output" : "_bracken_db-{bdb}_r-{read_length}_l-{level}_t-{threshold}"
+        },
+        "mash" : {
+            #output from mash sketch
+            "mash_sketch_out" : "{sample}_trim{qual}_interleaved_reads.fq.gz.msh",
+            #output from mash dist
+            "mash_dist_out" : "{sample}_trim{qual}_{db}_mash_distances.tab",
+            #output from sort
+            "mash_dist_sort_out" : "{sample}__trim{qual}_{db}_mash_distances.sorted.tab",
+            #mash screen out
+            "mash_screen_out" : "{sample}_trim{qual}_{db}_mash_screen.tab",
+            "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
         }
     },
 
@@ -282,12 +316,21 @@ config_default = {
             "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_megahit",
+            "input_db" : " ",
             "threads" : 8
         },
         "prokka_with_metaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_metaspades",
+            "input_db" : " ",
+            "threads" : 8
+        },
+        "prokka_with_spades" : {
+            "outdir_pattern" : "{sample}_trim{qual}_spades.prokka_annotation",
+            "input_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
+            "prefix_pattern" : "{sample}_trim{qual}_spades",
+            "input_db" : " ",
             "threads" : 8
         },
         "abricate_with_metaspades" : {
@@ -301,6 +344,14 @@ config_default = {
         "abricate_with_megahit" : {
             "output_pattern" : "{sample}_trim{qual}_megahit.abricate_{db}.csv",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
+            # set by default to use internal DB's
+            "db_dir" : "/opt/abricate/db/"
+            #use external dirs
+            #"db_dir" : "sing_dir"
+        },
+        "abricate_with_spades" : {
+            "output_pattern" : "{sample}_trim{qual}_spades.abricate_{db}.csv",
+            "input_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
             # set by default to use internal DB's
             "db_dir" : "/opt/abricate/db/"
             #use external dirs
@@ -378,10 +429,10 @@ config_default = {
         },
         "quast" : {
             "use_local" : True,
-            "filename" : "quast_4.5--boost1.61_1.sif",
+            "filename" : "quast_5.0.2--py27pl526ha92aebf_0.sif",
             "quayurl" : "quay.io/biocontainers/quast",
             "location" : "../container_images/",
-            "version" : "4.5--boost1.61_1"
+            "version" : "py27pl526ha92aebf_0"
         },
         "sourmash" : {
             "use_local" : True,
@@ -418,6 +469,13 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/kraken2",
             "version" : "2.0.8_beta--pl526h6bb024c_0"
         },
+        "bracken" : {
+            "use_local" : True,
+            "filename" : "bracken_2.2--py27h2d50403_1.sif",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/bracken",
+            "version" : "2.2--py27h2d50403_1"        
+        },
         "krakenuniq" : {
             "use_local" : True,
             "filename" : "krakenuniq_0.5.8--pl526he860b03_0.sif",
@@ -439,9 +497,16 @@ config_default = {
             "quayurl" : "thanhleviet/abricate",
             "version" : "latest"         
         },
+        "mash" : {
+            "use_local" : True,
+            "filename" : "mash_2.2--h3d38be6_0.sif",
+            "location" : "../container_images/",
+            "quayurl" : "quay.io/biocontainers/mash",
+            "version" : "2.2--h3d38be6_0"         
+        },
         "srst2" : {
             "use_local" : True,
-            "filename" : "SRST2-_.2.0--py27_2.sif",
+            "filename" : "srst2_0.2.0--py27_2.sif",
             "location" : "../container_images/",
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"

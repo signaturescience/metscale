@@ -1,9 +1,0 @@
-ktImportText -o output_name.html input_name.txt
-
-ktImportText -o HMP_Truth_Krona_Plot.html HMP_Truth_Krona_Input.txt
-
-ktImportText -o Shakya_Truth_Krona_Plot.html Shakya_Truth_Krona_Input.txt
-
-ktImportText -o Zymo_Truth_Krona_Plot.html Zymo_Truth_Krona_Input.txt
-
-ktImportText -o ESKAPE_C_Truth_Krona_Plot.html ESKAPE_C_Truth_Krona_Input.txt

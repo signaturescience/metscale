@@ -58,6 +58,16 @@ config_default = {
             "assembler" : ["megahit","metaspades"],
             "qual"      : ["2","30"],
         },
+        "assembly_metaquast_workflow" : {
+            "assembler" : ["megahit","metaspades"],
+            "qual"      : ["2","30"],
+        },
+        "assembly_quast_spades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "assembly_quast_plasmidspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
         "assembly_multiqc_workflow" : {
             # #which assembler to get input from
             "multiqc_assembler" :  ["megahit","metaspades"],
@@ -162,7 +172,24 @@ config_default = {
             # db to run against, this is the default DB downloaded from download python script.
             "db" : "minikraken_20171019_8GB",
             # hll-precision score between 10 and 18
-            "hll_precision" : 10  
+            "hll_precision" : 12  
+        },
+        "tax_class_bracken_workflow" : {
+            "read_length" : 100,
+            "level" : "S",
+            "threshold" : 0,
+            #directory that has DB dir. defaults to default dir
+            "bdb" : "Bracken_Kraken2_DB"
+        },
+        "tax_class_mash_dist_workflow" : {
+            "qual" : ["2","30"],
+            #mash db
+            "mash_db" : "RefSeq_10K_Sketches.msh",
+        },
+        "tax_class_mash_screen_workflow" : {
+            "qual" : ["2","30"],
+            #mash db
+            "mash_db" : "RefSeq_10K_Sketches.msh",
         },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 
@@ -174,21 +201,37 @@ config_default = {
             # from metaspades to run prokka on
             "qual"      : ["2","30"],
         },
+        "functional_prokka_with_spades_workflow" : {
+            # these parameters determine which contig params
+            # from spades to run prokka on
+            "qual"      : ["2","30"],
+        },
         "functional_abricate_with_megahit_workflow" : {
             # these parameters determine which contig params 
             # from megahit to run abricate on
             "qual"      : ["2","30"],
             # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            #to use custom/external DB file "customDBabricate"
             "db"        : ["card", "vfdb"],
+            #"db"        : ["customDBabricate"],
         },
         "functional_abricate_with_metaspades_workflow" : {
             # these parameters determine which contig params 
             # from metaspades to run abricate on
             "qual"      : ["2","30"],
             # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
-            #to use custom/external DB file "AMRVF2"
+            #to use custom/external DB file "customDBabricate"
             "db"        : ["card", "vfdb"],
-            #"db"        : ["AMRVF2"],
+            #"db"        : ["customDBabricate"],
+        },
+        "functional_abricate_with_spades_workflow" : {
+            # these parameters determine which contig params 
+            # from spades to run abricate on
+            "qual"      : ["2","30"],
+            # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            #to use custom/external DB file "customDBabricate"
+            "db"        : ["card", "vfdb"],
+            #"db"        : ["customDBabricate"],
         },
         "functional_with_srst2_workflow" : {
             # these paramters determine srst2 input

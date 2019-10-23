@@ -1186,6 +1186,7 @@ kraken2_input_fwd = kraken2_input_pattern.format(
             db ='{db}',
             conf='{conf}'
 )
+
 kraken2_input_rev = kraken2_input_pattern.format(
             direction=readfilt['direction_labels']['reverse'], 
             sample='{sample}', 
@@ -1212,12 +1213,12 @@ kraken2_input_rev_sing = kraken2_input_pattern_sing.format(
 kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] )
 kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
 
-
 kraken2_image = container_image_name(biocontainers, 'kraken2')
 kraken2_threads = taxclass['kraken2']['threads'] 
 kraken2_unclass_out = join(sing_dir, taxclass['kraken2']['unclass_out'])
 kraken2_class_out = join(sing_dir, taxclass['kraken2']['class_out'])
-kraken2_report = join(sing_dir, taxclass['kraken2']['report'])
+kraken2_report_sing = join(sing_dir, taxclass['kraken2']['report'])
+kraken2_report = join(data_dir, taxclass['kraken2']['report'])
 kraken2_db_sing = join(sing_dir, '{db}')
 
 
@@ -1243,7 +1244,7 @@ rule kraken2:
         unclass_out = kraken2_unclass_out,
         class_out = kraken2_class_out,
         out_sing = kraken2_ouput_sing,
-        report = kraken2_report
+        report = kraken2_report_sing
     shell:
         'kraken2 '
         '--db {params.db_sing} '
@@ -1258,7 +1259,59 @@ rule kraken2:
 
 
 
+############################################
+# Taxonomic Classification: bracken
 
+bracken_input_raw = kraken2_report
+bracken_input_raw_sing = kraken2_report_sing
+
+bracken_input = bracken_input_raw.replace('.report','')
+bracken_input_sing = bracken_input_raw_sing.replace('.report','')
+
+bracken_output_pattern = taxclass['bracken']['bracken_output']
+bracken_output_raw = bracken_output_pattern.format(
+             read_length = '{read_length}',
+             level = '{level}',
+             threshold = '{threshold}',
+             bdb = '{bdb}'
+)
+
+bracken_output = bracken_input + bracken_output_raw
+bracken_output_sing = bracken_input_sing + bracken_output_raw
+
+bracken_image = container_image_name(biocontainers, 'bracken')
+
+
+def get_braken_DB(wildcards):
+    return join(sing_dir, wildcards.bdb)
+
+rule bracken:
+    """
+    we do something with bracken here
+    """
+    input:
+        bracken_input = bracken_input_raw
+    output:
+        bracken_output
+    message:
+        '''--- Running bracken.'''
+    singularity:
+        bracken_image
+    params:
+        bracken_input_sing = bracken_input_raw_sing,
+        bracken_output = bracken_output_sing,
+        db_sing = get_braken_DB,
+        read_length = '{read_length}',
+        level = '{level}',
+        threshold = '{threshold}',
+    shell:
+        'bracken '
+        ' -d {params.db_sing} '
+        ' -i {params.bracken_input_sing} '
+        ' -r {params.read_length} '
+        ' -l {params.level} '
+        ' -t {params.threshold} '
+        ' -o {params.bracken_output} '
 
 ############################################
 # Taxonomic Classification: krakenUniq
@@ -1348,9 +1401,114 @@ rule krakenuniq:
 
         
 
-        
+
+############################################
+# Taxonomic Classification:  mash dist with reference DB
+
+mash_dist_input = interleave_output
+mash_dist_input_sing = mash_dist_input.replace(data_dir, sing_dir)
+
+mash_dist_output = join(data_dir, taxclass['mash']['mash_dist_out'] )
+mash_dist_output = mash_dist_output.format(
+    db = '{db}', sample='{sample}', qual='{qual}')
+mash_dist_output_sing = join(sing_dir, taxclass['mash']['mash_dist_out'] )
+mash_db = join(sing_dir, '{db}' )
+mash_image = container_image_name(biocontainers, 'mash')
 
 
+rule mash_dist_db:
+    input:
+        mash_dist_input
+    output:
+        mash_dist_output
+    message:
+        '''--- Running mash dist.'''
+    singularity:
+        mash_image
+    params:
+        mash_input = mash_dist_input_sing,
+        mash_output = mash_dist_output_sing,
+        mash_db_sing = mash_db
+    shell:
+        'mash dist '  
+        '{params.mash_db_sing} '
+        '{params.mash_input} '
+        '> {params.mash_output} '
+
+
+
+############################################
+# Taxonomic Classification:  mash screen results
+
+mash_sort_input = mash_dist_output
+mash_sort_ouput_pattern = join(data_dir, taxclass['mash']['mash_dist_sort_out'] )
+mash_dist_sort_output = mash_sort_ouput_pattern.format(
+   sample='{sample}', qual='{qual}', db = '{db}',)
+
+
+
+rule mash_sort:
+    input:
+        mash_sort_input
+    output:
+        mash_dist_sort_output
+    shell:
+        "sort -gk3 "
+        "{input} > {output} "
+
+
+
+
+############################################
+# Taxonomic Classification:  mash screen 
+
+mash_screen_input = interleave_output
+mash_screen_input_sing = interleave_output.replace(data_dir, sing_dir)
+
+mash_screen_output = join(data_dir, taxclass['mash']['mash_screen_out'] )
+mash_screen_output = mash_screen_output.format(
+    db = '{db}', sample='{sample}', qual='{qual}')
+mash_screen_output_sing = join(sing_dir, taxclass['mash']['mash_screen_out'] )
+
+
+rule mash_screen_db:
+    input:
+        mash_screen_input
+    output:
+        mash_screen_output
+    message:
+        '''--- Running mash screen.'''
+    singularity:
+        mash_image
+    params:
+        mash_input = mash_screen_input_sing,
+        mash_output = mash_screen_output_sing,
+        mash_db_sing = mash_db
+    shell:
+        'mash screen '  
+        '{params.mash_db_sing} '
+        '{params.mash_input} '
+        '> {params.mash_output} '
+
+
+############################################
+# Taxonomic Classification:  mash screen results
+
+mash_screen_sort_input = mash_screen_output
+mash_screen_sort_ouput_pattern = join(data_dir, taxclass['mash']['mash_screen_sort_out'] )
+mash_screen_sort_output = mash_screen_sort_ouput_pattern.format(
+   sample='{sample}', qual='{qual}', db = '{db}')
+
+
+
+rule mash_screen_sort:
+    input:
+        mash_screen_sort_input
+    output:
+        mash_screen_sort_output
+    shell:
+        "sort -gr "
+        "{input} > {output} "
 
 
 ###################################
@@ -1643,6 +1801,42 @@ rule tax_class_krakenuniq_workflow:
                 qual      = workflows['tax_class_krakenuniq_workflow']['qual'],
                 direction = directions,
                 db        = workflows['tax_class_krakenuniq_workflow']['db'],
-                hll_prec       = workflows['tax_class_krakenuniq_workflow']['hll_precision'],
+                hll_prec  = workflows['tax_class_krakenuniq_workflow']['hll_precision'],
         )
 
+
+rule tax_class_bracken_workflow:
+    input:
+        expand( bracken_output,
+            sample      = sample_input_files,
+            bdb         = workflows['tax_class_bracken_workflow']['bdb'],
+            read_length = workflows['tax_class_bracken_workflow']['read_length'],
+            level       = workflows['tax_class_bracken_workflow']['level'],
+            threshold   = workflows['tax_class_bracken_workflow']['threshold'],
+            qual        = workflows['tax_class_kraken2_workflow']['qual'],
+            db          = workflows['tax_class_kraken2_workflow']['db'],
+            conf        = workflows['tax_class_kraken2_workflow']['confidence'],
+        )
+
+
+rule tax_class_mash_dist_workflow:
+    '''
+    mash takes uncompressed interleaved files as input
+    '''
+    input:
+        expand( mash_dist_sort_output,
+            sample      = sample_input_files,
+            qual        = workflows['tax_class_mash_dist_workflow']['qual'],
+            db          = workflows['tax_class_mash_dist_workflow']['mash_db'],
+        )
+
+rule tax_class_mash_screen_workflow:
+    '''
+    mash takes uncompressed interleaved files as input
+    '''
+    input:
+        expand( mash_screen_sort_output,
+            sample      = sample_input_files,
+            qual        = workflows['tax_class_mash_screen_workflow']['qual'],
+            db          = workflows['tax_class_mash_screen_workflow']['mash_db'],
+        )

@@ -7,8 +7,10 @@ Documentation: docs/workflow_assembly.md
 '''
 
 from common.utils  import container_image_is_external, container_image_name
-from os.path import join, isfile, dirname
+from os.path import join, isfile, dirname, islink
 import os, re
+import hashlib
+from shutil import copyfile
 
 
 
@@ -42,6 +44,7 @@ prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahi
                             qual='{qual}'))
 prokka_with_megahit_prefix_files = inference['prokka_with_megahit']['prefix_pattern']
 prokka_megahit_threads = inference['prokka_with_megahit']['threads']
+prokka_with_megahit_input_db = join(sing_dir,inference['prokka_with_megahit']['input_db'])
 
 
 rule prokka_with_megahit:
@@ -52,7 +55,8 @@ rule prokka_with_megahit:
     params:
         input_files = prokka_with_megahit_input_dir_sing,
         output_dir = prokka_with_megahit_output_dir_sing,
-        prefix_files = prokka_with_megahit_prefix_files
+        prefix_files = prokka_with_megahit_prefix_files,
+        input_db = prokka_with_megahit_input_db
     threads:
         prokka_megahit_threads
     singularity:
@@ -62,7 +66,8 @@ rule prokka_with_megahit:
     	'&& '
         'prokka '
         '{params.input_files} '
-        '--metagenome --eval 1e-06 --notrna --rnammer '
+        '--metagenome --eval 1e-06 --notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
         '--cpus {threads}'
@@ -83,6 +88,7 @@ prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_met
                             qual='{qual}'))
 prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefix_pattern']
 prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
+prokka_with_metaspades_input_db = join(sing_dir,inference['prokka_with_metaspades']['input_db'])
 
 
 rule prokka_with_metaspades:
@@ -93,7 +99,8 @@ rule prokka_with_metaspades:
     params:
         input_files = prokka_with_metaspades_input_dir_sing,
         output_dir = prokka_with_metaspades_output_dir_sing,
-        prefix_files = prokka_with_metaspades_prefix_files
+        prefix_files = prokka_with_metaspades_prefix_files,
+        input_db = prokka_with_metaspades_input_db
     threads:
         prokka_metaspades_threads
     singularity:
@@ -103,10 +110,62 @@ rule prokka_with_metaspades:
     	'&& '
         'prokka '
         '{params.input_files} '
-        '--metagenome --eval 1e-06 --notrna --rnammer '
+        '--metagenome --eval 1e-06 --notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads} '
+
+
+
+
+
+###################################
+# Functional Inference: prokka with spades input for isolates
+
+prokka_with_spades_output_dir = join(data_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_spades_output_dir_sing = join(sing_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+#prokka_with_spades_input_dir = join(data_dir,inference['prokka_with_spades']['input_pattern'].format(sample='{sample}',
+#                            qual='{qual}'))
+#prokka_with_spades_input_dir_sing = join(sing_dir,inference['prokka_with_spades']['input_pattern'].format(sample='{sample}',
+#                            qual='{qual}'))
+
+prokka_with_spades_input = assembly_spades_output
+prokka_with_spades_input_sing = assembly_spades_output_sing
+
+prokka_with_spades_prefix_files = inference['prokka_with_spades']['prefix_pattern']
+prokka_with_spades_input_db = join(sing_dir,inference['prokka_with_spades']['input_db'])
+prokka_spades_threads = inference['prokka_with_spades']['threads']
+
+
+rule prokka_with_spades:
+    input:
+        prokka_with_spades_input
+    output:
+        directory(prokka_with_spades_output_dir)
+    params:
+        input_files = prokka_with_spades_input_sing,
+        output_dir = prokka_with_spades_output_dir_sing,
+        prefix_files = prokka_with_spades_prefix_files,
+        input_db = prokka_with_spades_input_db
+    threads:
+        prokka_spades_threads
+    singularity:
+        prokka_image
+    shell:
+        'export LC_ALL=C '
+        '&& '
+        'prokka '
+        '{params.input_files} '
+        '--notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
         '--cpus {threads}'
+
+
 
 
 ###################################
@@ -193,6 +252,48 @@ rule abricate_with_metaspades:
         '{params.output_files} '
 
 
+###################################
+# Functional Inference: abricate with spades input
+
+abricate_with_spades_output = join(data_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_spades_output_sing = join(sing_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+
+abricate_with_spades_input = join(data_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_spades_input_sing = join(sing_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_spades_db = '{db}'
+
+
+def get_db_dir_spades(wildcards):
+    abricate_db_dir = inference['abricate_with_spades']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
+
+#print("abricate_with_spades_input: "+str(abricate_with_spades_input))
+#print("abricate_with_spades_output: "+str(abricate_with_spades_output))
+
+rule abricate_with_spades:
+    input:
+        abricate_with_spades_input = assembly_spades_output
+    output:
+        abricate_with_spades_output
+    params:
+        input_files = assembly_spades_output_sing,
+        output_files = abricate_with_spades_output_sing,
+        gene_db = abricate_with_spades_db,
+        db_dir = get_db_dir_spades
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '-datadir {params.db_dir} '
+        '--db {params.gene_db} '
+        '{params.input_files}>'
+        '{params.output_files} '
 
 
 
@@ -217,6 +318,30 @@ srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_tr
 srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 
                         srst2_rev_post_trimmed_sing]
 
+#I believe this is old and deprecated
+def srst2_post_trimming_inputs_sing(wildcards):
+    # input already includes data/ prefix
+    pre_inputs_wc = [x.format(**wildcards) for x in srst2_post_trimming_inputs]
+
+    # for containers, turn prefix data/ into /data/
+    #pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
+
+    file_seed = pre_inputs_wc[0]
+    unique_filename_obj = hashlib.md5(file_seed.encode())
+    unique_filename = unique_filename_obj.hexdigest()
+    unique_filename = unique_filename[:-16] 
+    print("unique_filename: "+str(unique_filename))
+    srst2_input_sing = []
+    for num, file in enumerate(pre_inputs_wc, start=1):
+        dst_file = join(data_dir, unique_filename + '_'+ str(num) +readfilt['quality_trimming']['sample_file_ext'])
+        file = file.replace(data_dir +"/", "")
+        srst2_input_sing.append(dst_file)
+        if (not islink(dst_file)):
+            os.symlink(file, dst_file)
+    srst2_input_sing = [ file.replace(data_dir, sing_dir) for file in srst2_input_sing ]
+    pre_inputs_wcs = " ".join(srst2_input_sing)
+    return pre_inputs_wcs
+
 
 srst2_db_location = join(sing_dir, '{db}')
 srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db='{db}'))
@@ -229,7 +354,7 @@ srst2_threads = inference['srst2']['threads']
 def srst2_output_sub_sing(wildcards):
     return srst2_output_sing.format(**wildcards)
 
-#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a generic filename
+#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a generic hash filename
 #to create a copy of input files then delete them.
 
 def srst2_input_files_sing(wildcards):
@@ -238,11 +363,14 @@ def srst2_input_files_sing(wildcards):
         in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
         input_file = in_file[0]
         if (num ==0):  #forward 
-            srst2_input_file = data_dir + '/' + '0_1' + readfilt['quality_trimming']['sample_file_ext']     
+            result_file = hashlib.md5(input_file.encode())
+            hex_file = result_file.hexdigest()[:16]
+            srst2_input_file = data_dir + '/' + hex_file + '_1' + readfilt['quality_trimming']['sample_file_ext']     
         else:   #reverse
-            srst2_input_file = data_dir + '/' + '0_2' + readfilt['quality_trimming']['sample_file_ext']
+            srst2_input_file = data_dir + '/' + hex_file + '_2' + readfilt['quality_trimming']['sample_file_ext']
         if (os.path.isfile(input_file)):
-            shutil.copyfile(input_file,srst2_input_file)
+            shutil.copyfile(input_file, srst2_input_file)
+            srst2_input_file = srst2_input_file.replace(data_dir, sing_dir)
         srst2_input_list.append(srst2_input_file)
     return srst2_input_list
 
@@ -263,13 +391,16 @@ rule srst2_with_raw_reads:
     shell:
         'srst2 '
         '--input_pe {params.input_files} '
+        '--forward _1 '
+        '--reverse _2 '
+        '--merge_pair '
         '--output {params.output_files} '
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
         '&& '
         'rm {params.input_files}'
-        
+
 
   
 
@@ -303,6 +434,17 @@ rule functional_prokka_with_metaspades_workflow:
                 qual   = workflows['functional_prokka_with_metaspades_workflow']['qual']
         )
 
+rule functional_prokka_with_spades_workflow:
+    """
+    Run prokka with spades contigs
+    """
+    input:
+        expand( prokka_with_spades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_with_spades_workflow']['qual']
+        )
+
+
 
 rule functional_abricate_with_megahit_workflow:
     """
@@ -325,6 +467,18 @@ rule functional_abricate_with_metaspades_workflow:
                 sample    = sample_input_files,
                 qual   = workflows['functional_abricate_with_metaspades_workflow']['qual'],
                 db     = workflows['functional_abricate_with_metaspades_workflow']['db'],
+        )
+
+
+rule functional_abricate_with_spades_workflow:
+    """
+    Run abricate with assembled spades contigs as input
+    """
+    input:
+        expand( abricate_with_spades_output,
+                sample    = sample_input_files,
+                qual   = workflows['functional_abricate_with_spades_workflow']['qual'],
+                db     = workflows['functional_abricate_with_spades_workflow']['db'],
         )
 
 

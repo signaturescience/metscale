@@ -194,7 +194,6 @@ def assembly_plasmidspades_outprefix_sub(wildcards):
     return assembly_plasmidspades_outprefix.format(**wildcards)
 
 
-
 rule assembly_plasmidspades:
     """
     Perform read assembly of trimmed reads using plasmidspades.
@@ -226,8 +225,6 @@ rule assembly_plasmidspades:
         '-o /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc} '
         '&& '
         'mv /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc}/contigs.fasta /{params.spades_plasmidoutput_expanded} '
-
-
 
 
 
@@ -271,6 +268,7 @@ megahit_image = container_image_name(biocontainers, 'megahit')
 
 def assembly_megahit_outprefix_sub(wildcards):
     return assembly_megahit_outprefix.format(**wildcards)
+
 
 rule assembly_megahit:
     """
@@ -319,6 +317,7 @@ assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast
 assembly_quast_threads = assembly['assembly_patterns']['quast_threads']
 quast_image = container_image_name(biocontainers, 'quast')
 
+
 rule assembly_statistics_quast:
     """
     Compute assembly statistics with quast
@@ -338,6 +337,115 @@ rule assembly_statistics_quast:
         quast_image
     shell:
         'quast.py {params.quast_input_sing} -t {threads} -o {params.quast_output_sing}'
+
+
+###################################
+# Assembly: metaquast statistics
+
+assembly_metaquast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_metaquast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_metaquast_output = join(data_dir, assembly['assembly_patterns']['metaquast_pattern'],assembly['assembly_patterns']['metaquast_output_multiqc_input_file'] )
+assembly_metaquast_output_sing = join(sing_dir, assembly['assembly_patterns']['metaquast_pattern'])
+assembly_metaquast_threads = assembly['assembly_patterns']['metaquast_threads']
+metaquast_image = container_image_name(biocontainers, 'quast')
+
+
+assembly_metaquast_ref = assembly['assembly_patterns']['metaquast_ref']
+assembly_metaquast_ref_str =  sing_dir + "/" + assembly_metaquast_ref
+
+
+rule assembly_statistics_metaquast:
+    """
+    Compute assembly statistics with metaquast
+    """
+    input:
+        assembly_metaquast_input
+    output:
+        assembly_metaquast_output
+    params:
+        metaquast_input_sing = assembly_metaquast_input_sing,
+        metaquast_output_sing = assembly_metaquast_output_sing,
+        metaquast_ref_db = assembly_metaquast_ref_str
+    message: 
+        '--- Calculating assembly statistics with metaquast'
+    threads:
+        assembly_metaquast_threads
+    singularity:
+        metaquast_image
+    shell:
+        'metaquast.py {params.metaquast_input_sing} -R {params.metaquast_ref_db} -t {threads} -o {params.metaquast_output_sing}'
+
+
+###################################
+# Assembly: quast with SPAdes workflow
+
+assembly_quast_spades_output = join(data_dir, assembly['assembly_patterns']['quast_spades_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
+assembly_quast_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_spades_pattern'])
+assembly_quast_spades_threads = assembly['assembly_patterns']['quast_spades_threads']
+
+
+#FOR multiple refs
+#assembly_quast_spades_ref = assembly['assembly_patterns']['quast_spades_ref']
+#assembly_quast_spades_ref = [ sing_dir + "/" + file for file in assembly_quast_spades_ref]
+#assembly_quast_spades_ref_str = ",".join(assembly_quast_spades_ref)
+
+assembly_quast_spades_ref = assembly['assembly_patterns']['quast_spades_ref']
+assembly_quast_spades_ref_str =  sing_dir + "/" + assembly_quast_spades_ref
+
+rule assemly_statistic_quast_spades:
+    """
+    take the output of SPADes and run quast on it
+    """
+    input:
+        input_contigs = assembly_spades_output
+    output:
+        assembly_quast_spades_output
+    params:
+        quast_input_sing = assembly_spades_output_sing,
+        quast_output_sing = assembly_quast_spades_output_sing,
+        quast_ref_db = assembly_quast_spades_ref_str
+    message: 
+        '--- Calculating assembly statistics with quast and SPAdes'
+    threads:
+        assembly_quast_spades_threads
+    singularity:
+        quast_image
+    shell:
+        'quast.py {params.quast_input_sing} -R {params.quast_ref_db} -t {threads} -o {params.quast_output_sing}'
+
+
+###################################
+# Assembly: quast with plasmidSPAdes workflow
+
+assembly_quast_plasmidspades_output = join(data_dir, assembly['assembly_patterns']['quast_plasmidspades_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
+assembly_quast_plasmidspades_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_plasmidspades_pattern'])
+assembly_quast_plasmidspades_threads = assembly['assembly_patterns']['quast_plasmidspades_threads']
+
+assembly_quast_plasmidspades_ref = assembly['assembly_patterns']['quast_plasmidspades_ref']
+assembly_quast_plasmidspades_ref_str =  sing_dir + "/" + assembly_quast_plasmidspades_ref
+
+
+
+rule assemly_statistics_quast_plasmidspades:
+    """
+    take the output of plasmidSPADes and run quast on it
+    """
+    input:
+        input_contigs = assembly_plasmidspades_output
+    output:
+        assembly_quast_plasmidspades_output
+    params:
+        quast_input_sing = assembly_plasmidspades_output_sing,
+        quast_output_sing = assembly_quast_plasmidspades_output_sing,
+        quast_ref_db = assembly_quast_plasmidspades_ref_str
+    message: 
+        '--- Calculating assembly statistics with quast and plasmidSPAdes'
+    threads:
+        assembly_quast_plasmidspades_threads
+    singularity:
+        quast_image
+    shell:
+        'quast.py {params.quast_input_sing} -R {params.quast_ref_db}  -t {threads} -o {params.quast_output_sing}'
 
 
 
@@ -477,9 +585,31 @@ rule assembly_quast_workflow:
                 assembler = workflows['assembly_quast_workflow']['assembler'],
         )
 
+rule assembly_metaquast_workflow:
+    input:
+        expand( assembly_metaquast_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_metaquast_workflow']['qual'],
+                assembler = workflows['assembly_metaquast_workflow']['assembler'],
+        )
+
 rule assembly_multiqc_workflow:
     input:
         expand( assembly_multiqc_output_dir,
                 sample    = sample_input_files,
                 assembler = workflows['assembly_multiqc_workflow']['multiqc_assembler'],
+        )
+
+rule assembly_quast_reference_with_spades_workflow:
+    input:
+        expand( assembly_quast_spades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_quast_spades_workflow']['qual'],
+        )
+
+rule assembly_quast_reference_with_plasmidspades_workflow:
+    input:
+        expand( assembly_quast_plasmidspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_quast_plasmidspades_workflow']['qual'],
         )

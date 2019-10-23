@@ -57,17 +57,25 @@ def download_file(workflow, data, install_dir):
                             except OSError:
                                 pass
             elif (url.scheme == "http" or url.scheme == "https" or url.scheme == "ftp"):      #download via http, ftp
-                if not (os.path.isfile(os.path.join(install_dir, file_name))):
+                if not ( (os.path.isfile(os.path.join(install_dir, file_name))) or (os.path.isfile(os.path.join(install_dir,"Bracken_Kraken2_DB", file_name))) ):
                     print("Downloading " +file_name + " from " + url_string)
                     try:
-                        urllib.request.urlretrieve(url_string, install_dir+ "/"+file_name, reporthook)
+                        if (file_name.endswith("kmer_distrib")):  #these files need to go in subdir
+                            if not (os.path.isdir(install_dir + "/Bracken_Kraken2_DB")):
+                                mkdir_command = "mkdir " + install_dir + "/Bracken_Kraken2_DB"
+                                subprocess.run([mkdir_command], shell =True)
+                            urllib.request.urlretrieve(url_string, install_dir+ "/Bracken_Kraken2_DB/" +file_name, reporthook)
+                        else:
+                            opener = urllib.request.build_opener()
+                            opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+                            urllib.request.install_opener(opener)
+                            urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
                         if (file_name.endswith('.tgz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([untar_command], shell=True)
                         elif (file_name.endswith('.gz')):
                             unzip_command = "gunzip -c " + install_dir+"/" + file_name + " > " + install_dir + "/" + os.path.splitext(file_name)[0] + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([unzip_command], shell=True)
-   
                     except SocketError as e:
                         print("Error downloading file " + file_name + " Retry script.")
                         print(e)
@@ -84,7 +92,11 @@ def download_file(workflow, data, install_dir):
             elif (url.scheme == "file"):         #copy file from local location
                 if not (os.path.isfile(os.path.join(install_dir, file_name))):
                     print("Copying "+ file_name)
-                    copyfile(".."+ url.path, install_dir+ "/"+ file_name)
+                    if (file_name.endswith('.tgz')):
+                        untar_command = "tar -zxvf " + ".." + url.path + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
+                        subprocess.run([untar_command], shell=True)   
+                    else:  
+                        copyfile(".."+ url.path, install_dir+ "/"+ file_name)
 
                         
                          

@@ -102,9 +102,9 @@ def create_output_internal_format_rev(wildcards):
    return fq_rev_pre_trimmed.format(**wildcards)
 
 
-rule convert_illumina_to_internal_format:
+rule convert_external_to_internal_format:
     '''
-    Convert the illumina file format to out internal file format
+    Convert the external file format to our internal file format
     '''
     input:
         convert_illumina_input_files
@@ -117,7 +117,7 @@ rule convert_illumina_to_internal_format:
         replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
     run:
         src_fwd_str = str(input)
-        src_rev_str = src_fwd_str.replace(params.search_pattern, params.replace_pattern)
+        src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
         shutil.copy(src_fwd_str, params.dest_fwd)
         shutil.copy(src_rev_str, params.dest_rev)
 
@@ -819,17 +819,6 @@ rule read_filtering_statistics_multiqc:
 ###     shell:
 ###         'wget -O {params.read_data_file} {params.read_data_url}'
 
-'''
-probably not
-There appears to be a bug in snakemake where when you call read_filtering_khmer_interleave_reads_workflow
-it makes the DAG it think it should also call download_reads as a dependency and gives it the incorrect
-wild cards that make it match the output of interleave_reads. This leads to an AmbiguousRuleExcpetion.
-I think this happens somewhere in def collect_potential_dependencies(self, job)
-'''
-#ruleorder: interleave_reads > download_reads
-#ruleorder: subsample_interleaved_reads > download_reads
-
-
 
 
 ###################################
@@ -916,11 +905,10 @@ rule read_filtering_khmer_count_unique_kmers_workflow:
                 kmers       = workflows['read_filtering_khmer_count_unique_kmers_workflow']['kmers'],
         )
 
+
 rule read_filtering_fastq_to_fasta_workflow:
     '''
     build rule: convert fq.gz files to .fa files
     '''
     input:  
         expand("data/{file}.fa", file=files)
-
-
