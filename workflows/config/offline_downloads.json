@@ -32,11 +32,13 @@
         "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
         "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
         "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
+        "mash_2.2--h3d38be6_0.sif" : "docker://quay.io/biocontainers/mash:2.2--h3d38be6_0",
         "minikraken2_v2_8GB_201904_UPDATE.tgz" : "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
         "database100mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database100mers.kmer_distrib",
         "database150mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database150mers.kmer_distrib",
-        "database200mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database200mers.kmer_distrib"
+        "database200mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database200mers.kmer_distrib",
+        "RefSeq_10K_Sketches.msh.gz": "https://obj.umiacs.umd.edu/diamond/RefSeq_10K_Sketches.msh.gz"
     },
 
     "sourmash_db" : {

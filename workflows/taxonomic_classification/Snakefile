@@ -1401,9 +1401,114 @@ rule krakenuniq:
 
         
 
-        
+
+############################################
+# Taxonomic Classification:  mash dist with reference DB
+
+mash_dist_input = interleave_output
+mash_dist_input_sing = mash_dist_input.replace(data_dir, sing_dir)
+
+mash_dist_output = join(data_dir, taxclass['mash']['mash_dist_out'] )
+mash_dist_output = mash_dist_output.format(
+    db = '{db}', sample='{sample}', qual='{qual}')
+mash_dist_output_sing = join(sing_dir, taxclass['mash']['mash_dist_out'] )
+mash_db = join(sing_dir, '{db}' )
+mash_image = container_image_name(biocontainers, 'mash')
 
 
+rule mash_dist_db:
+    input:
+        mash_dist_input
+    output:
+        mash_dist_output
+    message:
+        '''--- Running mash dist.'''
+    singularity:
+        mash_image
+    params:
+        mash_input = mash_dist_input_sing,
+        mash_output = mash_dist_output_sing,
+        mash_db_sing = mash_db
+    shell:
+        'mash dist '  
+        '{params.mash_db_sing} '
+        '{params.mash_input} '
+        '> {params.mash_output} '
+
+
+
+############################################
+# Taxonomic Classification:  mash screen results
+
+mash_sort_input = mash_dist_output
+mash_sort_ouput_pattern = join(data_dir, taxclass['mash']['mash_dist_sort_out'] )
+mash_dist_sort_output = mash_sort_ouput_pattern.format(
+   sample='{sample}', qual='{qual}', db = '{db}',)
+
+
+
+rule mash_sort:
+    input:
+        mash_sort_input
+    output:
+        mash_dist_sort_output
+    shell:
+        "sort -gk3 "
+        "{input} > {output} "
+
+
+
+
+############################################
+# Taxonomic Classification:  mash screen 
+
+mash_screen_input = interleave_output
+mash_screen_input_sing = interleave_output.replace(data_dir, sing_dir)
+
+mash_screen_output = join(data_dir, taxclass['mash']['mash_screen_out'] )
+mash_screen_output = mash_screen_output.format(
+    db = '{db}', sample='{sample}', qual='{qual}')
+mash_screen_output_sing = join(sing_dir, taxclass['mash']['mash_screen_out'] )
+
+
+rule mash_screen_db:
+    input:
+        mash_screen_input
+    output:
+        mash_screen_output
+    message:
+        '''--- Running mash screen.'''
+    singularity:
+        mash_image
+    params:
+        mash_input = mash_screen_input_sing,
+        mash_output = mash_screen_output_sing,
+        mash_db_sing = mash_db
+    shell:
+        'mash screen '  
+        '{params.mash_db_sing} '
+        '{params.mash_input} '
+        '> {params.mash_output} '
+
+
+############################################
+# Taxonomic Classification:  mash screen results
+
+mash_screen_sort_input = mash_screen_output
+mash_screen_sort_ouput_pattern = join(data_dir, taxclass['mash']['mash_screen_sort_out'] )
+mash_screen_sort_output = mash_screen_sort_ouput_pattern.format(
+   sample='{sample}', qual='{qual}', db = '{db}')
+
+
+
+rule mash_screen_sort:
+    input:
+        mash_screen_sort_input
+    output:
+        mash_screen_sort_output
+    shell:
+        "sort -gr "
+        "{input} > {output} "
 
 
 ###################################
@@ -1713,3 +1818,25 @@ rule tax_class_bracken_workflow:
             conf        = workflows['tax_class_kraken2_workflow']['confidence'],
         )
 
+
+rule tax_class_mash_dist_workflow:
+    '''
+    mash takes uncompressed interleaved files as input
+    '''
+    input:
+        expand( mash_dist_sort_output,
+            sample      = sample_input_files,
+            qual        = workflows['tax_class_mash_dist_workflow']['qual'],
+            db          = workflows['tax_class_mash_dist_workflow']['mash_db'],
+        )
+
+rule tax_class_mash_screen_workflow:
+    '''
+    mash takes uncompressed interleaved files as input
+    '''
+    input:
+        expand( mash_screen_sort_output,
+            sample      = sample_input_files,
+            qual        = workflows['tax_class_mash_screen_workflow']['qual'],
+            db          = workflows['tax_class_mash_screen_workflow']['mash_db'],
+        )
