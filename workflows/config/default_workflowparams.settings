@@ -510,7 +510,14 @@ config_default = {
             "location" : "../container_images/",
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"
-        }
+        },
+        "mtsv" : {
+            "use_local" : True,
+            "filename" : "mtsv_1.0.5--py36hc9558a2_0.sif",
+            "location" : "../container_images/",
+            "version" : "1.0.5--py36hc9558a2_",
+            "quayurl" : "quay.io/biocontainers/mtsv"
+        },
     }
 
 }

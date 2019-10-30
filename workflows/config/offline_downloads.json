@@ -31,6 +31,7 @@
         "sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
         "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
         "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
+        "mtsv_1.0.5--py36hc9558a2_0.sif" : "docker://quay.io/biocontainers/mtsv:1.0.5--py36hc9558a2_0",
         "mash_2.2--h3d38be6_0.sif" : "docker://quay.io/biocontainers/mash:2.2--h3d38be6_0",
         "minikraken2_v2_8GB_201904_UPDATE.tgz" : "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
@@ -51,8 +52,12 @@
     "kaiju_db" : {
         "kaiju_index_nr_euk.tgz"  : "http://kaiju.binf.ku.dk/database/kaiju_index_nr_euk.tgz"
     },
+    
+    "mtsv_db" : {
+    	"May-22-2019.tar"	: "https://rcdata.nau.edu/fofanov_labs/for_krista/May-22-2019"
+    },
 
-    "functional_inference" : {
+    "functional_inference"	: {
         "prokka_1.13.3-01.sif" : "docker://ummidock/prokka:1.13.3-01",
         "abricate_latest.sif" : "docker://thanhleviet/abricate",
         "srst2_0.2.0--py27_2.sif" : "docker://quay.io/biocontainers/srst2:0.2.0--py27_2",
