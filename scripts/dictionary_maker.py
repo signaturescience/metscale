@@ -20,7 +20,9 @@ public databases.
 
 ## Paths
 path_for_storing_pickles = "pickle_dir/"
-path="/home/cgrahlmann/eclipse-workspace/mondavi/scripts/"
+#TODO: Move to an args sections
+#TODO: delete all these if 0 sections
+path="/data/home/cgrahlmann/mondavi/metagenomics/scripts/"
 #path = "/data/project_data/dhs_db/database_comparisons/scripts_for_informative_files/"
 
 ## outputfile names
@@ -51,11 +53,11 @@ genebank_file_open = open(path + genebank_file)
 
 nucleo_file_open = open(path + nucleo_file)
 #wgsmap_file_open = open(path + wgsmap_file)
-'''
+
 if 0:
     # reading in the files
     genebank_file_read = genebank_file_open.readlines()
-'''
+
 
 ##refseq_file_read = refseq_file_open.readlines()
 nucleo_file_read = nucleo_file_open.readlines()
@@ -70,7 +72,7 @@ taxid_dict = {}
 wgsmap_dict = {}
 
 #handle genbank versions? only a few files are available
-'''
+
 if 0:
     # parsing each of the files
     print("\n"+"genbank output:")
@@ -79,9 +81,9 @@ if 0:
         genebank_line = genebank_line.split(",")
     
         # Taking out indivdual columns
-'''
+
 wgs_counter = 0;
-'''
+
 if 0:
     print("\n"+"wgs mapping output:")
     for wgsmap_line in wgsmap_file_read:
@@ -96,7 +98,7 @@ if 0:
             wgsmap_dict[wgsmap_tax_id] = wgsmap_acc_id;
 
         wgs_counter += 1;
-'''
+
 
 
 krakenfiles = glob.glob(kraken_dir+"/*.map")
@@ -121,7 +123,7 @@ for kraken_file in krakenfiles:
             #print kraken_tax_id,
             kraken_dict[version][kraken_tax_id] = 1
 
-'''
+
 if 0:
     refseqfiles = []
     # r=root, d=directories, f = files
@@ -165,26 +167,26 @@ if 0:
             nucleo_dict[ncbi_tax_nucleo] = accession_nucelo
 
         nucleo_counter += 1;
-'''
+
         
 # saving the dicitonaries as pickled files
-'''
+
 if 0:
     pickle.dump(genebank_dict, open(path_for_storing_pickles + genebank_dict_pickle, "w" ) )
 
 if 0:
     for version in refect_dict.keys():
         pickle.dump(refseq_dict[version], open(path_for_storing_pickles + "v"+version+"."+refseq_dict_pickle, "w" ) )
-'''
+
 if 1:
     for version in kraken_dict.keys():
-        pickle.dump(kraken_dict[version], open(path_for_storing_pickles + "kraken1_"+version+"."+kraken_dict_pickle, "w" ) )
-'''
-if 0:
-    pickle.dump(nucleo_dict, open(path_for_storing_pickles + nucleo_dict_pickle, "w" ) )
-'''
-pickle.dump(taxid_dict, open(path_for_storing_pickles + taxid_dict_pickle, "w" ) )
-pickle.dump(wgsmap_dict, open(path_for_storing_pickles + wgsmap_dict_pickle, "w" ) )
+        pickle.dump(kraken_dict[version], open(path_for_storing_pickles + "kraken1_"+version+"."+kraken_dict_pickle, "wb" ) )
+#TODO: Flipped to if 1. Looks like script wants nucleo_dict
+if 1:
+    pickle.dump(nucleo_dict, open(path_for_storing_pickles + nucleo_dict_pickle, "wb" ) )
+
+pickle.dump(taxid_dict, open(path_for_storing_pickles + taxid_dict_pickle, "wb" ) )
+pickle.dump(wgsmap_dict, open(path_for_storing_pickles + wgsmap_dict_pickle, "wb" ) )
 
 refseq_dict = {}
 if 1:
@@ -231,12 +233,14 @@ print("Creating jaccard file:")
 outfile = open("dbs.jaccard.tsv",'w')
 if 1:
     outfile.write("\t")
+    #all_sets_list = list(all_sets.keys()[:-1])
     for key in all_sets.keys()[:-1]:
         outfile.write("%s\t"%(key))
     outfile.write("%s\n"%(all_sets.keys()[-1]))
 for key2 in all_sets.keys():
     outfile.write("%s\t"%(key2))
     for key1 in all_sets.keys()[:-1]:
+#ERROR: float divison by zero
         jaccard = float(len(all_sets[key1].intersection(all_sets[key2])))/float(len(all_sets[key1].union(all_sets[key2])))
         outfile.write("%.9f\t"%(jaccard))
     key1 = all_sets.keys()[-1]
