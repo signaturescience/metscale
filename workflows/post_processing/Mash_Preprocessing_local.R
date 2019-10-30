@@ -1,15 +1,9 @@
-process_mash <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE,
-                             type = c("sourmash", "mash screen"))
-{
-
-  # data_dir = dd
-  # out_dir = f_name
-  # verbose = TRUE
-  # type = "mash screen"
-
+process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","mash screen")){
   require("dplyr")
   require("taxizedb")
   require("stringr")
+  options(stringsAsFactors = F)
+  src_ncbi <- src_ncbi()
 
   parse_mash_screen <- function(path) {
     data <- readLines(con = path)
@@ -24,15 +18,40 @@ process_mash <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE,
     data$name <- trimws(stringr::str_remove(string = data$name, pattern = "\\[[0-9]?[0-9] seqs\\]"))
     return(data)
   }
-
   getID <- function(tmp_dat, path, type) {
+
+    # Function to convert GenBank IDs to NCBI taxon IDs
+    genbank2uid <- function(id) {
+      require(taxizedb, quietly = T, warn.conflicts = F)
+      f <- file.path(tdb_cache$cache_path_get(), "GenBank.sql")
+      if(!file.exists(f)) {stop("GenBank database not found.")}
+      con <- RSQLite::dbConnect(RSQLite::SQLite(), dbname = f)
+      id <- matrix(unlist(strsplit(id, "[.]")), ncol = 2, byrow = T)[, 1]
+      id <- paste(id, collapse = "','")
+      q1 <- paste("SELECT ACCESSION, TAXID FROM TBL_NUCL_GB WHERE ACCESSION IN ('", id, "')", sep = "")
+      q2 <- paste("SELECT ACCESSION, TAXID FROM TBL_DEAD_GB WHERE ACCESSION IN ('", id, "')", sep = "")
+      q3 <- paste("SELECT ACCESSION, TAXID FROM TBL_NUCL_WGS WHERE ACCESSION IN ('", id, "')", sep = "")
+      q4 <- paste("SELECT ACCESSION, TAXID FROM TBL_DEAD_WGS WHERE ACCESSION IN ('", id, "')", sep = "")
+      o <- RSQLite::dbGetQuery(con, q1)
+      if (nrow(o) == 0) {
+        o <- RSQLite::dbGetQuery(con, q2)
+      }
+      if (nrow(o) == 0) {
+        o <- RSQLite::dbGetQuery(con, q3)
+      }
+      if (nrow(o) == 0) {
+        o <- RSQLite::dbGetQuery(con, q4)
+      }
+      RSQLite::dbDisconnect(con)
+      return(o)
+    }
 
     # Extract the genbank IDs from the name string.
     tmp_dat$genbank_id <- unlist(lapply(strsplit(tmp_dat$name, " "), '[[', 1))
 
     # Check that all of the genbank IDs were extracted. This is a problem with Mash Screen files in
     # particular because Mash Screen will put a sequence count at the beginning of the name string.
-    if (any(!grepl("[A-Z][A-Z]", tmp_dat$genbank_id))) {
+    if (any(grepl("[0-9]", substr(tmp_dat$genbank_id, 1, 1)))) {
       tmp_1 <- tmp_dat[!grepl("[A-Z][A-Z]", tmp_dat$genbank_id), ]
       tmp_2 <- tmp_dat[grepl("[A-Z][A-Z]", tmp_dat$genbank_id), ]
       tmp_1$genbank_id <- unlist(lapply(strsplit(tmp_1$name, " "), '[[', 3))
@@ -40,35 +59,17 @@ process_mash <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE,
       rm(tmp_1, tmp_2)
     }
 
-    # Query for the NCBI IDs
-    # gbid <- unique(tmp_dat$genbank_id)
-    gbpb <- txtProgressBar(min = 0, max = nrow(tmp_dat), initial = NA, style = 3)
-    tmp_dat$ncbi_id <- numeric(nrow(tmp_dat))
-    for (j in 33887:nrow(tmp_dat)) {
-      setTxtProgressBar(pb = gbpb, value = j)
-      tmp_dat$ncbi_id[j] <- as.numeric(genbank2uid(id = tmp_dat$genbank_id[j])[[1]])
-      Sys.sleep(0.05)
-    }
-    # ncbi <- genbank2uid(id = gbid)
-    # ncbi <- do.call(rbind, ncbi)
-    # ncbi <- data.frame(genbank_id = gbid, ncbi_id = ncbi); rm(gbid)
-    # tmp_dat <- merge(x = tmp_dat, y = ncbi, by = "genbank_id", all.x = T)
+    tmp_dat$accession <- matrix(unlist(strsplit(tmp_dat$genbank_id, "[.]")), ncol = 2, byrow = T)[,1]
 
+    # Query for the NCBI IDs
+    ncbi <- genbank2uid(id=tmp_dat$genbank_id)
+    tmp_dat <- merge(x=tmp_dat,y=ncbi,by="accession",all.x=T)
+    colnames(tmp_dat)[colnames(tmp_dat) == "taxid"] <- "ncbi_id"
     unique_ids <- na.exclude(unique(tmp_dat$ncbi_id))
-    all_lin <- NULL
-    prog_bar <- txtProgressBar(min = 0, max = length(unique_ids), initial = NA, style = 3)
-    for (i in 31420:length(unique_ids)) {
-      setTxtProgressBar(pb = prog_bar, value = i)
-      tmp <- taxize::classification(unique_ids[i], db = "ncbi")
-      tmp <- tmp[[1]]
-      tmp$ncbi_id <- unique_ids[i]
-      all_lin <- rbind(all_lin, tmp)
-      rm(tmp)
-    }
-    # all_lin <- classification(unique(tmp_dat$ncbi_id), db = "ncbi")
-    # all_lin <- do.call(rbind, all_lin)
-    # all_lin$ncbi_id <- trunc(as.numeric(row.names(all_lin)))
-    # row.names(all_lin) <- NULL
+    all_lin <- classification(unique_ids,db="ncbi")
+    all_lin <- do.call(rbind, all_lin)
+    all_lin$ncbi_id <- trunc(as.numeric(row.names(all_lin)))
+    row.names(all_lin) <- NULL
 
     king_id <- all_lin %>%
       filter(rank == "superkingdom") %>%
@@ -173,64 +174,48 @@ process_mash <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE,
     trim_value <- paste("Trim", trim_value)
     tmp_dat$trim <- rep(x = trim_value, times = nrow(tmp_dat))
 
-    ds_name <- unlist(strsplit(path, "\\\\"))[7]
-    tmp_dat$data_set <- rep(x = ds_name, times = nrow(tmp_dat))
+    # Add the data set name to the counts (parsed from the file name)
+    if(type=="sourmash"){
+      ds_name <- unlist(strsplit(x=bn,split="_"))[1]
+    }
+    if(type=="mashscreen"){
+      ds_name <- substr(x=bn,start=1,stop=(regexpr("trim",bn)-1))
+    }
+    tmp_dat$data_set <- rep(x=ds_name,times=nrow(tmp_dat))
 
+    # Add the assembler to the counts (not used by mash)
     tmp_dat$assembler <- NA
 
-    k_value   <- unlist(stringr::str_extract_all(pattern = "k[0-9]?[0-9]", string = bn))
+    # Add the kmer value to the counts (used by sourmash, parsed from the file name)
+    if(type=="sourmash"){
+      k_value <- unlist(stringr::str_extract_all(pattern = "k[0-9]?[0-9]", string = bn))
+    } else {
+      k_value <- NA
+    }
     tmp_dat$k <- rep(x = k_value, times = nrow(tmp_dat))
 
     return(tmp_dat)
   }
-
-  genbank2uid <- function(id) {
-    require(taxizedb, quietly = T, warn.conflicts = F)
-    f <- file.path(tdb_cache$cache_path_get(), "GenBank.sql")
-    if(!file.exists(f)) {stop("GenBank database not found.")}
-    con <- RSQLite::dbConnect(RSQLite::SQLite(), dbname = f)
-    id <- matrix(unlist(strsplit(id, "[.]")), ncol = 2, byrow = T)[, 1]
-    id <- paste(id, collapse = "','")
-    q1 <- paste("SELECT ACCESSION, TAXID FROM TBL_NUCL_GB WHERE ACCESSION IN ('", id, "')", sep = "")
-    q2 <- paste("SELECT ACCESSION, TAXID FROM TBL_DEAD_GB WHERE ACCESSION IN ('", id, "')", sep = "")
-    q3 <- paste("SELECT ACCESSION, TAXID FROM TBL_NUCL_WGS WHERE ACCESSION IN ('", id, "')", sep = "")
-    q4 <- paste("SELECT ACCESSION, TAXID FROM TBL_DEAD_WGS WHERE ACCESSION IN ('", id, "')", sep = "")
-    o <- RSQLite::dbGetQuery(con, q1)
-    if (nrow(o) == 0) {
-      o <- RSQLite::dbGetQuery(con, q2)
-    }
-    if (nrow(o) == 0) {
-      o <- RSQLite::dbGetQuery(con, q3)
-    }
-    if (nrow(o) == 0) {
-      o <- RSQLite::dbGetQuery(con, q4)
-    }
-    return(o)
+  if(file_type=="sourmash"){
+    file_pattern <- "[[:print:]]{1,}_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv"
   }
-
-  if (is.null(data_dir)) {
-    data_dir <- choose.dir(caption = "Select folder containing Sourmash output:")
+  if(file_type=="mashscreen"){
+    file_pattern <- "[[:print:]]{1,}trim[[:digit:]]{1,}[[:print:]]{1,}_mash_screen[.]tab"
   }
-
-  file_list <- list.files(path = data_dir, full.names = T)
-
-  if (is.null(out_dir)) {
-    out_dir <- choose.dir(caption = "Select the directory for processed output:")
-  }
-
+  file_list <- list.files(path=data_dir,pattern=file_pattern,full.names=TRUE)
   for (i in 1:length(file_list)) {
 
-    if (type == "sourmash") {
+    if (file_type == "sourmash") {
       tmp_dat <- read.csv(file = file_list[i], header = T, as.is = T)
     }
 
-    if (type == "mash screen") {
+    if (file_type == "mash screen") {
       tmp_dat <- parse_mash_screen(path = file_list[i])
     }
 
     if(verbose) cat(paste("Formatting ", basename(file_list[i]), "...\n", sep = ""))
 
-    tmp_dat  <- getID(tmp_dat, file_list[i])
+    tmp_dat  <- getID(tmp_dat=tmp_dat,path=file_list[i],type=file_type)
     out_file <- paste(out_dir, basename(file_list[i]), sep = "/")
     write.csv(x = tmp_dat, file = out_file, row.names = F)
 

@@ -1,25 +1,18 @@
-process_braken <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE, overwrite = TRUE,
-                           file_type = c("kraken2", "krakenuniq", "bracken"), data_set_name)
+process_bracken <- function(data_dir = NULL, out_dir = NULL, verbose = FALSE, overwrite = TRUE,
+                           file_type = c("kraken2", "krakenuniq", "bracken"))
 {
 
   require("dplyr")
-  require("taxize")
+  require("taxizedb")
   require("stringr")
 
-  data_dir  <- "P:/Mondavi/Option Year Tasks/Task 2 - Interpretation Guideline Integration/Benchmark Sets/Benchmark_Results/ZymoBIOMICS_DNA_in7321_1/4 - Taxonomic Classification/4.3 - Kraken2"
-  #data_dir  <- "C:/Users/chulmelowe/Documents/Projects/Mondavi/Benchmark Results/ZymoBIOMICS Microbial in 7322.1/Bracken"
-  out_dir   <- "P:/Mondavi/Option Year Tasks/Task 2 - Interpretation Guideline Integration/Benchmark Sets/Taxonomic Classification Results/ProcessedData/ZymoBIOMICS_DNA_in731_1/Kraken2"
-  verbose   <- TRUE
-  overwrite <- TRUE
-  file_type <- "kraken2"
-  data_set_name <- "ZymoBIOMICS_Microbial_in7321_1"
-
-  Sys.setenv(ENTREZ_KEY = "1df332e342c8cc46709c3fc5985598445908")
+  options(stringsAsFactors=FALSE)
+  src_ncbi <- src_ncbi()
 
   parse_kraken_rept <- function(file.path) {
 
-    file_in <- readLines(con = file.path)
-    file_in <- file_in[which(grepl("%", file_in)):length(file_in)]
+    file_in <- readLines(con=file.path)
+    file_in <- file_in[which(grepl("%",file_in)):length(file_in)]
 
     var_names <- file_in[1]
     var_names <- stringr::str_replace(string = var_names, pattern = "%", replacement = "percent")
@@ -44,27 +37,28 @@ process_braken <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE, over
     return(data)
   }
 
-  if (is.null(data_dir)) {
-    data_dir <- choose.dir(caption = "Select output directory:")
-  } else {
-    if (!dir.exists(data_dir)) {
-      warning("The specified data directory does not exist. Please check the directory path.")
-    }
+  if(file_type=="kraken2"){
+    file_pattern <- "[[:print:]]{1,}_trim[[:digit:]]{1,}kraken2[[:print:]]{1,}_confidence[[:digit:]]{1,}[.]report"
   }
 
-  file_list <- list.files(path = data_dir, pattern = "*report*", full.names = T)
-
-  if (is.null(out_dir)) {
-    out_dir <- choose.dir(caption = "Select the directory for processed output:")
-  } else {
-    if (!dir.exists(out_dir)) {
-      dir.create(path = out_dir, recursive = TRUE)
-    }
+  if(file_type=="krakenuniq"){
+    file_pattern <- "[[:print:]]{1,}_trim[[:digit:]]{1,}krakenuniq[[:print:]]{1,}_hll[[:digit:]]{1,}_report"
   }
+
+  if(file_type=="bracken"){
+    file_pattern <- "_bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}"
+  }
+
+  file_list <- list.files(path = data_dir, pattern = file_pattern, full.names = T)
 
   for (i in 1:length(file_list)) {
 
     bn <- basename(file_list[i])
+    if(file_type %in% c("kraken2","krakenuniq")){
+      data_set_name <- unlist(strsplit(x=bn,split="_"))[1]
+    } else{
+      data_set_name <- bn
+    }
 
     # Check for existing output
     out_file <- paste(paste(out_dir, bn, sep = "/"), "csv", sep = ".")
@@ -76,9 +70,9 @@ process_braken <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE, over
 
     if (verbose) cat(paste("Parsing ", bn, "...\n", sep = ""))
 
-    if (file_type %in% c("kraken2", "bracken")) {
+    if (file_type %in% c("kraken2","bracken")) {
       dat <- read.table(file = file_list[i], sep = "\t", as.is = T, header = F)
-      colnames(dat) <- c("percent", "fragments", "tax_fragments", "rank", "species_id", "species_name")
+      colnames(dat) <- c("percent","fragments","tax_fragments","rank","species_id","species_name")
     }
 
     if(file_type == "krakenuniq") {
@@ -94,7 +88,7 @@ process_braken <- function(data_dir = NULL, out_dir = NULL, verbose = TRUE, over
     dat <- subset(dat, select = -rank)
 
     if (verbose) {cat("Querying taxon IDs...\n")}
-    all_lin <- taxize::classification(unique(dat$species_id), db = "ncbi")
+    all_lin <- taxize::classification(unique(dat$species_id),db="ncbi")
     all_lin <- do.call(rbind, all_lin)
     all_lin$species_id <- trunc(as.numeric(row.names(all_lin)))
     row.names(all_lin) <- NULL

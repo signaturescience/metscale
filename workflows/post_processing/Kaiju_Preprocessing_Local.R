@@ -1,11 +1,13 @@
-process_kaiju <- function(data_dir = NULL, out_dir, verbose = TRUE, overwrite = TRUE) {
+process_kaiju <- function(data_dir = NULL, out_dir, verbose = FALSE, overwrite = TRUE) {
 
   require("dplyr")
   require("taxizedb")
   require("stringr")
 
   options(stringsAsFactors = F)
+  db_download_ncbi()
   src_ncbi <- src_ncbi()
+  
 
   # Function to parse the raw Kaiju output
   parse_kaiju <- function(path) {
@@ -31,14 +33,9 @@ process_kaiju <- function(data_dir = NULL, out_dir, verbose = TRUE, overwrite = 
 
   }
 
-  # Choose the directory containing the Kaiju output
-  if (is.null(data_dir)) {
-    data_dir <- choose.dir()
-  }
-
   # List the .out files
-  f_list <- list.files(path = data_dir, pattern = "[.]out", full.names = T)
-  f_list <- f_list[!grepl("[.]csv", f_list)]
+  f_list <- list.files(path = data_dir, full.names = TRUE,
+                       pattern = "[[:print:]]{1,}_trim[[:digit:]]{1,}[.]kaiju[.]out")
 
   # Parse each file and save it as a .csv for future analysis
   for (i in 1:length(f_list)) {
@@ -60,17 +57,14 @@ process_kaiju <- function(data_dir = NULL, out_dir, verbose = TRUE, overwrite = 
     # Query the species taxon IDs from NCBI and add them to the dataframe
     if(verbose) cat("Querying species IDs...\n")
     tax_id  <- unique(tmp$tax_id[tmp$classified == "C"])
-    all_lin <- taxizedb::classification(x = tax_id[1:8000], db = "ncbi", verbose = TRUE)
-    tmp_lin <- taxizedb::classification(x = tax_id[8001:length(tax_id)], db = "ncbi", verbose = TRUE)
-    all_lin <- c(all_lin, tmp_lin)
+    all_lin <- taxizedb::classification(x = tax_id, db = "ncbi", verbose = TRUE)
     all_lin <- do.call(rbind, all_lin)
     all_lin$rept_id <- trunc(as.numeric(row.names(all_lin)))
     row.names(all_lin) <- NULL
-    all_lin <- all_lin[all_lin$rank == "species", ]
+    all_lin <- all_lin[all_lin$rank=="species",]
     colnames(all_lin)[3] <- "species_id"
     colnames(all_lin)[1] <- "species_name"
     all_lin <- subset(all_lin, select = c("species_id", "species_name", "rept_id"))
-    memory.limit(size = 10024000)
     tmp <- merge(x = tmp, y = all_lin, by.x = "tax_id", by.y = "rept_id", all.x = T)
 
     # Count the number of times each species appears in the dataframe
@@ -84,8 +78,8 @@ process_kaiju <- function(data_dir = NULL, out_dir, verbose = TRUE, overwrite = 
     if(verbose) cat("Attaching higher-order taxon IDs...\n")
     all_lin <- taxizedb::classification(unique(r_counts$species_id), db = "ncbi")
     all_lin <- do.call(rbind, all_lin)
-    all_lin$species_id <- matrix(unlist(strsplit(row.names(all_lin), "[.]")), ncol = 2, byrow = T)[ ,1]
-    row.names(all_lin) <- NULL
+    all_lin$species_id<-matrix(unlist(strsplit(row.names(all_lin),"[.]")),ncol=2,byrow=T)[,1]
+    row.names(all_lin)<-NULL
 
     king_id <- all_lin %>%
       filter(rank == "superkingdom") %>%
@@ -127,7 +121,7 @@ process_kaiju <- function(data_dir = NULL, out_dir, verbose = TRUE, overwrite = 
 
     # Add the data set name to the counts (parsed from the path)
     if(verbose) cat("Adding data set name...\n")
-    ds_name <- "spiked100x" #unlist(strsplit(f_list[i], "\\\\"))[7]
+    ds_name <- unlist(strsplit(x=bn,split="_"))[1]
     r_counts$data_set <- rep(x = ds_name, times = nrow(r_counts))
 
     # Add the use variable for consistency with other tool output (is always TRUE for Kaiju)
