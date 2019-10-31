@@ -1866,3 +1866,7 @@ rule tax_class_mash_screen_workflow:
             qual        = workflows['tax_class_mash_screen_workflow']['qual'],
             db          = workflows['tax_class_mash_screen_workflow']['mash_db'],
         )
+
+rule tax_class_prep_mtsv_db:
+    input:
+      mtsv_db  
