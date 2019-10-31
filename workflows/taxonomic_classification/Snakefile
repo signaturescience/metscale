@@ -1515,12 +1515,13 @@ rule mash_screen_sort:
 # Taxonomic Classification:  build MTSV databases
 
 mtsv_threads = taxclass['mtsv']['threads']
-mtsv_customdb_name = taxclass['mtsv']['customdb_name']
+mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
+#mtsv_custom_db_name = '"%s"'%mtsv_custom_db_name
 mtsv_partitions = taxclass['mtsv']['partitions']
 mtsv_image = container_image_name(biocontainers, 'mtsv')
 mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
 mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
-
+print("mtsv_sing_db: " +mtsv_sing_db)
 
 rule mtsv_update_json:
     output:
@@ -1533,11 +1534,11 @@ rule mtsv_update_json:
         customdb_name = mtsv_customdb_name,
         partitions = mtsv_partitions
     shell:
-        "mtsv_setup json_update "
-        "--path {params.sing_db} --cores -thread {params.threads} && "
         "mtsv_setup custom_db "
-        "--path {params.sing_db} --cores -thread {params.threads} "
-        "--customdb {params.customdb_name} --partitions {params.partitions} "
+        "--path {params.sing_db} --cores -t {params.threads} "
+        "--customdb {params.customdb_name} --partitions {params.partitions} && "
+        "mtsv_setup json_update "
+        "--path {params.sing_db} --cores -t {params.threads} "
 
 
 
