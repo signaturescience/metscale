@@ -1527,12 +1527,17 @@ rule mtsv_update_json:
         mtsv_db
     singularity:
         mtsv_image
+    params:
+        sing_db = mtsv_sing_db,
+        threads = mtsv_threads,
+        customdb_name = mtsv_customdb_name,
+        partitions = mtsv_partitions
     shell:
         "mtsv_setup json_update "
-        "--path {mtsv_sing_db} --cores -thread {mtsv_threads} && "
+        "--path {params.sing_db} --cores -thread {params.threads} && "
         "mtsv_setup custom_db "
-        "--path {mtsv_sing_dir} --cores -thread {mtsv_threads} "
-        "--customdb {mtsv_customdb_name} --partitions {mtsv_partitions} "
+        "--path {params.sing_db} --cores -thread {params.threads} "
+        "--customdb {params.customdb_name} --partitions {params.partitions} "
 
 
 
