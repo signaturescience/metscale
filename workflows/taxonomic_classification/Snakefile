@@ -1511,6 +1511,32 @@ rule mash_screen_sort:
         "{input} > {output} "
 
 
+############################################
+# Taxonomic Classification:  build MTSV databases
+
+mtsv_threads = taxclass['mtsv']['threads']
+mtsv_customdb_name = taxclass['mtsv']['customdb_name']
+mtsv_partitions = taxclass['mtsv']['partitions']
+mtsv_image = container_image_name(biocontainers, 'mtsv')
+mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
+mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
+
+
+rule mtsv_update_json:
+    output:
+        mtsv_db
+    singularity:
+        mtsv_image
+    shell:
+        "mtsv_setup json_update "
+        "--path {mtsv_sing_db} --cores -thread {mtsv_threads} && "
+        "mtsv_setup custom_db "
+        "--path {mtsv_sing_dir} --cores -thread {mtsv_threads} "
+        "--customdb {mtsv_customdb_name} --partitions {mtsv_partitions} "
+
+
+
+
 ###################################
 # Taxonomic Classification: build rules
 

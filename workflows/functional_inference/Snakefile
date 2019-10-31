@@ -273,8 +273,6 @@ def get_db_dir_spades(wildcards):
         abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
     return abricate_db_dir
 
-#print("abricate_with_spades_input: "+str(abricate_with_spades_input))
-#print("abricate_with_spades_output: "+str(abricate_with_spades_output))
 
 rule abricate_with_spades:
     input:
@@ -330,7 +328,6 @@ def srst2_post_trimming_inputs_sing(wildcards):
     unique_filename_obj = hashlib.md5(file_seed.encode())
     unique_filename = unique_filename_obj.hexdigest()
     unique_filename = unique_filename[:-16] 
-    print("unique_filename: "+str(unique_filename))
     srst2_input_sing = []
     for num, file in enumerate(pre_inputs_wc, start=1):
         dst_file = join(data_dir, unique_filename + '_'+ str(num) +readfilt['quality_trimming']['sample_file_ext'])
