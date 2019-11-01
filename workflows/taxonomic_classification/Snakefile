@@ -1519,8 +1519,10 @@ mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
 mtsv_partitions = taxclass['mtsv']['partitions']
 mtsv_image = container_image_name(biocontainers, 'mtsv')
 mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
+mtsv_sing_db = '"' + mtsv_sing_db + '"'
 mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
-
+print(mtsv_sing_db)
+print(type(mtsv_sing_db))
 
 rule tax_class_mtsv_update_db:
     output:
@@ -1533,11 +1535,11 @@ rule tax_class_mtsv_update_db:
         customdb_name = mtsv_customdb_name,
         partitions = mtsv_partitions
     shell:
-        "mtsv_setup custom_db "
-        "--path {params.sing_db} --cores -t {params.threads} "
-        "--customdb {params.customdb_name} --partitions {params.partitions} && "
         "mtsv_setup json_update "
-        "--path {params.sing_db} --cores -t {params.threads} "
+        "--path {params.sing_db} && "
+        "mtsv_setup custom_db "
+        "--path {params.sing_db} -t {params.threads} "
+        "--customdb {params.customdb_name} --partitions {params.partitions}"
 
 ############################################
 # Taxonomic Classification:  create MTSV File
@@ -1583,6 +1585,7 @@ rule mtsv_update_cfg:
 
 
 output_summary_file = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV','Summary','summary.csv')
+mtsv_cfg_sing_dest = join(sing_dir, 'mtsv.cfg')
 
 rule tax_class_run_mtsv:
     input:
@@ -1592,7 +1595,7 @@ rule tax_class_run_mtsv:
     singularity:
         mtsv_image
     params:
-        cfg = mtsv_cfg_dest,
+        cfg = mtsv_cfg_sing_dest,
         threads = mtsv_threads
     shell:
         "mtsv readprep -c {params.cfg} && "

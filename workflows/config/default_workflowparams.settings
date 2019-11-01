@@ -310,7 +310,7 @@ config_default = {
         },
         "mtsv" : {
             "sample_name" : "SRR606249",
-            "threads" : 6,
+            "threads" : 20,
             #db file dir name uncompressed
             "db_name" : "May-22-2019",
             "customdb_name" : "Complete Genome",
