@@ -1524,7 +1524,7 @@ mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
 
 rule tax_class_mtsv_update_db:
     output:
-        mtsv_db
+        directory(mtsv_db)
     singularity:
         mtsv_image
     params:
