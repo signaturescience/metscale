@@ -3,6 +3,9 @@
 
 This is a database query tool that can be used to query the contents of reference databases that are commonly used with taxonomic classification tools. This tool integrates the contents of many databases used in the taxonomic workflows, and it allows an end-user to query tax ids to find databases that contain information on those individual IDs. 
 
+![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool.png)
+
+
 ## How to use the DQT
 
 ### query_tool.py (Using the tool)
