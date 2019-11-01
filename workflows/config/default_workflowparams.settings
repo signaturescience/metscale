@@ -309,10 +309,16 @@ config_default = {
             "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
         },
         "mtsv" : {
+            "sample_name" : "SRR606249",
             "threads" : 6,
+            #db file dir name uncompressed
             "db_name" : "May-22-2019",
             "customdb_name" : "Complete Genome",
             "partitions" : 2,
+            "input_files" : "*.fq",
+            "kmer" : 50,
+            "n_kmers" : 100000,
+            "signature_cutoff" : 20
         }
     },
 

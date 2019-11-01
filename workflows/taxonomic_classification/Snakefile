@@ -1512,18 +1512,17 @@ rule mash_screen_sort:
 
 
 ############################################
-# Taxonomic Classification:  build MTSV databases
+# Taxonomic Classification:  update MTSV databases
 
 mtsv_threads = taxclass['mtsv']['threads']
 mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
-#mtsv_custom_db_name = '"%s"'%mtsv_custom_db_name
 mtsv_partitions = taxclass['mtsv']['partitions']
 mtsv_image = container_image_name(biocontainers, 'mtsv')
 mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
 mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
-print("mtsv_sing_db: " +mtsv_sing_db)
 
-rule mtsv_update_json:
+
+rule tax_class_mtsv_update_db:
     output:
         mtsv_db
     singularity:
@@ -1539,6 +1538,70 @@ rule mtsv_update_json:
         "--customdb {params.customdb_name} --partitions {params.partitions} && "
         "mtsv_setup json_update "
         "--path {params.sing_db} --cores -t {params.threads} "
+
+############################################
+# Taxonomic Classification:  create MTSV File
+
+mtsv_cfg_dest = join(data_dir,  'mtsv.cfg')
+mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
+
+input_files = taxclass['mtsv']['input_files']
+mtsv_sing_dir_path = join(sing_dir,taxclass['mtsv']['sample_name']+'_MTSV')
+mtsv_kmer_output = taxclass['mtsv']['kmer']
+mtsv_db_config = sing_dir + "/" + taxclass['mtsv']['db_name'] + "/artifacts/complete_genome.json"
+mtsv_n_kmers = taxclass['mtsv']['n_kmers']
+mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
+
+
+rule mtsv_update_cfg:
+    output:
+        mtsv_cfg_dest
+    params:
+        src = mtsv_cfg_src,
+        dest = mtsv_cfg_dest,
+        data_dir = mtsv_sing_dir_path,
+        input_files = input_files,
+        kmer_output = mtsv_kmer_output,
+        database_config_output = mtsv_db_config,
+        n_kmers_output = mtsv_n_kmers,
+        signature_cutoff_output = mtsv_signature_cutoff
+    run:
+        with open(params.src, 'r') as f:
+            s1 = f.read().replace("{fastq_output}", params.input_files, 1)
+            s2 = s1.replace("{data_dir}", params.data_dir, 15)
+            s3 = s2.replace("{kmer_output}", str(params.kmer_output), 1)
+            s4 = s3.replace("{database_config}", params.database_config_output)
+            s5 = s4.replace("{n_kmers}",str(params.n_kmers_output),1)
+            s6 = s5.replace("{signature_cutoff}", str(params.signature_cutoff_output),1)
+        with open(params.dest, 'w') as f:
+            f.write(s6)
+
+
+
+############################################
+# Taxonomic Classification:  run MTSV 
+
+
+output_summary_file = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV','Summary','summary.csv')
+
+rule tax_class_run_mtsv:
+    input:
+        mtsv_cfg_dest
+    output:
+        output_summary_file
+    singularity:
+        mtsv_image
+    params:
+        cfg = mtsv_cfg_dest,
+        threads = mtsv_threads
+    shell:
+        "mtsv readprep -c {params.cfg} && "
+        "mtsv binning -c {params.cfg} --cores -t {params.threads} && "
+        "mtsv summary -c {params.cfg} --cores -t {params.threads} && "
+        "mtsv summary -c {params.cfg} --cores -t {params.threads} && "
+        "mtsv analyze -c {params.cfg} --cores -t {params.threads}"
+
+
 
 
 
@@ -1872,7 +1935,7 @@ rule tax_class_mash_screen_workflow:
             qual        = workflows['tax_class_mash_screen_workflow']['qual'],
             db          = workflows['tax_class_mash_screen_workflow']['mash_db'],
         )
-
+#TODO: FIX, doesn't work
 rule tax_class_prep_mtsv_db:
     input:
       mtsv_db  
