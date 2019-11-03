@@ -12,7 +12,7 @@ process_bracken <- function(data_dir = NULL, out_dir = NULL, verbose = FALSE, ov
   parse_kraken_rept <- function(file.path) {
 
     file_in <- readLines(con=file.path)
-    file_in <- file_in[which(grepl("%",file_in)):length(file_in)]
+    file_in <- file_in[which(grepl("^%",file_in)):length(file_in)]
 
     var_names <- file_in[1]
     var_names <- stringr::str_replace(string = var_names, pattern = "%", replacement = "percent")
@@ -38,15 +38,15 @@ process_bracken <- function(data_dir = NULL, out_dir = NULL, verbose = FALSE, ov
   }
 
   if(file_type=="kraken2"){
-    file_pattern <- "[[:print:]]{1,}_trim[[:digit:]]{1,}kraken2[[:print:]]{1,}_confidence[[:digit:]]{1,}[.]report"
+    file_pattern <- "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_kraken2_[[:print:]]{1,}_confidence[[:digit:]]{1,}[.]report"
   }
 
   if(file_type=="krakenuniq"){
-    file_pattern <- "[[:print:]]{1,}_trim[[:digit:]]{1,}krakenuniq[[:print:]]{1,}_hll[[:digit:]]{1,}_report"
+    file_pattern <- "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_krakenuniq[[:print:]]{0,}_report"
   }
 
   if(file_type=="bracken"){
-    file_pattern <- "_bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}"
+    file_pattern <- "._bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}"
   }
 
   file_list <- list.files(path = data_dir, pattern = file_pattern, full.names = T)
@@ -70,9 +70,28 @@ process_bracken <- function(data_dir = NULL, out_dir = NULL, verbose = FALSE, ov
 
     if (verbose) cat(paste("Parsing ", bn, "...\n", sep = ""))
 
-    if (file_type %in% c("kraken2","bracken")) {
-      dat <- read.table(file = file_list[i], sep = "\t", as.is = T, header = F)
+    if (file_type == "kraken2") {
+      dat <- read.table(file = file_list[i], sep = "\t", as.is = T, header = F, quote = '"')
       colnames(dat) <- c("percent","fragments","tax_fragments","rank","species_id","species_name")
+    }
+
+    if (file_type == "bracken") {
+      dat <- readLines(file_list[i])
+      dat <- strsplit(dat, "\t")
+      dat <- do.call(rbind, dat)
+      colnames(dat) <- dat[1, ]
+      dat <- dat[2:nrow(dat), ]
+      dat <- data.frame(dat)
+      dat$name <- as.character(dat$name)
+      dat$taxonomy_id <- as.numeric(dat$taxonomy_id)
+      dat$taxonomy_lvl <- as.character(dat$taxonomy_lvl)
+      dat$kraken_assigned_reads <- as.numeric(dat$kraken_assigned_reads)
+      dat$added_reads <- as.numeric(dat$added_reads)
+      dat$new_est_reads <- as.numeric(dat$new_est_reads)
+      dat$fraction_total_reads <- as.numeric(dat$fraction_total_reads)
+      colnames(dat)[colnames(dat) == "taxonomy_id"] <- "species_id"
+      colnames(dat)[colnames(dat) == "taxonomy_lvl"] <- "rank"
+      colnames(dat)[colnames(dat) == "name"] <- "species_name"
     }
 
     if(file_type == "krakenuniq") {
@@ -82,13 +101,11 @@ process_bracken <- function(data_dir = NULL, out_dir = NULL, verbose = FALSE, ov
     }
 
     dat <- dat %>% filter(rank == "S" | rank == "species")
-
     dat$species_name <- trimws(x = dat$species_name, which = "both")
-
     dat <- subset(dat, select = -rank)
 
     if (verbose) {cat("Querying taxon IDs...\n")}
-    all_lin <- taxize::classification(unique(dat$species_id),db="ncbi")
+    all_lin <- taxizedb::classification(unique(dat$species_id),db="ncbi")
     all_lin <- do.call(rbind, all_lin)
     all_lin$species_id <- trunc(as.numeric(row.names(all_lin)))
     row.names(all_lin) <- NULL
