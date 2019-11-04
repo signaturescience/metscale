@@ -471,7 +471,7 @@ ABRicate was designed to screen contigs for antimicrobial resistance or virulenc
 ABRicate was designed to screen contigs for antimicrobial resistance or virulence genes
 
 ```{r, results='asis'}
-x <- list.files(pattern="card\\.csv$", recursive=TRUE)
+x <- list.files(pattern="abricate.*\\.csv$", recursive=TRUE)
 bx <- basename(x)
 glue::glue("- **[{x}]({bx})**") %>% 
   cat(sep="\n")
