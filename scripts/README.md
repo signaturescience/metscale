@@ -30,6 +30,14 @@ In the specific example given here, this would be:
  ```
  python query_tool.py pickle_dir/containment_dict.p query_file.txt
  ```
+#### Example with Shakya dataset used in demo
+Another example use case are the tax IDs present in the Shakya dataset. Here we are using the provided '' dataset, shich list all the tax ids line by line. We use the following command to run the tool: 
+
+```
+ python query_tool.py pickle_dir/containment_dict.p query_file.txt
+```
+
+This returns a list of all the associated taxa and the databases they are present within. 
 
 ### dictionary_maker.py (Building query database for the tool)
 To use the dictionary_maker.py (v2), the end user only needs to modify the dictionary_maker_parameters.py file. This allows for a friendly interface, where a user only needs to change the paths and the boolean statements for what they would like to build. This therefore supports an easy-to-use method for adding databases as they are released, in addition to completely rebuilding indexes used by the tool from scratch if desired. 
