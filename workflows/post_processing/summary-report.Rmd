@@ -254,7 +254,51 @@ MTSv is a suite of metagenomic binning and analysis tools, and organisms are det
 
 ### Direct Links to these file:
 
-TODO: Insert files here
+
+```{r, results='asis'}
+x_csv <- list.files(pattern="summary.csv$", recursive=TRUE)
+bx_csv <- basename(x_csv)
+x <- file.path(getwd(), x_csv)
+glue::glue("- **[{x_csv}]({x})**")  %>% 
+  cat(sep="\n")
+```
+
+
+```{r, results='asis'}
+x_csv <- list.files(pattern="analysis.csv$", recursive=TRUE)
+bx_csv <- basename(x_csv)
+x <- file.path(getwd(), x_csv)
+glue::glue("- **[{x_csv}]({x})**")  %>% 
+  cat(sep="\n")
+```
+
+
+```{r, results='asis'}
+x_csv <- list.files(pattern="binning_report.html$", recursive=TRUE)
+bx_csv <- basename(x_csv)
+x <- file.path(getwd(), x_csv)
+glue::glue("- **[{x_csv}]({x})**")  %>% 
+  cat(sep="\n")
+```
+
+
+```{r, results='asis'}
+x_csv <- list.files(pattern="readprep_report.html$", recursive=TRUE)
+bx_csv <- basename(x_csv)
+x <- file.path(getwd(), x_csv)
+glue::glue("- **[{x_csv}]({x})**")  %>% 
+  cat(sep="\n")
+```
+
+
+```{r, results='asis'}
+x_csv <- list.files(pattern="summary_report.html$", recursive=TRUE)
+bx_csv <- basename(x_csv)
+x <- file.path(getwd(), x_csv)
+glue::glue("- **[{x_csv}]({x})**")  %>% 
+  cat(sep="\n")
+```
+
 
 ## Bracken results {.tabset .tabset-pills}
 
