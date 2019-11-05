@@ -378,9 +378,9 @@ def srst2_input_files_sing(wildcards):
         if (num ==0):  #forward 
             result_file = hashlib.md5(input_file.encode())
             hex_file = result_file.hexdigest()[:16]
-            srst2_input_file = data_dir + '/' + hex_file + '_1' + readfilt['quality_trimming']['sample_file_ext']     
+            srst2_input_file = data_dir + '/' + hex_file + '_1' + wildcards.db + readfilt['quality_trimming']['sample_file_ext']     
         else:   #reverse
-            srst2_input_file = data_dir + '/' + hex_file + '_2' + readfilt['quality_trimming']['sample_file_ext']
+            srst2_input_file = data_dir + '/' + hex_file + '_2' + wildcards.db + readfilt['quality_trimming']['sample_file_ext']
         if (os.path.isfile(input_file)):
             shutil.copyfile(input_file, srst2_input_file)
             srst2_input_file = srst2_input_file.replace(data_dir, sing_dir)
@@ -406,13 +406,12 @@ rule srst2_with_raw_reads:
         '--input_pe {params.input_files} '
         '--forward _1 '
         '--reverse _2 '
-        '--merge_pair '
         '--output {params.output_files} '
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
         '&& '
-        'rm {params.input_files}'
+        'rm {params.input_files} '
 
 
   
