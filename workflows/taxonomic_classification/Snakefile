@@ -1618,12 +1618,10 @@ rule tax_class_run_mtsv:
 
 image = mtsv_image.split("file:",1)[1]
 output_analysis_file = join(data_dir, taxclass['mtsv']['sample_name']+'_MTSV','Analysis','analysis.csv')
-output_summary_file = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV','Summary','summary.csv')
-print("out: " +str(output_summary_file))
-'''
+
 rule tax_class_run_mtsv_analyze:
     input:
-	output_summary_file
+        output_summary_file
     output:
         output_analysis_file
     params:
@@ -1633,7 +1631,7 @@ rule tax_class_run_mtsv_analyze:
         image = image
     run:
         shell("singularity run {params.image} mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path}")
-'''	
+	
 
 
 
