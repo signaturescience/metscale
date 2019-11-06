@@ -1609,7 +1609,6 @@ rule tax_class_run_mtsv:
     shell:
         "mtsv readprep -c {params.cfg} -wd {params.sing_dir_path} && "
         "mtsv binning -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
-        "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
         "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} "
 
 
