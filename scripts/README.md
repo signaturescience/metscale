@@ -6,6 +6,11 @@ This is a database query tool that can be used to query the contents of referenc
 ![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool.png)
 
 
+## Databases and Corresponding Tools
+Below is an image of the programs aand tools used in the workflows with the corresponding databases. When using the query_tool.py, this table may be used to the output databases back with the tools that are used. 
+
+![](https://github.com/signaturescience/metagenomics/blob/master/scripts/databases.png)
+
 ## How to use the DQT
 
 ### query_tool.py (Using the tool)
