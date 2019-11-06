@@ -26,7 +26,7 @@ To query for specific tax ids, a line delimited file is used as input. For examp
 9606
 ```
 
-When using query_tool.py on the input file, query_file.txt, there needs to be a precomputed query database. This query database is a pickled python dictionary containing information for all of the input databases. The dictionary_maker.py and dictionary_maker_parameters.py together create a containment_dict.p file that aggregates all of the information for the databases used in the taxonomic classification tools. The first argument for the tool is the path to the containment_dict.p pickle file, and the second argument is the path to the file containing the tax id's being queried. For example:
+When using query_tool.py on the input file, query_file.txt, there needs to be a precomputed query database. This query database is a pickled python dictionary containing information for all of the input databases. The dictionary_maker.py and dictionary_maker_parameters.py together create a containment_dict.p file that aggregates all of the information for the databases used in the taxonomic classification tools. This file can be downloaded from [https://osf.io/2d3nw/]. The first argument for the tool is the path to the containment_dict.p pickle file, and the second argument is the path to the file containing the tax id's being queried. For example:
 
 ```
 python query_tool.py <PATH TO PICKLE FILE> <QUERY FILE>
