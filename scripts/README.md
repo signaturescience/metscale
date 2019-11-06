@@ -3,7 +3,7 @@
 
 This is a database query tool that can be used to query the contents of reference databases that are used with taxonomic classification tools. This tool integrates the contents of many databases used in the taxonomic workflows, and it allows an end-user to query NCBI taxonomic ids to find databases that contain a refence back to the taxonomic id in the query file. 
 
-![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool_(1).png)
+![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool.png)
 
 
 ## How to use the DQT
