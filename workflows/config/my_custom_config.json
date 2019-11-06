@@ -56,7 +56,7 @@
         },
         "assembly_all_workflow" : {
             # the assembly workflow will run
-            # all assemblers
+            # all metagenome assemblers (megahit and metaspades)
             "qual"      : ["2","30"],
         },
         "assembly_quast_workflow" : {
