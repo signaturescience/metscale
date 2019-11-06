@@ -4,7 +4,7 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
   require("stringr")
   options(stringsAsFactors = F)
   src_ncbi <- src_ncbi()
-  
+  memory.limit(size = 10024000)
   parse_mash_screen <- function(path) {
     data <- readLines(con = path)
     data <- strsplit(x = data, split = "\t")
@@ -194,10 +194,10 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
 
     return(tmp_dat)
   }
-  if(file_type=="sourmash"){
+  if(type=="sourmash"){
     file_pattern <- "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv"
   }
-  if(file_type=="mash screen"){
+  if(type=="mash screen"){
     file_pattern <- "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_[[:print:]]{1,}_mash_screen[.]sorted[.]tab"
   }
   file_list <- list.files(path = data_dir, pattern = file_pattern, full.names = TRUE)

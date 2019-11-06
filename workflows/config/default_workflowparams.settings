@@ -374,7 +374,7 @@ config_default = {
         "move_samples_to_dir" : {
             # file pattern to move files to in post processing
             "output_pattern" : "{sample}_finished",
-            "out_pattern" : "{sample_mv}/0-summary-report.html"
+            "out_pattern" : "{sample_mv}/summary-report.html"
         },
     },
 
