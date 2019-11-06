@@ -7,7 +7,7 @@ This is a database query tool that can be used to query the contents of referenc
 
 
 ## Databases and Corresponding Tools
-Below is an image of the programs aand tools used in the workflows with the corresponding databases. When using the query_tool.py, this table may be used to the output databases back with the tools that are used. 
+Below is an image of the programs and tools used in the workflows with the corresponding databases. When using the query_tool.py, this table may be used to the output databases back with the tools that are used. 
 
 ![](https://github.com/signaturescience/metagenomics/blob/master/scripts/databases.png)
 
