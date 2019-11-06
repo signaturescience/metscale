@@ -9,6 +9,7 @@ Documentation: docs/workflow_taxclass.md
 from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
+import shutil
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 
@@ -1520,7 +1521,7 @@ mtsv_partitions = taxclass['mtsv']['partitions']
 mtsv_image = container_image_name(biocontainers, 'mtsv')
 mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
 mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
-dummy_dir = join(data_dir, "DUMMY_DIR")
+dummy_dir = join(data_dir, "MTSV_DUMMY_DIR")
 
 rule tax_class_mtsv_update_db:
     output:
@@ -1542,13 +1543,15 @@ rule tax_class_mtsv_update_db:
         "--customdb {params.customdb_name} --partitions {params.partitions}"
 
 ############################################
-# Taxonomic Classification:  create MTSV File
+# Taxonomic Classification:  create MTSV cfg File
 
 mtsv_cfg_dest = join(data_dir,  'mtsv.cfg')
 mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
 
-input_files = taxclass['mtsv']['input_files']
+input_files = join(sing_dir, taxclass['mtsv']['input_files'])
 mtsv_sing_dir_path = join(sing_dir,taxclass['mtsv']['sample_name']+'_MTSV')
+mtsv_data_dir_path = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV')
+mtsv_query_fasta_path = mtsv_data_dir_path + '/QueryFastas'
 mtsv_kmer_output = taxclass['mtsv']['kmer']
 mtsv_db_config = sing_dir + "/" + taxclass['mtsv']['db_name'] + "/artifacts/complete_genome.json"
 mtsv_n_kmers = taxclass['mtsv']['n_kmers']
@@ -1562,12 +1565,17 @@ rule mtsv_update_cfg:
         src = mtsv_cfg_src,
         dest = mtsv_cfg_dest,
         data_dir = mtsv_sing_dir_path,
+        dir_path_create = mtsv_data_dir_path,
         input_files = input_files,
         kmer_output = mtsv_kmer_output,
         database_config_output = mtsv_db_config,
         n_kmers_output = mtsv_n_kmers,
-        signature_cutoff_output = mtsv_signature_cutoff
+        signature_cutoff_output = mtsv_signature_cutoff,
+        query_fasta_file = mtsv_query_fasta_path
     run:
+        shell("mkdir -p .mtsv")
+        shell("mkdir -p {params.dir_path_create}")
+        shell("cp ../resources/expected.csv .mtsv")
         with open(params.src, 'r') as f:
             s1 = f.read().replace("{fastq_output}", params.input_files, 1)
             s2 = s1.replace("{data_dir}", params.data_dir, 15)
@@ -1595,17 +1603,37 @@ rule tax_class_run_mtsv:
     singularity:
         mtsv_image
     params:
+        sing_dir_path = mtsv_sing_dir_path,
         cfg = mtsv_cfg_sing_dest,
         threads = mtsv_threads
     shell:
-        "mtsv readprep -c {params.cfg} && "
-        "mtsv binning -c {params.cfg} --cores -t {params.threads} && "
-        "mtsv summary -c {params.cfg} --cores -t {params.threads} && "
-        "mtsv summary -c {params.cfg} --cores -t {params.threads} && "
-        "mtsv analyze -c {params.cfg} --cores -t {params.threads}"
+        "mtsv readprep -c {params.cfg} -wd {params.sing_dir_path} && "
+        "mtsv binning -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
+        "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
+        "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} "
 
 
+#####################################
+# Taxonomic Classification: run MTSV analyse
 
+image = mtsv_image.split("file:",1)[1]
+output_analysis_file = join(data_dir, taxclass['mtsv']['sample_name']+'_MTSV','Analysis','analysis.csv')
+output_summary_file = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV','Summary','summary.csv')
+print("out: " +str(output_summary_file))
+'''
+rule tax_class_run_mtsv_analyze:
+    input:
+	output_summary_file
+    output:
+        output_analysis_file
+    params:
+        sing_dir_path = mtsv_sing_dir_path,
+        cfg = mtsv_cfg_sing_dest,
+        threads = mtsv_threads,
+        image = image
+    run:
+        shell("singularity run {params.image} mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path}")
+'''	
 
 
 
