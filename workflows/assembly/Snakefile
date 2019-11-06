@@ -219,7 +219,7 @@ rule assembly_plasmidspades:
     benchmark:
         assembly_plasmidspades_benchfile
     shell:
-        'spades.py -t {threads} '
+        'plasmidspades.py -t {threads} '
          '-1 {params.fwd_sing} '
          '-2 {params.rev_sing} '
         '-o /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc} '
