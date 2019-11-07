@@ -73,7 +73,6 @@ assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patte
 assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
 assembly_metaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['metaspades_pattern'])
 
-assembly_metaspades_logfile = re.sub('contigs.fa','log',assembly_metaspades_output)
 assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
 assembly_metaspades_threads =  assembly['assembly_patterns']['metaspades_threads']
 
@@ -102,8 +101,6 @@ rule assembly_metaspades:
         spades_image
     threads: 
         assembly_metaspades_threads
-    log: 
-        assembly_metaspades_logfile
     benchmark:
         assembly_metaspades_benchfile
     shell:
@@ -133,8 +130,6 @@ assembly_spades_output = assembly_spades_output.replace('kmer', assembly_spades_
 assembly_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['spades_pattern'])
 assembly_spades_output_sing = assembly_spades_output_sing.replace('kmer', assembly_spades_kmer_filename)
 
-
-assembly_spades_logfile = re.sub('contigs.fa','log',assembly_spades_output)
 assembly_spades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_spades_output)
 assembly_spades_threads =  assembly['assembly_patterns']['spades_threads']
 assembly_spades_kmer = assembly['assembly_patterns']['kmer']
@@ -165,8 +160,6 @@ rule assembly_spades:
         spades_image
     threads: 
         assembly_spades_threads
-    log: 
-        assembly_spades_logfile
     benchmark:
         assembly_spades_benchfile
     shell:
@@ -186,7 +179,6 @@ assembly_plasmidspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_pa
 assembly_plasmidspades_output = join(data_dir, assembly['assembly_patterns']['plasmidspades_pattern'])
 assembly_plasmidspades_output_sing = join(sing_dir, assembly['assembly_patterns']['plasmidspades_pattern'])
 
-assembly_plasmidspades_logfile = re.sub('contigs.fa','log',assembly_plasmidspades_output)
 assembly_plasmidspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_plasmidspades_output)
 assembly_plasmidspades_threads =  assembly['assembly_patterns']['plasmidspades_threads']
 
@@ -214,8 +206,6 @@ rule assembly_plasmidspades:
         spades_image
     threads: 
         assembly_plasmidspades_threads
-    log: 
-        assembly_plasmidspades_logfile
     benchmark:
         assembly_plasmidspades_benchfile
     shell:
@@ -260,7 +250,6 @@ assembly_megahit_input_rev_sing = assembly_megahit_input_pattern_sing.format(
 assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
 assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 
-assembly_megahit_logfile = re.sub('contigs.fa','log',assembly_megahit_output)
 assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
 assembly_megahit_threads =  assembly['assembly_patterns']['megahit_threads']
 
@@ -285,8 +274,6 @@ rule assembly_megahit:
         megahit_image
     threads:
         assembly_megahit_threads
-    log:
-        assembly_megahit_logfile
     benchmark:
         assembly_megahit_benchfile
     params:
