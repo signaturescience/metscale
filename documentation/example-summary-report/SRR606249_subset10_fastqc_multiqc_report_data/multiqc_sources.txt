@@ -1,7 +1,0 @@
-Module	Section	Sample Name	Source
-FastQC	all_sections	SRR606249_subset10_trim2_1	/tmp/SRR606249_subset10_trim2_1_fastqc.zip
-FastQC	all_sections	SRR606249_subset10_trim30_1	/tmp/SRR606249_subset10_trim30_1_fastqc.zip
-FastQC	all_sections	SRR606249_subset10_1_reads	//tmp/SRR606249_subset10_1_reads_fastqc.zip
-FastQC	all_sections	SRR606249_subset10_trim30_2	/tmp/SRR606249_subset10_trim30_2_fastqc.zip
-FastQC	all_sections	SRR606249_subset10_2_reads	//tmp/SRR606249_subset10_2_reads_fastqc.zip
-FastQC	all_sections	SRR606249_subset10_trim2_2	/tmp/SRR606249_subset10_trim2_2_fastqc.zip
