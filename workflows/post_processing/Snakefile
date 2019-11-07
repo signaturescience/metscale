@@ -49,7 +49,8 @@ def get_input_files(wildcards):
     input_files.extend(glob.glob(str(input_file_pattern[0])))
 
     #reverse string pattern
-    input_rev_str = str(sample_input).replace(search_pattern, replace_pattern)
+    input_rev_str = str(sample_input).rsplit(search_pattern, 1)
+    input_rev_str = replace_pattern.join(input_rev_str)
     input_rev_str_pattern = join(data_dir,input_rev_str)
     input_rev_str_pattern = input_rev_str_pattern+"*"
     input_files.extend(glob.glob(input_rev_str_pattern))
