@@ -1,7 +1,7 @@
 
 # Database Query Tool (DQT)
 
-**NOTE:** The DQT currently is only working with python2.
+**NOTE:** The DQT works with python2 OR python3.
 
 This is a database query tool that can be used to query the contents of reference databases that are used with taxonomic classification tools. This tool integrates the contents of many databases used in the taxonomic workflows, and it allows an end-user to query NCBI taxonomic ids to find databases that contain a refence back to the taxonomic id in the query file. 
 
