@@ -35,18 +35,21 @@ params:
 ---
 
 ```{r setup, message=FALSE, warning=FALSE}
+
+# Get input dir
+input_dir_param <- snakemake@params[1]
+input_dir <- toString(input_dir_param)
+# Set sample name (parameterized)
+id <- snakemake@params[2]
+
+
 # setup and load necessary libraries
 library(knitr)
 library(tidyverse)
 library(DT)
 opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+opts_knit$set(root.dir=input_dir)
 theme_set(theme_bw())
-
-
-# Get input dir
-input_dir <- snakemake@params[1]
-# Set sample name (parameterized)
-id <- snakemake@params[2]
 ```
 
 
