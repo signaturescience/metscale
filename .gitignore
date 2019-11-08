@@ -20,12 +20,9 @@ workflows/read_filtering/data
 workflows/taxonomic_classification/data
 
 # Don't blacklist workflows/data recursively
-!workflows/data/
 # Ignore everything under workflows/data
 workflows/data/*
-# Except this particular directory and everything under it
-!workflows/data/SRR606249_subset10_1_reads_finished/
-!workflows/data/SRR606249_subset10_1_reads_finished/*
+
 
 # no big files
 .sbt*

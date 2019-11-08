@@ -13,7 +13,7 @@ from socket import error as SocketError
 from snakemake.io import expand
 
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
+workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'post_processing', 'all']  #keep all at the end of the list
 
 
 def reporthook(count, block_size, total_size):
@@ -32,6 +32,8 @@ def reporthook(count, block_size, total_size):
  
 def download_file(workflow, data, install_dir):
     if workflow in data.keys():
+        if (workflow == "post_processing"):
+            install_dir = "post_processing/"
         for file_name, url_string in data[workflow].items():   
             try:
                 url = urlparse(url_string)
@@ -71,10 +73,10 @@ def download_file(workflow, data, install_dir):
                             urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
                         if (file_name.endswith('.tgz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
-                            subprocess.run([untar_command], shell=True) 
+                            subprocess.run([untar_command], shell=True)
                         elif (file_name.endswith('.gz')):
                             unzip_command = "gunzip -c " + install_dir+"/" + file_name + " > " + install_dir + "/" + os.path.splitext(file_name)[0] + " && rm -f " + install_dir+"/" + file_name
-                            subprocess.run([unzip_command], shell=True) 
+                            subprocess.run([unzip_command], shell=True)
                     except SocketError as e:
                         print("Error downloading file " + file_name + " Retry script.")
                         print(e)

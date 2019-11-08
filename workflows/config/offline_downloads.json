@@ -60,7 +60,15 @@
         "ARGannot.r3.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ARGannot_r3.fasta",
         "ResFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ResFinder.fasta",
         "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
-        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta",
-        "customDBabricate.tgz" : "file:///resources/customDBabricate.tgz"
+        "customDBabricate.tgz" : "file:///resources/customDBabricate.tgz",
+        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta"
+
+    },
+
+    "post_processing" : {
+        "dead_nucl.accession2taxid.gz": "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/dead_nucl.accession2taxid.gz",
+        "dead_wgs.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/dead_wgs.accession2taxid.gz",
+        "nucl_gb.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz",
+        "nucl_wgs.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz"
     }
 }

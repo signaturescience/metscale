@@ -33,8 +33,26 @@ post_processing = config['post_processing']
 ##################################################
 
 
+#We need to get the files if they have been moved to the completed dir.
 output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
-output_dir = join(data_dir, output_dir_pattern)
+file_ext = readfilt['quality_trimming']['sample_file_ext']
+
+workflows = config['workflows']
+sample_files_dir_mv = []
+sample_files_mv = []
+for sample in all_sample_names:
+    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    input_file_pattern = input_file_pattern.replace(file_ext,'')
+    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+    sample_file_dir = output_dir_pattern.replace("{sample}", sample_file)
+    sample_file_dir = join(data_dir, sample_file_dir)
+    if os.path.isdir(sample_file_dir):
+        sample_files_dir_mv.append(sample_file_dir)
+
+
+##########################################################
+
+samples_output_dir = join(data_dir, output_dir_pattern)
 
 
 def get_input_files(wildcards):
@@ -62,9 +80,9 @@ rule move_samples_to_dir:
     move files to seperate dir after processing
     '''
     output:
-        directory(output_dir)
+        directory(samples_output_dir)
     params:
-        output_dir = output_dir,
+        output_dir = samples_output_dir,
         input_files = get_input_files
     message: 
         '--- Moving files to samples dir'
@@ -72,14 +90,60 @@ rule move_samples_to_dir:
         "post_processing/move_completed_files.sh {params.output_dir} {params.input_files}"
 
 
+##################################################
+# post processing: create the final HTML report
+
+
+
+def get_sample_filenames(wildcards):
+    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    input_file_pattern = input_file_pattern.replace(file_ext,'')
+    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+    return sample_file
+
+
+def get_sample_dir(wildcards):
+    a = wildcards.sample_mv
+    path = os.getcwd() + "/" + a
+    return path
+
+
+html_output_file = post_processing['move_samples_to_dir']['out_pattern']
+
+rule generate_r_script:
+    '''
+    generate R script for final reports
+    '''
+    output:
+        html_output_file
+    params:
+        input_dir = get_sample_dir,  
+        input_files = get_sample_filenames
+    script:
+        "summary-report.Rmd"
+
+ 
+
+ ###################################
+# Post Processing: build rules      
 
 
 
 rule post_processing_move_samples_dir_workflow:
     '''
-    Build rule: Take forward and reversed trimmed reads and run interleave-reads
+    Build rule: Move all output files to subdir
     '''
     input:
-        expand( output_dir,
+        expand( samples_output_dir,
                 sample    = sample_input_files,
+        )
+
+
+rule post_processing_create_final_report_workflow:
+    '''
+    Build rule: Create a final HTML report
+    '''
+    input:
+        expand( html_output_file,
+                sample_mv    = sample_files_dir_mv,
         )
