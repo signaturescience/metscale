@@ -38,7 +38,6 @@ output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
 file_ext = readfilt['quality_trimming']['sample_file_ext']
 
 workflows = config['workflows']
-#all_sample_names = workflows['samples_input_workflow']['samples']
 sample_files_dir_mv = []
 sample_files_mv = []
 for sample in all_sample_names:
@@ -96,16 +95,17 @@ rule move_samples_to_dir:
 
 
 def get_sample_filenames(wildcards):
-    finshed_file_pattern = post_processing['move_samples_to_dir']['output_pattern']
-    finshed_file_pattern = finshed_file_pattern.replace('{sample}','')
-    finished_file = wildcards.sample_mv.split(finshed_file_pattern)[0]
-    finished_file = finished_file.replace(data_dir,'')
-    finished_file = wildcards.sample_mv + finished_file
-    return finished_file
+    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    input_file_pattern = input_file_pattern.replace(file_ext,'')
+    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+    return sample_file
 
 
 def get_sample_dir(wildcards):
-    return wildcards.sample_mv
+    a = wildcards.sample_mv
+    path = os.getcwd() + "/" + a
+    return path
+
 
 html_output_file = post_processing['move_samples_to_dir']['out_pattern']
 
@@ -140,10 +140,9 @@ rule post_processing_move_samples_dir_workflow:
 
 rule post_processing_create_final_report_workflow:
     '''
-    Build rule: Crate a final HTML report
+    Build rule: Create a final HTML report
     '''
     input:
         expand( html_output_file,
                 sample_mv    = sample_files_dir_mv,
-                #sample_mv     = 'data/SRR606249_subset10_1_reads_finished',
         )
