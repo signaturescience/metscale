@@ -102,13 +102,16 @@ list.files(pattern="uniqueK\\d\\d\\.txt", recursive=TRUE) %>%
   DT::datatable(caption="The khmer script `unique-kmers.py` estimates the total number of unique kmers within the interleaved reads after trimming.")
 ```
 
+
 ```{r}
-if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_general_stats.txt"))) {
-  read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_general_stats.txt")) %>% 
-    set_names(~str_remove(., "FastQC_mqc-generalstats-")) %>% 
-    mutate_if(is.double, round, 2) %>% 
-    DT::datatable(caption="FastQC provides general quality control statistics about reads in the sample before and after trimming with Trimmomatic.")
-}
+list.dirs() %>%
+grep("fastqc_multiqc_report", ., value=TRUE) %>%
+list.files(pattern="multiqc_general_stats\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_fastqc_multiqc_report.*", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="FastQC provides general quality control statistics about reads in the sample before and after trimming with Trimmomatic.")
 ```
 
 
@@ -128,18 +131,28 @@ glue::glue("- **[{x}]({bx})**") %>%
 ## Detailed FastQC statistics
 
 ```{r}
-if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_fastqc.txt"))) {
-  read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_fastqc.txt")) %>% 
-    DT::datatable(caption="Comprehensive information from FastQC (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.dirs() %>%
+grep("_fastqc_multiqc_report_data", ., value=TRUE) %>%
+list.files(pattern="multiqc_fastqc\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|multiqc_fastqc.txt", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Comprehensive information from FastQC (side-scroll to see more)", options = list(scrollX='600px'))
 ```
 
+
 ```{r}
-if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_sources.txt"))) {
-  read_tsv(paste0(id, "_fastqc_multiqc_report_data/multiqc_sources.txt")) %>% 
-    DT::datatable(caption="MultiQC Data Sources")
-}
+list.dirs() %>%
+grep("_fastqc_multiqc_report_data", ., value=TRUE) %>%
+list.files(pattern="multiqc_fastqc\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|multiqc_sources.txt", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="MultiQC Data Sources")
 ```
+
 
 # Assembly {.tabset .tabset-fade}
 
@@ -149,24 +162,32 @@ if (file.exists(paste0(id, "_fastqc_multiqc_report_data/multiqc_sources.txt"))) 
 ### MEGAHIT
 
 ```{r}
-if (file.exists(paste0(id, ".megahit_multiqc_report_data/multiqc_general_stats.txt"))) {
-  read_tsv(paste0(id, ".megahit_multiqc_report_data/multiqc_general_stats.txt")) %>% 
-    set_names(~str_remove(., "QUAST_mqc-generalstats-")) %>% 
-    select(Sample, Total_length, N50) %>% 
-    DT::datatable(caption="General assembly statistics about samples in this run from MEGAHIT.")
-}
+list.dirs() %>%
+grep(".megahit_multiqc_report_data", ., value=TRUE) %>%
+list.files(pattern="multiqc_general_stats\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|multiqc_general_stats.txt", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="General assembly statistics about samples in this run from MEGAHIT")
 ```
+
+
 
 ### MetaSPADES
 
 ```{r}
-if (file.exists(paste0(id, ".metaspades_multiqc_report_data/multiqc_general_stats.txt"))) {
-  read_tsv(paste0(id, ".metaspades_multiqc_report_data/multiqc_general_stats.txt")) %>% 
-    set_names(~str_remove(., "QUAST_mqc-generalstats-")) %>% 
-    select(Sample, Total_length, N50) %>% 
-    DT::datatable(caption="General assembly statistics about samples in this run from metaSPAdes.")
-}
+list.dirs() %>%
+grep(".metaspades_multiqc_report_data", ., value=TRUE) %>%
+list.files(pattern="multiqc_general_stats\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|multiqc_general_stats.txt", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="General assembly statistics about samples in this run from metaSPAdes")
 ```
+
+
 
 ## QUAST {.tabset .tabset-pills}
 
@@ -199,20 +220,32 @@ glue::glue("- **[{x1}]({x1})**") %>%
 ### MEGAHIT
 
 ```{r}
-if (file.exists(paste0(id, ".megahit_multiqc_report_data/multiqc_quast.txt"))) {
-  read_tsv(paste0(id, ".megahit_multiqc_report_data/multiqc_quast.txt")) %>% 
-    DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.dirs() %>%
+grep(".megahit_multiqc_report_data", ., value=TRUE) %>%
+list.files(pattern="multiqc_quast\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|multiqc_quast.txt", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
 ```
+
 
 ### MetaSPADES
 
+
 ```{r}
-if (file.exists(paste0(id, ".metaspades_multiqc_report_data/multiqc_quast.txt"))) {
-  read_tsv(paste0(id, ".metaspades_multiqc_report_data/multiqc_quast.txt")) %>% 
-    DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.dirs() %>%
+grep(".metaspades_multiqc_report_data", ., value=TRUE) %>%
+list.files(pattern="multiqc_quast\\.txt", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|multiqc_quast.txt", "", file)) %>%
+mutate(data=map(file, read_tsv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Comprehensive information from QUAST (side-scroll to see more)", options = list(scrollX='600px'))
 ```
+
+
 
 
 # Comparison {.tabset .tabset-fade}
@@ -435,61 +468,71 @@ glue::glue("- **[{x}]({bx})**") %>%
 ### Trim2 k=21
 
 ```{r}
-if (file.exists(paste0(id, "_trim2_k21.gather_output.csv"))) {
-  read_csv(paste0(id, "_trim2_k21.gather_output.csv")) %>% 
-    mutate_if(is.double, round, 2) %>% 
-    DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.files(pattern="_trim2_k21.gather_output\\.csv", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_trim2_k21.gather_output.csv", "", file)) %>%
+mutate(data=map(file, read_csv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
 ```
+
+
 
 ### Trim2 k=31
 
 ```{r}
-if (file.exists(paste0(id, "_trim2_k31.gather_output.csv"))) {
-  read_csv(paste0(id,"_trim2_k31.gather_output.csv")) %>% 
-    mutate_if(is.double, round, 2) %>% 
-    DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.files(pattern="_trim2_k31.gather_output\\.csv", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_trim2_k31.gather_output.csv", "", file)) %>%
+mutate(data=map(file, read_csv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
 ```
+
 
 ### Trim2 k=51
 
 ```{r}
-if (file.exists(paste0(id, "_trim2_k51.gather_output.csv"))) {
-  read_csv(paste0(id,"_trim2_k51.gather_output.csv")) %>% 
-    mutate_if(is.double, round, 2) %>% 
-    DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.files(pattern="_trim2_k51.gather_output\\.csv", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_trim2_k51.gather_output.csv", "", file)) %>%
+mutate(data=map(file, read_csv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
 ```
 
 ### Trim30 k=21
 
 ```{r}
-if (file.exists(paste0(id, "_trim30_k21.gather_output.csv"))) {
-read_csv(paste0(id,"_trim30_k21.gather_output.csv")) %>% 
-  mutate_if(is.double, round, 2) %>% 
-  DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.files(pattern="_trim30_k21.gather_output\\.csv", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_trim2_k21.gather_output.csv", "", file)) %>%
+mutate(data=map(file, read_csv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Sourmash Gather results for k=21 (side-scroll to see more)", options = list(scrollX='600px'))
 ```
+
 
 ### Trim30 k=31
 
 ```{r}
-if (file.exists(paste0(id, "_trim30_k31.gather_output.csv"))) {
-  read_csv(paste0(id,"_trim30_k31.gather_output.csv")) %>% 
-    mutate_if(is.double, round, 2) %>% 
-    DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.files(pattern="_trim30_k31.gather_output\\.csv", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_trim2_k31.gather_output.csv", "", file)) %>%
+mutate(data=map(file, read_csv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Sourmash Gather results for k=31 (side-scroll to see more)", options = list(scrollX='600px'))
 ```
 
 ### Trim30 k=51
 
 ```{r}
-if (file.exists(paste0(id, "_trim30_k51.gather_output.csv"))) {
-  read_csv(paste0(id,"_trim30_k51.gather_output.csv")) %>% 
-    mutate_if(is.double, round, 2) %>% 
-    DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
-}
+list.files(pattern="_trim30_k51.gather_output\\.csv", full.names=TRUE) %>%
+tibble(file=., sample=gsub("\\./|_trim2_k51.gather_output.csv", "", file)) %>%
+mutate(data=map(file, read_csv)) %>%
+select(-file) %>%
+unnest(col=data) %>%
+DT::datatable(caption="Sourmash Gather results for k=51 (side-scroll to see more)", options = list(scrollX='600px'))
 ```
 
 # Functional Inference {.tabset .tabset-fade}

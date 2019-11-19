@@ -38,16 +38,18 @@ output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
 file_ext = readfilt['quality_trimming']['sample_file_ext']
 
 workflows = config['workflows']
+#TODO: Test What if we have multiple samples?
 sample_files_dir_mv = []
-sample_files_mv = []
 for sample in all_sample_names:
     input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    sample_file_dir = output_dir_pattern.replace("{sample}", sample_file)
-    sample_file_dir = join(data_dir, sample_file_dir)
-    if os.path.isdir(sample_file_dir):
-        sample_files_dir_mv.append(sample_file_dir)
+    finished_dir = output_dir_pattern.replace("{sample}", sample_file)
+    finished_dir = join(data_dir, finished_dir)
+    if ('*' in sample_file) or ('?' in sample_file):
+        finished_dir = glob.glob(finished_dir)[0]
+    if os.path.isdir(finished_dir):
+        sample_files_dir_mv.append(finished_dir)
 
 
 ##########################################################
@@ -98,6 +100,7 @@ def get_sample_filenames(wildcards):
     input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+    sample_file = re.sub(r"\*", r".+", sample_file)
     return sample_file
 
 
