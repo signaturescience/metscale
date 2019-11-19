@@ -47,7 +47,10 @@ for sample in all_sample_names:
     finished_dir = output_dir_pattern.replace("{sample}", sample_file)
     finished_dir = join(data_dir, finished_dir)
     if ('*' in sample_file) or ('?' in sample_file):
-        finished_dir = glob.glob(finished_dir)[0]
+        try:
+            finished_dir = glob.glob(finished_dir)[0]
+        except:
+            print("Error in matching sample file patterns.")
     if os.path.isdir(finished_dir):
         sample_files_dir_mv.append(finished_dir)
 
