@@ -1,10 +1,14 @@
 process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","mash screen")){
+
   require("dplyr")
   require("taxizedb")
   require("stringr")
+
   options(stringsAsFactors = F)
+
   src_ncbi <- src_ncbi()
   memory.limit(size = 10024000)
+
   parse_mash_screen <- function(path) {
     data <- readLines(con = path)
     data <- strsplit(x = data, split = "\t")
@@ -17,6 +21,7 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
     data$name <- trimws(stringr::str_remove(string = data$name, pattern = "\\[[0-9]?[0-9] seqs\\]"))
     return(data)
   }
+
   getID <- function(tmp_dat, path, type) {
     # Function to convert GenBank IDs to NCBI taxon IDs
     genbank2uid <- function(id) {
@@ -101,14 +106,14 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
       filter(rank == "species") %>%
       select(species_name = name, ncbi_id)
 
-    tmp_dat <- merge(x = tmp_dat, y = species_id, by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = species_id,   by = "ncbi_id", all.x = T)
     tmp_dat <- merge(x = tmp_dat, y = species_name, by = "ncbi_id", all.x = T)
-    tmp_dat <- merge(x = tmp_dat, y = genus_id, by = "ncbi_id", all.x = T)
-    tmp_dat <- merge(x = tmp_dat, y = family_id, by = "ncbi_id", all.x = T)
-    tmp_dat <- merge(x = tmp_dat, y = order_id, by = "ncbi_id", all.x = T)
-    tmp_dat <- merge(x = tmp_dat, y = class_id, by = "ncbi_id", all.x = T)
-    tmp_dat <- merge(x = tmp_dat, y = phylum_id, by = "ncbi_id", all.x = T)
-    tmp_dat <- merge(x = tmp_dat, y = king_id, by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = genus_id,     by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = family_id,    by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = order_id,     by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = class_id,     by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = phylum_id,    by = "ncbi_id", all.x = T)
+    tmp_dat <- merge(x = tmp_dat, y = king_id,      by = "ncbi_id", all.x = T)
 
     tmp_dat <- subset(x = tmp_dat, select = -c(ncbi_id))
 
@@ -173,13 +178,13 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
     tmp_dat$trim <- rep(x = trim_value, times = nrow(tmp_dat))
 
     # Add the data set name to the counts (parsed from the file name)
-    if(type=="sourmash"){
-      ds_name <- unlist(strsplit(x=bn,split="_"))[1]
+    if(type == "sourmash"){
+      ds_name <- unlist(strsplit(x = bn, split = "_"))[1]
     }
-    if(type=="mashscreen"){
-      ds_name <- substr(x=bn,start=1,stop=(regexpr("trim",bn)-1))
+    if(type == "mashscreen"){
+      ds_name <- substr(x = bn, start = 1, stop = (regexpr("trim" ,bn) - 1))
     }
-    tmp_dat$data_set <- rep(x=ds_name,times=nrow(tmp_dat))
+    tmp_dat$data_set <- rep(x = ds_name, times = nrow(tmp_dat))
 
     # Add the assembler to the counts (not used by mash)
     tmp_dat$assembler <- NA
@@ -194,12 +199,14 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
 
     return(tmp_dat)
   }
-  if(type=="sourmash"){
+
+  if(file_type=="sourmash"){
     file_pattern <- "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv"
   }
-  if(type=="mash screen"){
+  if(file_type=="mash screen"){
     file_pattern <- "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_[[:print:]]{1,}_mash_screen[.]sorted[.]tab"
   }
+
   file_list <- list.files(path = data_dir, pattern = file_pattern, full.names = TRUE)
   for (i in 1:length(file_list)) {
 
@@ -213,7 +220,7 @@ process_mash <- function(data_dir,out_dir,verbose=FALSE,file_type=c("sourmash","
 
     if(verbose) cat(paste("Formatting ", basename(file_list[i]), "...\n", sep = ""))
 
-    tmp_dat  <- getID(tmp_dat=tmp_dat,path=file_list[i],type=file_type)
+    tmp_dat  <- getID(tmp_dat = tmp_dat, path = file_list[i], type = file_type)
     out_file <- paste(out_dir, basename(file_list[i]), sep = "/")
     write.csv(x = tmp_dat, file = out_file, row.names = F)
 

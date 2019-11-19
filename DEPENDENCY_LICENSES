@@ -70,7 +70,7 @@ The metagenomics workflows use the following tools:
 		-Copyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of California
 		-BSD-3-Clause License
 	
-	-SPAdes version 3.11--py27_zlibl.2.8_0
+	-SPAdes version 3.11--py36_zlib1.2.8_0
 		-quay.io/biocontainers/spades
 		-http://cab.spbu.ru/software/spades
 		-GNU General Public License v2
@@ -80,18 +80,24 @@ The metagenomics workflows use the following tools:
 		-https://github.com/voutcn/megahit
 		-GNU General Public License v3
 
-	-QUAST version 4.5--boost1.61_1
+	-QUAST version 5.0.2--py27pl526ha92aebf_0
 		-quay.io/biocontainers/quast
 		-http://quast.sourceforge.net/
 		-GNU General Public License v2
 
-	-Sourmash version 2.0.0a3--py36_0
+	-Mash version mash_2.2--h3d38be6_0
+		-quay.io/biocontainers/mash
+		-https://github.com/marbl/Mash
+		-Copyright © 2015, Battelle National Biodefense Institute (BNBI)
+		-MIT License, and others as described in https://github.com/marbl/Mash/blob/master/LICENSE.txt
+	
+	-Sourmash version 2.1.0--py27he1b5a44_0
 		-quay.io/biocontainers/sourmash
 		-https://github.com/dib-lab/sourmash
 		-Copyright © 2016 The Regents of the University of California
 		-BSD-3-Clause License
 
-	-Kaiju version 1.6.1--pl5.22.0_0
+	-Kaiju version 1.6.1--pl5.22.0_0.sif
 		-quay.io/biocontainers/kaiju
 		-http://kaiju.binf.ku.dk/
 		-GNU General Public License v3
@@ -101,6 +107,28 @@ The metagenomics workflows use the following tools:
 		-https://github.com/marbl/Krona
 		-Copyright © 2011, Battelle National Biodefense Institute (BNBI)
 		-BSD 2-clause “Simplified” License
+		
+	-KrakenUniq version krakenuniq_0.5.8--pl526he860b03_0
+		-quay.io/biocontainers/krakenuniq
+		-https://github.com/fbreitwieser/krakenuniq
+		-GNU General Public License v3
+	
+	-Kraken2 version 2.0.8_beta--pl526h6bb024c_0
+		-quay.io/biocontainers/
+		-https://ccb.jhu.edu/software/kraken2/
+		-Copyright (c) 2017-2018 Derrick Wood
+		-MIT License
+	
+	-Bracken version 2.2--py27h2d50403_1
+		-quay.io/biocontainers/
+		-https://ccb.jhu.edu/software/bracken/
+		-GNU General Public License v3
+	
+	-MTSv version 1.0.5--py36hc9558a2_0
+		-quay.io/biocontainers/
+		-https://github.com/FofanovLab/MTSv
+		-Copyright (c) 2018 FofanovLab
+		-MIT License
 		
 	-SRST2 version 2-0.2.0--py27_2
 		-quay.io/biocontainers/srst2
