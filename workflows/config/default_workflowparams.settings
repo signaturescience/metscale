@@ -526,9 +526,9 @@ config_default = {
         },
         "mtsv" : {
             "use_local" : True,
-            "filename" : "mtsv_1.0.6--py36hc9558a2_0.sif",
+            "filename" : "mtsv_1.0.6--py36hc9558a2_1.sif",
             "location" : "../container_images/",
-            "version" : "1.0.6--py36hc9558a2_0",
+            "version" : "1.0.6--py36hc9558a2_1",
             "quayurl" : "quay.io/biocontainers/mtsv"
         },
     }

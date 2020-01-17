@@ -1573,9 +1573,9 @@ rule mtsv_update_cfg:
         signature_cutoff_output = mtsv_signature_cutoff,
         query_fasta_file = mtsv_query_fasta_path
     run:
-        shell("mkdir -p ~/.mtsv")
+        #shell("mkdir -p .mtsv")
         shell("mkdir -p {params.dir_path_create}")
-        shell("cp ../resources/expected.csv ~/.mtsv")
+        #shell("cp ../resources/expected.csv .mtsv")
         with open(params.src, 'r') as f:
             s1 = f.read().replace("{fastq_output}", params.input_files, 1)
             s2 = s1.replace("{data_dir}", params.data_dir, 15)
