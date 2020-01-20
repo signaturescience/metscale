@@ -1628,8 +1628,8 @@ rule tax_class_run_mtsv_analyze:
         cfg = mtsv_cfg_sing_dest,
         threads = mtsv_threads,
         image = image
-    run:
-        shell("singularity run {params.image} mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path}")
+    shell:
+        "mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path}"
 	
 
 
