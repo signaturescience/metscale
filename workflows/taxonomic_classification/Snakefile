@@ -1283,7 +1283,7 @@ bracken_output_sing = bracken_input_sing + bracken_output_raw
 bracken_image = container_image_name(biocontainers, 'bracken')
 
 
-def get_braken_DB(wildcards):
+def get_bracken_DB(wildcards):
     return join(sing_dir, wildcards.bdb)
 
 rule bracken:
@@ -1301,7 +1301,7 @@ rule bracken:
     params:
         bracken_input_sing = bracken_input_raw_sing,
         bracken_output = bracken_output_sing,
-        db_sing = get_braken_DB,
+        db_sing = get_bracken_DB,
         read_length = '{read_length}',
         level = '{level}',
         threshold = '{threshold}',

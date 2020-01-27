@@ -1,6 +1,6 @@
 #! usr/bin/python
 # Author: Dreycey Albin
-# Update(s):07/12/2019 
+# Update(s):07/12/2019,10/31/2019 
 
 import sys
 import pickle
@@ -24,7 +24,7 @@ if str(sys.argv[1]) in ('-h', '--help') or str(sys.argv[1]) == '':
 
 # import the dictionary
 
-containment_dict = pickle.load( open( sys.argv[1], "r" ) )
+containment_dict = pickle.load( open( sys.argv[1], "rb" ) )
 
 # import user query 
 
@@ -41,17 +41,17 @@ for taxid in user_query_file_read:
 
         for db in containment_dict[taxid]:
             if "RefSeq" in db:
-                list1.append(int(db.split("RefSeq")[-1].split("_v")[-1]))
-                refseq_dict[int(db.split("RefSeq")[-1].split("_v")[-1])] = "RefSeq"
+                list1.append(str(int(db.split("RefSeq")[-1].split("_v")[-1])))
+                refseq_dict[str(int(db.split("RefSeq")[-1].split("_v")[-1]))] = "RefSeq"
             else:
                 list1.append(db)
         list1.sort()
-        print "taxon["+str(taxid)+"]:",
+        print ("taxon["+str(taxid)+"]:"),
         
         for item in list1:
             try:
                 refseq_dict[item]
-                print "RefSeq"+str(item),
+                print ("RefSeq"+"_"+ str(item)),
             except KeyError:
-                print str(item),
-        print "===="
+                print (str(item)),
+        print ("====")

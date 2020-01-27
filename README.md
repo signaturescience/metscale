@@ -1,11 +1,13 @@
 
-# Open Source Metagenomics Workflows
+![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/MetScale_Logo.png)
 
-These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is paired-end Illumina FASTQ files, and the current outputs include filtered reads, assembled contigs, MultiQC reports for FastQC and QUAST results, metagenome comparison estimates, taxonomic classifications, and gene predictions. 
+
+
+# MetScale: open source metagenomics workflows
+
+These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is paired-end Illumina FASTQ files, and the current outputs include filtered reads, assembled contigs, MultiQC reports for FastQC and QUAST results, metagenome comparison estimates, taxonomic classifications, and functional predictions. 
 
 ![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/Overview_Flowchart.png)
-
-Future outputs will include additional taxonomic classifications and visualizations, functional predictions, and alignments. We are actively developing these workflows, so please stay tuned for updates!
 
 ## Getting Started
 
@@ -13,7 +15,7 @@ The [wiki](https://github.com/signaturescience/metagenomics/wiki) for this proje
 
 ## Prerequisites
 
-These workflows have been tested to run offline on CentOS, Red Hat, and Ubuntu.
+These workflows have been tested to run offline on Linux operating systems, including CentOS, Red Hat, and Ubuntu.
 
 ## Example Data 
 
@@ -26,16 +28,6 @@ The original Shakya et al. 2013 dataset is available online as [SRR606249](https
 [SRR606249_subset10_1.fq.gz](https://osf.io/xwk7m/)
 
 [SRR606249_subset10_2.fq.gz](https://osf.io/6dmh5/)
-
-More information about how the subsampled dataset was generated can be found [here](https://github.com/signaturescience/metagenomics/tree/master/workflows/dataset_construction).
-
-## Scientific Benchmark Data
-
-The [NIST-IMMSA ftp site](https://ftp-private.ncbi.nlm.nih.gov/nist-immsa/IMMSA) houses the raw data from the McIntyre et al. 2017 benchmarking study, which leveraged datasets from many previous publications. The following publications are relevant to the datasets used in our scientific benchmarks:
-
-[McIntyre, Alexa B. R., Rachid Ounit, Ebrahim Afshinnekoo, Robert J. Prill, Elizabeth Hénaff, Noah Alexander, Samuel S. Minot, et al. 2017. “Comprehensive Benchmarking and Ensemble Approaches for Metagenomic Classifiers.” Genome Biology 18 (1): 182.](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-017-1299-7)
-
-[Ounit, Rachid, and Stefano Lonardi. 2016. “Higher Classification Sensitivity of Short Metagenomic Reads with CLARK-S.” Bioinformatics  32 (24): 3823–25.](https://academic.oup.com/bioinformatics/article/32/24/3823/2525654)
 
 ## Contributing
 

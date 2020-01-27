@@ -77,7 +77,7 @@ p <- p + scale_fill_gradient2(limits = c(0,1), name = "Jaccard Index",low = "blu
                               high = "red", midpoint = 0.5, mid = "lightgrey")
 p <- p + xlab("")
 p <- p + ylab("")
-p <- p + ggtitle(label = substr(file_name, 1, (nchar(file_name) - 4)))
+#p <- p + ggtitle(label = substr(file_name, 1, (nchar(file_name) - 4)))
 p <- p + theme(plot.title = element_text(size = 20, hjust = 0.5))
 print(p)
 dev.off()

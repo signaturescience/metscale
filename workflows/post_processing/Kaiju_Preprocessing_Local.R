@@ -35,7 +35,7 @@ process_kaiju <- function(data_dir = NULL, out_dir, verbose = FALSE, overwrite =
 
   # List the .out files
   f_list <- list.files(path = data_dir, full.names = TRUE,
-                       pattern = "[[:print:]]{1,}_trim[[:digit:]]{1,}[.]kaiju[.]out")
+                       pattern = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}(_[[:print:]]{1, })?[.]kaiju[.]out")
 
   # Parse each file and save it as a .csv for future analysis
   for (i in 1:length(f_list)) {

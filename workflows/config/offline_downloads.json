@@ -17,18 +17,19 @@
         "spades_3.11.1--py36_zlib1.2.8_0.sif" : "docker://quay.io/biocontainers/spades:3.11.1--py36_zlib1.2.8_0",
         "quast_5.0.2--py27pl526ha92aebf_0.sif": "docker://quay.io/biocontainers/quast:5.0.2--py27pl526ha92aebf_0",
         "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
-        "GCF_000008565.1_ASM856v1_genomic.fna.gz" : "file:///resources/GCF_000008565.1_ASM856v1_genomic.fna.gz"
+        "GCF_000008565.1_ASM856v1_genomic.fna.gz" : "file:///resources/GCF_000008565.1_ASM856v1_genomic.fna.gz",
+        "Shakya_Refs" : "dir:///resources/Shakya_Refs"
     },
 
     "comparison": {
-    	"sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0"
+    	 "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0"
     },
 
     "taxonomic_classification": {
         "bracken_2.2--py27h2d50403_1.sif" : "docker://quay.io/biocontainers/bracken:2.2--py27h2d50403_1",
         "kaiju_1.6.1--pl5.22.0_0.sif" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
         "krona_2.7--pl5.22.0_1.sif" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
-        "sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
+        "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
         "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
         "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
         "mtsv_1.0.6--py36hc9558a2_1.sif" : "docker://quay.io/biocontainers/mtsv:1.0.6--py36hc9558a2_1",
@@ -42,7 +43,7 @@
     },
 
     "sourmash_db" : {
-        "sourmash_2.0.0a3--py36_0.sif" : "docker://quay.io/biocontainers/sourmash:2.0.0a3--py36_0",
+        "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
         "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
         "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
         "databases" : ["genbank","refseq"],

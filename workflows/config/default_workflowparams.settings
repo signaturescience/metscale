@@ -133,7 +133,8 @@ config_default = {
             #  metaquast output file pattern and threads to run
             "metaquast_pattern" : "{sample}_trim{qual}.{assembler}_metaquast/",
             "metaquast_threads" : 4,
-            "metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            #"metaquast_ref" :  "GCF_000008565.1_ASM856v1_genomic.fna.gz",
+            "metaquast_ref" :  "Shakya_Refs",
             "metaquast_output_multiqc_input_file" : "report.html",
             #
             # multiqc output dir pattern
@@ -149,7 +150,7 @@ config_default = {
             "quast_spades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
             # 
             # quast with plasmidSPAdes output file pattern
-            "quast_plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades_quast",
+            "quast_plasmidspades_pattern" : "{sample}_trim{qual}.plasmidspades-quast",
             "quast_plasmidspades_threads" : 4,
             "quast_plasmidspades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
             #
@@ -329,21 +330,21 @@ config_default = {
             "outdir_pattern" : "{sample}_trim{qual}_megahit.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_megahit",
-            "input_db" : " ",
+            "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
             "threads" : 8
         },
         "prokka_with_metaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_metaspades",
-            "input_db" : " ",
+            "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
             "threads" : 8
         },
         "prokka_with_spades" : {
             "outdir_pattern" : "{sample}_trim{qual}_spades.prokka_annotation",
             "input_pattern" : "{sample}_trim{qual}.spades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_spades",
-            "input_db" : " ",
+            "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
             "threads" : 8
         },
         "abricate_with_metaspades" : {
@@ -386,7 +387,7 @@ config_default = {
         "move_samples_to_dir" : {
             # file pattern to move files to in post processing
             "output_pattern" : "{sample}_finished",
-            "out_pattern" : "{sample_mv}/0-summary-report.html"
+            "out_pattern" : "{sample_mv}/summary-report.html"
         },
     },
 
@@ -449,17 +450,17 @@ config_default = {
         },
         "sourmash" : {
             "use_local" : True,
-            "filename" : "sourmash_2.0.0a3--py36_0.sif",
+            "filename" : "sourmash_2.1.0--py27he1b5a44_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
-            "version" : "2.0.0a3--py36_0"
+            "version" : "2.1.0--py27he1b5a44_0"
         },
         "sourmash_compare" : {
             "use_local" : True,
-            "filename" : "sourmash_2.0.0a3--py36_0.sif",
+            "filename" : "sourmash_2.1.0--py27he1b5a44_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
-            "version" : "2.0.0a3--py36_0"
+            "version" : "2.1.0--py27he1b5a44_0"
         },
         "kaiju" : {
             "use_local" : True,
