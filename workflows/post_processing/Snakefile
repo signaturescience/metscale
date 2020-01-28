@@ -50,7 +50,7 @@ for sample in all_sample_names:
         try:
             finished_dir = glob.glob(finished_dir)[0]
         except:
-            print("Error in matching sample file patterns.")
+            print("Error in matching sample file patterns. Empty report generated")
     if os.path.isdir(finished_dir):
         sample_files_dir_mv.append(finished_dir)
 
@@ -104,6 +104,8 @@ def get_sample_filenames(wildcards):
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
     sample_file = re.sub(r"\*", r".+", sample_file)
+    if sample_file == "":
+        print("Error: Rscript input file patterns not found.")
     return sample_file
 
 
@@ -124,10 +126,28 @@ rule generate_r_script:
     params:
         input_dir = get_sample_dir,  
         input_files = get_sample_filenames
+    message: 
+        '--- Generating Final Report'
     script:
         "summary-report.Rmd"
 
- 
+############################################
+# post processing rename file to sample file name
+
+final_html_report = html_output_file.replace("summary-report.html", all_sample_names[0]+"_summary-report.html" )
+
+
+rule rename_output_html:
+    '''
+    Do a move command to call it {sample}_summary-report.html
+    '''
+    input:
+        html_output_file
+    output:
+        final_html_report
+    shell:
+        "mv {input} {output}" 
+
 
  ###################################
 # Post Processing: build rules      
@@ -149,6 +169,6 @@ rule post_processing_create_final_report_workflow:
     Build rule: Create a final HTML report
     '''
     input:
-        expand( html_output_file,
+        expand( final_html_report,
                 sample_mv    = sample_files_dir_mv,
         )
