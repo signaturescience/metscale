@@ -310,7 +310,7 @@ config_default = {
             "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
         },
         "mtsv" : {
-            "sample_name" : "SRR606249",
+            #"sample_name" : "{sample}_MTSV.",
             "threads" : 20,
             #db file dir name uncompressed
             "db_name" : "May-22-2019",
