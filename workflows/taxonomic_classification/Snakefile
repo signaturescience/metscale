@@ -1514,7 +1514,7 @@ rule mash_screen_sort:
 
 ############################################
 # Taxonomic Classification:  update MTSV databases
-
+'''
 mtsv_threads = taxclass['mtsv']['threads']
 mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
 mtsv_partitions = taxclass['mtsv']['partitions']
@@ -1542,6 +1542,36 @@ rule tax_class_mtsv_update_db:
         "mtsv_setup custom_db "
         "--path {params.sing_db} -t {params.threads} "
         "--customdb {params.customdb_name} --partitions {params.partitions}"
+'''
+
+mtsv_threads = taxclass['mtsv']['threads']
+mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
+mtsv_partitions = taxclass['mtsv']['partitions']
+mtsv_image = container_image_name(biocontainers, 'mtsv')
+mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
+mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
+dummy_dir = join(data_dir, "MTSV_DUMMY_DIR")
+
+rule tax_class_mtsv_update_db:
+    output:
+        directory(dummy_dir)
+    singularity:
+        mtsv_image
+    params:
+        sing_db = mtsv_sing_db,
+        threads = mtsv_threads,
+        customdb_name = mtsv_customdb_name,
+        partitions = mtsv_partitions,
+        dummy_dir = dummy_dir
+    shell:
+        "mkdir -p {params.dummy_dir} && "
+        "mtsv_setup json_update "
+        "--path {params.sing_db} -t {params.threads} && "
+        "mtsv_setup custom_db "
+        "--path {params.sing_db} -t {params.threads} "
+        "--customdb {params.customdb_name} --partitions {params.partitions}"
+
+
 
 ############################################
 # Taxonomic Classification:  create MTSV cfg File
@@ -1986,8 +2016,14 @@ rule tax_class_mash_screen_workflow:
 
 rule tax_class_run_mtsv_workflow:
     input:
-      expand( output_summary_path,
+        expand( output_summary_path,
             sample   = sample_input_files,
             qual     = workflows['tax_class_mtsv_workflow']['qual'],
         )
               
+rule tax_class_create_mtsv_db_workflow:
+    input:
+        expand( directory(dummy_dir),
+            sample   = sample_input_files,
+            qual     = workflows['tax_class_mtsv_workflow']['qual'],
+        )
