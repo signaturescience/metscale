@@ -317,7 +317,7 @@ config_default = {
             #Not sure if this can be changed
             "customdb_name" : "Complete Genome",
             "partitions" : 2,
-            "input_files" : "*.fq",
+          #  "input_files" : "*.fq",
             "kmer" : 50,
             "n_kmers" : 100000,
             "signature_cutoff" : 20

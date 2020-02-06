@@ -1579,7 +1579,7 @@ mtsv_cfg_dest = join(data_dir,  '{sample}_trim{qual}_mtsv.cfg')
 mtsv_cfg_dest = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
 mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
 
-input_files = join(sing_dir, taxclass['mtsv']['input_files'])
+#input_files = join(sing_dir, taxclass['mtsv']['input_files'])
 #mtsv_sing_dir_path = join(sing_dir,taxclass['mtsv']['sample_name']+'_MTSV')
 #mtsv_data_dir_path = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV')
 mtsv_dir_path = '{sample}_trim{qual}_MTSV'.format(sample='{sample}', qual='{qual}')
@@ -1591,22 +1591,19 @@ mtsv_db_config = sing_dir + "/" + taxclass['mtsv']['db_name'] + "/artifacts/comp
 mtsv_n_kmers = taxclass['mtsv']['n_kmers']
 mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
 
-'''
+
 def get_input_files_mtsv(wildcards):
-    print("interleave_output: "+str(interleave_output))
-    print(wildcards)
-    #mtsv_input_files = interleave_output.format(sample='{sample}', qual='{qual}')
     mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
-    print("mtsv_input_files: "+str(mtsv_input_files))
-    return mtsv_input_files
-'''
+    str_mtsv_input_files = mtsv_input_files[0]
+    #print("mtsv_input_files: "+mtsv_input_files)
+    return str_mtsv_input_files
+
 
 #print("interleave_output: "+str(interleave_output))
 #print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 rule mtsv_update_cfg:
     input:
         interleave_output
-        #get_input_files_mtsv
     output:
         mtsv_cfg_dest
     params:
@@ -1614,7 +1611,7 @@ rule mtsv_update_cfg:
         dest = mtsv_cfg_dest,
         data_dir = mtsv_sing_dir_path,
         dir_path_create = mtsv_data_dir_path,
-        input_files = input_files,
+        input_files = get_input_files_mtsv,
         kmer_output = mtsv_kmer_output,
         database_config_output = mtsv_db_config,
         n_kmers_output = mtsv_n_kmers,
