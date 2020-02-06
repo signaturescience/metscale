@@ -1550,11 +1550,11 @@ mtsv_partitions = taxclass['mtsv']['partitions']
 mtsv_image = container_image_name(biocontainers, 'mtsv')
 mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
 mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
-dummy_dir = join(data_dir, "MTSV_DUMMY_DIR")
-
+#dummy_dir = join(data_dir, "MTSV_DUMMY_DIR")
+#print(mtsv_db)
 rule tax_class_mtsv_update_db:
     output:
-        directory(dummy_dir)
+        directory(mtsv_db)
     singularity:
         mtsv_image
     params:
@@ -1562,9 +1562,8 @@ rule tax_class_mtsv_update_db:
         threads = mtsv_threads,
         customdb_name = mtsv_customdb_name,
         partitions = mtsv_partitions,
-        dummy_dir = dummy_dir
+    #    dummy_dir = dummy_dir
     shell:
-        "mkdir -p {params.dummy_dir} && "
         "mtsv_setup json_update "
         "--path {params.sing_db} -t {params.threads} && "
         "mtsv_setup custom_db "
@@ -1592,7 +1591,7 @@ mtsv_db_config = sing_dir + "/" + taxclass['mtsv']['db_name'] + "/artifacts/comp
 mtsv_n_kmers = taxclass['mtsv']['n_kmers']
 mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
 
-
+'''
 def get_input_files_mtsv(wildcards):
     print("interleave_output: "+str(interleave_output))
     print(wildcards)
@@ -1600,10 +1599,10 @@ def get_input_files_mtsv(wildcards):
     mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
     print("mtsv_input_files: "+str(mtsv_input_files))
     return mtsv_input_files
+'''
 
-
-print("interleave_output: "+str(interleave_output))
-print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
+#print("interleave_output: "+str(interleave_output))
+#print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 rule mtsv_update_cfg:
     input:
         interleave_output
@@ -1648,7 +1647,7 @@ output_summary_file = output_summary_file_pattern.format(sample='{sample}', qual
 output_summary_path = join(mtsv_data_dir_path,'Summary', output_summary_file)
 output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
 old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
-print("output_summary_path: "+str(output_summary_path))
+#print("output_summary_path: "+str(output_summary_path))
 
 
 
@@ -1663,7 +1662,8 @@ mtsv_cfg_sing_dest = mtsv_cfg_dest
 #print("tax_class_output_dir: "+str(tax_class_output_dir))
 rule tax_class_run_mtsv:
     input:
-        get_mtsv_cfg_dest
+        #get_mtsv_cfg_dest
+        mtsv_cfg_dest
     output:
         output_summary_path
     singularity:
@@ -2023,7 +2023,7 @@ rule tax_class_run_mtsv_workflow:
               
 rule tax_class_create_mtsv_db_workflow:
     input:
-        expand( directory(dummy_dir),
+        expand( directory(mtsv_db),
             sample   = sample_input_files,
             qual     = workflows['tax_class_mtsv_workflow']['qual'],
         )
