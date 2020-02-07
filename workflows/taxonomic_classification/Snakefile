@@ -1578,7 +1578,8 @@ rule tax_class_mtsv_update_db:
 mtsv_cfg_dest = join(data_dir,  '{sample}_trim{qual}_mtsv.cfg')
 mtsv_cfg_dest = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
 mtsv_cfg_dest_sing = join(sing_dir,  '{sample}_trim{qual}_mtsv.cfg')
-mtsv_cfg_dest_sing = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
+mtsv_cfg_dest_sing = mtsv_cfg_dest_sing.format(sample='{sample}', qual='{qual}')
+
 mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
 
 #input_files = join(sing_dir, taxclass['mtsv']['input_files'])
@@ -1657,7 +1658,7 @@ output_summary_path = join(mtsv_data_dir_path,'Summary', output_summary_file)
 output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
 old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
 
-
+#print("mtsv_cfg_dest_sing: "+str(mtsv_cfg_dest_sing))
 #print("tax_class_output_dir: "+str(tax_class_output_dir))
 rule tax_class_run_mtsv:
     input:
