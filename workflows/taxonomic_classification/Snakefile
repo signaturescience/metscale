@@ -1577,6 +1577,8 @@ rule tax_class_mtsv_update_db:
 
 mtsv_cfg_dest = join(data_dir,  '{sample}_trim{qual}_mtsv.cfg')
 mtsv_cfg_dest = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
+mtsv_cfg_dest_sing = join(sing_dir,  '{sample}_trim{qual}_mtsv.cfg')
+mtsv_cfg_dest_sing = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
 mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
 
 #input_files = join(sing_dir, taxclass['mtsv']['input_files'])
@@ -1654,18 +1656,7 @@ output_summary_file = output_summary_file_pattern.format(sample='{sample}', qual
 output_summary_path = join(mtsv_data_dir_path,'Summary', output_summary_file)
 output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
 old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
-#print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
-#print("output_summary_path: "+str(output_summary_path))
 
-
-'''
-def get_mtsv_cfg_dest(wildcards):
-    print("W: "+str(wildcards))
-    print("mtsv_cfg_dest " +str(mtsv_cfg_dest))
-    return mtsv_cfg_dest
-'''
-
-mtsv_cfg_sing_dest = mtsv_cfg_dest
 
 #print("tax_class_output_dir: "+str(tax_class_output_dir))
 rule tax_class_run_mtsv:
@@ -1678,7 +1669,7 @@ rule tax_class_run_mtsv:
         mtsv_image
     params:
         sing_dir_path = mtsv_sing_dir_path,
-        cfg = mtsv_cfg_sing_dest,
+        cfg = mtsv_cfg_dest_sing,
         threads = mtsv_threads,
         new_summary_path = output_summary_path_sing,
         old_summary_path = old_summary_path
