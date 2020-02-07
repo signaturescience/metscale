@@ -1592,11 +1592,19 @@ mtsv_n_kmers = taxclass['mtsv']['n_kmers']
 mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
 
 
+def get_input_files_mtsv_gz(wildcards):
+    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    str_mtsv_input_files_gz = mtsv_input_files[0]
+ #   print("mtsv_input_files: "+str(mtsv_input_files))
+    return str_mtsv_input_files_gz
+
 def get_input_files_mtsv(wildcards):
     mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
-    str_mtsv_input_files = mtsv_input_files[0]
-    #print("mtsv_input_files: "+mtsv_input_files)
+    str_mtsv_input_files_gz = mtsv_input_files[0]
+    str_mtsv_input_files = os.path.splitext(str_mtsv_input_files_gz)[0]
+ #   print("mtsv_input_files: "+str(mtsv_input_files))
     return str_mtsv_input_files
+
 
 
 #print("interleave_output: "+str(interleave_output))
@@ -1611,6 +1619,7 @@ rule mtsv_update_cfg:
         dest = mtsv_cfg_dest,
         data_dir = mtsv_sing_dir_path,
         dir_path_create = mtsv_data_dir_path,
+        input_files_gz  = get_input_files_mtsv_gz,
         input_files = get_input_files_mtsv,
         kmer_output = mtsv_kmer_output,
         database_config_output = mtsv_db_config,
@@ -1620,6 +1629,7 @@ rule mtsv_update_cfg:
     run:
         #shell("mkdir -p .mtsv")
         shell("mkdir -p {params.dir_path_create}")
+        shell("gunzip -c {params.input_files_gz} > {params.input_files}")
         #shell("cp ../resources/expected.csv .mtsv")
         with open(params.src, 'r') as f:
             s1 = f.read().replace("{fastq_output}", params.input_files, 1)
@@ -1644,6 +1654,7 @@ output_summary_file = output_summary_file_pattern.format(sample='{sample}', qual
 output_summary_path = join(mtsv_data_dir_path,'Summary', output_summary_file)
 output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
 old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
+#print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 #print("output_summary_path: "+str(output_summary_path))
 
 
