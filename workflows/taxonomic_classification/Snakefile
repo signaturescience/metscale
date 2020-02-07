@@ -1611,12 +1611,15 @@ def get_input_files_mtsv(wildcards):
     return str_mtsv_input_files
 
 def get_input_files_sing(wildcards):
-    interleave_output_sing = interleave_output.replace(data_dir, sing_dir)
-    interleave_output_sing = os.path.splitext(interleave_output_sing)[0]    
+    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    str_mtsv_input_files = mtsv_input_files[0]
+    str_mtsv_input_files = os.path.splitext(str_mtsv_input_files)[0]    
+    interleave_output_sing = str_mtsv_input_files.replace(data_dir, sing_dir)
+ #   print("interleave_output_sing: "+str(interleave_output_sing))
     return interleave_output_sing
 
 
-print("interleave_output: "+str(interleave_output))
+#print("interleave_output: "+str(interleave_output))
 #print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 rule mtsv_update_cfg:
     input:
