@@ -1595,6 +1595,8 @@ mtsv_n_kmers = taxclass['mtsv']['n_kmers']
 mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
 
 
+
+
 def get_input_files_mtsv_gz(wildcards):
     mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
     str_mtsv_input_files_gz = mtsv_input_files[0]
@@ -1608,9 +1610,13 @@ def get_input_files_mtsv(wildcards):
  #   print("mtsv_input_files: "+str(mtsv_input_files))
     return str_mtsv_input_files
 
+def get_input_files_sing(wildcards):
+    interleave_output_sing = interleave_output.replace(data_dir, sing_dir)
+    interleave_output_sing = os.path.splitext(interleave_output_sing)[0]    
+    return interleave_output_sing
 
 
-#print("interleave_output: "+str(interleave_output))
+print("interleave_output: "+str(interleave_output))
 #print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 rule mtsv_update_cfg:
     input:
@@ -1624,6 +1630,7 @@ rule mtsv_update_cfg:
         dir_path_create = mtsv_data_dir_path,
         input_files_gz  = get_input_files_mtsv_gz,
         input_files = get_input_files_mtsv,
+        input_file_sing = get_input_files_sing,
         kmer_output = mtsv_kmer_output,
         database_config_output = mtsv_db_config,
         n_kmers_output = mtsv_n_kmers,
@@ -1635,7 +1642,7 @@ rule mtsv_update_cfg:
         shell("gunzip -c {params.input_files_gz} > {params.input_files}")
         #shell("cp ../resources/expected.csv .mtsv")
         with open(params.src, 'r') as f:
-            s1 = f.read().replace("{fastq_output}", params.input_files, 1)
+            s1 = f.read().replace("{fastq_output}", params.input_file_sing, 1)
             s2 = s1.replace("{data_dir}", params.data_dir, 15)
             s3 = s2.replace("{kmer_output}", str(params.kmer_output), 1)
             s4 = s3.replace("{database_config}", params.database_config_output)
