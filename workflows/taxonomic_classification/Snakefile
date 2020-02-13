@@ -1620,7 +1620,7 @@ def get_input_files_sing(wildcards):
 
 
 #print("interleave_output: "+str(interleave_output))
-#print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
+print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 rule mtsv_update_cfg:
     input:
         interleave_output
@@ -1640,10 +1640,10 @@ rule mtsv_update_cfg:
         signature_cutoff_output = mtsv_signature_cutoff,
         query_fasta_file = mtsv_query_fasta_path
     run:
-        #shell("mkdir -p .mtsv")
+        shell("mkdir -p ~/.mtsv")
         shell("mkdir -p {params.dir_path_create}")
         shell("gunzip -c {params.input_files_gz} > {params.input_files}")
-        #shell("cp ../resources/expected.csv .mtsv")
+        shell("cp ../resources/expected.csv ~/.mtsv")
         with open(params.src, 'r') as f:
             s1 = f.read().replace("{fastq_output}", params.input_file_sing, 1)
             s2 = s1.replace("{data_dir}", params.data_dir, 15)
@@ -1661,15 +1661,16 @@ rule mtsv_update_cfg:
 
 
 #output_summary_file = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV','Summary','summary.csv')
-output_summary_file_pattern = '{sample}_trim_{qual}_summary.csv'
-output_summary_file = output_summary_file_pattern.format(sample='{sample}', qual='{qual}')
+output_summary_file = 'analysis.csv'
+#output_summary_file = output_summary_file_pattern.format(sample='{sample}', qual='{qual}')
 
-output_summary_path = join(mtsv_data_dir_path,'Summary', output_summary_file)
-output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
-old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
+output_summary_path = join(mtsv_data_dir_path,'Analysis', output_summary_file)
+#output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
+#old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
 
 #print("mtsv_cfg_dest_sing: "+str(mtsv_cfg_dest_sing))
 #print("tax_class_output_dir: "+str(tax_class_output_dir))
+print("output_summary_path: "+str(output_summary_path))
 rule tax_class_run_mtsv:
     input:
         #get_mtsv_cfg_dest
@@ -1682,14 +1683,14 @@ rule tax_class_run_mtsv:
         sing_dir_path = mtsv_sing_dir_path,
         cfg = mtsv_cfg_dest_sing,
         threads = mtsv_threads,
-        new_summary_path = output_summary_path_sing,
-        old_summary_path = old_summary_path
+    #    new_summary_path = output_summary_path_sing,
+    #    old_summary_path = old_summary_path
     shell:
         "mtsv readprep -c {params.cfg} -wd {params.sing_dir_path} && "
         "mtsv binning -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
         "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
         "mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
-        "mv  {params.old_summary_path} {params.new_summary_path} "
+    #    "mv  {params.old_summary_path} {params.new_summary_path} "
         
 
 
