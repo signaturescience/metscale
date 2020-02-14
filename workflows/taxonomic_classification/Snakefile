@@ -1514,35 +1514,7 @@ rule mash_screen_sort:
 
 ############################################
 # Taxonomic Classification:  update MTSV databases
-'''
-mtsv_threads = taxclass['mtsv']['threads']
-mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
-mtsv_partitions = taxclass['mtsv']['partitions']
-mtsv_image = container_image_name(biocontainers, 'mtsv')
-mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
-mtsv_db = join(data_dir, taxclass['mtsv']['db_name'])
-dummy_dir = join(data_dir, "{sample}_trim{qual}_MTSV_DUMMY_DIR")
-dummy_dir = dummy_dir.format(sample='{sample}', qual='{qual}')
 
-rule tax_class_mtsv_update_db:
-    output:
-        directory(dummy_dir)
-    singularity:
-        mtsv_image
-    params:
-        sing_db = mtsv_sing_db,
-        threads = mtsv_threads,
-        customdb_name = mtsv_customdb_name,
-        partitions = mtsv_partitions,
-        dummy_dir = dummy_dir
-    shell:
-        "mkdir -p {params.dummy_dir} && "
-        "mtsv_setup json_update "
-        "--path {params.sing_db} -t {params.threads} && "
-        "mtsv_setup custom_db "
-        "--path {params.sing_db} -t {params.threads} "
-        "--customdb {params.customdb_name} --partitions {params.partitions}"
-'''
 
 mtsv_threads = taxclass['mtsv']['threads']
 mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
@@ -1550,8 +1522,7 @@ mtsv_partitions = taxclass['mtsv']['partitions']
 mtsv_image = container_image_name(biocontainers, 'mtsv')
 mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
 mtsv_db = join(data_dir, taxclass['mtsv']['db_name'], "indices")
-#dummy_dir = join(data_dir, "MTSV_DUMMY_DIR")
-#print(mtsv_db)
+
 rule tax_class_mtsv_update_db:
     output:
         directory(mtsv_db)
@@ -1562,7 +1533,6 @@ rule tax_class_mtsv_update_db:
         threads = mtsv_threads,
         customdb_name = mtsv_customdb_name,
         partitions = mtsv_partitions,
-        #dummy_dir = dummy_dir
     shell:
         "mtsv_setup json_update "
         "--path {params.sing_db} -t {params.threads} && "
@@ -1579,12 +1549,7 @@ mtsv_cfg_dest = join(data_dir,  '{sample}_trim{qual}_mtsv.cfg')
 mtsv_cfg_dest = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
 mtsv_cfg_dest_sing = join(sing_dir,  '{sample}_trim{qual}_mtsv.cfg')
 mtsv_cfg_dest_sing = mtsv_cfg_dest_sing.format(sample='{sample}', qual='{qual}')
-
 mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
-
-#input_files = join(sing_dir, taxclass['mtsv']['input_files'])
-#mtsv_sing_dir_path = join(sing_dir,taxclass['mtsv']['sample_name']+'_MTSV')
-#mtsv_data_dir_path = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV')
 mtsv_dir_path = '{sample}_trim{qual}_MTSV'.format(sample='{sample}', qual='{qual}')
 mtsv_sing_dir_path = join(sing_dir, mtsv_dir_path)
 mtsv_data_dir_path = join(data_dir, mtsv_dir_path)
@@ -1595,19 +1560,15 @@ mtsv_n_kmers = taxclass['mtsv']['n_kmers']
 mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
 
 
-
-
 def get_input_files_mtsv_gz(wildcards):
     mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
     str_mtsv_input_files_gz = mtsv_input_files[0]
- #   print("mtsv_input_files: "+str(mtsv_input_files))
     return str_mtsv_input_files_gz
 
 def get_input_files_mtsv(wildcards):
     mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
     str_mtsv_input_files_gz = mtsv_input_files[0]
     str_mtsv_input_files = os.path.splitext(str_mtsv_input_files_gz)[0]
- #   print("mtsv_input_files: "+str(mtsv_input_files))
     return str_mtsv_input_files
 
 def get_input_files_sing(wildcards):
@@ -1615,12 +1576,9 @@ def get_input_files_sing(wildcards):
     str_mtsv_input_files = mtsv_input_files[0]
     str_mtsv_input_files = os.path.splitext(str_mtsv_input_files)[0]    
     interleave_output_sing = str_mtsv_input_files.replace(data_dir, sing_dir)
- #   print("interleave_output_sing: "+str(interleave_output_sing))
     return interleave_output_sing
 
 
-#print("interleave_output: "+str(interleave_output))
-print("mtsv_cfg_dest: "+str(mtsv_cfg_dest))
 rule mtsv_update_cfg:
     input:
         interleave_output
@@ -1659,21 +1617,11 @@ rule mtsv_update_cfg:
 ############################################
 # Taxonomic Classification:  run MTSV 
 
-
-#output_summary_file = join(data_dir,taxclass['mtsv']['sample_name']+'_MTSV','Summary','summary.csv')
 output_summary_file = 'analysis.csv'
-#output_summary_file = output_summary_file_pattern.format(sample='{sample}', qual='{qual}')
-
 output_summary_path = join(mtsv_data_dir_path,'Analysis', output_summary_file)
-#output_summary_path_sing = join(mtsv_sing_dir_path ,'Summary', output_summary_file)
-#old_summary_path = join(sing_dir, 'MTSV','Summary', 'summary.csv')
 
-#print("mtsv_cfg_dest_sing: "+str(mtsv_cfg_dest_sing))
-#print("tax_class_output_dir: "+str(tax_class_output_dir))
-print("output_summary_path: "+str(output_summary_path))
 rule tax_class_run_mtsv:
     input:
-        #get_mtsv_cfg_dest
         mtsv_cfg_dest
     output:
         output_summary_path
@@ -1683,14 +1631,12 @@ rule tax_class_run_mtsv:
         sing_dir_path = mtsv_sing_dir_path,
         cfg = mtsv_cfg_dest_sing,
         threads = mtsv_threads,
-    #    new_summary_path = output_summary_path_sing,
-    #    old_summary_path = old_summary_path
     shell:
         "mtsv readprep -c {params.cfg} -wd {params.sing_dir_path} && "
         "mtsv binning -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
         "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
         "mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path}"
-    #    "mv  {params.old_summary_path} {params.new_summary_path} "
+
         
 
 
