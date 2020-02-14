@@ -5,7 +5,7 @@
 import pickle
 import os
 import glob
-from sets import Set
+# from sets import Set
 from dictionary_maker_parameters import *
 
 print (" DICTIONARY MAKER v2 ")
@@ -140,10 +140,11 @@ if create_nucleo_dict:
 k_counter = 0;
 if create_kaiju_dict:
     kaiju_dict = {}
-    print "The Kaiju DB is being opened"
+    print ("The Kaiju DB is being opened")
     kaiju_file = open(path+kaiju_file).readlines()
+
     #line_count = len(kaiju_file)
-    print "The Kaiju DB is being inserted into a dictionary"
+    print ("The Kaiju DB is being inserted into a dictionary")
     for line in kaiju_file:
         taxid = int(line.split(">")[1].split("_")[-1])
         kaiju_dict[taxid]=1
@@ -151,26 +152,26 @@ if create_kaiju_dict:
         #print out status
         #perc = (float(k_counter) // float(line_count))*100
         if k_counter % 10000000 == 0: #in #line_count*[.1,.25,.50,.75,1]:
-            print str(k_counter) + " tax IDs have been added to the Kaiju dict"
+            print (str(k_counter) + " tax IDs have been added to the Kaiju dict")
         k_counter += 1;
 
 # saving the dicitonaries as pickled files
 if create_genebank_dict:
-    pickle.dump(genebank_dict, open(path_for_storing_pickles + genebank_dict_pickle, "w" ) )
+    pickle.dump(genebank_dict, open(path_for_storing_pickles + genebank_dict_pickle, "wb" ) )
 if create_refseq_dict:
     for version in refect_dict.keys():
-        pickle.dump(refseq_dict[version], open(path_for_storing_pickles + "v"+version+"."+refseq_dict_pickle, "w" ) )
+        pickle.dump(refseq_dict[version], open(path_for_storing_pickles + "v"+version+"."+refseq_dict_pickle, "wb" ) )
 if create_kraken_dict:
     for version in kraken_dict.keys():
-        pickle.dump(kraken_dict[version], open(path_for_storing_pickles + "kraken1_"+version+"."+kraken_dict_pickle, "w" ) )
+        pickle.dump(kraken_dict[version], open(path_for_storing_pickles + "kraken1_"+version+"."+kraken_dict_pickle, "wb" ) )
 if create_nucleo_dict:
-    pickle.dump(nucleo_dict, open(path_for_storing_pickles + nucleo_dict_pickle, "w" ) )
+    pickle.dump(nucleo_dict, open(path_for_storing_pickles + nucleo_dict_pickle, "wb" ) )
 if create_taxid_dict:
-    pickle.dump(taxid_dict, open(path_for_storing_pickles + taxid_dict_pickle, "w" ) )
+    pickle.dump(taxid_dict, open(path_for_storing_pickles + taxid_dict_pickle, "wb" ) )
 if create_wgsmap_dict:
-    pickle.dump(wgsmap_dict, open(path_for_storing_pickles + wgsmap_dict_pickle, "w" ) )
+    pickle.dump(wgsmap_dict, open(path_for_storing_pickles + wgsmap_dict_pickle, "wb" ) )
 if create_kaiju_dict:
-    pickle.dump(kaiju_dict, open(path_for_storing_pickles+kaiju_dict_pickle, "w" ))  #open(path_for_storing_pickles+kaiju_dict_pickle, "w" ) )
+    pickle.dump(kaiju_dict, open(path_for_storing_pickles+kaiju_dict_pickle, "wb" ))  #open(path_for_storing_pickles+kaiju_dict_pickle, "w" ) )
             
 
 # Loading in the pickled dictionaries for rebuilding the final containment dictionary
@@ -183,14 +184,14 @@ if import_refseq_dict:
     for ver in vers:
         versions.append(ver.split(os.sep)[-1].split(".")[0])
 
-    print "Loading refseq pickle.."
+    print ("Loading refseq pickle..")
     for version in versions:
         refseq_dict[version]  = pickle.load(open(path_for_storing_pickles +version+"."+refseq_dict_pickle, "rb" ))
         #print refseq_dict[version].keys()[-1]
 
 ## Genbank pickle import 
 if import_nucleo_dict:
-    print "Loading genbank pickle.."
+    print( "Loading genbank pickle..")
     nucleo_dict  = pickle.load(open(path_for_storing_pickles + nucleo_dict_pickle, "rb" ))
 
 ## Kraken pickle import
@@ -200,14 +201,14 @@ if import_kraken_dict:
     versions = []
     for ver in vers:
         versions.append(ver.split(os.sep)[-1].split(".")[0])
-    print versions
-    print "Loading Kraken pickle.."
+    print (versions)
+    print ("Loading Kraken pickle..")
     for version in versions:
          kraken_dict[version]  = pickle.load(open(path_for_storing_pickles +version+"."+kraken_dict_pickle, "rb" ))
 
 ## Kaiju pickle import
 if import_kaiju_dict:
-    print "importing the Kaiju pickle.."
+    print ("importing the Kaiju pickle..")
     kaiju_dict = pickle.load(open(path_for_storing_pickles+kaiju_dict_pickle, "rb" ))    
 
 #calculate jaccard similarity
@@ -219,19 +220,19 @@ if calculate_jaccard:
         taxids = []
         for key in nucleo_dict.keys():
             taxids.append(int(key))
-        all_sets["GenBank_060219"] = Set(taxids)
+        all_sets["GenBank_060219"] = set(taxids)
     for key in kraken_dict.keys():
         taxids = []
         for tid in kraken_dict[key].keys():
             taxids.append(int(tid))
-        all_sets["Kraken1_"+key] = Set(taxids)
+        all_sets["Kraken1_"+key] = set(taxids)
     for key in refseq_dict.keys():
         taxids = []
         for tid in refseq_dict[key].keys():
             taxids.append(int(tid))
-        all_sets["Refseq_"+key] = Set(taxids)
+        all_sets["Refseq_"+key] = set(taxids)
 
-    print "Creating jaccard file:"
+    print ("Creating jaccard file:")
     outfile = open("dbs.jaccard.tsv",'w')
     if 1:
         outfile.write("\t")
@@ -253,18 +254,18 @@ if calculate_jaccard:
 if create_full_dict:
     containment_dict = {} # should have {taxid_1: [DB_1, DB_3], taxid_2: [DB_1], ...
      
-    print "\n"
-    print "Creating containment dict:"
+    print ("\n")
+    print ("Creating containment dict:")
 
     ## Adding an already made containment dictionary
     if use_old_containment:
-        print "Adding taxIDs from previous containment file"
+        print ("Adding taxIDs from previous containment file")
         containment_dict = pickle.load(open(path_for_old_containment + containment_dictionary_pickle, "rb" ))
             
 
     ## Adding genbank taxonomy
     if import_nucleo_dict or create_nucleo_dict:
-        print "Adding genbank taxonomy"
+        print ("Adding genbank taxonomy")
         for wgs_key in nucleo_dict.keys():
             wgs_key = int(wgs_key)
             if wgs_key in containment_dict:
@@ -276,7 +277,7 @@ if create_full_dict:
 
     ## Adding refseq taxonomy
     if import_refseq_dict or create_refseq_dict:
-        print "Adding refseq taxonomy to containment"
+        print ("Adding refseq taxonomy to containment")
         for version in refseq_dict.keys():
             for refseq_key in refseq_dict[version].keys():
                 refseq_key = int(refseq_key)
@@ -289,7 +290,7 @@ if create_full_dict:
     
     ## Adding kraken taxonomy
     if import_kraken_dict or create_kraken_dict:
-        print "Adding kraken taxonomy containment"
+        print( "Adding kraken taxonomy containment")
         for version in kraken_dict.keys():
             for kraken_key in kraken_dict[version].keys():
                 kraken_key = int(kraken_key)
@@ -302,7 +303,7 @@ if create_full_dict:
 
     ## Adding Kaiju taxonomy
     if import_kaiju_dict or create_kaiju_dict:
-        print "Adding kaiju taxonomy to containment"
+        print ("Adding kaiju taxonomy to containment")
         for kaiju_key in kaiju_dict.keys():
             kaiju_key = int(kaiju_key)
             if kaiju_key in containment_dict:
@@ -313,6 +314,6 @@ if create_full_dict:
                 None
 
     # saving the "containment dictionary" as a pickled file
-    pickle.dump(containment_dict, open(path_for_storing_pickles + containment_dictionary_pickle, "w" ));
+    pickle.dump(containment_dict, open(path_for_storing_pickles + containment_dictionary_pickle, "wb" ));
 
 

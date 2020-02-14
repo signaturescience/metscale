@@ -1,2 +1,0 @@
-Sample	AmpC1_Ecoli_Bla	Aph3''Ia_AGly	AphA2_AGly	CarA_MLS	LsaA_MLS	MphD_MLS	MsrD_MLS	OqxB_Flq	TEM-1D_Bla	TetO_Tet	TlrC2_MLS
-SRR606249_subset10_trim30	AmpC1_1670*?	Aph3''Ia_1217*?	AphA2_1492*?	CarA_580*?	LsaA_298*?	MphD_1613*?	MsrD_296*?	OqxB_49*?	TEM-197_1034*?	TetO_834*?	TlrC_576*?

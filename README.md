@@ -1,5 +1,9 @@
 
-# Open Source Metagenomics Workflows
+![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/MetScale_Logo.png)
+
+
+
+# MetScale: open source metagenomics workflows
 
 These open source metagenomics workflows are intended to analyze the biological contents of complex environmental samples. The expected input is paired-end Illumina FASTQ files, and the current outputs include filtered reads, assembled contigs, MultiQC reports for FastQC and QUAST results, metagenome comparison estimates, taxonomic classifications, and functional predictions. 
 
@@ -24,8 +28,6 @@ The original Shakya et al. 2013 dataset is available online as [SRR606249](https
 [SRR606249_subset10_1.fq.gz](https://osf.io/xwk7m/)
 
 [SRR606249_subset10_2.fq.gz](https://osf.io/6dmh5/)
-
-More information about how the subsampled dataset was generated can be found [here](https://github.com/signaturescience/metagenomics/tree/master/workflows/dataset_construction).
 
 ## Contributing
 

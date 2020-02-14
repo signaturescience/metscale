@@ -1,10 +1,17 @@
 
 # Database Query Tool (DQT)
 
-This is a database query tool that can be used to query the contents of reference databases that are used with taxonomic classification tools. This tool integrates the contents of many databases used in the taxonomic workflows, and it allows an end-user to query NCBI taxonomic ids to find databases that contain a refence back the id. 
+**NOTE:** The DQT works with python3.
+
+This is a database query tool that can be used to query the contents of reference databases that are used with taxonomic classification tools. This tool integrates the contents of many databases used in the taxonomic workflows, and it allows an end-user to query NCBI taxonomic ids to find databases that contain a refence back to the taxonomic id in the query file. 
 
 ![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool.png)
 
+
+## Databases and Corresponding Tools
+Below is an image of the programs and tools used in the workflows with the corresponding databases. When using the query_tool.py, this table may be used to map the output databases back with the tools that are used. 
+
+![](https://github.com/signaturescience/metagenomics/blob/master/scripts/databases.png)
 
 ## How to use the DQT
 
@@ -19,7 +26,7 @@ To query for specific tax ids, a line delimited file is used as input. For examp
 9606
 ```
 
-When using query_tool.py on the input file, query_file.txt, there needs to be a precomputed query database. This query database is a pickled python dictionary containing information for all of the input databases. The dictionary_maker.py and dictionary_maker_parameters.py together create a containment_dict.p file that aggregates all of the information for the databases used in the taxonomic classification tools. The first argument for the tool is the path to the containment_dict.p pickle file, and the second argument is the path to the file containing the tax id's being queried. For example:
+When using query_tool.py on the input file, query_file.txt, there needs to be a precomputed query database. This query database is a pickled python dictionary containing information for all of the input databases. The dictionary_maker.py and dictionary_maker_parameters.py together create a containment_dict.p file that aggregates all of the information for the databases used in the taxonomic classification tools. This file can be downloaded from https://osf.io/2d3nw/. The first argument for the tool is the path to the containment_dict.p pickle file, and the second argument is the path to the file containing the tax id's being queried. For example:
 
 ```
 python query_tool.py <PATH TO PICKLE FILE> <QUERY FILE>
@@ -30,6 +37,14 @@ In the specific example given here, this would be:
  ```
  python query_tool.py pickle_dir/containment_dict.p query_file.txt
  ```
+#### Example with Shakya dataset used in demo
+Another example use case are the tax IDs present in the Shakya dataset. Here we are using the provided 'Shakya_Taxa.txt' dataset, which lists all of the tax ids line by line. We use the following command to run the tool: 
+
+```
+ python query_tool.py pickle_dir/containment_dict.p Shakya_Taxa.txt
+```
+
+This returns a list of all the associated taxa from the dataset and the databases they are present within. In this specific example, we have the tax id 314267 which shows up in all the databases except for Kraken. 
 
 ### dictionary_maker.py (Building query database for the tool)
 To use the dictionary_maker.py (v2), the end user only needs to modify the dictionary_maker_parameters.py file. This allows for a friendly interface, where a user only needs to change the paths and the boolean statements for what they would like to build. This therefore supports an easy-to-use method for adding databases as they are released, in addition to completely rebuilding indexes used by the tool from scratch if desired. 

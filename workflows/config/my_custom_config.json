@@ -17,7 +17,7 @@
         "read_filtering_pretrim_workflow" : {
         },
         "read_filtering_posttrim_workflow" : {
-            "qual"   : ["30"]
+            "qual"   : ["2","30"]
         },
         "read_filtering_multiqc_workflow" : {
         },
@@ -35,28 +35,28 @@
             "kmers" : [21,31,51]
         },
         "assembly_metaspades_workflow" : {
-            # the assembly workflow will be run on.
-            # (metaspades assembler only).
+            # the assembly workflow will run
+            # metaspades assembler only
             "qual"      : ["2","30"],
         },
         "assembly_spades_workflow" : {
-            # the assembly workflow will be run on.
-            # (spades assembler only).
-            "qual"      : ["30"],
+            # the assembly workflow will run
+            # spades assembler only
+            "qual"      : ["2","30"],
         },
         "assembly_plasmidspades_workflow" : {
-            # the assembly workflow will be run on.
-            # (plasmidspades assembler only).
+            # the assembly workflow will run
+            # plasmidspades assembler only
             "qual"      : ["2","30"],
         },
         "assembly_megahit_workflow" : {
-            # the assembly workflow will be run on
-            # (megahit assembler only).
+            # the assembly workflow will run
+            # megahit assembler only
             "qual"      : ["2","30"],
         },
         "assembly_all_workflow" : {
-            # the assembly workflow will be run on
-            # (all assemblers).
+            # the assembly workflow will run
+            # all metagenome assemblers (megahit and metaspades)
             "qual"      : ["2","30"],
         },
         "assembly_quast_workflow" : {
@@ -74,7 +74,7 @@
             "qual"      : ["2","30"],
         },
         "assembly_multiqc_workflow" : {
-            # #which assembler to get input from
+            # which metagenome assembler to get input from
             "multiqc_assembler" :  ["megahit","metaspades"],
         },
         "comparison_reads_workflow": {
@@ -83,13 +83,13 @@
             "kvalue"    : ["21","31","51"],
         },
         "comparison_assembly_workflow" : {
-            # these parameters determine which assembled reads
+            # these parameters determine which assembled contigs
             # the comparison workflow will be run on
             "kvalue"    : ["21","31","51"],
         },
         "comparison_reads_assembly_workflow" : {
             # these parameters determine which reads and assembled
-            # reads the comparison workflow will be run on
+            # contigs the comparison workflow will be run on
             "kvalue"    : ["21","31","51"],
         },
         "tax_class_signatures_workflow" : {
@@ -166,15 +166,15 @@
             "assembler" : ["megahit","metaspades"]
         },
         "tax_class_kraken2_workflow" : {
-            "qual" : ["30"],
-            # db to run against, this is the default DB downloaded from download python script.
+            "qual" : ["2","30"],
+            # DB to use, this is the default DB downloaded from download python script
             "db" : "minikraken2_v2_8GB_201904_UPDATE",
             # confidence score between 0 and 1
             "confidence" : 0,
         },
         "tax_class_krakenuniq_workflow" : {
             "qual" : ["2","30"],
-            # db to run against, this is the default DB downloaded from download python script.
+            # DB to use, this is the default DB downloaded from download python script
             "db" : "minikraken_20171019_8GB",
             # hll-precision score between 10 and 18
             "hll_precision" : 12
@@ -183,7 +183,7 @@
             "read_length" : 100,
             "level" : "S",
             "threshold" : 0,
-            #directory that has DB dir. defaults to default dir
+            # directory that has DBs
             "bdb" : "Bracken_Kraken2_DB"
         },
         "tax_class_mash_dist_workflow" : {
@@ -213,8 +213,8 @@
             # these parameters determine which contig params
             # from megahit to run abricate on
             "qual"      : ["2","30"],
-            # abricate db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
-            #to use custom/external DB file "customDBabricate"
+            # abricate internal DBs - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            # replace "customDBabricate" with custom/external DB name 
             "db"        : ["card", "vfdb"],
             #"db"        : ["customDBabricate"],
         },
@@ -222,24 +222,24 @@
             # these parameters determine which contig params
             # from metaspades to run abricate on
             "qual"      : ["2","30"],
-            # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
-            #to use custom/external DB file "customDBabricate"
+            # abricate internal DBs - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            # replace "customDBabricate" with custom/external DB name
             "db"        : ["card", "vfdb"],
             #"db"        : ["customDBabricate"],
         },
         "functional_abricate_with_spades_workflow" : {
             # these parameters determine which contig params
             # from spades to run abricate on
-            "qual"      : ["30"],
-            # abricate internal db's - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
-            #to use custom/external DB file "customDBabricate"
-            #"db"        : ["card", "vfdb"],
-            "db"        : ["customDBabricate"],
+            "qual"      : ["2","30"],
+            # abricate internal DBs - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
+            # replace "customDBabricate" with custom/external DB name
+            "db"        : ["card", "vfdb"],
+            #"db"        : ["customDBabricate"],
         },
         "functional_with_srst2_workflow" : {
             # these paramters determine srst2 input
             "qual"      : ["2","30"],
-            #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta} or external DBs
+            # srst2 DBs - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta} or external DBs
             "db"        : ["ARGannot.r3.fasta", "ResFinder.fasta"]
         },
     },

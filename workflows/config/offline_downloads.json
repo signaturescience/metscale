@@ -54,7 +54,7 @@
     },
 
     "functional_inference" : {
-        "prokka_1.13.3-01.sif" : "docker://ummidock/prokka:1.13.3-01",
+        "prokka_1.14.5-1.sif" : "docker://ummidock/prokka:1.14.5-1",
         "abricate_latest.sif" : "docker://thanhleviet/abricate",
         "srst2_0.2.0--py27_2.sif" : "docker://quay.io/biocontainers/srst2:0.2.0--py27_2",
         "ARGannot.r3.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ARGannot_r3.fasta",
