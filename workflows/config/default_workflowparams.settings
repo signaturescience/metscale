@@ -499,10 +499,10 @@ config_default = {
         },
         "prokka" : {
             "use_local" : True,
-            "filename" : "prokka_1.13.3-01.sif",
+            "filename" : "prokka_1.14.5-1.sif",
             "location" : "../container_images/",
             "quayurl" : "ummidock/prokka",
-            "version" : "1.13.3-01"        
+            "version" : "1.14.5-1"
         },
         "abricate" : {
             "use_local" : True,
