@@ -44,7 +44,6 @@ for sample in all_sample_names:
     input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    print("sample_file: "+str(sample_file))
     #for illumina wild cards in samples
     if ('*' in sample_file) or ('?' in sample_file):
         try:
@@ -66,7 +65,6 @@ for sample in all_sample_names:
    
     if os.path.isdir(finished_dir):
         sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
-        print("finished_dir: "+str(finished_dir))
 
 
 
