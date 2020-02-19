@@ -347,8 +347,8 @@ def srst2_output_sub_sing(wildcards):
 #srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a random filename
 #to create a copy of input files then delete them.
 
+srst2_input_list = []
 def srst2_input_files_sing(wildcards):
-    srst2_input_list = []
     for num, file in enumerate(srst2_post_trimming_inputs):
         in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
         input_file = in_file[0]
@@ -388,8 +388,7 @@ rule srst2_with_raw_reads:
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
-        '&& '
-        'rm {params.input_files}'
+
 
 
   
@@ -484,3 +483,21 @@ rule functional_with_srst2_workflow:
                 direction = directions,
         )
 
+
+#Cleanup on success, check for srst2 dummy input files and delete
+onsuccess:
+    for file in srst2_input_list:
+        file = file.replace(sing_dir, data_dir)
+        try:
+            os.remove(file)
+        except:
+            pass
+ 
+
+onerror:
+    for file in srst2_input_list:
+        file = file.replace(sing_dir, data_dir)
+        try:
+            os.remove(file)
+        except:
+            pass
