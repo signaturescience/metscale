@@ -43,6 +43,7 @@ def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_str
             subprocess.run([mkdir_command], shell =True)
             gunzip_command = "gunzip " + install_dir + "/" + file_name
             subprocess.run([gunzip_command], shell =True)
+            file_name = file_name.replace('.gz','')
             untar_command =  "tar -xvf " + install_dir + "/" + file_name + " -C " + install_dir + "/" +  install_sub_dir
             subprocess.run([untar_command], shell =True)
         except SocketError as e:
