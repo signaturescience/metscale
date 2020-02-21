@@ -35,7 +35,7 @@ def reporthook(count, block_size, total_size):
 
 #certain files want special attention Needs to be installed in certain subdir inside data folder
 def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_string):
-    if not os.path(os.path.isdir(os.path.join(install_dir, install_sub_dir))):
+    if not os.path.isdir(os.path.join(install_dir, install_sub_dir)):
         print("\nDownloading " + file_name)
         try:
             urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
