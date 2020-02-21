@@ -15,6 +15,10 @@ from snakemake.io import expand
 
 workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'post_processing', 'all']  #keep all at the end of the list
 
+CHOCOPLAN_DIR = "chocophlan_plus_viral"
+UNIREF_DIR ="uniref90"
+BRACKEN_DIR = "Bracken_Kraken2_DB"
+
 
 def reporthook(count, block_size, total_size):
     global start_time
@@ -29,7 +33,52 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
 
- 
+#certain files want special attention Needs to be installed in certain subdir inside data folder
+def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_string):
+    if not os.path(os.path.isdir(os.path.join(install_dir, install_sub_dir))):
+        print("\nDownloading " + file_name)
+        try:
+            urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
+            mkdir_command = "mkdir " + install_dir + "/" +  install_sub_dir
+            subprocess.run([mkdir_command], shell =True)
+            gunzip_command = "gunzip " + file_name
+            subprocess.run([gunzip_command], shell =True)
+            untar_command =  "tar -xvf " + file_name + " -C "  + install_sub_dir
+            subprocess.run([untar_command], shell =True)
+        except SocketError as e:
+            print("Error downloading/extracting file " + file_name + "Retry script.")
+            print(e)
+            try:
+                os.remove(install_dir+ "/"+file_name)
+            except OSError:
+                pass
+    
+
+def download_sourmash_files(data, workflow, install_dir):   
+    tar_file = data[workflow]['sbttar']
+    db = data[workflow]['databases']
+    kv = data[workflow]['kvalue']
+    sbturl = data[workflow]['sbturl']
+    sourmash_files = expand(tar_file, database=db, kvalue=kv)
+    for file in sourmash_files:
+        if not (os.path.isfile(install_dir+"/"+file)):
+            print("\nDownloading " + file +" from " +sbturl)
+            try:
+                urllib.request.urlretrieve("http://" +sbturl + '/' +file, install_dir +"/" +file, reporthook)
+            except SocketError as e:
+                print("Error downloading file " + file + "Retry script.")
+                print(e)
+                try:
+                    os.remove(install_dir+ "/"+file)
+                except OSError:
+                    pass 
+
+def download_kmer_files(file_name, install_sub_dir, install_dir, url_string):
+    if not (os.path.isdir(install_dir + "/" + install_sub_dir)):
+        mkdir_command = "mkdir " + install_dir + "/" + install_sub_dir
+        subprocess.run([mkdir_command], shell =True)
+    urllib.request.urlretrieve(url_string, install_dir+ "/" + install_sub_dir+ "/" +file_name, reporthook)              
+                
 def download_file(workflow, data, install_dir):
     if workflow in data.keys():
         if (workflow == "post_processing"):
@@ -40,37 +89,21 @@ def download_file(workflow, data, install_dir):
             except Exception as e:  #we don't care since some of the JSONS are not URL's
                 pass
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
-                tar_file = data[workflow]['sbttar']
-                db = data[workflow]['databases']
-                kv = data[workflow]['kvalue']
-                sbturl = data[workflow]['sbturl']
-                sourmash_files = expand(tar_file, database=db, kvalue=kv)
-                for file in sourmash_files:
-                    if not (os.path.isfile(install_dir+"/"+file)):
-                        print("\nDownloading " + file +" from " +sbturl)
-                        try:
-                            urllib.request.urlretrieve("http://" +sbturl + '/' +file, install_dir +"/" +file, reporthook)
-                        except SocketError as e:
-                            print("Error downloading file " + file + "Retry script.")
-                            print(e)
-                            try:
-                                os.remove(install_dir+ "/"+file)
-                            except OSError:
-                                pass
+                download_sourmash_files(data, workflow)
+            elif (file_name == 'full_chocophlan_plus_viral.v0.1.1.tar.gz'):
+                download_extract_targz_file(file_name, CHOCOPLAN_DIR, install_dir)
+            elif (file_name == 'uniref90_annotated_1_1.tar.gz'):
+                download_extract_targz_file(file_name, UNIREF_DIR, install_dir)
+            elif (file_name.endswith("kmer_distrib")):
+                download_kmer_files(file_name, BRACKEN_DIR, install_dir, url_string)
             elif (url.scheme == "http" or url.scheme == "https" or url.scheme == "ftp"):      #download via http, ftp
-                if not ( (os.path.isfile(os.path.join(install_dir, file_name))) or (os.path.isfile(os.path.join(install_dir,"Bracken_Kraken2_DB", file_name))) ):
+                if not  (os.path.isfile(os.path.join(install_dir, file_name)) ):
                     print("Downloading " +file_name + " from " + url_string)
                     try:
-                        if (file_name.endswith("kmer_distrib")):  #these files need to go in subdir
-                            if not (os.path.isdir(install_dir + "/Bracken_Kraken2_DB")):
-                                mkdir_command = "mkdir " + install_dir + "/Bracken_Kraken2_DB"
-                                subprocess.run([mkdir_command], shell =True)
-                            urllib.request.urlretrieve(url_string, install_dir+ "/Bracken_Kraken2_DB/" +file_name, reporthook)
-                        else:
-                            opener = urllib.request.build_opener()
-                            opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-                            urllib.request.install_opener(opener)
-                            urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
+                        opener = urllib.request.build_opener()
+                        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+                        urllib.request.install_opener(opener)
+                        urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
                         if (file_name.endswith('.tgz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([untar_command], shell=True)

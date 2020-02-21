@@ -219,7 +219,7 @@ config_default = {
             # csv_out is the single output file containing
             # comparison results among all of the above files.
             "csv_out"   : "{sample}_read_assembly_comparison.k{kvalue_read_assembly}.csv"
-        }
+        },
     },
 
     "taxonomic_classification" : {
@@ -308,6 +308,11 @@ config_default = {
             #mash screen out
             "mash_screen_out" : "{sample}_trim{qual}_{db}_mash_screen.tab",
             "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
+        },
+        "humann2" : {
+            "nucleotide_db" : "chocophlan_plus_viral",
+            "protein_db" : "uniref90",
+            "threads" : 4
         }
     },
 
@@ -511,7 +516,14 @@ config_default = {
             "location" : "../container_images/",
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"
-        }
+        },
+        "humann2" : {
+            "use_local" : True,
+            "filename" : "humann2_2.8.1--py27_0.sif",
+            "location" : "../container_images/",
+            "version" : "2.8.1--py27_0",
+            "quayurl" : "quay.io/biocontainers/humann2"
+        },
     }
 
 }
