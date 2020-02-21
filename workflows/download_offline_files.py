@@ -91,9 +91,9 @@ def download_file(workflow, data, install_dir):
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
                 download_sourmash_files(data, workflow)
             elif (file_name == 'full_chocophlan_plus_viral.v0.1.1.tar.gz'):
-                download_extract_targz_file(file_name, CHOCOPLAN_DIR, install_dir)
+                download_extract_targz_file(file_name, CHOCOPLAN_DIR, install_dir, url_string)
             elif (file_name == 'uniref90_annotated_1_1.tar.gz'):
-                download_extract_targz_file(file_name, UNIREF_DIR, install_dir)
+                download_extract_targz_file(file_name, UNIREF_DIR, install_dir, url_string)
             elif (file_name.endswith("kmer_distrib")):
                 download_kmer_files(file_name, BRACKEN_DIR, install_dir, url_string)
             elif (url.scheme == "http" or url.scheme == "https" or url.scheme == "ftp"):      #download via http, ftp
