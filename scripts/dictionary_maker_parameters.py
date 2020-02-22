@@ -25,18 +25,21 @@ previous. This can be achived by changing the path titled "path_for_old_containm
 """
 
 ## Major paths (change these as needed!)
-path = 'PATH TO WORKING DIRECTORY';
-path_for_storing_pickles = 'PATH TO THE PICKLED FILES DIRECTORY';
-path_for_old_containment = 'PATH TO THE DIRECTORY FOR THE OLD containment_dict.py';
+# path = 'PATH TO WORKING DIRECTORY';
+path = '/home/mnute/sigsci/metagenomics/scripts/'
+path_for_storing_pickles = './pickle_dir/';
+# path_for_old_containment = 'PATH TO THE DIRECTORY FOR THE OLD containment_dict.py';
+path_for_old_containment = path_for_storing_pickles
 
 ## To run a process below, change value to true (change these as needed!)
 calculate_jaccard = False; # This will calculate the jaccard between DBs
-create_full_dict = False; # This will create a new full dictionary
+create_full_dict = True; # This will create a new full dictionary
 use_old_containment = False; # This will import the old containment
-import_refseq_dict = False; # This will import the pickled refseq
+
+import_refseq_dict = True; # This will import the pickled refseq
 import_nucleo_dict = False; # This will import the picked genebank
-import_kraken_dict = False; # This will import the picked kraken DBs
-import_kaiju_dict = False; # This will import the picked kraken DBs
+import_kraken_dict = True; # This will import the picked kraken DBs
+import_kaiju_dict = True; # This will import the picked kaiju DBs
 
 ## The below rebuilds the dictionaries.(change these as needed!)
 create_genebank_dict = False; # This will create a genebank dictionary
@@ -54,7 +57,6 @@ wgsmap_file = "accession2taxid_files/nucl_wgs.accession2taxid" #wgsmap file path
 kaiju_file = "kaiju_files/kaiju_nr.taxids.txt" #kaiju file path
 refseq_dir = "refseq_archives" #refseq directory path
 kraken_dir = "kraken_versions" #kraken directory path
-
 
 ## pickled file names (recommended to not change these!)
 containment_dictionary_pickle = "containment_dict.p" #Complete dictionary (use this)

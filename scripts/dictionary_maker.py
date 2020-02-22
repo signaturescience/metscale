@@ -41,6 +41,7 @@ taxid_dict = {}
 wgsmap_dict = {}
 
 #handle genbank versions? only a few files are available
+# TODO: either implement this or get rid of it.
 if create_genebank_dict:
     # parsing each of the files
     print ("\n"+"genbank output:")

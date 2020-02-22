@@ -7,7 +7,8 @@ import pickle
 
 # purpose of this script
 """
-This will be used as a query tool. The user should input a particular tax id, and the output will be the databases which contain that tax id. The input query is a file containing the organism tax ids seperated by new lines. 
+This will be used as a query tool. The user should input a particular tax id, and the output will be the databases which 
+contain that tax id. The input query is a file containing the organism tax ids seperated by new lines. 
 """
 
 #Help message for using repeatmaker.py
