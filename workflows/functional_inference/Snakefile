@@ -398,10 +398,10 @@ rule srst2_with_raw_reads:
 
 humann2_image = container_image_name(biocontainers, 'humann2') 
 humann2_threads = inference['humann2']['threads']
-humann2_output = '{sample}_trim{qual}_genefamilies.tsv'
+humann2_output = '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv'
 nucleotide_db = join(sing_dir, inference['humann2']['nucleotide_db'])
 protein_db = join(sing_dir, inference['humann2']['protein_db'])
-
+print("humann2_output: "+str(humann2_output))
 
 rule run_humann2:
     input:
