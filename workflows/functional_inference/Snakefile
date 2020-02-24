@@ -418,7 +418,7 @@ rule run_humann2:
     singularity:
         humann2_image
     shell:
-        'export LC_ALL=C & '
+        'export LC_ALL=C && '
         'humann2 -i {input} -o {params.out_folder} '
         '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
         '--nucleotide-database  {params.nucleotide_db} '
@@ -519,6 +519,17 @@ rule functional_with_srst2_workflow:
         )
 
 
+rule functional_humann2_workflow:
+    '''
+    run humann2 workflow
+    '''
+    input:
+        expand(humann2_output,
+            sample      = sample_input_files,
+            qual        = workflows['functional_humann2_workflow']['qual'],
+            )
+
+
 #Cleanup on success, check for srst2 dummy input files and delete
 onsuccess:
     for file in srst2_input_list:
@@ -536,13 +547,3 @@ onerror:
             os.remove(file)
         except:
             pass
-
-rule functional_humann2_workflow:
-    '''
-    run humann2 workflow
-    '''
-    input:
-        expand(humann2_output,
-            sample      = sample_input_files,
-            qual        = workflows['functional_humann2_workflow']['qual'],
-            )
