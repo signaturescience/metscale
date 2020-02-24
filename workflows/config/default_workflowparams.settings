@@ -309,11 +309,6 @@ config_default = {
             "mash_screen_out" : "{sample}_trim{qual}_{db}_mash_screen.tab",
             "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
         },
-        "humann2" : {
-            "nucleotide_db" : "chocophlan_plus_viral",
-            "protein_db" : "uniref90",
-            "threads" : 4
-        }
     },
 
     "functional_inference" : {
@@ -371,6 +366,11 @@ config_default = {
         "srst2" : {
             "threads" : 4,
             "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
+        },
+        "humann2" : {
+            "nucleotide_db" : "chocophlan_plus_viral",
+            "protein_db" : "uniref90",
+            "threads" : 4
         }
     },
 

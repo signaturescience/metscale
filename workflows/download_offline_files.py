@@ -49,10 +49,10 @@ def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_str
         except SocketError as e:
             print("Error downloading/extracting file " + file_name + "Retry script.")
             print(e)
-            try:
-                os.remove(install_dir+ "/"+file_name)
-            except OSError:
-                pass
+        try:
+            os.remove(install_dir+ "/"+file_name)
+        except OSError:
+            pass
     
 
 def download_sourmash_files(data, workflow, install_dir):   
@@ -69,10 +69,10 @@ def download_sourmash_files(data, workflow, install_dir):
             except SocketError as e:
                 print("Error downloading file " + file + "Retry script.")
                 print(e)
-                try:
-                    os.remove(install_dir+ "/"+file)
-                except OSError:
-                    pass 
+            try:
+                os.remove(install_dir+ "/"+file)
+            except OSError:
+                pass 
 
 def download_kmer_files(file_name, install_sub_dir, install_dir, url_string):
     if not (os.path.isdir(install_dir + "/" + install_sub_dir)):
