@@ -191,7 +191,7 @@ config_default = {
             #mash db
             "mash_db" : "RefSeq_10K_Sketches.msh",
         },
-        "tax_class_humann2_workflow" : {
+        "functional_humann2_workflow" : {
             "qual" : ["2","30"],
         },
         "functional_prokka_with_megahit_workflow" : {

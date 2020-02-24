@@ -392,6 +392,41 @@ rule srst2_with_raw_reads:
 
 
   
+###################################
+# Functioanl Inference: Run humann2
+
+
+humann2_image = container_image_name(biocontainers, 'humann2') 
+humann2_threads = inference['humann2']['threads']
+humann2_output = '{sample}_trim{qual}_genefamilies.tsv'
+nucleotide_db = join(sing_dir, inference['humann2']['nucleotide_db'])
+protein_db = join(sing_dir, inference['humann2']['protein_db'])
+
+
+rule run_humann2:
+    input:
+        interleave_output
+    output:
+        humann2_output
+    params:
+        out_folder = sing_dir,
+        nucleotide_db = nucleotide_db,
+        protein_db = protein_db,
+        threads = humann2_threads
+#    threads:
+#        humann2_threads
+    singularity:
+        humann2_image
+    shell:
+        'export LC_ALL=C & '
+        'humann2 -i {input} -o {params.out_folder} '
+        '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
+        '--nucleotide-database  {params.nucleotide_db} '
+        '--protein-database  {params.protein_db} '
+        '--remove-temp-output '
+        '--threads {params.threads} '
+
+
 
 ###################################
 # Functional Inference: build rules
@@ -501,3 +536,13 @@ onerror:
             os.remove(file)
         except:
             pass
+
+rule functional_humann2_workflow:
+    '''
+    run humann2 workflow
+    '''
+    input:
+        expand(humann2_output,
+            sample      = sample_input_files,
+            qual        = workflows['functional_humann2_workflow']['qual'],
+            )
