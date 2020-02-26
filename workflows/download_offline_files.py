@@ -108,7 +108,7 @@ def download_file(workflow, data, install_dir):
                         if (file_name.endswith('.tgz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([untar_command], shell=True)
-                        elif (file_name.endswith('.gz')):
+                        elif (file_name.endswith('.gz') and not file_name.endswith('fq.gz')):
                             unzip_command = "gunzip -c " + install_dir+"/" + file_name + " > " + install_dir + "/" + os.path.splitext(file_name)[0] + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([unzip_command], shell=True)
                     except SocketError as e:
