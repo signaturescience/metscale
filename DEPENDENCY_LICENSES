@@ -11,7 +11,7 @@ ACKNOWLEDGMENTS
 This project builds off open source work that began in the Dahak project.
 
 -Dahak
-	-https://github.com/dahak-metagenomics/dahak
+	-github.com/dahak-metagenomics/dahak
 	-Copyright © 2017, The Regents of the University of California
 	-BSD 3-Clause License
 
@@ -19,12 +19,12 @@ DEPENDENCIES
 The metagenomics workflows use the following tools:
 
 -Singularity
-	-https://www.sylabs.io/docs/
+	-www.sylabs.io/docs/
 	-Copyright © 2018 Singularity
 	-BSD 3-Clause License
 
 -Snakemake
-	-https://github.com/snakemake-workflows/docs
+	-github.com/snakemake-workflows/docs
 	-Copyright © 2016 Johannes Köstert
 	-MIT License
 
@@ -34,14 +34,14 @@ The metagenomics workflows use the following tools:
 	-Apache 2.0 License
 
 -Python
-	-https://www.python.org
+	-www.python.org
 	-Copyright © 2001-2018 Python Software Foundation
 	-Python Software Foundation License
 
 -Conda
 	-https://conda.io/docs/
 	-Copyright © 2017, Anaconda, Inc.
-	-Licensed under BSD 3-Clause and terms in https://conda.io/docs/license.html
+	-Licensed under BSD 3-Clause and terms in conda.io/docs/license.html
 	
 -Biocontainers
 	-https://biocontainers.pro/
@@ -51,113 +51,117 @@ The metagenomics workflows use the following tools:
 
 	-Trimmomatic version 0.36--5
 		-quay.io/biocontainers/trimmomatic
-		-https://github.com/timflutre/trimmomatic
+		-github.com/timflutre/trimmomatic
 		-GNU General Public License v3
 
 	-FastQC version 0.11.7--p15.22.0_2
 		-quay.io/biocontainers/fastqc
-		-https://github.com/s-andrews/FastQC
+		-github.com/s-andrews/FastQC
 		-GNU General Public License v2
 
 	-MultiQC version 1.4--py35_0
 		-quay.io/biocontainers/multiqc
-		-https://multiqc.iCopyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of Californianfo/
+		-multiqc.iCopyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of Californianfo/
 		-GNU General Public License v3
 		
 	-Khmer version 2.1--py35_0
 		-quay.io/biocontainers/khmer
-		-https://khmer.readthedocs.io/en/v2.1.2/user/scripts.html
+		-khmer.readthedocs.io/en/v2.1.2/user/scripts.html
 		-Copyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of California
 		-BSD-3-Clause License
 	
 	-SPAdes version 3.11--py36_zlib1.2.8_0
 		-quay.io/biocontainers/spades
-		-http://cab.spbu.ru/software/spades
+		-cab.spbu.ru/software/spades
 		-GNU General Public License v2
  
 	-MEGAHIT version 1.1.2--py35_0
 		-quay.io/biocontainers/megahit
-		-https://github.com/voutcn/megahit
+		-github.com/voutcn/megahit
 		-GNU General Public License v3
 
 	-QUAST version 5.0.2--py27pl526ha92aebf_0
 		-quay.io/biocontainers/quast
-		-http://quast.sourceforge.net/
+		-quast.sourceforge.net/
 		-GNU General Public License v2
 
 	-Mash version mash_2.2--h3d38be6_0
 		-quay.io/biocontainers/mash
-		-https://github.com/marbl/Mash
+		-github.com/marbl/Mash
 		-Copyright © 2015, Battelle National Biodefense Institute (BNBI)
-		-MIT License, and others as described in https://github.com/marbl/Mash/blob/master/LICENSE.txt
+		-MIT License, and others as described in github.com/marbl/Mash/blob/master/LICENSE.txt
 	
 	-Sourmash version 2.1.0--py27he1b5a44_0
 		-quay.io/biocontainers/sourmash
-		-https://github.com/dib-lab/sourmash
+		-github.com/dib-lab/sourmash
 		-Copyright © 2016 The Regents of the University of California
 		-BSD-3-Clause License
 
 	-Kaiju version 1.6.1--pl5.22.0_0.sif
 		-quay.io/biocontainers/kaiju
-		-http://kaiju.binf.ku.dk/
+		-kaiju.binf.ku.dk/
 		-GNU General Public License v3
 
 	-Krona version 2.7--pl5.22.0_1
 		-quay.io/biocontainers/krona
-		-https://github.com/marbl/Krona
+		-github.com/marbl/Krona
 		-Copyright © 2011, Battelle National Biodefense Institute (BNBI)
 		-BSD 2-clause “Simplified” License
 		
 	-KrakenUniq version krakenuniq_0.5.8--pl526he860b03_0
 		-quay.io/biocontainers/krakenuniq
-		-https://github.com/fbreitwieser/krakenuniq
+		-github.com/fbreitwieser/krakenuniq
 		-GNU General Public License v3
 	
 	-Kraken2 version 2.0.8_beta--pl526h6bb024c_0
-		-quay.io/biocontainers/
-		-https://ccb.jhu.edu/software/kraken2/
+		-quay.io/biocontainers/kraken2
+		-ccb.jhu.edu/software/kraken2/
 		-Copyright (c) 2017-2018 Derrick Wood
 		-MIT License
 	
 	-Bracken version 2.2--py27h2d50403_1
-		-quay.io/biocontainers/
-		-https://ccb.jhu.edu/software/bracken/
+		-quay.io/biocontainers/bracken
+		-ccb.jhu.edu/software/bracken/
 		-GNU General Public License v3
 	
 	-MTSv version 1.0.5--py36hc9558a2_0
-		-quay.io/biocontainers/
-		-https://github.com/FofanovLab/MTSv
+		-quay.io/biocontainers/mtsv
+		-github.com/FofanovLab/MTSv
 		-Copyright (c) 2018 FofanovLab
 		-MIT License
 		
 	-SRST2 version 2-0.2.0--py27_2
 		-quay.io/biocontainers/srst2
-		-https://github.com/katholt/srst2
+		-github.com/katholt/srst2
 		-Copyright (c) 2013, Michael Inouye, Bernie Pope, Harriet Dashnow, Kathryn Holt
 		-BSD License
+		
+	-HUMAnN2 version 2.8.1--py27_0
+		-quay.io/biocontainers/humann2
+		-huttenhower.sph.harvard.edu/humann
+		-MIT License
 
 -Docker
-	-https://www.docker.com/legal/components-licenses
+	-www.docker.com/legal/components-licenses
 	-Copyright © 2019 Docker Inc. All rights reserved.
 	-Apache 2.0 license
 
 -The following are downloaded from Docker Hub and used in the current workflows:
 
 	-ABRicate version 0.5-dev
-		-https://hub.docker.com/r/thanhleviet/abricate/
-		-https://github.com/tseemann/abricate
+		-hub.docker.com/r/thanhleviet/abricate/
+		-github.com/tseemann/abricate
 		-GNU General Public License v2
 		
-	-Prokka version 1.13.3-01
-		-https://hub.docker.com/r/ummidock/prokka/
-		-https://github.com/tseemann/prokka
+	-Prokka version 1.14.5-1
+		-hub.docker.com/r/ummidock/prokka/
+		-github.com/tseemann/prokka
 		-GNU General Public License v3
 		
-
--R (example final report in R Markdown)
-	-https://github.com/rstudio/rmarkdown
-	-https://svn.r-project.org/R/trunk/doc/COPYRIGHTS
-	-https://www.r-project.org/Licenses/
+-R (final report in R Markdown)
+	-github.com/rstudio/rmarkdown
+	-hsvn.r-project.org/R/trunk/doc/COPYRIGHTS
+	-www.r-project.org/Licenses/
 	-GNU General Public License v3
 
 	-R packages used:
