@@ -30,12 +30,13 @@ MY_DEBUG = True
 
 # Specifies how to parse file types that are just delimited text. Each entry is:
 #   ( <Delimiter>, <Taxon ID Column>, <# Header Rows to Skip> )
+#   NOTE: moved to the config file.
 delimited_format_parse_specs = {
-    'accn2taxid':       ('\t', 2, 1),
-    'kraken2_inspect':  ('\t', 4, 0),
-    'first_col':        ('\t', 0, 0),
-    'refseq':           ('\t', 0, 0),
-    'seqid2taxid':      ('\t', 1, 0)
+    # 'accn2taxid':       ('\t', 2, 1),
+    # 'kraken2_inspect':  ('\t', 4, 0),
+    # 'first_col':        ('\t', 0, 0),
+    # 'refseq':           ('\t', 0, 0),
+    # 'seqid2taxid':      ('\t', 1, 0)
 }
 
 taxid_dict = {}
@@ -202,6 +203,12 @@ def command_args_postprocess(cargs):
     ''' % (dir_working, fpath_containment, source_file_list, fpath_ncbi_tax_nodes, dir_refseq)
     logging.info(param_vals_msg)
 
+    # READ THE FORMAT LIST INTO A DICT:
+    for k in dbqt_config['formats'].keys():
+        fmt = None
+        exec('fmt=' + dbqt_config.get('formats',k))
+        delimited_format_parse_specs[k]=fmt
+
     # IDENTIFIES WHICH ROUTINE TO RUN:
     # todo: build this out later.
 
@@ -228,42 +235,65 @@ def get_file_md5_digest(file_path):
         hd=hashlib.md5(fb.read()).hexdigest()
     return hd
 
-def read_source_file_list():
+def read_source_file_list(skip_refseq = False):
     '''
-    Reads a config file containing a list of databases to be imported, including relevant information
+    Reads a config file containing a list of databases to be imported, including relevant information. The file it looks
+    through must be tab-delimited, with a single header row. The fields it expects are:
+        DB_Name: simple string identifying the database (e.g. 'RefSeq_v90' or 'kaiju_db_nr_euk')
+        Path: path to the file. If this is not an absolute path it will be considered relative to the working folder.
+        Format: the name of the format spec (from the config file) to use.
+        Import: Set to 0 if the row should be skipped during processing, 1 otherwise.
     :return:
     '''
-    logging.info('Function: read_source_file_list()...')
+    global dir_refseq, source_file_list
+    logging.debug('Function: read_source_file_list()...')
     sf = open(source_file_list, 'r')
+
+
     sf.readline() #skip header
     source_file_list_output = []
+    no_file_errors = []
+    not_to_import = []
     refseq_ct = 0
+    line_no = 1
+    refseq_in_source_list = False
 
     for ln in sf:
         if len(ln.strip())<=1:
             continue
         flds = ln.strip().split('\t')
         db_name = flds[0]
-        db_filepath = os.path.join(flds[1], flds[2])
-        db_format = flds[3]
-        db_to_import = bool(int(flds[4]))
+        db_filepath = flds[1]
+        # db_filepath = os.path.join(flds[1], flds[2])
+        db_format = flds[2]
+        db_to_import = bool(int(flds[3]))
         if db_to_import:
-            # If the line is for RefSeq, do it differently:
-            if db_name.lower()=='refseq':
-                refseq_dir = flds[1]
-                if os.path.isdir(refseq_dir):
-                    refseq_file_list = search_refseq_dir(refseq_dir)
+            if db_name.lower()=='refseq' and not skip_refseq:   # If the line is for RefSeq, do it differently...
+                new_refseq_dir = flds[1]
+                if os.path.isdir(new_refseq_dir):
+                    logging.debug('found RefSeq in the source list. Replacing config refseq folder with:\n\t%s' % new_refseq_dir)
+                    dir_refseq = new_refseq_dir
+                    refseq_in_source_list = True
                 else:
-                    logging.warning(' - RefSeq line has folder column that is not a valid path:')
-                    logging.warning('       %s' % refseq_dir)
-                    logging.warning('   ...skipping RefSeq search')
-                    refseq_file_list = []
-                refseq_ct = len(refseq_file_list)
-                for ftup in refseq_file_list:
-                    source_file_list_output.append(ftup)
-            else:
-                db_tuple = make_tuple_with_metadata(db_filepath, db_name, db_format)
-                source_file_list_output.append(db_tuple)
+                    logging.warning(' - RefSeq (line %s) has path column that is not a valid folder:\n\t%s' % (line_no, new_refseq_dir))
+
+            else:  # ...otherwise send it to the text parser
+                if os.path.isfile(db_filepath):
+                    db_tuple = make_tuple_with_metadata(db_filepath, db_name, db_format)
+                    source_file_list_output.append(db_tuple)
+                else:
+                    logging.debug(' - File in source list does not exist (line %s, db=%s)\n\t%s' % (line_no, db_name, db_filepath))
+                    no_file_errors.append((db_filepath, db_name, db_format))
+        else:   # Add to the skips list
+            not_to_import.append((db_filepath, db_name, db_format))
+        line_no += 1
+
+    if not skip_refseq:
+        if dir_refseq is not None:
+            refseq_file_list = search_refseq_dir(dir_refseq)
+            refseq_ct = len(refseq_file_list)
+            for ftup in refseq_file_list:
+                source_file_list_output.append(ftup)
 
     # Print some info about what we found:
     total_ct = len(source_file_list_output)
@@ -271,7 +301,7 @@ def read_source_file_list():
     logging.debug(' - source_file_list yielded the following to be imported:')
     logging.debug('     %s RefSeq database files' % refseq_ct)
     logging.debug('     %s other database files' % other_ct)
-    return source_file_list_output
+    return source_file_list_output, no_file_errors, not_to_import
 
 def search_refseq_dir(custom_refseq_dir = None):
     '''
@@ -490,7 +520,7 @@ def containment_dict_summary(contain, all_refseq = False, print_to_console = Fal
         else:
             mainkeys.append(k)
     tot_db_ct = len(mainkeys) + len(refseq_keys)
-    summ_str = summ_str + '  Size: %d (%d RefSeq, %d other)\n' % (tot_db_ct, len(refseq_keys), len(mainkeys))
+    summ_str = summ_str + '  # Databases: %d (%d RefSeq, %d other)\n' % (tot_db_ct, len(refseq_keys), len(mainkeys))
     summ_str = summ_str + '  Latest RefSeq: v%d\n' % latest_ver_num
     if not all_refseq:
         mainkeys.append(latest_ver_key)
@@ -500,7 +530,8 @@ def containment_dict_summary(contain, all_refseq = False, print_to_console = Fal
     # make the summary string:
     longest_key_len = max(map(len, mainkeys))
     lp_key = lambda x: ('%' + str(longest_key_len) + 's') % x
-    summ_str = summ_str + "  Main Databases: (Name, # Taxa, Date Parsed)\n"
+    summ_str = summ_str + "  Main Databases:\n"
+    summ_str = summ_str + "  %s: %9s taxa, %s\n" % ('Database Name', '# of', 'Date Parsed')
     for mk in mainkeys:
         summ_str = summ_str + "  %s: %9s taxa, %s\n" % (lp_key(mk), str(contain[mk]['num_taxa']), contain[mk]['date_parsed'])
     summ_str = summ_str + '\n'
@@ -620,9 +651,39 @@ def make_ncbi_taxonomy_full_vector_lookup(ncbi_dict):
         ncbi_tax_fullvec[k] = taxonid_to_lineage_vector(k, ncbi_dict)
     return ncbi_tax_fullvec
 
+def run_recruit_sources_print_report():
+    '''
+    Simple routine to check the DB sources that will be found when the sources and/or refseq
+    folder is parsed. Prints a report to the logger.
+    :return:
+    '''
+    rpt = '\n'
+    sft, nfe, skips = read_source_file_list()
+    refseq_list = []
+    main_list = []
+    latest_refseq_version = -1
+    latest_refseq_index = None
+    for db_ind in range(len(sft)):
+        db = sft[db_ind]
+        if db[1][:6].lower()=='refseq':
+            refseq_list.append(db)
+            ver = int(db[1][8:])
+            if ver > latest_refseq_version:
+                latest_refseq_version = ver
+                latest_refseq_index = db_ind
+        else:
+            main_list.append(db)
+
+
+    rpt = rpt + 'Searching for data sources...\n'
+    rpt = rpt + '    RefSeq folder: %s\n' % dir_refseq
+    rpt = rpt + '    Source List File: %s\n' % source_file_list
+    rpt = rpt + 'Data Sources to be Imported:'
+
+
 def main():
     args = command_args_parse()
-    sft = read_source_file_list()
+    sft, nfe, skips = read_source_file_list()
     cd = containment_dict_build(sft)
     cd_sum = containment_dict_summary(cd)
     print (cd_sum)

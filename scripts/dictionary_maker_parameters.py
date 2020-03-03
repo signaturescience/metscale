@@ -21,7 +21,7 @@ then turn the "use_old_containment" switch to True. In addition, follow the step
 in 3, adding the new database to the paths below and updating the "create" switch
 for that particular database. Lastly, it is advised to move the previous containment
 file to a new directory for backup, as the newly created one will overwrite the 
-previous. This can be achived by changing the path titled "path_for_old_containment".
+previous. This can be achived by changing the path titled "fpath_containment".
 """
 import os
 
@@ -30,7 +30,7 @@ import os
 dir_working = '/home/mnute/sigsci/metagenomics/scripts/'
 # path_for_storing_pickles = './pickle_dir/';
 dir_pickle = os.path.join(dir_working, 'pickle_dir')
-# path_for_old_containment = 'PATH TO THE DIRECTORY FOR THE OLD containment_dict.py';
+# fpath_containment = 'PATH TO THE DIRECTORY FOR THE OLD containment_dict.py';
 path_for_old_containment = os.path.join(os.path.abspath(dir_pickle), 'containment_dict.p')
 source_file_list = '/home/mnute/sigsci/work/db_query_tool/source_file_list.txt'
 path_to_ncbi_taxonomy_nodes = '/home/mnute/sigsci/work/db_query_tool/ncbi_taxonomy/nodes.dmp'
@@ -59,7 +59,7 @@ genebank_file = "genebank_livelist/GbAccList.0602.2019" # genebank file path
 nucleo_file = "accession2taxid_files/nucl_gb.accession2taxid" #nt DB file path
 wgsmap_file = "accession2taxid_files/nucl_wgs.accession2taxid" #wgsmap file path
 kaiju_file = "kaiju_files/kaiju_nr.taxids.txt" #kaiju file path
-# refseq_dir = "refseq_archives" #refseq directory path
+# dir_refseq = "refseq_archives" #refseq directory path
 refseq_dir = '/home/mnute/sigsci/work/db_query_tool/refseq/catalog_taxid'
 kraken_dir = "kraken_versions" #kraken directory path
 
