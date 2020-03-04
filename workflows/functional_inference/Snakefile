@@ -367,7 +367,7 @@ def srst2_input_files_sing(wildcards):
 
 rule srst2_with_raw_reads:
     input:
-       srst2_post_trimming_inputs
+        srst2_post_trimming_inputs
     output:
         srst2_log_out
     params:
@@ -391,9 +391,9 @@ rule srst2_with_raw_reads:
 
 
 
-  
+
 ###################################
-# Functioanl Inference: Run humann2
+# Functional Inference: Run humann2
 
 
 humann2_image = container_image_name(biocontainers, 'humann2') 
@@ -401,10 +401,27 @@ humann2_threads = inference['humann2']['threads']
 humann2_output = join(data_dir, '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv')
 nucleotide_db = join(sing_dir, inference['humann2']['nucleotide_db'])
 protein_db = join(sing_dir, inference['humann2']['protein_db'])
+metaphlan_db_tar = [join(data_dir, 'mpa_v20_m200.tar'), join(data_dir, 'mpa_v20_m200.md5')]
+metaphlan_db_bt2 = list(map(lambda x: join(data_dir, 'mpa_v20_m200.' + str(x) + '.bt2'), ['1', '2', '3', '4', 'rev.1', 'rev.2']))
+metaphlan_db_bt2 += [join(data_dir, 'mpa_v20_m200.fna.bz2'), join(data_dir, 'mpa_v20_m200.pkl')]
+
+rule install_metaphlan_db:
+    input:
+        metaphlan_db_tar
+    output:
+        metaphlan_db_bt2
+    params:
+        out_folder = sing_dir
+    singularity:
+        humann2_image
+    shell:
+        'export LC_ALL=C && '
+        'metaphlan2.py --bowtie2db {params.out_folder} --install'
+
 
 rule run_humann2:
     input:
-        interleave_output
+        interleave_output, metaphlan_db_bt2
     output:
         humann2_output
     params:
@@ -418,7 +435,7 @@ rule run_humann2:
         humann2_image
     shell:
         'export LC_ALL=C && '
-        'humann2 -i {input} -o {params.out_folder} '
+        'humann2 -i {input[0]} -o {params.out_folder} '
         '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
         '--nucleotide-database  {params.nucleotide_db} '
         '--protein-database  {params.protein_db} '
