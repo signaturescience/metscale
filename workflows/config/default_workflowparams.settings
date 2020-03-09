@@ -370,7 +370,9 @@ config_default = {
         "humann2" : {
             "nucleotide_db" : "chocophlan_plus_viral",
             "protein_db" : "uniref90",
-            "threads" : 16
+            "threads" : 16,
+            "metaphlan_db_tar" : ["mpa_v20_m200.tar", "mpa_v20_m200.md5"],
+            "metaphlan_db" : ["mpa_v20_m200.1.bt2", "mpa_v20_m200.2.bt2", "mpa_v20_m200.3.bt2", "mpa_v20_m200.4.bt2", "mpa_v20_m200.rev.1.bt2", "mpa_v20_m200.rev.2.bt2", "mpa_v20_m200.fna.bz2", "mpa_v20_m200.pkl"]
         }
     },
 
