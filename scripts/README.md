@@ -12,13 +12,14 @@ In its most basic form, the tool allows the user to input one or more taxon IDs 
 
 
 ## Usage 
-*Note: a complete list of the commands and options is available using the `--help` flag at the command line. E.g. `python3 query_tool.py --help`.*
+*Note: a complete list of the commands and options is available using the `--help` flag at the command line:*
+```python3 query_tool.py --help```
 
 ### Taxon ID Querying
 
 The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The included metadata file includes many databases of interest, including several of tools in the Taxon Classification workflows and all versions of RefSeq through v98, and is described in more detail below.
 
-<details><summary>#####Details & Example</summary>
+<details><summary>##### Details & Example</summary>
 
 The query tool can be run using the following command (for example):
 
@@ -67,19 +68,18 @@ DB Column Names:
 
 ### Inspecting and Editing Metadata
 
-<details><summary>The tool additionally contains several processes to update or change the metadata in `containment_dict.p`.</summary>
+The tool additionally contains several processes to update or change the metadata in `containment_dict.p`.
 
-###### New Database Definitions
+<details><summary>##### New Database Definitions</summary>
 
 To import a new database, the set of taxon IDs included must be contained somehow in a delimited text file (duplicates OK), which covers many common default metadata formats. If it does not exist, it must be created. A new database, therefore, must be specified by 1) a name, 2) a path to a delimited text file, 3) a format name specified in the config file. (Format specifications are documented in `dbqt_config`, but are simply a python tuple object containing `(<delimiter>, <column>, <# header rows to skip>)`. See `dbqt_config` for examples and additional documentation.)
 
 Before the metadata can be updated or appended, a roster of new databases must be specified. This can be done using either a config file or a tab-delimited text file in a specified form. (See comments in the default config file for how to use that. To see the specs for a roster as a tab-delimited text file, run `python3 query_tool.py --print_source_file_list_specs`.) In either case, an option is available to skip a particular database which can save time in parsing without heavy file editing.
 
-###### RefSeq Parsing
+**RefSeq**: The exception to the database definition is RefSeq. In that case, a folder should be given rather than a file name. The tool recognizes this database name and will gather all the files in the folder and try to parse the names for RefSeq version numbers.  **The tool assumes that all files are in the form `RefSeq-release##.catalog.taxid`**. It uses python string splitting (not regex matching) to parse the version number, so filenames that are not in this form could cause an error.
+</details>
 
-The exception to the database definition is RefSeq. In that case, a folder should be given rather than a file name. The tool recognizes this database name and will gather all the files in the folder and try to parse the names for RefSeq version numbers.  **The tool assumes that all files are in the form `RefSeq-release##.catalog.taxid`**. It uses python string splitting (not regex matching) to parse the version number, so filenames that are not in this form could cause an error.
-
-###### Commands:
+<details><summary>##### Commands:</summary>
 
 Four procedures dealing with the metadata are available at the command-line (corresponding command-line flag in parentheses):
 
@@ -90,11 +90,18 @@ Four procedures dealing with the metadata are available at the command-line (cor
 
 </details>
 
-### Config File Contents:
+### Config File
 
-The tool relies on a config file for several key settings. The file is read using the Python [`configparse`](https://docs.python.org/3.7/library/configparser.html) module, so the documentation of the file format can be found [here](https://docs.python.org/3.7/library/configparser.html#supported-ini-file-structure). Many of these settings can be overridden by command-line arguments (and will be if the command-line args are specified). The default config file is [`dbqt_config`](../blob/master/scripts/dbqt_config), which additionally contains comments documenting the requirements for the sections other than `[paths]`.
+<details><summary>##### Description</summary>
 
-<details><summary>#####Contents</summary>
+The tool relies on a config file for several key settings. Many of these settings can be overridden by command-line arguments (any conflicting command-line argument given will be prioritized), but values stored in the config will be used as defaults. The default config file is [`dbqt_config`](../blob/master/scripts/dbqt_config), though a different file can be given at the command line. 
+
+which additionally contains comments documenting the requirements for the sections other than `[paths]`.
+
+The file is read using the Python [`configparse`](https://docs.python.org/3.7/library/configparser.html) module, so the documentation of the file format can be found [here](https://docs.python.org/3.7/library/configparser.html#supported-ini-file-structure). 
+</details>
+
+<details><summary>##### Contents</summary>
 
 The `[paths]` section specifies a few important paths for the tool:
 
@@ -106,24 +113,21 @@ The `[paths]` section specifies a few important paths for the tool:
 
 * **Database Source Roster (Text-File)** (`path_to_source_file_list`): (OPTIONAL) The path to a tab-delimited text file containing a roster of databases and associated taxon list files. This can be given in addition to or instead of the roster via the config file. Can be overridden via command-line using `-dbs` flag.
 
-* **TODO: Do I need the RefSeq folder here?**
-
-The remaining sections (namely `[formats]`, `[db_source_files]`, and `[db_source_formats]`) are used to define the specifications for any source files to be imported. This can be left empty if the only planned use is to query the included metadata. See [`dbqt_config`](../blob/master/scripts/dbqt_config) for documentation in comments about what each of these sections must contain.
+The remaining sections (`[formats]`, `[db_source_files]`, and `[db_source_formats]`) are used to define the specifications for any source files to be imported. This can be left empty if the only planned use is to query the included metadata. See [`dbqt_config`](../blob/master/scripts/dbqt_config) for documentation in comments about what each of these sections must contain.
 
 </details>
 
-### Additional Options & Notes:
+### Additional Command-line Arguments
 
 * __`--all_refseq_versions`__: RefSeq is treated differently than other databases in the tool. Since many versions are included by default, only the latest version is included in the output unless this option is given at the command-line.
 * __Logging__: the tool does extensive logging of the steps involved. That log can be sunk to a file using the `--logfile` option. It can also be made more or less verbose using the `--debug` (more) or '-qt' (less) or `-vqt` flags.
 * __`-o/--output`__: Specifies a file for the output of the procedure. If this is printing a report then it will print the report to the output file instead of the console. This applies to most of the procedures.
 
-###### Notes:
-* Only one argument specifying a procedure can be specified at a time. These are the arguments whose short-hand is three capital letters (e.g. `-BCD`) or whose long-hand starts with `--cmd_` (e.g. `--cmd_inspect_filelist`).
+**Note:** Only one argument specifying a procedure can be specified at a time. These are the arguments whose short-hand is three capital letters (e.g. `-BCD`) or whose long-hand starts with `--cmd_` (e.g. `--cmd_inspect_filelist`).
 
-## Packaged Taxon-Containment [Metadata](../blob/master/scripts/pickle_dir/containment_dict.p)
+## Packaged Taxon-Containment [Metadata File](../blob/master/scripts/pickle_dir/containment_dict.p)
 
-### Included Databases
+### Databases Included
 The [containment metadata file](../blob/master/scripts/pickle_dir/containment_dict.p) packaged with this repo includes a number of databases relevant to the taxon classification workflows in MetScale. Below is a table of the databases included:
 
 |Database|Metadata Key|Source|
@@ -135,7 +139,7 @@ The [containment metadata file](../blob/master/scripts/pickle_dir/containment_di
 |GenBank|NCBI_nucl_gb|[NCBI accn2taxid (nucl_gb)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
 |GenBank (WGS/TSA)|NCBI_nucl_wgs|[NCBI accn2taxid (nucl_wgs)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
 
-###### Notes:
+*Notes:*
 
 * __\*Kraken2/Krakenuniq/Kaiju__:
 	* Taxon ID files specifically match databases used by Taxon Classification workflows.
@@ -146,11 +150,11 @@ The [containment metadata file](../blob/master/scripts/pickle_dir/containment_di
 	* Pulled directly from the NCBI's broadest [accession-to-taxonID database](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/).
 
 
-### Procedure for Creating Included Databases 
+### Data Sources 
 
 The process for downloading all of the data included in the packaged metadata file is re-created (approximately) in the script `prepare_taxid_metadata.sh`. Below is a description of the process for each database:
 
-<details><summary>###### NCBI Sources:</summary>
+<details><summary>##### NCBI Sources:</summary>
 
 * **RefSeq**
     * The RefSeq catalog contains all Accessions included in a release, with a column for NCBI taxon ID. Downloading the catalog file directly is sufficient for importing with `query_tool.py`.
@@ -162,7 +166,7 @@ The process for downloading all of the data included in the packaged metadata fi
     * Taxonomy can be downloaded from [NCBI] directly. After extracting, `nodes.dmp` should be in the target folder. That file path should be given in the config file (see above).
 </details> 
    
-<details><summary>###### Taxon Classification Tool-Specific Databases:</summary>
+<details><summary>##### Taxon Classification Tool-Specific Databases:</summary>
 
 * **Krakenuniq**
     * Krakenuniq uses databases in the same form as Kraken1. When those DBs were packaged by the developers, they included a file called `seqid2taxid.map`. The provenenace of that particular file is not well-documented as far as I can tell, although it is ostensibly a mapping from database sequence to taxon ID, which is what we need. 
