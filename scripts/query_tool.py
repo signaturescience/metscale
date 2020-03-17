@@ -48,7 +48,7 @@ ncbi_tax_levels = ['no rank', 'superkingdom', 'kingdom', 'subkingdom', 'superphy
                    'suborder', 'infraorder', 'parvorder', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe',
                    'genus', 'subgenus', 'section', 'subsection', 'series', 'species group', 'species subgroup',
                    'species', 'subspecies', 'varietas', 'forma']
-
+hidden_args_help_strings = {}
 
 #
 # Utility Functions First:
@@ -64,26 +64,7 @@ def command_args_parse():
     global options
     p = argparse.ArgumentParser(description='Module to build and manipulate the Taxon ID metadata and the database'
                                             ' containment_dict.p')
-    p.add_argument('-wd', '--workdir', type=str, default=None,
-                   help='The working folder in which we assume the script \'prepare_taxid_metadata.sh\' has run. '
-                        '(default: current directory)')
-    p.add_argument('-dbs', '--db_source_list_file',type=str, default=None,
-                   help='Path to the file containing the Source File List. Typically named \'source_file_list.txt\'. '
-                        'This is a specifically formatted text file (tab-delimited) containing the target DBs and '
-                        'metadata files.')
-    p.add_argument('-pf', '--pickle_file', type=str, default=None, help='path to the pickled containment_dict.p file')
-    p.add_argument('-qt', '--quiet', action='store_true', default=False,
-                   help='If given, disables logging to the console except for warnings or errors (overrides --debug)')
-    p.add_argument('-vqt', '--veryquiet', action='store_true', default=False,
-                   help='If given, disables logging to the console (overrides --quiet and --debug)')
-    p.add_argument('--debug', action='store_true', default=False,
-                   help='If given, enables more detailed logging useful in debugging.')
-    p.add_argument('-lf', '--logfile', type=str, default=None,
-                   help = 'If given, sends logging messages to a file instead of the console. Note that if the path'
-                          'given is not a valid path to open a new file, the behavior is undefined.')
-    p.add_argument('--all_refseq_versions', action='store_true', default=False,
-                   help='Prints whatever results are called for including all versions of RefSeq, not just the latest '
-                        'version (default).')
+
     help_taxid_list = 'The NCBI taxonomy ID(s) to query against the containment_dict metadatabase. Can be in one of ' \
                       'three forms: a) a single integer, which will be queried and the results output, b) a valid path' \
                       'to a text file containing one taxon ID per line, all of which will be queried and the results ' \
@@ -91,30 +72,81 @@ def command_args_parse():
                       'standard input and processed as with a file.'
     p.add_argument('-t', '--taxids', dest='taxid_list', type=str, default=None, help=help_taxid_list)
     p.add_argument('-o', '--output', dest='output_path', type=str, default=None, help='output file path')
-    p.add_argument('--num_taxa', type=int, default=25, help='number of taxa to dump to file.')
+    p.add_argument('--all_refseq_versions', action='store_true', default=False,
+                   help='Prints whatever results are called for including all versions of RefSeq, not just the latest '
+                        'version (default).')
 
-    commandgroup = p.add_argument_group('Procedures Available', 'Each of these options describes a different subroutine to'
+
+    configgroup = p.add_argument_group('Configuration Options',
+                                       'Paths to key locations and files required by the tool. Arguments not supplied '
+                                       'will be pulled from the default config file \'dbqt_config\' and if needed will '
+                                       'be assigned their default values (where applicable).')
+    configgroup.add_argument('-wd', '--workdir', type=str, default=None,
+                   help='The working folder in which we assume the script \'prepare_taxid_metadata.sh\' has run. '
+                        '(default: current directory)')
+    configgroup.add_argument('-pf', '--pickle_file', type=str, default=None,
+                             help='Path to the pickled containment_dict.p file.')
+    configgroup.add_argument('-dbs', '--db_source_list_file', type=str, default=None,
+                   help='Path to the file containing the Source File List. Typically named \'source_file_list.txt\'. '
+                        'This is a specifically formatted text file (tab-delimited) containing the target DBs and '
+                        'metadata files.')
+    configgroup.add_argument('-c', '--config', type=str, default=None,
+                             help='Optional config file (overrides default file path: \'dbqt_config\'')
+
+
+    logginggroup = p.add_argument_group('Logging Options', 'Options related to how much information the program prints '
+                                                           'while running (to stdout by default, but optioanlly to a logfile.')
+    logginggroup.add_argument('-qt', '--quiet', action='store_true', default=False,
+                   help='If given, disables logging to the console except for warnings or errors (overrides --debug)')
+    logginggroup.add_argument('-vqt', '--veryquiet', action='store_true', default=False,
+                   help='If given, disables logging to the console (overrides --quiet and --debug)')
+    logginggroup.add_argument('--debug', action='store_true', default=False,
+                   help='If given, enables more detailed logging useful in debugging.')
+    logginggroup.add_argument('-lf', '--logfile', type=str, default=None,
+                   help='If given, sends logging messages to a file instead of the console. Note that if the path'
+                        'given is not a valid path to open a new file, the behavior is undefined.')
+
+    commandgroup = p.add_argument_group('Procedures Available', 'Each of these options describes a different subroutine to '
                                                                 'run. Only one can be given and if none are, defaults to '
-                                                                'querying a taxon ID against the containment file. (-QRY)')
-    help_cmd_filelist = 'Parses the Source File List, prints the results to the console (readably), and then exits.'
+                                                                'querying a taxon ID against the containment file (i.e. -QRY)')
+    help_cmd_query_taxid = 'query one or more taxids against the containment file. Report back which DBs contain the taxid ' \
+                           '(adjusted to the species level). (Requires \'-t/--taxids\', \'-o/--output\''
+    commandgroup.add_argument('-QRY', '--cmd_query_taxids', action='store_true', help=help_cmd_query_taxid,
+                              default=False)
+    help_cmd_filelist = 'Parses the roster of database sources to be added to the containment_dict.p file, either from ' \
+                        'the soure_file_list file or from the config file (or both). Prints the results to the console ' \
+                        '(readably), and then exits. Primarily for checking accuracy of source file roster before building ' \
+                        'a new containment_dict.p file.'
     commandgroup.add_argument('-IFL', '--cmd_inspect_filelist', action='store_true', help=help_cmd_filelist, default=False)
-    help_cmd_inspect_contain = 'Opens the existing containment_dict.p file and gets some summary data about it. Prints' + \
-                               'it to the console and then exits.'
+    help_cmd_inspect_contain = 'Prints some summary data about the existing containment_dict.p file to the console and ' \
+                               'then exits. Primarily for inspecting contents of the file.'
     commandgroup.add_argument('-ICD', '--cmd_inspect_contain', action='store_true', help=help_cmd_inspect_contain, default=False)
-    help_cmd_build_containment = 'Build a new containment dictionary. Requires doing just about every step along' \
-                                 'the way: 1) parses source_file_list, 2) opens old containment dict, 3) parses' \
-                                 'each individual database file, 4) gently replaces containment_dict.p and saves' \
-                                 'new stuff elsewhere.'
-    commandgroup.add_argument('-BCD', '--cmd_build_containment', action='store_true', help=help_cmd_build_containment, default=False)
-    help_cmd_show_build_plan = 'Compare the source files to the contents of the containment_dict file and identify which' \
-                               'files will be addded/replaced/left alone...'
+    help_cmd_show_build_plan = 'Runs procedures to inspect and generate a roster of database sources, as well as to inspect' \
+                               'the contaiment_dict.p file. Compares the two and identifies the plan for which files ' \
+                               'to be added, ignored or replaced. This procedure is run automatically prior to building ' \
+                               'a new containment_dict.p file.'
     commandgroup.add_argument('-CMO', '--cmd_compare_sources', action='store_true', help=help_cmd_show_build_plan,
                               default=False)
-    help_cmd_query_taxid = 'query one or more taxids against the containment file. Report back which DBs contain the taxid' \
-                           '(adjusted to the species level).'
-    commandgroup.add_argument('-QRY', '--cmd_query_taxids', action='store_true', help=help_cmd_query_taxid,default=False)
-    commandgroup.add_argument('--cmd_random_taxon_sample', action='store_true', help='makes a quick random sample of taxids to file. For testing.',
-                              default=False)
+    help_cmd_build_containment = 'Build a new containment dictionary. Requires doing just about every step along ' \
+                                 'the way: 1) parses source_file_list, 2) opens old containment dict, 3) parses ' \
+                                 'each individual database file, 4) gently replaces containment_dict.p and saves ' \
+                                 'new stuff elsewhere.'
+    commandgroup.add_argument('-BCD', '--cmd_build_containment', action='store_true', help=help_cmd_build_containment, default=False)
+    commandgroup.add_argument('--print_debug_args_help', action='store_true', default = False,
+                              help = 'Prints a help message for some additional command-line arguments. Most of thiese '
+                                     'are intended for debugging only and are not especially interesting.')
+
+    #
+    # Hidden arguments
+    #
+    commandgroup.add_argument('--cmd_random_taxon_sample', action='store_true', default=False, help=argparse.SUPPRESS)
+    hidden_args_help_strings['cmd_random_taxon_sample'] = 'Makes a quick random sample of taxids to file, for testing. ' \
+                                                          '(requires: -o/--output, --num_taxa)'
+    p.add_argument('--num_taxa', type=int, default=25, help=argparse.SUPPRESS)
+    hidden_args_help_strings['num_taxa'] = '(Integer, used with --cmd_random_taxon_sample) Number of taxa to be sampled. (default: 25)'
+    commandgroup.add_argument('--print_source_file_list_specs', action='store_true', default=False, help=argparse.SUPPRESS)
+    hidden_args_help_strings['print_source_file_list_specs'] = 'Prints a description of the specs for specifying a ' \
+                                                               'database roster in a text file.'
 
     p.parse_args(namespace=options)
     options.parser_store = p
@@ -133,29 +165,38 @@ def command_args_postprocess():
     # READ GLOBAL VARIABLES FROM CONFIG FILE
     # global dir_working, dir_refseq, fpath_containment, fpath_ncbi_tax_nodes, source_file_list
     global options
-    dbqt_config.read('dbqt_config')
-    dir_working_cfg = dbqt_config['paths'].get('working_folder', fallback=None)
-    dir_refseq_cfg = dbqt_config['paths'].get('refseq_folder', fallback=None)
-    fpath_containment_cfg = dbqt_config['paths'].get('path_to_pickle_file', fallback=None)
-    fpath_ncbi_tax_nodes_cfg = dbqt_config['paths'].get('path_to_ncbi_taxonomy_nodes', fallback=None)
-    source_file_list_cfg = dbqt_config['paths'].get('path_to_source_file_list', fallback=None)
+    if options.config is not None:
+        if os.path.isfile(os.path.expanduser(options.config)):
+            dbqt_config.read('dbqt_config')
+            logging.debug('Reading config file: %s' % options.config)
+        else:
+            logging.error('Config file given at command line does not exist (file: %s)' % options.config)
+    else:
+        dbqt_config.read('dbqt_config')
+
+    dir_working_cfg = os.path.expanduser(dbqt_config['paths'].get('working_folder', fallback=None))
+    dir_refseq_cfg = os.path.expanduser(dbqt_config['paths'].get('refseq_folder', fallback=None))
+    fpath_containment_cfg = os.path.expanduser(dbqt_config['paths'].get('path_to_pickle_file', fallback=None))
+    fpath_ncbi_tax_nodes_cfg = os.path.expanduser(dbqt_config['paths'].get('path_to_ncbi_taxonomy_nodes', fallback=None))
+    source_file_list_cfg = os.path.expanduser(dbqt_config['paths'].get('path_to_source_file_list', fallback=None))
 
     # CONFIGURE THE LOGGER
     mylvl = logging.INFO
+    if options.MY_DEBUG:
+        mylvl = logging.DEBUG
     if options.debug:
         mylvl = logging.DEBUG
     if options.quiet:
         mylvl = logging.WARNING
     if options.veryquiet:
         mylvl = logging.CRITICAL
-    if options.MY_DEBUG:
-        mylvl = logging.DEBUG
+
 
     rich_format = "%(levelname) 8s [%(filename)s (line %(lineno)d)]: %(message)s"
     to_file = False
     if options.logfile is not None:
         try:
-            myf = open(options.logfile, 'a')
+            myf = open(os.path.expanduser(options.logfile), 'a')
             myf.close()
             to_file = True
         except:
@@ -253,6 +294,22 @@ def command_args_postprocess():
         exec('fmt=' + dbqt_config.get('formats',k))
         options.delimited_format_parse_specs[k]=fmt
 
+def command_args_print_hidden_args_help():
+    '''
+    Several arguments are available at the command line for debugging but are not included in the default help menu.
+    This function prints a special help menu for the hidden options. None of these are especially interesting.
+    :return:
+    '''
+    import textwrap
+    print('\nHelp menu for hidden (debugging only) arguments:\n\n', end='')
+
+    for k in hidden_args_help_strings:
+        print('  --%s')
+        hstr = textwrap.wrap(hidden_args_help_strings[k], 55)
+        for ln in hstr:
+            print(' '*25, end='')
+            print(ln)
+
 def make_tuple_with_metadata(path, dbname, format):
     '''minor utility that takes three inputs and returns a tuple with the three inputs plus the file size and mod_time.
     '''
@@ -298,7 +355,7 @@ def util_filter_out_main_dbnames(db_iterable):
     out.append(latest_refseq_name)
     return out
 
-def read_source_file_list(skip_refseq = False, from_config = True, from_file_if_exists = True):
+def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_exists = True):
     '''
     Reads a config file containing a list of databases to be imported, including relevant information. If from_config
     is True, it will look for the relevant file paths and formats in the config file 'dbqt_config'. Specifically it will
@@ -320,7 +377,7 @@ def read_source_file_list(skip_refseq = False, from_config = True, from_file_if_
     :return:
     '''
     global options #.dir_refseq, source_file_list, dbqt_config
-    logging.debug('Function: read_source_file_list()...')
+    logging.debug('Function: source_file_list_read()...')
 
     source_file_list_output = []
     source_file_list_parsed = {}
@@ -373,7 +430,7 @@ def read_source_file_list(skip_refseq = False, from_config = True, from_file_if_
 
     for flds in source_file_list_parsed:
         db_name = flds[0]
-        db_filepath = flds[1]
+        db_filepath = os.path.abspath(os.path.expanduser( flds[1] ))
         # db_filepath = os.path.join(flds[1], flds[2])
         db_format = flds[2]
         db_to_import = bool(int(flds[3]))
@@ -413,6 +470,27 @@ def read_source_file_list(skip_refseq = False, from_config = True, from_file_if_
     logging.debug('     %s other database files' % other_ct)
     return source_file_list_output, no_file_errors, not_to_import
 
+def source_file_list_print_specs():
+    '''
+    Prints the help description for the specs of the database source roster (i.e. source_file_list).
+    :return:
+    '''
+    mydesc = 'A roster of new databases can be specified using a tab-delimited text file. In order to use this format, ' \
+           'a file path must be specified either at the command line (using the flag \'-dbs <PATH>\') or in the config ' \
+           'file (under the [paths] section, named \'path_to_source_file_list\').'
+
+    hstr='''
+%s
+ 
+The specified file must be tab-delimited text, with a single header row. Each database is given in a single row, with the following fields (in order):
+    DB_Name:  Simple string identifying the database (e.g. 'RefSeq_v90' or 'kaiju_db_nr_euk')
+    Path:     Path to the file. If this is not an absolute path it will be considered relative to the working folder.
+    Format:   The name of the format spec (from the config file) to use.
+    Import:   Set to 0 if the row should be skipped during processing, 1 otherwise.''' % mydesc
+    print(mydesc)
+    if options.logfile is not None:
+        logging.info(mydesc)
+
 def search_refseq_dir(custom_refseq_dir = None):
     '''
     Combs through the folder pointed to by the "options.dir_refseq" parameter for files matching '*release*.*' and
@@ -425,7 +503,7 @@ def search_refseq_dir(custom_refseq_dir = None):
     if custom_refseq_dir is None:
         refseq_dir_abs = os.path.abspath(options.dir_refseq)
     else:
-        refseq_dir_abs = os.path.abspath(custom_refseq_dir)
+        refseq_dir_abs = os.path.abspath(os.path.expanduser(custom_refseq_dir))
 
     for r, d, f in os.walk(refseq_dir_abs):
         for refseqfile in f:
@@ -824,7 +902,7 @@ def run_recruit_sources_print_report():
     :return:
     '''
     rpt = '\n'
-    sft, nfe, skips = read_source_file_list()
+    sft, nfe, skips = source_file_list_read()
     refseq_list = []
     main_list = []
     latest_refseq_version = -1
@@ -935,7 +1013,7 @@ def run_query_taxids_against_containment():
 
         rpt = rpt + '\n'
         rpt = rpt + ('%9s' % 'taxid') + ' ' + ('%9s' % 'rank') + ' '
-        rpt = rpt + ' '.join(range(len(main_keys))) + '\n'
+        rpt = rpt + ' '.join(map(str,range(len(main_keys)))) + '\n'
         for r in results:
             rpt = rpt + '%9s %9s ' % (r[0], r[1])
             mystr = ' '.join(map(str,r[2:]))
@@ -987,11 +1065,11 @@ def main():
         run_inspect_previous_containment_dict()
         return
     elif options.cmd_compare_sources:
-        sft, nfe, skips = read_source_file_list()
+        sft, nfe, skips = source_file_list_read()
         contain = containment_dict_read_previous()
         containment_dict_show_build_plan(sft, contain)
     elif options.cmd_build_containment:
-        sft, nfe, skips = read_source_file_list()
+        sft, nfe, skips = source_file_list_read()
         cd = containment_dict_build(sft)
         cd_sum = containment_dict_summary(cd)
         logging.info(cd_sum)
@@ -1000,6 +1078,10 @@ def main():
         run_query_taxids_against_containment()
     elif options.cmd_random_taxon_sample:
         run_random_taxon_sample_to_file()
+    elif options.print_source_file_list_specs:
+        source_file_list_print_specs()
+    elif options.print_debugging_command_flags_help:
+        command_args_print_hidden_args_help()
 
 if __name__=='__main__':
     main()
