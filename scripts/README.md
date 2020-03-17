@@ -13,13 +13,16 @@ In its most basic form, the tool allows the user to input one or more taxon IDs 
 
 ## Usage 
 *Note: a complete list of the commands and options is available using the `--help` flag at the command line:*
-```python3 query_tool.py --help```
+
+```python3 query_tool.py --help
+```
 
 ### Taxon ID Querying
 
 The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The included metadata file includes many databases of interest, including several of tools in the Taxon Classification workflows and all versions of RefSeq through v98, and is described in more detail below.
 
-<details><summary>##### Details & Example</summary>
+<details><summary>
+##### Details & Example</summary>
 
 The query tool can be run using the following command (for example):
 
@@ -70,7 +73,8 @@ DB Column Names:
 
 The tool additionally contains several processes to update or change the metadata in `containment_dict.p`.
 
-<details><summary>##### New Database Definitions</summary>
+<details><summary>
+##### New Database Definitions</summary>
 
 To import a new database, the set of taxon IDs included must be contained somehow in a delimited text file (duplicates OK), which covers many common default metadata formats. If it does not exist, it must be created. A new database, therefore, must be specified by 1) a name, 2) a path to a delimited text file, 3) a format name specified in the config file. (Format specifications are documented in `dbqt_config`, but are simply a python tuple object containing `(<delimiter>, <column>, <# header rows to skip>)`. See `dbqt_config` for examples and additional documentation.)
 
@@ -79,7 +83,8 @@ Before the metadata can be updated or appended, a roster of new databases must b
 **RefSeq**: The exception to the database definition is RefSeq. In that case, a folder should be given rather than a file name. The tool recognizes this database name and will gather all the files in the folder and try to parse the names for RefSeq version numbers.  **The tool assumes that all files are in the form `RefSeq-release##.catalog.taxid`**. It uses python string splitting (not regex matching) to parse the version number, so filenames that are not in this form could cause an error.
 </details>
 
-<details><summary>##### Commands:</summary>
+<details><summary>
+##### Commands:</summary>
 
 Four procedures dealing with the metadata are available at the command-line (corresponding command-line flag in parentheses):
 
@@ -92,7 +97,8 @@ Four procedures dealing with the metadata are available at the command-line (cor
 
 ### Config File
 
-<details><summary>##### Description</summary>
+<details><summary>
+##### Description</summary>
 
 The tool relies on a config file for several key settings. Many of these settings can be overridden by command-line arguments (any conflicting command-line argument given will be prioritized), but values stored in the config will be used as defaults. The default config file is [`dbqt_config`](../blob/master/scripts/dbqt_config), though a different file can be given at the command line. 
 
@@ -101,7 +107,8 @@ which additionally contains comments documenting the requirements for the sectio
 The file is read using the Python [`configparse`](https://docs.python.org/3.7/library/configparser.html) module, so the documentation of the file format can be found [here](https://docs.python.org/3.7/library/configparser.html#supported-ini-file-structure). 
 </details>
 
-<details><summary>##### Contents</summary>
+<details><summary>
+##### Contents</summary>
 
 The `[paths]` section specifies a few important paths for the tool:
 
@@ -154,7 +161,8 @@ The [containment metadata file](../blob/master/scripts/pickle_dir/containment_di
 
 The process for downloading all of the data included in the packaged metadata file is re-created (approximately) in the script `prepare_taxid_metadata.sh`. Below is a description of the process for each database:
 
-<details><summary>##### NCBI Sources:</summary>
+<details><summary>
+##### NCBI Sources:</summary>
 
 * **RefSeq**
     * The RefSeq catalog contains all Accessions included in a release, with a column for NCBI taxon ID. Downloading the catalog file directly is sufficient for importing with `query_tool.py`.
@@ -166,7 +174,8 @@ The process for downloading all of the data included in the packaged metadata fi
     * Taxonomy can be downloaded from [NCBI] directly. After extracting, `nodes.dmp` should be in the target folder. That file path should be given in the config file (see above).
 </details> 
    
-<details><summary>##### Taxon Classification Tool-Specific Databases:</summary>
+<details><summary>
+##### Taxon Classification Tool-Specific Databases:</summary>
 
 * **Krakenuniq**
     * Krakenuniq uses databases in the same form as Kraken1. When those DBs were packaged by the developers, they included a file called `seqid2taxid.map`. The provenenace of that particular file is not well-documented as far as I can tell, although it is ostensibly a mapping from database sequence to taxon ID, which is what we need. 
