@@ -58,7 +58,6 @@
     	"May-22-2019.tar"	: "https://rcdata.nau.edu/fofanov_lab/for_krista/May-22-2019.tar"
     },
 
-<<<<<<< HEAD
     "functional_inference" : {
         "prokka_1.14.5-1.sif" : "docker://ummidock/prokka:1.14.5-1",
         "abricate_latest.sif" : "docker://thanhleviet/abricate",
@@ -68,7 +67,6 @@
         "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
         "customDBabricate.tgz" : "file:///resources/customDBabricate.tgz",
         "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta"
-
     },
 
     "post_processing" : {
