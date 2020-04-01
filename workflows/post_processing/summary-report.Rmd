@@ -38,10 +38,11 @@ params:
 
 # Get input dir
 input_dir_param <- snakemake@params[1]
+# input_dir_param <- snakemake@params[[1]]
 input_dir <- toString(input_dir_param)
 # Set sample name (parameterized)
 id <- snakemake@params[2]
-
+# id <- snakemake@params[[2]]
 
 # setup and load necessary libraries
 library(knitr)
