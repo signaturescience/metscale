@@ -9,7 +9,7 @@ Documentation: docs/workflow_assembly.md
 from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname, islink
 import os, re
-import hashlib
+import random, string
 from shutil import copyfile
 
 
@@ -331,29 +331,6 @@ srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_tr
 srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 
                         srst2_rev_post_trimmed_sing]
 
-#I believe this is old and deprecated
-def srst2_post_trimming_inputs_sing(wildcards):
-    # input already includes data/ prefix
-    pre_inputs_wc = [x.format(**wildcards) for x in srst2_post_trimming_inputs]
-
-    # for containers, turn prefix data/ into /data/
-    #pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
-
-    file_seed = pre_inputs_wc[0]
-    unique_filename_obj = hashlib.md5(file_seed.encode())
-    unique_filename = unique_filename_obj.hexdigest()
-    unique_filename = unique_filename[:-16] 
-    print("unique_filename: "+str(unique_filename))
-    srst2_input_sing = []
-    for num, file in enumerate(pre_inputs_wc, start=1):
-        dst_file = join(data_dir, unique_filename + '_'+ str(num) +readfilt['quality_trimming']['sample_file_ext'])
-        file = file.replace(data_dir +"/", "")
-        srst2_input_sing.append(dst_file)
-        if (not islink(dst_file)):
-            os.symlink(file, dst_file)
-    srst2_input_sing = [ file.replace(data_dir, sing_dir) for file in srst2_input_sing ]
-    pre_inputs_wcs = " ".join(srst2_input_sing)
-    return pre_inputs_wcs
 
 
 srst2_db_location = join(sing_dir, '{db}')
@@ -367,20 +344,20 @@ srst2_threads = inference['srst2']['threads']
 def srst2_output_sub_sing(wildcards):
     return srst2_output_sing.format(**wildcards)
 
-#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a generic hash filename
+#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a random filename
 #to create a copy of input files then delete them.
 
+srst2_input_list = []
 def srst2_input_files_sing(wildcards):
-    srst2_input_list = []
     for num, file in enumerate(srst2_post_trimming_inputs):
         in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
         input_file = in_file[0]
         if (num ==0):  #forward 
-            result_file = hashlib.md5(input_file.encode())
-            hex_file = result_file.hexdigest()[:16]
-            srst2_input_file = data_dir + '/' + hex_file + '_1' + readfilt['quality_trimming']['sample_file_ext']     
+            letters = string.ascii_lowercase
+            rand_file = ''.join(random.choice(letters) for i in range(8))
+            srst2_input_file = data_dir + '/' + rand_file + '_1' + readfilt['quality_trimming']['sample_file_ext']     
         else:   #reverse
-            srst2_input_file = data_dir + '/' + hex_file + '_2' + readfilt['quality_trimming']['sample_file_ext']
+            srst2_input_file = data_dir + '/' + rand_file + '_2' + readfilt['quality_trimming']['sample_file_ext']
         if (os.path.isfile(input_file)):
             shutil.copyfile(input_file, srst2_input_file)
             srst2_input_file = srst2_input_file.replace(data_dir, sing_dir)
@@ -390,7 +367,7 @@ def srst2_input_files_sing(wildcards):
 
 rule srst2_with_raw_reads:
     input:
-       srst2_post_trimming_inputs
+        srst2_post_trimming_inputs
     output:
         srst2_log_out
     params:
@@ -411,11 +388,64 @@ rule srst2_with_raw_reads:
         '--log --gene_db {params.db} '
         '--threads {threads} '
         '--min_coverage 0 '
-        '&& '
-        'rm {params.input_files}'
 
 
-  
+
+
+###################################
+# Functional Inference: Run humann2
+
+
+humann2_image = container_image_name(biocontainers, 'humann2') 
+humann2_threads = inference['humann2']['threads']
+humann2_output = join(data_dir, '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv')
+nucleotide_db = join(sing_dir, inference['humann2']['nucleotide_db'])
+protein_db = join(sing_dir, inference['humann2']['protein_db'])
+
+metaphlan_db_tar_input = inference['humann2']['metaphlan_db_tar']
+metaphlan_db_tar = [join(data_dir, db) for db in metaphlan_db_tar_input]
+metaphlan_db_out = inference['humann2']['metaphlan_db']
+metaphlan_db_bt2_path = [join(data_dir, db) for db in metaphlan_db_out]
+
+
+rule install_metaphlan_db:
+    input:
+        metaphlan_db_tar
+    output:
+        metaphlan_db_bt2_path
+    params:
+        out_folder = sing_dir
+    singularity:
+        humann2_image
+    shell:
+        'export LC_ALL=C && '
+        'metaphlan2.py --bowtie2db {params.out_folder} --install'
+
+
+rule run_humann2:
+    input:
+        interleave_output, metaphlan_db_bt2_path
+    output:
+        humann2_output
+    params:
+        out_folder = sing_dir,
+        nucleotide_db = nucleotide_db,
+        protein_db = protein_db,
+        threads = humann2_threads
+#    threads:
+#        humann2_threads
+    singularity:
+        humann2_image
+    shell:
+        'export LC_ALL=C && '
+        'humann2 -i {input[0]} -o {params.out_folder} '
+        '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
+        '--nucleotide-database  {params.nucleotide_db} '
+        '--protein-database  {params.protein_db} '
+        '--remove-temp-output '
+        '--threads {params.threads} '
+
+
 
 ###################################
 # Functional Inference: build rules
@@ -507,3 +537,32 @@ rule functional_with_srst2_workflow:
                 direction = directions,
         )
 
+
+rule functional_humann2_workflow:
+    '''
+    run humann2 workflow
+    '''
+    input:
+        expand(humann2_output,
+            sample      = sample_input_files,
+            qual        = workflows['functional_humann2_workflow']['qual'],
+            )
+
+
+#Cleanup on success, check for srst2 dummy input files and delete
+onsuccess:
+    for file in srst2_input_list:
+        file = file.replace(sing_dir, data_dir)
+        try:
+            os.remove(file)
+        except:
+            pass
+ 
+
+onerror:
+    for file in srst2_input_list:
+        file = file.replace(sing_dir, data_dir)
+        try:
+            os.remove(file)
+        except:
+            pass
