@@ -216,7 +216,7 @@ compare_read_sigs_output_name = comparison['compare_read_signatures']['csv_out']
 read_sig_qual_string = 'and'.join(map(str,comparison['compute_read_signatures']['qual'])) 
 
 compare_read_sigs_output_name = expand(compare_read_sigs_output_name,
-                                sample    = sample_input_files,
+                                sample    = 'AllSamplesCombined', # [previously was: 'sample    = sample_input_files,']
                                 qual = read_sig_qual_string,
                                 kvalue_read = '{kvalue_read}')
 

@@ -918,3 +918,4 @@ rule read_filtering_fastq_to_fasta_workflow:
     '''
     input:  
         expand("data/{file}.fa", file=files)
+

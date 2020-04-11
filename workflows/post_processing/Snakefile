@@ -39,33 +39,34 @@ file_ext = readfilt['quality_trimming']['sample_file_ext']
 
 workflows = config['workflows']
 #TODO: Test What if we have multiple samples?
-sample_files_dir_mv = []
-for sample in all_sample_names:
-    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
-    input_file_pattern = input_file_pattern.replace(file_ext,'')
-    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    #for illumina wild cards in samples
-    if ('*' in sample_file) or ('?' in sample_file):
-        try:
-            sample_dir_wildcards = join(data_dir, sample_file+'*')
-            glob_finished_dir = glob.glob(sample_dir_wildcards)
-            for i in range(len(sample_file), 0, -1):
-                if (sample_file[i-1] == "*" or sample_file[i-1] == "?"):
-                    input_file_pattern_index = i-1
-                    break
-            result = glob_finished_dir[0].index(sample_file[input_file_pattern_index+1:])
-            finished_dir = glob_finished_dir[0][:result+input_file_pattern_index]
-            finished_dir = output_dir_pattern.replace("{sample}", finished_dir)
-        except:
-            print("Error in matching sample file patterns. Empty report generated")
-    else:
-        finished_dir = output_dir_pattern.replace("{sample}", sample_file)
-        finished_dir = join(data_dir, finished_dir)
+#sample_files_dir_mv = []
+#for sample in all_sample_names:
+#    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+#    input_file_pattern = input_file_pattern.replace(file_ext,'')
+#    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+#    #for illumina wild cards in samples
+#    if ('*' in sample_file) or ('?' in sample_file):
+#        try:
+#            sample_dir_wildcards = join(data_dir, sample_file+'*')
+#            glob_finished_dir = glob.glob(sample_dir_wildcards)
+#            for i in range(len(sample_file), 0, -1):
+#                if (sample_file[i-1] == "*" or sample_file[i-1] == "?"):
+#                    input_file_pattern_index = i-1
+#                    break
+#            result = glob_finished_dir[0].index(sample_file[input_file_pattern_index+1:])
+#            finished_dir = glob_finished_dir[0][:result+input_file_pattern_index]
+#            finished_dir = output_dir_pattern.replace("{sample}", finished_dir)
+#        except:
+#            print("Error in matching sample file patterns. Empty report generated")
+#    else:
+#        finished_dir = output_dir_pattern.replace("{sample}", sample_file)
+#        finished_dir = join(data_dir, finished_dir)
+#
+#    if os.path.isdir(finished_dir):
+#        sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
 
-   
-    if os.path.isdir(finished_dir):
-        sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
 
+sample_files_dir_mv = sample_finished_folders
 
 
 ##########################################################
