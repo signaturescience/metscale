@@ -151,7 +151,6 @@ rule generate_r_script:
 
 final_html_report = html_output_file.replace("summary-report.html", all_sample_names[0]+"_summary-report.html" )
 
-
 rule rename_output_html:
     '''
     Do a move command to call it {sample}_summary-report.html
@@ -159,9 +158,11 @@ rule rename_output_html:
     input:
         html_output_file
     output:
-        final_html_report
+        touch(final_html_report)
+        #final_html_report
     shell:
-        "mv {input} {output}" 
+        "mv {input} $(echo {input} | sed 's/data\/\(.*\)_finished\/.*/data\/\\1_finished\/\\1_summary-report.html/g')"
+        #"mv {input} {output}"
 
 
  ###################################
