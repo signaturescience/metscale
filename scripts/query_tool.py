@@ -110,7 +110,7 @@ def command_args_parse():
                                                                 'run. Only one can be given and if none are, defaults to '
                                                                 'querying a taxon ID against the containment file (i.e. -QRY)')
     help_cmd_query_taxid = 'query one or more taxids against the containment file. Report back which DBs contain the taxid ' \
-                           '(adjusted to the species level). (Requires \'-t/--taxids\', \'-o/--output\''
+                           '(adjusted to the species level). (Requires \'-t/--taxids\', \'-o/--output\')'
     commandgroup.add_argument('-QRY', '--cmd_query_taxids', action='store_true', help=help_cmd_query_taxid,
                               default=False)
     help_cmd_filelist = 'Parses the roster of database sources to be added to the containment_dict.p file, either from ' \
@@ -124,18 +124,26 @@ def command_args_parse():
     help_cmd_show_build_plan = 'Runs procedures to inspect and generate a roster of database sources, as well as to inspect' \
                                'the contaiment_dict.p file. Compares the two and identifies the plan for which files ' \
                                'to be added, ignored or replaced. This procedure is run automatically prior to building ' \
-                               'a new containment_dict.p file.'
+                               'a new containment_dict.p file. (Optional: \'--clober\')'
     commandgroup.add_argument('-CMO', '--cmd_compare_sources', action='store_true', help=help_cmd_show_build_plan,
                               default=False)
     help_cmd_build_containment = 'Build a new containment dictionary. Requires doing just about every step along ' \
                                  'the way: 1) parses source_file_list, 2) opens old containment dict, 3) parses ' \
                                  'each individual database file, 4) gently replaces containment_dict.p and saves ' \
-                                 'new stuff elsewhere.'
+                                 'new stuff elsewhere.  (Optional: \'--clober\')'
     commandgroup.add_argument('-BCD', '--cmd_build_containment', action='store_true', help=help_cmd_build_containment, default=False)
     commandgroup.add_argument('--print_debug_args_help', action='store_true', default = False,
                               help = 'Prints a help message for some additional command-line arguments. Most of thiese '
                                      'are intended for debugging only and are not especially interesting.')
 
+    #
+    # Misc Args
+    #
+    miscgroup = p.add_argument_group('Miscellaneous Arguments',
+                                        'These arguments are mostly optional and in many cases only operate with certain'
+                                        'of the commands, and are ignored otherwise.')
+    miscgroup.add_argument('--clobber', action='store_true', help='If provided, previous containment_dict.p is removed and'
+                                                                  'rebuilt from scratch based on the source files.',default=False)
     #
     # Hidden arguments
     #
@@ -147,6 +155,9 @@ def command_args_parse():
     commandgroup.add_argument('--print_source_file_list_specs', action='store_true', default=False, help=argparse.SUPPRESS)
     hidden_args_help_strings['print_source_file_list_specs'] = 'Prints a description of the specs for specifying a ' \
                                                                'database roster in a text file.'
+    commandgroup.add_argument('--cmd_update_all_md5s', action='store_true', default=False, help=argparse.SUPPRESS)
+    hidden_args_help_strings['cmd_update_all_md5s'] = 'Runs through the existing containment_dict.p and updates all the ' \
+                                                      'md5 values, then saves the result and exits.'
 
     p.parse_args(namespace=options)
     options.parser_store = p
@@ -165,9 +176,9 @@ def command_args_postprocess():
     # READ GLOBAL VARIABLES FROM CONFIG FILE
     # global dir_working, dir_refseq, fpath_containment, fpath_ncbi_tax_nodes, source_file_list
     global options
-    if options.config is not None:
+    if hasattr(options,'config') and options.config is not None:
         if os.path.isfile(os.path.expanduser(options.config)):
-            dbqt_config.read('dbqt_config')
+            dbqt_config.read(options.config)
             logging.debug('Reading config file: %s' % options.config)
         else:
             logging.error('Config file given at command line does not exist (file: %s)' % options.config)
@@ -291,7 +302,9 @@ def command_args_postprocess():
     # READ THE FORMAT LIST INTO A DICT:
     for k in dbqt_config['formats'].keys():
         fmt = None
-        exec('fmt=' + dbqt_config.get('formats',k))
+        # logging.debug('format %8s\t%s' % (k, dbqt_config.get('formats',k)))
+        fmt=eval(dbqt_config.get('formats',k))
+        # logging.debug('fmt is now: %s' % str(fmt))
         options.delimited_format_parse_specs[k]=fmt
 
 def command_args_print_hidden_args_help():
@@ -428,7 +441,8 @@ def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_
             flds = ln.strip().split('\t')
             source_file_list_parsed[flds[0]] = flds
 
-    for flds in source_file_list_parsed:
+    for flds in source_file_list_parsed.values():
+        # logging.debug(str(flds))
         db_name = flds[0]
         db_filepath = os.path.abspath(os.path.expanduser( flds[1] ))
         # db_filepath = os.path.join(flds[1], flds[2])
@@ -436,7 +450,7 @@ def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_
         db_to_import = bool(int(flds[3]))
         if db_to_import:
             if db_name.lower()=='refseq' and not skip_refseq:   # If the line is for RefSeq, do it differently...
-                new_refseq_dir = flds[1]
+                new_refseq_dir = os.path.abspath(os.path.expanduser( flds[1] ))
                 if os.path.isdir(new_refseq_dir):
                     logging.debug('found RefSeq in the source list. Replacing config refseq folder with:\n\t%s' % new_refseq_dir)
                     options.dir_refseq = new_refseq_dir
@@ -631,7 +645,9 @@ def containment_dict_build(source_file_tuples, clobber_old = False, save_replace
 
     logging.info(' - Parsing databases ( %s RefSeq, %s other )' % (refseq_ct, other_ct))
 
-    for ft in source_file_tuples:
+    import_file_tuple_list = containment_dict_show_build_plan(source_file_tuples, contain, clobber_old=clobber_old)
+
+    for ft in import_file_tuple_list:
         db = {
             'name': ft[0],
             'file_path': ft[1],
@@ -645,27 +661,32 @@ def containment_dict_build(source_file_tuples, clobber_old = False, save_replace
         # If it already exists in the contain file, check if it came from the same original file (first by file
         #   properties, then by md5 hash if not sure).
         status_str =  '     '
+        db['md5'] = get_file_md5_digest(db['file_path'])
 
         if db['name'] in contain:
-            status_str = status_str + 'In pickled: Yes   | Call: '
-            old_ver = contain[db['name']]
-            if (old_ver['file_path']==db['file_path'] and old_ver['file_size']==db['file_size'] and
-                old_ver['file_mod_time']==db['file_mod_time']):
-                status_str = status_str + 'unchanged (no action)'
-                logging.debug(status_str)
-                continue
-
-            db['md5']=get_file_md5_digest(db['file_path'])
-            if db['md5']==old_ver['md5']:
-                status_str = status_str + 'same md5 (no action)'
-                logging.debug(status_str)
-                continue
-            # if we get here, make a backup copy of the old one.
-            status_str = status_str + 'new file (parse)      |'
             contain_replaced[db['name']] = contain.pop(db['name'])
             contain_replaced[db['name']]['comments'] +=  'replaced on: %s, ' % datetime.datetime.now().strftime(my_time_fmt_str)
-        else:
-            status_str = status_str + 'In pickled: No    | Parsing...   | '
+
+        # if db['name'] in contain:
+        #     status_str = status_str + 'In pickled: Yes   | Call: '
+        #     old_ver = contain[db['name']]
+        #     if (old_ver['file_path']==db['file_path'] and old_ver['file_size']==db['file_size'] and
+        #         old_ver['file_mod_time']==db['file_mod_time']):
+        #         status_str = status_str + 'unchanged (no action)'
+        #         logging.debug(status_str)
+        #         continue
+        #
+        #     db['md5']=get_file_md5_digest(db['file_path'])
+        #     if db['md5']==old_ver['md5']:
+        #         status_str = status_str + 'same md5 (no action)'
+        #         logging.debug(status_str)
+        #         continue
+        #     # if we get here, make a backup copy of the old one.
+        #     status_str = status_str + 'new file (parse)      |'
+        #     contain_replaced[db['name']] = contain.pop(db['name'])
+        #     contain_replaced[db['name']]['comments'] +=  'replaced on: %s, ' % datetime.datetime.now().strftime(my_time_fmt_str)
+        # else:
+        #     status_str = status_str + 'In pickled: No    | Parsing...   | '
 
         db['taxid_set']=parse_generic_file_by_format(db['file_path'], db['format'])
         setlen = len(db['taxid_set'])
@@ -684,7 +705,7 @@ def containment_dict_build(source_file_tuples, clobber_old = False, save_replace
 
     return contain
 
-def containment_dict_show_build_plan(source_file_tuples, contain, hide_older_refseq=True):
+def containment_dict_show_build_plan(source_file_tuples, contain, hide_older_refseq=True, quiet = False, clobber_old = False):
     '''
     Compares the contents of the source file list and the containment_dict, showing status for eventual
     build command.
@@ -701,38 +722,64 @@ def containment_dict_show_build_plan(source_file_tuples, contain, hide_older_ref
     rpt = '\n'
     rpt = rpt + 'Comparison of containment_dict and source files to be added:\n\n'
     rpt = rpt + ' Name                  Sources  Contain  Status     \n'
-    rpt = rpt + '---------------------  -------  -------  -----------\n'
+    rpt = rpt + '---------------------  -------  -------  -----------'
+    if not clobber_old:
+        logging.info(rpt)
+    else:
+        logging.info('No comparison to be done, \'--clobber\' was specified...')
+        logging.info('-------------------------------------------------------')
 
-    for nm in all_db_names:
-        if len(nm)>21:
-            rpt = rpt + nm[:21] + '  '
-        else:
-            rpt = rpt + nm + ' '*(23-len(nm))
+    import_list_file_tuples = []
 
-        if not nm in source_file_tuples_dict:
-            rpt = rpt + ' ' * 9
-            if not nm in contain:
-                rpt = rpt + ' '*9 + '(strange...this shouldn\'t happen)\n'
+    if clobber_old:
+        import_list_file_tuples = source_file_tuples
+    else:
+        for nm in all_db_names:
+            rpt=''
+            if len(nm)>21:
+                rpt = rpt + nm[:21] + '  '
             else:
-                rpt = rpt + ' xxx     ---   (leave in)\n'
-        else:
-            rpt = rpt + ' xxx     '
-            if not nm in contain:
-                rpt = rpt + ' '*9 + '-import\n'
+                rpt = rpt + nm + ' '*(23-len(nm))
+
+            if not nm in source_file_tuples_dict:   # name in containment_dict.p, not in source
+                rpt = rpt + ' ' * 9
+                if not nm in contain:
+                    rpt = rpt + ' '*9 + '(strange...this shouldn\'t happen)'
+                else:
+                    rpt = rpt + ' xxx     ---   (leave in)'
             else:
                 rpt = rpt + ' xxx     '
-                sf_tup = source_file_tuples_dict[nm]
-                old_ver = contain[nm]
-                if old_ver['file_path']==sf_tup[1] and old_ver['file_size']==sf_tup[2] and old_ver['file_mod_time']==sf_tup[4]:
-                    rpt = rpt + '---   (unchanged)\n'
-                    continue
-                new_md5 = get_file_md5_digest(sf_tup[1])
-                if new_md5==old_ver['md5']:
-                    rpt = rpt + '---   (same md5)\n'
-                    continue
+                if not nm in contain:       # in sources, not in containment_dict.p
+                    rpt = rpt + ' '*9 + '-import'
+                    import_list_file_tuples.append(source_file_tuples_dict[nm])
+                else:                       # in both
+                    rpt = rpt + ' xxx     '
+                    sf_tup = source_file_tuples_dict[nm]
+                    old_ver = contain[nm]
+                    if old_ver['file_path']==sf_tup[1] and old_ver['file_size']==sf_tup[3] and old_ver['file_mod_time']==sf_tup[4]:
+                        rpt = rpt + '---   (unchanged)'
+                        if not quiet:
+                            logging.info(rpt)
+                        continue
+                    if not quiet:
+                        logging.debug('getting md5 of %s' % sf_tup[1])
+                    if 'md5' in old_ver.keys():
+                        new_md5 = get_file_md5_digest(sf_tup[1])
+                        if new_md5==old_ver.get('md5',None):
+                            rpt = rpt + '---   (same md5)'
+                            if not quiet:
+                                logging.info(rpt)
+                            continue
+                    import_list_file_tuples.append(sf_tup)
+                    rpt = rpt + '-replace (new file)'
+            if not quiet:
+                logging.info(rpt)
+    logging.info('Summary of sources to be imported: (count = %d)' % len(import_list_file_tuples))
+    for ift in import_list_file_tuples:
+        logging.info('   %s\t%s' % (ift[0], ift[1]))
 
-                rpt = rpt + '-replace (new file)\n'
-    logging.info(rpt)
+
+    return import_list_file_tuples
 
 def containment_dict_summary(contain, all_refseq = False, print_to_console = False):
     '''
@@ -759,8 +806,8 @@ def containment_dict_summary(contain, all_refseq = False, print_to_console = Fal
         else:
             mainkeys.append(k)
     tot_db_ct = len(mainkeys) + len(refseq_keys)
-    summ_str = summ_str + '  # Databases: %d (%d RefSeq, %d other)\n' % (tot_db_ct, len(refseq_keys), len(mainkeys))
-    summ_str = summ_str + '  Latest RefSeq: v%d\n' % latest_ver_num
+    summ_str = summ_str + '    # Databases: %d (%d RefSeq, %d other)\n' % (tot_db_ct, len(refseq_keys), len(mainkeys))
+    summ_str = summ_str + '  Latest RefSeq: v%d\n\n' % latest_ver_num
     if not all_refseq:
         mainkeys.append(latest_ver_key)
     else:
@@ -770,9 +817,10 @@ def containment_dict_summary(contain, all_refseq = False, print_to_console = Fal
     longest_key_len = max(map(len, mainkeys))
     lp_key = lambda x: ('%' + str(longest_key_len) + 's') % x
     summ_str = summ_str + "  Main Databases:\n"
-    summ_str = summ_str + "  %s: %9s taxa, %s\n" % ('Database Name', '# of', 'Date Parsed')
+    summ_str = summ_str + "  %s   %9s taxa    %s\n" % (lp_key('Database Name'), '# of', 'Date Parsed')
+    summ_str = summ_str + "  %s   %9s-----    %s\n" % (lp_key('-------------'), '----', '-----------')
     for mk in mainkeys:
-        summ_str = summ_str + "  %s: %9s taxa, %s\n" % (lp_key(mk), str(contain[mk]['num_taxa']), contain[mk]['date_parsed'])
+        summ_str = summ_str + "  %s:  %9s taxa    %s\n" % (lp_key(mk), str(contain[mk]['num_taxa']), contain[mk]['date_parsed'])
     summ_str = summ_str + '\n'
 
     if print_to_console:
@@ -811,6 +859,21 @@ def containment_dict_save(contain):
     logging.info('Saving containment dictionary to %s' % options.fpath_containment)
     with open(options.fpath_containment, 'wb') as contpick:
         pickle.dump(contain, contpick)
+
+def containment_dict_update_all_md5s():
+    '''helper routine to refresh all the md5s, for debugging.'''
+    contain = containment_dict_read_previous()
+    for k in contain.keys():
+        fp = contain[k]['file_path']
+        nm = contain[k]['name']
+        if os.path.isfile(fp):
+            logging.debug('getting md5 for %s (%s)' % (nm, fp))
+            mdfive = get_file_md5_digest(fp)
+            contain[k]['md5']=mdfive
+        else:
+            logging.debug('file path for %s does not exist (%s)' % (nm, fp))
+            contain[k]['md5']=''
+    containment_dict_save(contain)
 
 def containment_dict_read_previous():
     '''
@@ -909,15 +972,17 @@ def run_recruit_sources_print_report():
     latest_refseq_index = None
     for db_ind in range(len(sft)):
         db = sft[db_ind]
-        if db[1][:6].lower()=='refseq':
+        if db[0][:6].lower()=='refseq':
             refseq_list.append(db)
-            ver = int(db[1][8:])
+            ver = int(db[0][8:])
             if ver > latest_refseq_version:
                 latest_refseq_version = ver
                 latest_refseq_index = db_ind
         else:
             main_list.append(db)
-    main_list.append(sft[latest_refseq_index])
+
+    if len(refseq_list)>0:
+        main_list.append(sft[latest_refseq_index])
 
     rpt = rpt + 'Searching for data sources...\n'
     rpt = rpt + '    RefSeq folder: %s\n' % options.dir_refseq
@@ -925,6 +990,8 @@ def run_recruit_sources_print_report():
     rpt = rpt + 'Data Sources to be Imported:\n'
     for db in main_list:
         rpt = rpt + '   %s\t%s\n' % (db[0], db[1])
+    if len(refseq_list)>1:
+        rpt = rpt + '   (...%s other RefSeq versions not shown)\n' % (len(refseq_list)-1)
 
     logging.info(rpt)
 
@@ -1067,10 +1134,10 @@ def main():
     elif options.cmd_compare_sources:
         sft, nfe, skips = source_file_list_read()
         contain = containment_dict_read_previous()
-        containment_dict_show_build_plan(sft, contain)
+        imp_list = containment_dict_show_build_plan(sft, contain, clobber_old=options.clobber)
     elif options.cmd_build_containment:
         sft, nfe, skips = source_file_list_read()
-        cd = containment_dict_build(sft)
+        cd = containment_dict_build(sft, clobber_old=options.clobber)
         cd_sum = containment_dict_summary(cd)
         logging.info(cd_sum)
         containment_dict_save(cd)
@@ -1080,8 +1147,10 @@ def main():
         run_random_taxon_sample_to_file()
     elif options.print_source_file_list_specs:
         source_file_list_print_specs()
-    elif options.print_debugging_command_flags_help:
+    elif options.print_debug_args_help:
         command_args_print_hidden_args_help()
+    elif options.cmd_update_all_md5s:
+        containment_dict_update_all_md5s()
 
 if __name__=='__main__':
     main()
