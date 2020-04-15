@@ -112,6 +112,10 @@ config_default = {
             "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
             "metaspades_threads" : 8,
             #
+            # filename pattern for rnaspades output and threads to run
+            "rnaspades_pattern" : "{sample}_trim{qual}.rnaspades.transcripts.fasta",
+            "rnaspades_threads" : 8,
+            #
             # filename pattern for megahit output amd threads to run
             "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
             "megahit_threads" : 8,
@@ -430,10 +434,10 @@ config_default = {
         },
         "spades" : {
             "use_local" : True,
-            "filename" : "spades_3.11.1--py36_zlib1.2.8_0.sif",
+            "filename" : "spades_3.14.0--h2d02072_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/spades",
-            "version" : "3.11.1--py36_zlib1.2.8_0"
+            "version" : "3.14.0--h2d02072_0"
         },
         "quast" : {
             "use_local" : True,

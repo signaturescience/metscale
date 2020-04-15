@@ -44,6 +44,11 @@ config_default = {
             # (plasmidspades assembler only).
             "qual"      : ["2","30"],
         },
+        "assembly_rnaspades_workflow" : {
+            # the assembly workflow will be run on.
+            # (rnaspades assembler only).
+            "qual"      : ["2","30"],
+        },
         "assembly_megahit_workflow" : {
             # the assembly workflow will be run on
             # (megahit assembler only).

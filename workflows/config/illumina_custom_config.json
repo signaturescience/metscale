@@ -44,6 +44,11 @@
             # spades assembler only
             "qual"      : ["2","30"],
         },
+        "assembly_rnaspades_workflow" : {
+            # the assembly workflow will be run on.
+            # (rnaspades assembler only).
+            "qual"      : ["2","30"],
+        },
         "assembly_plasmidspades_workflow" : {
             # the assembly workflow will run
             # plasmidspades assembler only
