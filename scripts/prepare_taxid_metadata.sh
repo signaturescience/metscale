@@ -23,7 +23,7 @@ metscale_data_folder=$metscale_scripts_folder/../workflows/data
 metscale_container_folder=$metscale_scripts_folder/container_images
 
 #
-# NCBI Taxonomy
+# **** NCBI Taxonomy ****
 #
 ncbi_fold=$WORK/ncbi_taxonomy
 ncbi_tax_url=ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip
@@ -37,7 +37,7 @@ wget $ncbi_tax_url
 unzip taxdmp.zip
 
 #
-# GenBank
+# **** GenBank ****
 #
 accn2taxid=$ncbi_fold/accn2taxid
 if [ ! -e $accn2taxid ]; then
@@ -52,7 +52,7 @@ cat $accn2taxid/nucl_gb.accession2taxid | cut -f 3 | sort | uniq > $accn2taxid/n
 cat $accn2taxid/nucl_wgs.accession2taxid | cut -f 3 | sort | uniq > $accn2taxid/nucl_wgs.taxid_list.txt
 
 #
-# RefSeq
+# **** RefSeq ****
 #
 
 # download_refseq_archive=T         #Uncomment to download fresh copies of RefSeq archives
@@ -104,7 +104,7 @@ then
 fi
 
 #
-# Kraken2: 
+# **** Kraken2 ****
 #   *DB located at: ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz
 #
 kraken2_work_fold=$WORK/kraken
@@ -115,7 +115,7 @@ kraken2_container_path=$metscale_container_folder/kraken2_2.0.8_beta--pl526h6bb0
 singularity exec $kraken2_container_path kraken2-inspect --db $kraken2_db_fold --report-zero-counts > $kraken2_work_fold/kraken2_inspect_wzerocounts.txt
 
 #
-# Krakenuniq: 
+#  **** Krakenuniq ****
 #
 krakenuniq_work_fold=$WORK/krakenuniq
 krakenuniq_seqid2taxid_url=https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map
@@ -126,7 +126,7 @@ wget $krakenuniq_seqid2taxid_url
 
 
 #
-# Kaiju:
+# **** Kaiju ****
 #
 # Need to have**:
 #   1) Kaiju compiled from source locally. The 'bin' folder craeted there becomes SCRIPTDIR below
@@ -158,3 +158,45 @@ gunzip -c $nr_path | $SCRIPTDIR/kaiju-convertNR -t $nodespath -g $prota2t -e $SC
 grep "^>" $kaijudir/kaiju_db_nr_euk.faa | sed 's/.*_\([0-9]\+\)$/\1/g' | sort | uniq > $kaijudir/kaiju_db_nr_euk.taxid_list.txt
 
 
+#
+# **** MetaPhlan ****
+#
+# Getting Taxon IDs for Metaphlan:
+#   - Doing this by parsing sequence names from the fna file
+#       in the database download.
+#   - Those sequence names are in one of three forms:
+#       GenBank record:     "gi|345004010|ref|NC_015954.1|:c419000-417852"
+#       GeneID only:        "GeneID:10192294"
+#       Accession only:     "NC_015954.1"
+#
+
+# Make gene2taxid lookup:
+cd $ncbi_fold
+wget https://ftp.ncbi.nih.gov/gene/DATA/gene2accession.gz
+gunzip gene2accession.gz  # 101,314,312 rows
+# Consolidate to a two-column uniq GeneID to TaxonID lookup table (gene in first column)  # 26,920,037 rows
+cat gene2accession | sed '1d' | cut -f 1,2 | sed 's/^\([^\t]\+\)\t\([^\t]\+\)$/\2\t\1/g' | sort | uniq > gene2taxidLkp.txt
+
+# Pull down the metaphlan db and extract it
+metaphlan_db_dir=$WORK/metaphlan
+cd $metaphlan_db_dir
+wget https://bitbucket.org/biobakery/metaphlan2/downloads/mpa_v20_m200.tar
+tar -xf mpa_v20_m200.tar
+bunzip2 mpa_v20_m200.fna.bz2
+
+# make a list of the sequence names only:
+grep "^>" mpa_v20_m200.fna | sed 's/>//g' > mpa_v20_m200.seq_names.txt
+
+# separate the sequence names into three lists by type, seperate out NCBI accession number (or GeneID)
+grep "^NC" mpa_v20_m200.seq_names.txt > mpa_v20_m200.seq_AccnOnly.txt                                           # (1)
+grep "^gi" mpa_v20_m200.seq_names.txt | cut -f 4 -d '|' | sort | uniq > mpa_v20_m200.seq_AccnFromLongRec.txt    # (2)
+grep "GeneID" mpa_v20_m200.seq_names.txt | sed 's/GeneID://g' > mpa_v20_m200.seq_GeneIDs.txt                    # (3)
+
+# Next Steps:
+#   1) Lookup accessions (files (1) and (2)) in:
+#       dead_nucl.accession2taxid, dead_wgs.accession2taxid, nucl_gb.accession2taxid, nucl_wgs.accession2taxid
+#       (in $ncbi_fold/accn2taxid)
+#   2) Lookup GeneIDs (file (3)) in $ncbi_fold/gene2taxidLkp.txt
+#   3) dump results to file 'mpa_v20_m200.TaxonIDmapping.FINAL.txt' (accn/gene, taxonID, type)
+#   (code contained elsewhere)
+cat mpa_v20_m200.TaxonIDmapping.FINAL.txt | cut -f 2 | sort | uniq > mpa_v20_m200.TaxonIDlist.FINAL.txt
