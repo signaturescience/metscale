@@ -69,10 +69,10 @@ def download_sourmash_files(data, workflow, install_dir):
             except SocketError as e:
                 print("Error downloading file " + file + "Retry script.")
                 print(e)
-            try:
-                os.remove(install_dir+ "/"+file)
-            except OSError:
-                pass 
+#            try:
+#                os.remove(install_dir+ "/"+file)
+#            except OSError:
+#                pass 
 
 def download_kmer_files(file_name, install_sub_dir, install_dir, url_string):
     if not (os.path.isdir(install_dir + "/" + install_sub_dir)):
@@ -90,7 +90,7 @@ def download_file(workflow, data, install_dir):
             except Exception as e:  #we don't care since some of the JSONS are not URL's
                 pass
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
-                download_sourmash_files(data, workflow)
+                download_sourmash_files(data, workflow, install_dir)
             elif (file_name == 'full_chocophlan_plus_viral.v0.1.1.tar.gz'):
                 download_extract_targz_file(file_name, CHOCOPLAN_DIR, install_dir, url_string)
             elif (file_name == 'uniref90_annotated_1_1.tar.gz'):
