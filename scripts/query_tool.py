@@ -29,10 +29,10 @@ class Opts:
         1: 'refseq_folder',
         2: 'containment_metadata_json_path',
         3: 'fpath_ncbi_tax_nodes',
-        4: 'source_file_list',
-        5: 'output',
-        6: 'taxids',
-        7: 'num_taxa'
+        4: 'source_file_list'
+        # 5: 'output',
+        # 6: 'taxids',
+        # 7: 'num_taxa'
     }
     source_working_folder = None
     source_containment = None
@@ -46,7 +46,7 @@ class Opts:
         # 'refseq':           ('\t', 0, 0),
         # 'seqid2taxid':      ('\t', 1, 0)
     }
-    MY_DEBUG = True
+    MY_DEBUG = False
     parser_store = None
     command_arg_parameter_reqs = {}
     command_arg_selected = None
@@ -135,7 +135,7 @@ def command_args_parse():
                                                                 'querying a taxon ID against the containment file (i.e. -QRY)')
     # 1) cmd_query_taxids
     help_cmd_query_taxid = 'query one or more taxids against the containment file. Report back which DBs contain the taxid ' \
-                           '(adjusted to the species level). (Requires \'-t/--taxids\', \'-o/--output\')'
+                           '(adjusted to the species level). (Requires \'-t/--taxids\')'
     commandgroup.add_argument('-QRY', '--cmd_query_taxids', action='store_true', help=help_cmd_query_taxid,
                               default=False)
 
@@ -225,14 +225,14 @@ def define_command_argument_requirements():
 
         (...from cfg_parameter_short_ids above...)
     '''
-    options.command_arg_parameter_reqs['cmd_query_taxids'] = [2, 3, 5, 6]
+    options.command_arg_parameter_reqs['cmd_query_taxids'] = [2, 3]
     options.command_arg_parameter_reqs['cmd_inspect_filelist'] = [4]
     options.command_arg_parameter_reqs['cmd_inspect_contain'] = [2]
     options.command_arg_parameter_reqs['cmd_compare_sources'] = [2, 4]
     options.command_arg_parameter_reqs['cmd_build_containment'] = [4, 2]
     options.command_arg_parameter_reqs['cmd_print_debug_args_help'] = []
     options.command_arg_parameter_reqs['cmd_download_ncbi_taxonomy'] = [3]
-    options.command_arg_parameter_reqs['cmd_random_taxon_sample'] = [3, 5, 7]
+    options.command_arg_parameter_reqs['cmd_random_taxon_sample'] = [3,]
     options.command_arg_parameter_reqs['cmd_print_source_file_list_specs'] = []
     options.command_arg_parameter_reqs['cmd_update_all_md5s'] = [2]
     options.command_arg_parameter_reqs['cmd_parseargs_report'] = []
@@ -267,7 +267,10 @@ def run_initial_setup():
     options.fpath_ncbi_tax_nodes = fpathncbi
 
     # Download and Extract NCBI
-    ncbi_taxonomy_download_taxdmp()
+    if os.path.isfile(options.fpath_ncbi_tax_nodes) and os.stat(options.fpath_ncbi_tax_nodes).st_size==154065274:
+        print('...skipping NCBI download, file alreayd there...')
+    else:
+        ncbi_taxonomy_download_taxdmp()
     endmsg = endmsg + 'Downloading/Extracting NCBI Taxonomy done....\n'
     print(endmsg)
 
@@ -433,10 +436,10 @@ def parse_dbqt_config_interpolated():
         dbqt_config.read('dbqt_config')
     # Fetch results
     working_folder_cfg = dbqt_config['paths'].get('working_folder', fallback=None)
-    refseq_folder_cfg = dbqt_config['paths'].get('refseq_folder', fallback=None)
     containment_metadata_json_path_cfg = dbqt_config['paths'].get('path_to_containment_file', fallback=None)
     fpath_ncbi_tax_nodes_cfg = dbqt_config['paths'].get('path_to_ncbi_taxonomy_nodes', fallback=None)
-    source_file_list_cfg = dbqt_config['paths'].get('path_to_source_file_list', fallback=None)
+    source_file_list_cfg = dbqt_config['import_locs'].get('path_to_source_file_list', fallback=None)
+    refseq_folder_cfg = dbqt_config['import_locs'].get('refseq_folder', fallback=None)
 
     # Expand User Character on paths:
     EUorNone = lambda x: None if x is None else os.path.expanduser(x)
@@ -1101,7 +1104,9 @@ def ncbi_taxonomy_parse_file():
             logging.error('   -> nodes.dmp path from config: %s' % options.fpath_ncbi_tax_nodes)
             return
     ncbi_f = open(options.fpath_ncbi_tax_nodes, 'r')
-    ncbi_dict = dict(map(lambda x: (int(x[0]), (int(x[2]), x[4], int(x[30]))), map(lambda x: x.strip().split('\t'), ncbi_f.readlines())))
+    # ncbi_dict = dict(map(lambda x: (int(x[0]), (int(x[2]), x[4], int(x[30]))), map(lambda x: x.strip().split('\t'), ncbi_f.readlines())))
+    ncbi_dict = dict(map(lambda x: (int(x[0]), (int(x[2]), x[4])),
+                         map(lambda x: x.strip().split('\t'), ncbi_f.readlines())))
     return ncbi_dict
 
 def ncbi_taxonid_to_lineage_vector(taxid, ncbi_dict):
@@ -1194,7 +1199,7 @@ def ncbi_taxonomy_download_taxdmp():
     # extract the 'nodes.dmp' file only:
     tdzip = zipfile.ZipFile(taxdmp_dest_path)
     assert 'nodes.dmp' in tdzip.namelist(), 'The archive downloaded does not contain a file called \'nodes.dmp\'.'
-    print(tdzip.namelist())
+    # print(tdzip.namelist())
     td_norm_path=tdzip.extract('nodes.dmp', ncbi_fold)
 
     logging.info('Success! The file \'nodes.dmp\' from the NCBI taxonomy was successfully downloaded ')
@@ -1264,8 +1269,8 @@ def set_config_workingfolder_to_thisone():
     logging.debug('Updating working_folder in dbqt_config to be %s' % scripts_fold)
     cfggen = configparser.ConfigParser()
     cfggen.read('dbqt_config')
+    wfcur = cfggen.get('paths','working_folder')
     cfggen.set('paths','working_folder',scripts_fold)
-
     with open('dbqt_config','w') as dc:
         cfggen.write(dc)
 
@@ -1399,7 +1404,7 @@ def verify_alg_params_present(custom_list = None, from_print_argparse = False):
         reqname = options.cfg_parameter_short_ids[req]
         reqval = getattr(options, reqname, None)
         if reqval is None:
-            logging.error('Command argument \'%s\' requires that %s be set, but it is currently None. Printing config diagnostics:')
+            logging.error('Command argument \'%s\' requires that %s be set, but it is currently None. Printing config diagnostics:' % (mycmd, reqval))
             if not from_print_argparse:
                 run_print_argparse_results()
             sys.exit(1)

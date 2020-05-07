@@ -2,8 +2,10 @@
 working_folder =
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
-path_to_source_file_list = ${working_folder}/source_file_list.txt
-refseq_folder = ${working_folder}/refseq/catalog_taxid
+
+[import_locs]
+path_to_source_file_list = ${paths:working_folder}/source_file_list.txt
+refseq_folder = ${paths:working_folder}/refseq/catalog_taxid
 
 [formats]
 # Each of these defines a format for pulling taxon ids from a delimited text file.
