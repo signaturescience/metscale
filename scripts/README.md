@@ -33,7 +33,9 @@ working_folder =
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 ```
-The command above first sets the value of the working_folder in this file to be the path to the scripts folder containing the DQT. After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the file needed to the path in the third setting above. These paths can be changed if needed, but by design they can be left alone except for periodic updates.
+The command above first sets the value of the working_folder in this file to be the path to the scripts folder containing the DQT. After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the file needed to the path in the third setting above. Finally it decompresses the file `containment_dict.json.gz` to create the file in the middle entry abvoe.
+
+These paths can be changed if needed, but by design they can be left alone except for periodic updates.
 
 ## Usage 
 *Note: a complete list of the commands and options is available using the `--help` flag at the command line:*

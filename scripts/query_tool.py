@@ -250,9 +250,6 @@ def run_initial_setup():
 
     :return:
     '''
-    if not options.cmd_setup:
-        return
-
     rich_format = "[%(filename)s (%(lineno)d)] %(levelname)s: %(message)s"
     logging.basicConfig(format=rich_format, level=logging.CRITICAL)
     endmsg = ''
@@ -273,7 +270,15 @@ def run_initial_setup():
     ncbi_taxonomy_download_taxdmp()
     endmsg = endmsg + 'Downloading/Extracting NCBI Taxonomy done....\n'
     print(endmsg)
+
+    # Extract gzipped JSON file:
+    import gzip
+    with open(os.path.join(options.working_folder, 'containment_dict.json.gz'), 'rb') as cdgz:
+        with open(options.containment_metadata_json_path, 'wb') as cd:
+            bct=cd.write(gzip.decompress(cdgz.read()))
     sys.exit(1)
+
+
 
 def command_args_postprocess():
     '''
