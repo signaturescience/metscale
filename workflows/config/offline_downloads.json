@@ -55,7 +55,7 @@
     },
     
     "mtsv_db" : {
-    	"May-22-2019.tar"	: "https://rcdata.nau.edu/fofanov_lab/for_krista/May-22-2019.tar"
+    	"complete_genome.tar.gz" : "https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz"
     },
 
     "functional_inference" : {

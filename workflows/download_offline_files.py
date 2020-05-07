@@ -71,7 +71,7 @@ def download_file(workflow, data, install_dir):
                             opener.addheaders = [('User-agent', 'Mozilla/5.0')]
                             urllib.request.install_opener(opener)
                             urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
-                        if (file_name.endswith('.tgz') or file_name.endswith('.tar')):
+                        if (file_name.endswith('.tgz') or file_name.endswith('.tar') or file_name.endswith('.tar.gz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([untar_command], shell=True) 
                         elif (file_name.endswith('.gz') and not file_name.endswith('fq.gz')):
