@@ -1,8 +1,7 @@
 [paths]
-# working_folder = ~/sigsci/metagenomics/scripts
-working_folder = ~/sigsci/work/db_query_tool
+working_folder = ~/
 refseq_folder = ${working_folder}/refseq/catalog_taxid
-path_to_pickle_file = ${working_folder}/containment_dict.p
+path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 path_to_source_file_list = ${working_folder}/source_file_list.txt
 

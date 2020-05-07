@@ -3,10 +3,10 @@
 
 This tool is used to compare the contents of the reference databases used by the various taxonomic classification tools. Specifically, since the NCBI taxonomy is constantly changing and being updated, not all tools may be using the same version. Thus, comparing outputs from one tool to another requires accounting for differences in the coverage of their respective reference databases.
 
-In its most basic form, the tool allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID. The metadata about the taxa in all of the various databases is contained in a single pickle file called (by default) `containment_dict.p`. The tool also contains several algorithms to construct, examine, add to, update or replace this file. It additionally has several functions that interface with the NCBI taxonomy to facilitate interpretation.
+In its most basic form, the tool allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID. The metadata about the taxa in all of the various databases is contained in a single json file called (by default) `containment_dict.json`. The tool also contains several algorithms to construct, examine, add to, update or replace this file. It additionally has several functions that interface with the NCBI taxonomy to facilitate interpretation.
 
 ## Table of Contents
-* [Requirements](#Requirements)
+* [Getting Started](#Getting-Started)
 * [Usage](#Usage)
      * [Taxon ID Querying](#Taxon-ID-Querying)
      * [Inspecting and Editing Metadata](#Inspecting-and-Editing-Metadata)
@@ -16,11 +16,24 @@ In its most basic form, the tool allows the user to input one or more taxon IDs 
      * [Databases Included](#Databases-Included)   
      * [Data Sources](#Data-Sources)
 
-## Requirements
+## Initial Configuration and Setup
 
-* Python 3
-* NCBI Taxonomy (local copy of `nodes.dmp`, included here: [zip](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip) [tar.gz](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz))
+### Quick Start:
+After cloning the Metscale reposotory, some configuration is necessary before use. It can be done automatically using default settings by runing the command:
+```
+python3 query_tool.py --setup
+```
+That will populate the setting `working_folder` in the default config file with the home folder of the DQT. Following that, the tool should be ready for use.
 
+### Detailed Settings
+The command above will automatically set the three important paths the DQT needs to run. Two of them are files: 1) the repository of taxon coverage information for the various MetScale tools, and 2) the full reference taxonomy maintained by NCBI. The third is a working folder for any outputs that are provided. Those are the first three settings listed in the config file:
+```
+[paths]
+working_folder = 
+path_to_containment_file = ${working_folder}/containment_dict.json
+path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
+```
+The command above first sets the value of the working_folder in this file to be the path to the scripts folder containing the DQT. After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the file needed to the path in the third setting above. These paths can be changed if needed, but by design they can be left alone except for periodic updates.
 
 ## Usage 
 *Note: a complete list of the commands and options is available using the `--help` flag at the command line:*
