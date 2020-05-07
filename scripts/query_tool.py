@@ -1359,4 +1359,112 @@ def run_query_taxids_against_containment():
 def run_random_taxon_sample_to_file():
     '''
     Just creates a file with a list of randomly selected taxon IDs. For testing
-    :param fil
+    :param filepath:
+    :param numtaxa:
+    :return:
+    '''
+    if options.output_path is None:
+        logging.error('output path must be specified to do the random taxon dump.')
+    outf = open(options.output_path, 'w')
+    nd = ncbi_taxonomy_parse_file()
+    alltax = list(nd.keys())
+    import random
+    sometax = random.sample(alltax, options.num_taxa)
+    for t in sometax:
+        c=outf.write('%s\n' % t)
+    outf.close()
+    logging.info('wrote %s randomly selected taxon IDs to the file %s' % (options.num_taxa, options.output_path))
+
+def verify_alg_params_present(custom_list = None, from_print_argparse = False):
+    '''
+    Checks to make sure all the necessary parameters for a given algorithm are provided.
+    :return:
+    '''
+    if options.command_arg_selected is None:
+        logging.error('Command argument not identified...this shouldn\'t happen')
+        sys.exit(1)
+    else:
+        mycmd = options.command_arg_selected
+
+    reqlist = options.command_arg_parameter_reqs[mycmd]
+    if custom_list is not None:
+        reqlist += custom_list
+
+    for req in reqlist:
+        reqname = options.cfg_parameter_short_ids[req]
+        reqval = getattr(options, reqname, None)
+        if reqval is None:
+            logging.error('Command argument \'%s\' requires that %s be set, but it is currently None. Printing config diagnostics:')
+            if not from_print_argparse:
+                run_print_argparse_results()
+            sys.exit(1)
+        if options.MY_DEBUG:
+            logging.debug('requirement = %s, value = %s' % (reqname, reqval))
+
+def verify_algorithm_argument(print_cmd_list=False, return_cmd_list=False):
+    '''
+    Goes through the option list to make sure at most one procedure argument was given. Sets default if omitted.
+    NOTE: in order for this function to work, command arguments in long form MUST start with 'cmd_'
+    :return:
+    '''
+    cmds = [i for i in vars(options).keys() if i[:4]=='cmd_']
+    if print_cmd_list:
+        print('')
+        for c in cmds:
+            print('%s' % c)
+        print('')
+    if return_cmd_list:
+        return cmds
+
+    cmd_ct = 0
+    for c in cmds:
+        if vars(options)[c]:
+            cmd_ct += 1
+            options.command_arg_selected = c
+    if cmd_ct > 1:
+        options.parser_store.print_help()
+        sys.exit(1)
+    elif cmd_ct == 0:
+        options.cmd_query_taxids = True
+        options.command_arg_selected = 'cmd_query_taxids'
+
+
+def main():
+    command_args_parse()
+    if options.cmd_setup:
+        ncbi_taxonomy_download_taxdmp()
+        return
+
+    if options.cmd_inspect_filelist:
+        run_recruit_sources_print_report()
+        return
+    elif options.cmd_inspect_contain:
+        run_inspect_previous_containment_dict()
+        return
+    elif options.cmd_compare_sources:
+        sft, nfe, skips = source_file_list_read()
+        contain = containment_dict_read_previous()
+        imp_list = containment_dict_show_build_plan(sft, contain, clobber_old=options.clobber)
+    elif options.cmd_build_containment:
+        sft, nfe, skips = source_file_list_read()
+        cd = containment_dict_build(sft, clobber_old=options.clobber)
+        cd_sum = containment_dict_summary(cd)
+        logging.info(cd_sum)
+        containment_dict_save(cd)
+    elif options.cmd_query_taxids:
+        run_query_taxids_against_containment()
+    elif options.cmd_random_taxon_sample:
+        run_random_taxon_sample_to_file()
+    elif options.cmd_print_source_file_list_specs:
+        source_file_list_print_specs()
+    elif options.cmd_print_debug_args_help:
+        command_args_print_hidden_args_help()
+    elif options.cmd_update_all_md5s:
+        containment_dict_update_all_md5s()
+    elif options.cmd_download_ncbi_taxonomy:
+        ncbi_taxonomy_download_taxdmp()
+    elif options.cmd_parseargs_report:
+        run_print_argparse_results()
+
+if __name__=='__main__':
+    main()
