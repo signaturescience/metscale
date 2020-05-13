@@ -312,9 +312,9 @@ config_default = {
         "mtsv" : {
             "threads" : 20,
             #db file dir name uncompressed
-            "db_name" : "complete_genome",
+            "db_name" : "Oct-28-2019",
             #Not sure if this can be changed
-            "customdb_name" : "Oct-28-2019",
+            "customdb_name" : "Complete_Genome",
             "partitions" : 2,
             "kmer" : 50,
             "n_kmers" : 100000,
