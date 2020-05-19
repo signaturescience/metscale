@@ -26,6 +26,7 @@ class Opts:
     containment_metadata_json_path = None
     fpath_ncbi_tax_nodes = None
     db_import_manifest = None
+    # The following is deprecated, but I don't have time to test it if I delete it (MN 5/15/20)
     cfg_parameter_short_ids = {  # <-- this variable is for storing argument requirements more easily later
         1: 'refseq_folder',
         2: 'containment_metadata_json_path',
@@ -223,6 +224,7 @@ def define_command_argument_requirements():
         5: 'output',
         6: 'taxids',
         7: 'num_taxa'
+    (5/15/20: Scratch that, no numbers used, just actual strings...)
 
         (...from cfg_parameter_short_ids above...)
     '''
@@ -286,8 +288,6 @@ def run_initial_setup():
             with open(options.containment_metadata_json_path, 'wb') as cd:
                 bct=cd.write(gzip.decompress(cdgz.read()))
     sys.exit(1)
-
-
 
 def command_args_postprocess():
     '''
