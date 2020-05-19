@@ -17,6 +17,7 @@ public databases.
 # logging.info("*** DICTIONARY MAKER v3 ***")
 # dbqt_config = configparser.ConfigParser()
 dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+dbqt_config.optionxform = lambda option: option
 
 # define some global variables
 class Opts:
@@ -24,12 +25,12 @@ class Opts:
     refseq_folder = None
     containment_metadata_json_path = None
     fpath_ncbi_tax_nodes = None
-    source_file_list = None
+    db_import_manifest = None
     cfg_parameter_short_ids = {  # <-- this variable is for storing argument requirements more easily later
         1: 'refseq_folder',
         2: 'containment_metadata_json_path',
         3: 'fpath_ncbi_tax_nodes',
-        4: 'source_file_list'
+        4: 'db_import_manifest'
         # 5: 'output',
         # 6: 'taxids',
         # 7: 'num_taxa'
@@ -38,7 +39,7 @@ class Opts:
     source_containment = None
     source_ncbitax = None
     source_refseq = None
-    source_sourcelist = None
+    source_db_import_manifest = None
     delimited_format_parse_specs = {
         # 'accn2taxid':       ('\t', 2, 1),
         # 'kraken2_inspect':  ('\t', 4, 0),
@@ -96,8 +97,6 @@ def command_args_parse():
                    help='runs a general setup routine to prepare for a first use. Does two things: 1) sets \'working_folder\''
                         'in the config file dbqt_config to be the path to this scripts folder. 2) Downloads the NCBI '
                         'taxonomy and extracts the file needed for the DQT.')
-
-
     configgroup = p.add_argument_group('Configuration Options',
                                        'Paths to key locations and files required by the tool. Arguments not supplied '
                                        'will be pulled from the default config file \'dbqt_config\' and if needed will '
@@ -107,8 +106,8 @@ def command_args_parse():
                         '(default: current directory)')
     configgroup.add_argument('-cn', '--containment_json', type=str, default=None,
                              help='Path to the containment_dict.json file.')
-    configgroup.add_argument('-dbs', '--db_source_list_file', type=str, default=None,
-                   help='Path to the file containing the Source File List. Typically named \'source_file_list.txt\'. '
+    configgroup.add_argument('-dbs', '--db_import_manifest', type=str, default=None,
+                   help='Path to the file containing the Source File List. Typically named \'db_import_manifest.txt\'. '
                         'This is a specifically formatted text file (tab-delimited) containing the target DBs and '
                         'metadata files.')
     configgroup.add_argument('-c', '--config', type=str, default=None,
@@ -156,7 +155,7 @@ def command_args_parse():
     commandgroup.add_argument('-CMO', '--cmd_compare_sources', action='store_true', help=help_cmd_show_build_plan,
                               default=False)
     help_cmd_build_containment = 'Build a new containment dictionary. Requires doing just about every step along ' \
-                                 'the way: 1) parses source_file_list, 2) opens old containment dict, 3) parses ' \
+                                 'the way: 1) parses db_import_manifest, 2) opens old containment dict, 3) parses ' \
                                  'each individual database file, 4) gently replaces containment_dict.json and saves ' \
                                  'new stuff elsewhere.  (Optional: \'--clober\')'
     commandgroup.add_argument('-BCD', '--cmd_build_containment', action='store_true', help=help_cmd_build_containment, default=False)
@@ -176,7 +175,9 @@ def command_args_parse():
                                         'These arguments are mostly optional and in many cases only operate with certain'
                                         'of the commands, and are ignored otherwise.')
     miscgroup.add_argument('--clobber', action='store_true', help='If provided, previous containment_dict.json is removed and'
-                                                                  'rebuilt from scratch based on the source files.',default=False)
+                           'rebuilt from scratch based on the source files. (If given along with the \'--setup\' argument, '
+                           'the existing containment json file will be overwritten by re-extracting the packaged ' 
+                           '`containment_dict.json.gz`).',default=False)
     #
     # Hidden arguments
     #
@@ -185,9 +186,9 @@ def command_args_parse():
                                                           '(requires: -o/--output, --num_taxa)'
     p.add_argument('--num_taxa', type=int, default=25, help=argparse.SUPPRESS)
     hidden_args_help_strings['num_taxa'] = '(Integer, used with --cmd_random_taxon_sample) Number of taxa to be sampled. (default: 25)'
-    commandgroup.add_argument('--print_source_file_list_specs', action='store_true', default=False, help=argparse.SUPPRESS,
-                              dest = 'cmd_print_source_file_list_specs')
-    hidden_args_help_strings['cmd_print_source_file_list_specs'] = 'Prints a description of the specs for specifying a ' \
+    commandgroup.add_argument('--print_db_import_manifest_specs', action='store_true', default=False, help=argparse.SUPPRESS,
+                              dest = 'cmd_print_db_import_manifest_specs')
+    hidden_args_help_strings['cmd_print_db_import_manifest_specs'] = 'Prints a description of the specs for specifying a ' \
                                                                'database roster in a text file.'
     commandgroup.add_argument('--cmd_update_all_md5s', action='store_true', default=False, help=argparse.SUPPRESS)
     hidden_args_help_strings['cmd_update_all_md5s'] = 'Runs through the existing containment_dict.json and updates all the ' \
@@ -218,23 +219,23 @@ def define_command_argument_requirements():
         1: 'refseq_folder',
         2: 'containment_metadata_json_path',
         3: 'fpath_ncbi_tax_nodes',
-        4: 'source_file_list',
+        4: 'db_import_manifest',
         5: 'output',
         6: 'taxids',
         7: 'num_taxa'
 
         (...from cfg_parameter_short_ids above...)
     '''
-    options.command_arg_parameter_reqs['cmd_query_taxids'] = [2, 3]
-    options.command_arg_parameter_reqs['cmd_inspect_filelist'] = [4]
-    options.command_arg_parameter_reqs['cmd_inspect_contain'] = [2]
-    options.command_arg_parameter_reqs['cmd_compare_sources'] = [2, 4]
-    options.command_arg_parameter_reqs['cmd_build_containment'] = [4, 2]
+    options.command_arg_parameter_reqs['cmd_query_taxids'] = ['containment_metadata_json_path', 'fpath_ncbi_tax_nodes']
+    options.command_arg_parameter_reqs['cmd_inspect_filelist'] = []
+    options.command_arg_parameter_reqs['cmd_inspect_contain'] = ['containment_metadata_json_path']
+    options.command_arg_parameter_reqs['cmd_compare_sources'] = ['containment_metadata_json_path']
+    options.command_arg_parameter_reqs['cmd_build_containment'] = ['containment_metadata_json_path']
     options.command_arg_parameter_reqs['cmd_print_debug_args_help'] = []
-    options.command_arg_parameter_reqs['cmd_download_ncbi_taxonomy'] = [3]
-    options.command_arg_parameter_reqs['cmd_random_taxon_sample'] = [3,]
-    options.command_arg_parameter_reqs['cmd_print_source_file_list_specs'] = []
-    options.command_arg_parameter_reqs['cmd_update_all_md5s'] = [2]
+    options.command_arg_parameter_reqs['cmd_download_ncbi_taxonomy'] = ['fpath_ncbi_tax_nodes']
+    options.command_arg_parameter_reqs['cmd_random_taxon_sample'] = ['fpath_ncbi_tax_nodes',]
+    options.command_arg_parameter_reqs['cmd_print_db_import_manifest_specs'] = []
+    options.command_arg_parameter_reqs['cmd_update_all_md5s'] = ['containment_metadata_json_path']
     options.command_arg_parameter_reqs['cmd_parseargs_report'] = []
     options.command_arg_parameter_reqs['cmd_setup'] = []
 
@@ -267,8 +268,9 @@ def run_initial_setup():
     options.fpath_ncbi_tax_nodes = fpathncbi
 
     # Download and Extract NCBI
-    if os.path.isfile(options.fpath_ncbi_tax_nodes) and os.stat(options.fpath_ncbi_tax_nodes).st_size==154065274:
-        print('...skipping NCBI download, file alreayd there...')
+    if os.path.isfile(options.fpath_ncbi_tax_nodes) and (options.cmd_download_ncbi_taxonomy is False): # and os.stat(options.fpath_ncbi_tax_nodes).st_size==154065274:
+        print('...skipping NCBI download, file already there. To force a re-download, use the argument ')
+        print('    --download_ncbi_taxonomy.')
     else:
         ncbi_taxonomy_download_taxdmp()
     endmsg = endmsg + 'Downloading/Extracting NCBI Taxonomy done....\n'
@@ -276,9 +278,13 @@ def run_initial_setup():
 
     # Extract gzipped JSON file:
     import gzip
-    with open(os.path.join(options.working_folder, 'containment_dict.json.gz'), 'rb') as cdgz:
-        with open(options.containment_metadata_json_path, 'wb') as cd:
-            bct=cd.write(gzip.decompress(cdgz.read()))
+    if os.path.isfile(options.containment_metadata_json_path) and (options.clobber is False):
+        print('...skipping containment_dict.json.gz extraction because the given path already exists. To ')
+        print('    force a re-extraction of the packaged containment file, use the option \'--clobber\'.')
+    else:
+        with open(os.path.join(options.working_folder, 'containment_dict.json.gz'), 'rb') as cdgz:
+            with open(options.containment_metadata_json_path, 'wb') as cd:
+                bct=cd.write(gzip.decompress(cdgz.read()))
     sys.exit(1)
 
 
@@ -294,11 +300,13 @@ def command_args_postprocess():
         3) Identifies which routine to run based on the 'cmd' flag
     '''
     # READ GLOBAL VARIABLES FROM CONFIG FILE
-    # global working_folder, refseq_folder, containment_metadata_json_path, fpath_ncbi_tax_nodes, source_file_list
+    # global working_folder, refseq_folder, containment_metadata_json_path, fpath_ncbi_tax_nodes, db_import_manifest
     global options
 
 
-    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, source_file_list_cfg, working_folder_cfg = parse_dbqt_config_interpolated()
+    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated()
+    options.db_import_manifest_cfg = db_import_manifest_cfg
+    options.refseq_folder_cfg = refseq_folder_cfg
 
     # CONFIGURE THE LOGGER
     mylvl = logging.INFO
@@ -333,7 +341,7 @@ def command_args_postprocess():
     #
     # OVERRIDE GLOBAL VALUES IF GIVEN IN COMMAND LINE
     #
-    options.source_containment = 'NONE'; options.source_refseq = 'NONE'; options.source_sourcelist = 'NONE'
+    options.source_containment = 'NONE'; options.source_refseq = 'NONE'; options.source_db_import_manifest = 'NONE'
     options.source_ncbitax = 'config'; options.source_working_folder = '(default)'
 
     # a) working folder: try CMD, then CFG, default to scripts folder
@@ -369,34 +377,7 @@ def command_args_postprocess():
         options.containment_metadata_json_path = os.path.join(options.working_folder, 'containment_dict.json')
         options.source_containment = '(default)'
 
-    # Source File List: (first try CFG, over-write if in CMD, default to being in working dir)
-    if source_file_list_cfg is not None:
-        if os.path.isfile(source_file_list_cfg):
-            options.source_file_list = source_file_list_cfg
-            options.source_sourcelist = 'config'
-        else:
-            logging.warning('Config parameter source_file_list_cfg is not a valid file path: %s' % source_file_list_cfg)
-    if options.db_source_list_file is not None:
-        if os.path.isfile(options.db_source_list_file):
-            options.source_file_list = options.db_source_list_file
-            options.source_sourcelist = 'cmd_line'
-        else:
-            logging.warning('Command-line parameter --db_source_list_file is not a valid file path: %s' % options.db_source_list_file)
-    if options.source_file_list is None:
-        source_file_list_wd = os.path.join(options.working_folder, 'source_file_list.txt')
-        if os.path.isfile(source_file_list_wd):
-            options.source_file_list = source_file_list_wd
-            options.source_sourcelist = '(default)'
-            # logging.info('Found a valid DB source file list file at: %s' % source_file_list)
-
-    # RefSeq folder
-    if refseq_folder_cfg is not None:
-        if os.path.isdir(refseq_folder_cfg):
-            options.refseq_folder = refseq_folder_cfg
-            options.source_refseq = 'config'
-        else:
-            options.refseq_folder = None
-            logging.warning('Config parameter refseq_folder is not a valid folder: %s' % refseq_folder_cfg)
+    # command_args_postprocess_db_import()
 
     # NCBI nodes file
     if fpath_ncbi_tax_nodes_cfg is not None:
@@ -421,24 +402,77 @@ def command_args_postprocess():
         options.delimited_format_parse_specs[k]=fmt
 
 
-def parse_dbqt_config_interpolated():
+def command_args_postprocess_db_import():
     '''
-    Parses the dbqt_config file using interpolition.
+    Looks at the values for the manifest file given at the command line and/or in the config file for
+    the db_import_manifest and refseq_folder paths. Assesses if they are valid paths and prints warnings
+    accordingly.
     :return:
     '''
+    # Source File List: (first try CFG, over-write if in CMD, default to being in working dir)
+    global options
+    if options.db_import_manifest_cfg is not None:
+        if os.path.isfile(options.db_import_manifest_cfg):
+            options.db_import_manifest = options.db_import_manifest_cfg
+            options.source_db_import_manifest = 'config'
+        else:
+            logging.warning(
+                'Config parameter path_to_db_import_manifest is not a valid file path: %s' % options.db_import_manifest_cfg)
+    if options.db_import_manifest is not None:
+        if os.path.isfile(options.db_import_manifest):
+            options.db_import_manifest = options.db_import_manifest
+            options.source_db_import_manifest = 'cmd_line'
+        else:
+            logging.warning(
+                'Command-line parameter --db_import_manifest is not a valid file path: %s' % options.db_import_manifest)
+    if options.db_import_manifest is None:
+        db_import_manifest_wd = os.path.join(options.working_folder, 'db_import_manifest.txt')
+        if os.path.isfile(db_import_manifest_wd):
+            options.db_import_manifest = db_import_manifest_wd
+            options.source_db_import_manifest = '(default)'
+            # logging.info('Found a valid DB source file list file at: %s' % db_import_manifest)
+    # RefSeq folder
+    if options.refseq_folder_cfg is not None:
+        if os.path.isdir(options.refseq_folder_cfg):
+            options.refseq_folder = options.refseq_folder_cfg
+            options.source_refseq = 'config'
+        else:
+            options.refseq_folder = None
+            logging.warning('Config parameter refseq_folder is not a valid folder: %s' % options.refseq_folder_cfg)
+
+def parse_dbqt_config_interpolated():
+    '''
+    Parses the dbqt_config file using interpolition. If a config file is specified at the command line, options
+    specified therein will override the default dbqt_config where duplicated.
+    :return:
+    '''
+    if os.path.isfile('dbqt_config'):
+        dbqt_config.read('dbqt_config')
+    else:
+        logging.warning('File `dbqt_config` has not been created, it is possible that setup has not been run. If this is the '
+                        'case, please run the DQT with the `--setup` option first, or perform the equivalent steps manually.')
+        logging.warning('Making a copy of the config found in the `doc` subfolder and using the query_tool.py folder '
+                        'as the working_folder.')
+        config_check_exists_else_copy()
+        dbqt_config.read('dbqt_config')
+
+    # set default working_folder to be the current one if missing
+    if dbqt_config.get('paths','working_folder').strip() == '':
+        scriptsfold = os.path.split(__file__)[0]
+        dbqt_config.set('paths','working_folder', scriptsfold)
+
     if hasattr(options, 'config') and options.config is not None:
         if os.path.isfile(os.path.expanduser(options.config)):
             dbqt_config.read(options.config)
             logging.debug('Reading config file: %s' % options.config)
         else:
             logging.error('Config file given at command line does not exist (file: %s)' % options.config)
-    else:
-        dbqt_config.read('dbqt_config')
+
     # Fetch results
     working_folder_cfg = dbqt_config['paths'].get('working_folder', fallback=None)
     containment_metadata_json_path_cfg = dbqt_config['paths'].get('path_to_containment_file', fallback=None)
     fpath_ncbi_tax_nodes_cfg = dbqt_config['paths'].get('path_to_ncbi_taxonomy_nodes', fallback=None)
-    source_file_list_cfg = dbqt_config['import_locs'].get('path_to_source_file_list', fallback=None)
+    db_import_manifest_cfg = dbqt_config['import_locs'].get('path_to_db_import_manifest', fallback=None)
     refseq_folder_cfg = dbqt_config['import_locs'].get('refseq_folder', fallback=None)
 
     # Expand User Character on paths:
@@ -447,8 +481,8 @@ def parse_dbqt_config_interpolated():
     refseq_folder_cfg = EUorNone(refseq_folder_cfg)
     containment_metadata_json_path_cfg = EUorNone(containment_metadata_json_path_cfg)
     fpath_ncbi_tax_nodes_cfg = EUorNone(fpath_ncbi_tax_nodes_cfg)
-    source_file_list_cfg = EUorNone(source_file_list_cfg)
-    return containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, source_file_list_cfg, working_folder_cfg
+    db_import_manifest_cfg = EUorNone(db_import_manifest_cfg)
+    return containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg
 
 
 def run_print_argparse_results(config_params=True, alg_params=False):
@@ -465,12 +499,12 @@ def run_print_argparse_results(config_params=True, alg_params=False):
         print('path_to_containment_file =    %s' % options.containment_metadata_json_path)
         print('path_to_ncbi_taxonomy_nodes = %s' % options.fpath_ncbi_tax_nodes)
         print('refseq_folder =               %s' % options.refseq_folder)
-        print('path_to_source_file_list =    %s' % options.source_file_list)
+        print('path_to_db_import_manifest =    %s' % options.db_import_manifest)
         print('source_working_folder =       %s' % options.source_working_folder)
         print('source_containment =          %s' % options.source_containment)
         print('source_ncbitax =              %s' % options.source_ncbitax)
         print('source_refseq =               %s' % options.source_refseq)
-        print('source_sourcelist =           %s\n' % options.source_sourcelist)
+        print('source_db_import_manifest =           %s\n' % options.source_db_import_manifest)
 
     if alg_params:
         print('VERIFYING ALGORITHM ARGUMENT:')
@@ -538,7 +572,7 @@ def util_filter_out_main_dbnames(db_iterable):
     out.append(latest_refseq_name)
     return out
 
-def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_exists = True):
+def db_import_manifest_read(skip_refseq = False, from_config = True, from_file_if_exists = True):
     '''
     Reads a config file containing a list of databases to be imported, including relevant information. If from_config
     is True, it will look for the relevant file paths and formats in the config file 'dbqt_config'. Specifically it will
@@ -559,11 +593,13 @@ def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_
     If both arguments are True, duplicates will be prioritized from the text file.
     :return:
     '''
-    global options #.refseq_folder, source_file_list, dbqt_config
-    logging.debug('Function: source_file_list_read()...')
+    global options #.refseq_folder, db_import_manifest, dbqt_config
+    logging.debug('Function: db_import_manifest_read()...')
 
-    source_file_list_output = []
-    source_file_list_parsed = {}
+    command_args_postprocess_db_import()
+
+    db_import_manifest_output = []
+    db_import_manifest_parsed = {}
     no_file_errors = []
     not_to_import = []
     refseq_ct = 0
@@ -571,18 +607,19 @@ def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_
     refseq_in_source_list = False
 
     #
-    # 1) Get the raw values from the config (or text file)
+    # 1) Get the databases specified in the config file
     #
     if from_config:
         for dbnm in dbqt_config['db_source_files'].keys():
             db_name = dbnm
             db_filepath = dbqt_config['db_source_files'][dbnm]
-            if db_name not in dbqt_config['db_source_formats'].keys():
+            # verify that a format has been specified
+            if db_name not in dbqt_config['db_source_formats'].keys():  # No Format Specified --> SKIP
                 logging.warning('In config: database name \'%s\' was found in the config file under [db_source_files] but does not have'
                                 'a format defined in [db_source_formats]. (Skipping)' % dbnm)
                 db_format = ''
                 db_to_import = 0
-            else:
+            else:                                                       # Format Specified --> OK
                 db_fmt_val = dbqt_config['db_source_formats'][dbnm]
                 db_fmt_tup = db_fmt_val.strip().split(' ')
                 db_format = db_fmt_tup[0]
@@ -597,32 +634,42 @@ def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_
                         logging.warning('In config: Database format string for \'%s\' contains more than one space. Using only the '
                                         'first two values. (string: \'%s\')' % (dbnm, db_fmt_val))
                 else:
-                    logging.warning('In config: Database format string for \'%s\' does not contain a space: assuming final value of 1 (proceeding). (string: \'%s\')' % (dbnm, db_fmt_val))
+                    logging.warning('In config: Database format string for \'%s\' does not contain a space: assuming final value of 1 (proceeding to import). (string: \'%s\')' % (dbnm, db_fmt_val))
                     db_to_import = 1
-            source_file_list_parsed[dbnm] = [db_name, db_filepath, db_format, str(db_to_import)]
+            db_import_manifest_parsed[dbnm] = [db_name, db_filepath, db_format, str(db_to_import), 'config']
 
-    if options.source_file_list is not None and from_file_if_exists:
-        sf = open(options.source_file_list, 'r')
+    #
+    # 2) Get the databases specified in a manifest (if appropriate):
+    #
+    if options.db_import_manifest is not None and from_file_if_exists:
+        sf = open(options.db_import_manifest, 'r')
         sf.readline()  # skip header
 
+        lno = 1
         for ln in sf:
             if len(ln.strip())<=1:
                 continue
-            flds = ln.strip().split('\t')
-            source_file_list_parsed[flds[0]] = flds
+            f = ln.strip().split('\t')
+            if len(f)<3:
+                logging.warning('In Manifest: line %d cannot be parsed (fewer than 3 tab-delimited fields). Line as read: \n\t%s' % (lno, ln.strip()))
+            if f[0] in db_import_manifest_parsed:
+                logging.info('Database %s was given in both the config and manifest file. Manifest will be used.')
+            db_import_manifest_parsed[f[0]] = [f[0], f[1], f[2], f[3], 'manifest']
+            lno += 1
 
-    for flds in source_file_list_parsed.values():
+    for flds in db_import_manifest_parsed.values():
         # logging.debug(str(flds))
         db_name = flds[0]
         db_filepath = os.path.abspath(os.path.expanduser( flds[1] ))
         # db_filepath = os.path.join(flds[1], flds[2])
         db_format = flds[2]
         db_to_import = bool(int(flds[3]))
+        db_spec_source = flds[4]
         if db_to_import:
             if db_name.lower()=='refseq' and not skip_refseq:   # If the line is for RefSeq, do it differently...
                 new_refseq_dir = os.path.abspath(os.path.expanduser( flds[1] ))
                 if os.path.isdir(new_refseq_dir):
-                    logging.debug('found RefSeq in the source list. Replacing config refseq folder with:\n\t%s' % new_refseq_dir)
+                    logging.debug('found RefSeq in the manifest list. Replacing config refseq folder with:\n\t%s' % new_refseq_dir)
                     options.refseq_folder = new_refseq_dir
                     refseq_in_source_list = True
                 else:
@@ -631,37 +678,38 @@ def source_file_list_read(skip_refseq = False, from_config = True, from_file_if_
             else:  # ...otherwise send it to the text parser
                 if os.path.isfile(db_filepath):
                     db_tuple = make_tuple_with_metadata(db_filepath, db_name, db_format)
-                    source_file_list_output.append(db_tuple)
+                    db_tuple += (db_spec_source,)
+                    db_import_manifest_output.append(db_tuple)
                 else:
                     logging.debug(' - File in source list does not exist (line %s, db=%s)\n\t%s' % (line_no, db_name, db_filepath))
-                    no_file_errors.append((db_filepath, db_name, db_format))
+                    no_file_errors.append((db_filepath, db_name, db_format, db_spec_source))
         else:   # Add to the skips list
-            not_to_import.append((db_filepath, db_name, db_format))
+            not_to_import.append((db_filepath, db_name, db_format, db_spec_source))
         line_no += 1
 
     if not skip_refseq:
         if options.refseq_folder is not None:
-            refseq_file_list = search_refseq_dir(options.refseq_folder)
+            refseq_file_list = db_import_search_refseq_dir(options.refseq_folder)
             refseq_ct = len(refseq_file_list)
             for ftup in refseq_file_list:
-                source_file_list_output.append(ftup)
+                db_import_manifest_output.append(ftup)
 
     # Print some info about what we found:
-    total_ct = len(source_file_list_output)
+    total_ct = len(db_import_manifest_output)
     other_ct = total_ct - refseq_ct
-    logging.debug(' - source_file_list (including config) yielded the following to be imported:')
+    logging.debug(' - db_import_manifest (including config) yielded the following to be imported:')
     logging.debug('     %s RefSeq database files' % refseq_ct)
     logging.debug('     %s other database files' % other_ct)
-    return source_file_list_output, no_file_errors, not_to_import
+    return db_import_manifest_output, no_file_errors, not_to_import
 
-def source_file_list_print_specs():
+def db_import_manifest_print_specs():
     '''
-    Prints the help description for the specs of the database source roster (i.e. source_file_list).
+    Prints the help description for the specs of the database source roster (i.e. db_import_manifest).
     :return:
     '''
     mydesc = 'A roster of new databases can be specified using a tab-delimited text file. In order to use this format, ' \
            'a file path must be specified either at the command line (using the flag \'-dbs <PATH>\') or in the config ' \
-           'file (under the [paths] section, named \'path_to_source_file_list\').'
+           'file (under the [paths] section, named \'path_to_db_import_manifest\').'
 
     hstr='''
 %s
@@ -675,7 +723,7 @@ The specified file must be tab-delimited text, with a single header row. Each da
     if options.logfile is not None:
         logging.info(mydesc)
 
-def search_refseq_dir(custom_refseq_dir = None):
+def db_import_search_refseq_dir(custom_refseq_dir = None):
     '''
     Combs through the folder pointed to by the "options.refseq_folder" parameter for files matching '*release*.*' and
     returns the file-info-tuples associated with them.
@@ -700,7 +748,7 @@ def search_refseq_dir(custom_refseq_dir = None):
                 version = fn.split(".")[0].split("release")[-1]
             except:
                 continue
-            refseq_tuple_list.append(make_tuple_with_metadata(fpath, 'RefSeq_v' + version, 'refseq'))
+            refseq_tuple_list.append(make_tuple_with_metadata(fpath, 'RefSeq_v' + version, 'refseq') + ('refseq_folder',))
     return refseq_tuple_list
 
 def parse_delimited_text_general(file_path, delimiter='\t', keycol_index = 0, header_rows = 0, valcol_index = None,
@@ -838,27 +886,6 @@ def containment_dict_build(source_file_tuples, clobber_old = False, save_replace
             contain_replaced[db['name']] = contain.pop(db['name'])
             contain_replaced[db['name']]['comments'] +=  'replaced on: %s, ' % datetime.datetime.now().strftime(my_time_fmt_str)
 
-        # if db['name'] in contain:
-        #     status_str = status_str + 'In pickled: Yes   | Call: '
-        #     old_ver = contain[db['name']]
-        #     if (old_ver['file_path']==db['file_path'] and old_ver['file_size']==db['file_size'] and
-        #         old_ver['file_mod_time']==db['file_mod_time']):
-        #         status_str = status_str + 'unchanged (no action)'
-        #         logging.debug(status_str)
-        #         continue
-        #
-        #     db['md5']=get_file_md5_digest(db['file_path'])
-        #     if db['md5']==old_ver['md5']:
-        #         status_str = status_str + 'same md5 (no action)'
-        #         logging.debug(status_str)
-        #         continue
-        #     # if we get here, make a backup copy of the old one.
-        #     status_str = status_str + 'new file (parse)      |'
-        #     contain_replaced[db['name']] = contain.pop(db['name'])
-        #     contain_replaced[db['name']]['comments'] +=  'replaced on: %s, ' % datetime.datetime.now().strftime(my_time_fmt_str)
-        # else:
-        #     status_str = status_str + 'In pickled: No    | Parsing...   | '
-
         db['taxid_set']=parse_generic_file_by_format(db['file_path'], db['format'])
         setlen = len(db['taxid_set'])
         db['num_taxa']=setlen
@@ -884,71 +911,86 @@ def containment_dict_show_build_plan(source_file_tuples, contain, hide_older_ref
     :param contain:
     :return:
     '''
+    #column widths:
+    max_name_width = 60
+    insources_width = 12
+    incontain_width = 7
+    status_width = 10
+
     source_file_tuples_dict = {}
     for ft in source_file_tuples:
         source_file_tuples_dict[ft[0]]=ft
 
+    #combine the names
     all_db_names = list(set(source_file_tuples_dict.keys()).union(set(contain.keys())))
 
-    rpt = '\n'
-    rpt = rpt + 'Comparison of containment_dict and source files to be added:\n\n'
-    rpt = rpt + ' Name                  Sources  Contain  Status     \n'
-    rpt = rpt + '---------------------  -------  -------  -----------'
+    #define output formatter
+    name_width = min(max_name_width, max(map(len, all_db_names)))
+    def makeline(nm, insrc, incon, statwid):
+        templt = ' %s | %s | %s | %s'
+        return templt % (nm[:name_width].ljust(name_width), insrc[:insources_width].ljust(insources_width),
+                         incon[:incontain_width].ljust(incontain_width), statwid)
+
     if not clobber_old:
-        logging.info(rpt)
+        print('Comparison of containment_dict and source files to be added:\n\n')
+        print(makeline('Database', 'In', 'In', 'Action'))
+        print(makeline('Name', 'Manifest', 'Contain', 'to be Taken'))
+        print(makeline('-'*name_width, '-'*insources_width, '-'*incontain_width, '-'*status_width))
     else:
-        logging.info('No comparison to be done, \'--clobber\' was specified...')
-        logging.info('-------------------------------------------------------')
+        print('No comparison to be done, \'--clobber\' was specified...')
+        print('-------------------------------------------------------')
 
     import_list_file_tuples = []
 
     if clobber_old:
         import_list_file_tuples = source_file_tuples
     else:
+        #compare the sources and the containment_dict
         for nm in all_db_names:
-            rpt=''
-            if len(nm)>21:
-                rpt = rpt + nm[:21] + '  '
-            else:
-                rpt = rpt + nm + ' '*(23-len(nm))
+            rpt_nm = nm; rpt_incon = ''; rpt_insrc = ''; rpt_status = '';
 
-            if not nm in source_file_tuples_dict:   # name in containment_dict.json, not in source
-                rpt = rpt + ' ' * 9
+            if not nm in source_file_tuples_dict:   # name in containment_dict.json, not in source_list
+                rpt_insrc = 'no'
                 if not nm in contain:
-                    rpt = rpt + ' '*9 + '(strange...this shouldn\'t happen)'
+                    rpt_incon = 'no'
+                    rpt_status = '(strange...this shouldn\'t happen)'
                 else:
-                    rpt = rpt + ' xxx     ---   (leave in)'
+                    rpt_incon = 'YES'
+                    rpt_status = '(leave in)'
             else:
-                rpt = rpt + ' xxx     '
+                rpt_insrc = 'YES (' + source_file_tuples_dict[nm][5] + ')'
+
                 if not nm in contain:       # in sources, not in containment_dict.json
-                    rpt = rpt + ' '*9 + '-import'
+                    rpt_incon = 'no'
+                    rpt_status = 'IMPORT'
                     import_list_file_tuples.append(source_file_tuples_dict[nm])
                 else:                       # in both
-                    rpt = rpt + ' xxx     '
+                    rpt_incon = 'YES'
                     sf_tup = source_file_tuples_dict[nm]
                     old_ver = contain[nm]
                     if old_ver['file_path']==sf_tup[1] and old_ver['file_size']==sf_tup[3] and old_ver['file_mod_time']==sf_tup[4]:
-                        rpt = rpt + '---   (unchanged)'
+                        rpt_status = '(unchanged, leave in)'
                         if not quiet:
-                            logging.info(rpt)
+                            print(makeline(rpt_nm, rpt_insrc, rpt_incon, rpt_status))
                         continue
                     if not quiet:
                         logging.debug('getting md5 of %s' % sf_tup[1])
                     if 'md5' in old_ver.keys():
                         new_md5 = get_file_md5_digest(sf_tup[1])
                         if new_md5==old_ver.get('md5',None):
-                            rpt = rpt + '---   (same md5)'
+                            rpt_status = '(same md5, leave in)'
                             if not quiet:
-                                logging.info(rpt)
+                                print(makeline(rpt_nm, rpt_insrc, rpt_incon, rpt_status))
                             continue
                     import_list_file_tuples.append(sf_tup)
-                    rpt = rpt + '-replace (new file)'
+                    rpt_status = 'REPLACE (new file)'
             if not quiet:
-                logging.info(rpt)
-    logging.info('Summary of sources to be imported: (count = %d)' % len(import_list_file_tuples))
-    for ift in import_list_file_tuples:
-        logging.info('   %s\t%s' % (ift[0], ift[1]))
+                print(makeline(rpt_nm, rpt_insrc, rpt_incon, rpt_status))
 
+    # print final list of actions:
+    print('\nSummary of sources to be imported: (count = %d)' % len(import_list_file_tuples))
+    for ift in import_list_file_tuples:
+        print('   %s\t%s' % (ift[0], ift[1]))
 
     return import_list_file_tuples
 
@@ -986,12 +1028,20 @@ def containment_dict_summary(contain, all_refseq = False, print_to_console = Fal
             mainkeys.append(rsk)
     # make the summary string:
     longest_key_len = max(map(len, mainkeys))
-    lp_key = lambda x: ('%' + str(longest_key_len) + 's') % x
-    summ_str = summ_str + "  Main Databases:\n"
-    summ_str = summ_str + "  %s   %9s taxa    %s\n" % (lp_key('Database Name'), '# of', 'Date Parsed')
-    summ_str = summ_str + "  %s   %9s-----    %s\n" % (lp_key('-------------'), '----', '-----------')
+    dbname_width_max = 60
+    numtaxa_width = 8
+    dtparsed_width = 20
+    dbname_width = min(dbname_width_max, longest_key_len+1)
+    makeline = lambda dbn, nt, dt: ' %s  %s  %s\n' % (dbn[:dbname_width].ljust(dbname_width), nt.rjust(numtaxa_width), dt)
+
+    summ_str = summ_str + "Main Databases:\n"
+    summ_str = summ_str + makeline('Database Name', '# Taxa', 'Date Parsed')
+    summ_str = summ_str + makeline('-'*dbname_width, '-'*numtaxa_width, '-'*dtparsed_width)
+    # summ_str = summ_str + "  %s   %9s taxa    %s\n" % (lp_key('Database Name'), '# of', 'Date Parsed')
+    # summ_str = summ_str + "  %s   %9s-----    %s\n" % (lp_key('-------------'), '----', '-----------')
     for mk in mainkeys:
-        summ_str = summ_str + "  %s:  %9s taxa    %s\n" % (lp_key(mk), str(contain[mk]['num_taxa']), contain[mk]['date_parsed'])
+        summ_str = summ_str + makeline(mk, str(contain[mk]['num_taxa']), contain[mk]['date_parsed'])
+        # summ_str = summ_str + "  %s:  %9s taxa    %s\n" % (lp_key(mk), str(contain[mk]['num_taxa']), contain[mk]['date_parsed'])
     summ_str = summ_str + '\n'
 
     if print_to_console:
@@ -1058,7 +1108,7 @@ def containment_dict_save(contain, as_json=True):
         for k in contain_dcpy.keys():
             contain_taxid_lists[k] = list(contain_dcpy[k].pop('taxid_set'))
         jsf = open(fpcjson, 'w')
-        json.dump({'metadata': contain_dcpy, 'taxid_lists': contain_taxid_lists}, jsf)
+        json.dump({'metadata': contain_dcpy, 'taxid_lists': contain_taxid_lists}, jsf, indent=2)
         jsf.close()
 
 def containment_dict_read_previous(as_json=True):
@@ -1154,7 +1204,9 @@ def ncbi_taxonomy_make_full_vector_lookup(ncbi_dict):
 def ncbi_taxonomy_download_taxdmp():
     '''
     This is a utility function to download and extract the required nodes.dmp file with the relevant
-    details of the NCBI taxonomy, if that has not already been done.
+    details of the NCBI taxonomy, if that has not already been done. If the containing folder of the
+    option 'fpath_ncbi_tax_nodes' does not exist, but is a subfolder of the working_folder, then
+    it is created first. Otherwise an error is raised.
     :return:
     '''
     ncbi_fold, taxdmp_fn = os.path.split(options.fpath_ncbi_tax_nodes)
@@ -1230,11 +1282,14 @@ def run_recruit_sources_print_report():
     :return:
     '''
     rpt = '\n'
-    sft, nfe, skips = source_file_list_read()
+    sft, nfe, skips = db_import_manifest_read()
     refseq_list = []
     main_list = []
     latest_refseq_version = -1
     latest_refseq_index = None
+    config_db_source_count = 0
+    manifest_db_source_count = 0
+    refseqfold_db_source_count = 0
     for db_ind in range(len(sft)):
         db = sft[db_ind]
         if db[0][:6].lower()=='refseq':
@@ -1244,14 +1299,28 @@ def run_recruit_sources_print_report():
                 latest_refseq_version = ver
                 latest_refseq_index = db_ind
         else:
+            if db[4] == 'config':
+                config_db_source_count += 1
+            elif db[4] == 'manifest':
+                manifest_db_source_count += 1
+            elif db[4] == 'refseq_folder':
+                refseqfold_db_source_count += 1
             main_list.append(db)
 
     if len(refseq_list)>0:
         main_list.append(sft[latest_refseq_index])
 
-    rpt = rpt + 'Searching for data sources...\n'
+    rpt = rpt + 'Checking for Manifest & Refseq paths...\n'
+    rpt = rpt + '    Manifest File: %s\n' % options.db_import_manifest
+    rpt = rpt + '          (source): %s\n' % options.source_db_import_manifest
     rpt = rpt + '    RefSeq folder: %s\n' % options.refseq_folder
-    rpt = rpt + '    Source List File: %s\n' % options.source_file_list
+    rpt = rpt + '          (source): %s\n' % options.source_refseq
+    rpt = rpt + '\n'
+    rpt = rpt + 'Config/Manifest/Refseq_folder Data Source Counts:'
+    rpt = rpt + '       Config File: %s\n' % config_db_source_count
+    rpt = rpt + '          Manifest: %s\n' % manifest_db_source_count
+    rpt = rpt + '     Refseq Folder: %s\n' % refseqfold_db_source_count
+    rpt = rpt + '\n'
     rpt = rpt + 'Data Sources to be Imported:\n'
     for db in main_list:
         rpt = rpt + '   %s\t%s\n' % (db[0], db[1])
@@ -1260,11 +1329,24 @@ def run_recruit_sources_print_report():
 
     logging.info(rpt)
 
+def config_check_exists_else_copy():
+    '''
+    Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
+    packaged in the 'doc' folder (considered a default).
+    :return:
+    '''
+    scripts_fold = os.path.split(os.path.abspath(__file__))[0]
+    dbqt_config_path = os.path.join(scripts_fold, 'dbqt_config')
+    dbqt_config_doc_path = os.path.join(scripts_fold, 'doc', 'dbqt_config_doc')
+    if not os.path.isfile(dbqt_config_path):
+        shutil.copy(dbqt_config_doc_path, dbqt_config_path)
+
 def set_config_workingfolder_to_thisone():
     '''
     Changes the value of the working_folder field of the dbqt_config to be the current folder
     :return:
     '''
+    config_check_exists_else_copy()
     scripts_fold = os.path.split(os.path.abspath(__file__))[0]
     logging.debug('Updating working_folder in dbqt_config to be %s' % scripts_fold)
     cfggen = configparser.ConfigParser()
@@ -1303,8 +1385,9 @@ def run_query_taxids_against_containment():
         options.parser_store.print_help()
         sys.exit(1)
     elif options.taxid_list == 'stdin':
-        while True:
-            foo = input()
+        # while True:
+        #     foo = input()
+        for foo in sys.stdin:
             if len(foo.strip())==0:
                 break
             taxids.append(int(foo.strip()))
@@ -1401,7 +1484,8 @@ def verify_alg_params_present(custom_list = None, from_print_argparse = False):
         reqlist += custom_list
 
     for req in reqlist:
-        reqname = options.cfg_parameter_short_ids[req]
+        # reqname = options.cfg_parameter_short_ids[req]
+        reqname = req
         reqval = getattr(options, reqname, None)
         if reqval is None:
             logging.error('Command argument \'%s\' requires that %s be set, but it is currently None. Printing config diagnostics:' % (mycmd, reqval))
@@ -1452,11 +1536,11 @@ def main():
         run_inspect_previous_containment_dict()
         return
     elif options.cmd_compare_sources:
-        sft, nfe, skips = source_file_list_read()
+        sft, nfe, skips = db_import_manifest_read()
         contain = containment_dict_read_previous()
         imp_list = containment_dict_show_build_plan(sft, contain, clobber_old=options.clobber)
     elif options.cmd_build_containment:
-        sft, nfe, skips = source_file_list_read()
+        sft, nfe, skips = db_import_manifest_read()
         cd = containment_dict_build(sft, clobber_old=options.clobber)
         cd_sum = containment_dict_summary(cd)
         logging.info(cd_sum)
@@ -1465,8 +1549,8 @@ def main():
         run_query_taxids_against_containment()
     elif options.cmd_random_taxon_sample:
         run_random_taxon_sample_to_file()
-    elif options.cmd_print_source_file_list_specs:
-        source_file_list_print_specs()
+    elif options.cmd_print_db_import_manifest_specs:
+        db_import_manifest_print_specs()
     elif options.cmd_print_debug_args_help:
         command_args_print_hidden_args_help()
     elif options.cmd_update_all_md5s:
