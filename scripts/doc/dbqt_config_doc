@@ -4,7 +4,7 @@ path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 
 [import_locs]
-path_to_source_file_list = ${paths:working_folder}/source_file_list.txt
+path_to_db_import_manifest = ${paths:working_folder}/db_import_manifest.txt
 refseq_folder = ${paths:working_folder}/refseq/catalog_taxid
 
 [formats]
