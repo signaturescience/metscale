@@ -120,6 +120,7 @@ def get_sample_filenames(wildcards):
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
     sample_file = re.sub(r"\*", r".+", sample_file)
+    print("input_files: "+str(sample_file))
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
     return sample_file
@@ -127,6 +128,7 @@ def get_sample_filenames(wildcards):
 
 def get_sample_dir(wildcards):
     sample_path = os.getcwd() + "/" + str(wildcards)
+    print("input_dir: "+str(sample_path))
     return sample_path
 
 
