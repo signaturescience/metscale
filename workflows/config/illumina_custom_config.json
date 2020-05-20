@@ -12,7 +12,8 @@
     },
     "workflows" : {
         "samples_input_workflow" : {
-            "samples"    : ["Sample_1","Sample_2","Sample_3"],
+            #"samples"    : ["Sample_1","Sample_2","Sample_3"],
+            "samples"    : ["96","95"],
         },
         "read_filtering_pretrim_workflow" : {
         },
