@@ -41,7 +41,6 @@ workflows = config['workflows']
 #TODO: Test What if we have multiple samples?
 sample_files_dir_mv = []
 for sample in all_sample_names:
-    print("sample: "+str(sample))
     input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
     input_file_pattern = input_file_pattern.replace(file_ext,'')
     sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
@@ -67,7 +66,6 @@ for sample in all_sample_names:
     if os.path.isdir(finished_dir):
         finished_dir = finished_dir.replace(data_dir+"/", "")
         sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
-print("sample_files_dir_mv: "+str(sample_files_dir_mv))
 
 
 ##########################################################
@@ -116,24 +114,23 @@ rule move_samples_to_dir:
 
 
 def get_sample_filenames(wildcards):
-    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
-    input_file_pattern = input_file_pattern.replace(file_ext,'')
-    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    sample_file = re.sub(r"\*", r".+", sample_file)
-    print("input_files: "+str(sample_file))
+    sample_file_remove = output_dir_pattern.replace('{sample}','')
+    wildcard_sample = str(wildcards)
+    sample_file = wildcard_sample.replace(sample_file_remove,"")
+    #print("sample_file "+str(sample_file))
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
     return sample_file
 
 
 def get_sample_dir(wildcards):
-    sample_path = os.getcwd() + "/" + str(wildcards)
-    print("input_dir: "+str(sample_path))
+    sample_path = os.getcwd() + "/" + data_dir + "/" + str(wildcards)
+    #print("input_dir: "+str(sample_path))
     return sample_path
 
 
-html_output_file = post_processing['move_samples_to_dir']['out_pattern']
-print("html_output_file: "+str(html_output_file))
+html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
+#print("html_output_file: "+str(html_output_file))
 
 rule generate_r_script:
     '''
