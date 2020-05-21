@@ -117,7 +117,6 @@ def get_sample_filenames(wildcards):
     sample_file_remove = output_dir_pattern.replace('{sample}','')
     wildcard_sample = str(wildcards)
     sample_file = wildcard_sample.replace(sample_file_remove,"")
-    #print("sample_file "+str(sample_file))
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
     return sample_file
@@ -125,12 +124,10 @@ def get_sample_filenames(wildcards):
 
 def get_sample_dir(wildcards):
     sample_path = os.getcwd() + "/" + data_dir + "/" + str(wildcards)
-    #print("input_dir: "+str(sample_path))
     return sample_path
 
 
 html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
-#print("html_output_file: "+str(html_output_file))
 
 rule generate_r_script:
     '''
@@ -150,9 +147,7 @@ rule generate_r_script:
 # post processing rename file to sample file name
 
 sample_output_path = "{sample}/{sample}_summary-report.html".format(sample='{sample_mv}')
-#print("frh: " +frh)  #frh: {sample}_summary-report.html
 final_html_report = join(data_dir, sample_output_path)
-#print("final_html_report "+str(final_html_report)) #final_html_report data/{sample_mv}_summary-report.html
 
 
 rule rename_output_html:
