@@ -207,7 +207,10 @@
         "functional_humann2_workflow" : {
             "qual" : ["2","30"],
         },
-        "functional_prokka_with_rnaspades_workflow" : {
+        "functional_prokka_metatrans_with_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "functional_prokka_trans_with_rnaspades_workflow" : {
             "qual"      : ["2","30"],
         },
         "functional_prokka_with_metaspades_workflow" : {

@@ -324,10 +324,17 @@ config_default = {
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
             "threads" : 8
         },
-        "prokka_with_rnaspades" : {
-            "outdir_pattern" : "{sample}_trim{qual}_rnaspades.prokka_annotation",
-            "input_pattern" : "{sample}_trim{qual}.rnaspades.contigs.fa",
-            "prefix_pattern" : "{sample}_trim{qual}_rnaspades",
+        "prokka_metatrans_with_rnaspades" : {
+            "outdir_pattern" : "{sample}_trim{qual}_metatrans_rnaspades.prokka_annotation",
+            "input_pattern" : "{sample}_trim{qual}_metatrans.rnaspades.contigs.fa",
+            "prefix_pattern" : "{sample}_trim{qual}_metatrans_rnaspades",
+            "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
+            "threads" : 8
+        },
+        "prokka_trans_with_rnaspades" : {
+            "outdir_pattern" : "{sample}_trim{qual}_trans_rnaspades.prokka_annotation",
+            "input_pattern" : "{sample}_trim{qual}_trans.rnaspades.contigs.fa",
+            "prefix_pattern" : "{sample}_trim{qual}_trans_rnaspades",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
             "threads" : 8
         },

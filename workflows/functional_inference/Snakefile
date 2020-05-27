@@ -81,42 +81,42 @@ rule prokka_with_megahit:
 
 
 ###################################
-# Functional Inference: prokka with rnaspades input
+# Functional Inference: prokka metatranscriptome with rnaspades input
 
-prokka_with_rnaspades_output_dir = join(data_dir,inference['prokka_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+prokka_metatrans_with_rnaspades_output_dir = join(data_dir,inference['prokka_metatrans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-prokka_with_rnaspades_output_dir_sing = join(sing_dir,inference['prokka_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+prokka_metatrans_with_rnaspades_output_dir_sing = join(sing_dir,inference['prokka_metatrans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-prokka_with_rnaspades_input_dir = join(data_dir,inference['prokka_with_rnaspades']['input_pattern'].format(sample='{sample}',
+prokka_metatrans_with_rnaspades_input_dir = join(data_dir,inference['prokka_metatrans_with_rnaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-prokka_with_rnaspades_input_dir_sing = join(sing_dir,inference['prokka_with_rnaspades']['input_pattern'].format(sample='{sample}',
+prokka_metatrans_with_rnaspades_input_dir_sing = join(sing_dir,inference['prokka_metatrans_with_rnaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-prokka_with_rnaspades_prefix_files = inference['prokka_with_rnaspades']['prefix_pattern']
-prokka_rnaspades_threads = inference['prokka_with_rnaspades']['threads']
+prokka_metatrans_with_rnaspades_prefix_files = inference['prokka_metatrans_with_rnaspades']['prefix_pattern']
+prokka_rnaspades_threads = inference['prokka_metatrans_with_rnaspades']['threads']
 
 
 def get_input_db_rnaspades(wildcards):
-    if (inference['prokka_with_rnaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+    if (inference['prokka_metatrans_with_rnaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
         return "/NGStools/prokka/db/kingdom/Bacteria/IS"
     else:
-        return join(sing_dir,inference['prokka_with_rnaspades']['input_db'])
+        return join(sing_dir,inference['prokka_metatrans_with_rnaspades']['input_db'])
 
 print("assembly_rnaspades_output: "+str(assembly_rnaspades_output))
-print("prokka_with_rnaspades_output_dir: "+str(prokka_with_rnaspades_output_dir))
-print("prokka_with_rnaspades_input_dir: "+str(prokka_with_rnaspades_input_dir))
+print("prokka_metatrans_with_rnaspades_output_dir: "+str(prokka_metatrans_with_rnaspades_output_dir))
+print("prokka_metatrans_with_rnaspades_input_dir: "+str(prokka_metatrans_with_rnaspades_input_dir))
 
-rule prokka_with_rnaspades:
+rule prokka_metatrans_with_rnaspades:
     input:
         assembly_rnaspades_output
-        #prokka_with_rnaspades_input_dir
+        #prokka_metatrans_with_rnaspades_input_dir
     output:
-        directory(prokka_with_rnaspades_output_dir)
+        directory(prokka_metatrans_with_rnaspades_output_dir)
     params:
-        #input_files = prokka_with_rnaspades_input_dir_sing,
+        #input_files = prokka_metatrans_with_rnaspades_input_dir_sing,
         input_files = assembly_rnaspades_output_sing,
 
-        output_dir = prokka_with_rnaspades_output_dir_sing,
-        prefix_files = prokka_with_rnaspades_prefix_files,
+        output_dir = prokka_metatrans_with_rnaspades_output_dir_sing,
+        prefix_files = prokka_metatrans_with_rnaspades_prefix_files,
         input_db = get_input_db_rnaspades
     threads:
         prokka_rnaspades_threads
@@ -134,6 +134,53 @@ rule prokka_with_rnaspades:
         '--prefix {params.prefix_files} '
         '--cpus {threads} '
 
+
+
+###################################
+# Functional Inference: prokka with trascriptome spades input for isolates
+#NEW FUNCTION HERE*******************************************
+prokka_trans_with_rnaspades_output_dir = join(data_dir,inference['prokka_trans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_trans_with_rnaspades_output_dir_sing = join(sing_dir,inference['prokka_trans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+
+
+#prokka_with_spades_input = assembly_spades_output
+#prokka_with_spades_input_sing = assembly_spades_output_sing
+
+prokka_trans_with_rnaspades_prefix_files = inference['prokka_trans_with_rnaspades']['prefix_pattern']
+prokka_trans_rnaspades_threads = inference['prokka_trans_with_rnaspades']['threads']
+
+def get_input_db_spades(wildcards):
+    if (inference['prokka_trans_with_rnaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_trans_with_spades']['input_db'])
+
+rule prokka_trans_with_spades:
+    input:
+        assembly_spades_output
+    output:
+        directory(prokka_trans_with_rnaspades_output_dir)
+    params:
+        input_files = assembly_spades_output_sing,
+        output_dir = prokka_trans_with_rnaspades_output_dir_sing,
+        prefix_files = prokka_trans_with_rnaspades_prefix_files,
+        input_db = get_input_db_spades
+    threads:
+        prokka_trans_rnaspades_threads
+    singularity:
+        prokka_image
+    shell:
+        'export LC_ALL=C '
+        '&& '
+        'prokka '
+        '{params.input_files} '
+        '--notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads}'
 
 
 ###################################
@@ -521,14 +568,25 @@ rule functional_prokka_with_megahit_workflow:
         )
 
 
-rule functional_prokka_metatransciptome_with_rnaspades_workflow:
+rule functional_prokka_metatranscriptome_with_rnaspades_workflow:
     """
-    Run prokka woth rna spades
+    Run prokka with metatranscriptome rna spades
     """
     input:
-        expand( prokka_with_rnaspades_output_dir,
+        expand( prokka_metatrans_with_rnaspades_output_dir,
                 sample    = sample_input_files,
-                qual   = workflows['functional_prokka_with_rnaspades_workflow']['qual']
+                qual   = workflows['functional_prokka_metatrans_with_rnaspades_workflow']['qual']
+        )
+
+
+rule functional_prokka_transcriptome_with_rnaspades_workflow:
+    """
+    Run prokka with transcriptome rna spades
+    """
+    input:
+        expand( prokka_trans_with_rnaspades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_trans_with_rnaspades_workflow']['qual']
         )
 
 
@@ -542,6 +600,7 @@ rule functional_prokka_with_metaspades_workflow:
                 qual   = workflows['functional_prokka_with_metaspades_workflow']['qual']
         )
 
+
 rule functional_prokka_with_spades_workflow:
     """
     Run prokka with spades contigs
@@ -551,7 +610,6 @@ rule functional_prokka_with_spades_workflow:
                 sample    = sample_input_files,
                 qual   = workflows['functional_prokka_with_spades_workflow']['qual']
         )
-
 
 
 rule functional_abricate_with_megahit_workflow:
