@@ -152,6 +152,7 @@ def get_input_db_spades(wildcards):
     else:
         return join(sing_dir,inference['prokka_trans_with_spades']['input_db'])
 
+
 rule prokka_trans_with_spades:
     input:
         prokka_trans_with_rnaspades_input_dir

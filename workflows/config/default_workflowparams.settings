@@ -333,7 +333,7 @@ config_default = {
         },
         "prokka_trans_with_rnaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_trans_rnaspades.prokka_annotation",
-            "input_pattern"  : "{sample}_trim{qual}_trans.rnaspades.contigs.fa",
+            "input_pattern"  : "{sample}_trim{qual}.rnaspades.transcripts.fasta",
             "prefix_pattern" : "{sample}_trim{qual}_trans_rnaspades",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
             "threads" : 8
