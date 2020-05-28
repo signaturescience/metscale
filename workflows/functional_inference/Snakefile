@@ -172,7 +172,7 @@ rule prokka_trans_with_spades:
         '&& '
         'prokka '
         '{params.input_files} '
-        '--notrna --rnammer --rawproduct '
+        '--notrna --rnammer --rawproduct --compliant '
         '--proteins {params.input_db} '
         '--outdir {params.output_dir} '
         '--prefix {params.prefix_files} '
