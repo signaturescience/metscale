@@ -92,7 +92,7 @@ prokka_metatrans_with_rnaspades_input_dir = join(data_dir,inference['prokka_meta
 prokka_metatrans_with_rnaspades_input_dir_sing = join(sing_dir,inference['prokka_metatrans_with_rnaspades']['input_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 prokka_metatrans_with_rnaspades_prefix_files = inference['prokka_metatrans_with_rnaspades']['prefix_pattern']
-prokka_rnaspades_threads = inference['prokka_metatrans_with_rnaspades']['threads']
+prokka_metatrans_rnaspades_threads = inference['prokka_metatrans_with_rnaspades']['threads']
 
 
 def get_input_db_rnaspades(wildcards):
@@ -101,25 +101,21 @@ def get_input_db_rnaspades(wildcards):
     else:
         return join(sing_dir,inference['prokka_metatrans_with_rnaspades']['input_db'])
 
-print("assembly_rnaspades_output: "+str(assembly_rnaspades_output))
-print("prokka_metatrans_with_rnaspades_output_dir: "+str(prokka_metatrans_with_rnaspades_output_dir))
-print("prokka_metatrans_with_rnaspades_input_dir: "+str(prokka_metatrans_with_rnaspades_input_dir))
 
 rule prokka_metatrans_with_rnaspades:
     input:
-        assembly_rnaspades_output
-        #prokka_metatrans_with_rnaspades_input_dir
+        #assembly_rnaspades_output
+        prokka_metatrans_with_rnaspades_input_dir
     output:
         directory(prokka_metatrans_with_rnaspades_output_dir)
     params:
-        #input_files = prokka_metatrans_with_rnaspades_input_dir_sing,
-        input_files = assembly_rnaspades_output_sing,
-
+        input_files = prokka_metatrans_with_rnaspades_input_dir_sing,
+        #input_files = assembly_rnaspades_output_sing,
         output_dir = prokka_metatrans_with_rnaspades_output_dir_sing,
         prefix_files = prokka_metatrans_with_rnaspades_prefix_files,
         input_db = get_input_db_rnaspades
     threads:
-        prokka_rnaspades_threads
+        prokka_metatrans_rnaspades_threads
     singularity:
         prokka_image
     shell:
@@ -138,16 +134,15 @@ rule prokka_metatrans_with_rnaspades:
 
 ###################################
 # Functional Inference: prokka with trascriptome spades input for isolates
-#NEW FUNCTION HERE*******************************************
+
 prokka_trans_with_rnaspades_output_dir = join(data_dir,inference['prokka_trans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
 prokka_trans_with_rnaspades_output_dir_sing = join(sing_dir,inference['prokka_trans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
                             qual='{qual}'))
-
-
-#prokka_with_spades_input = assembly_spades_output
-#prokka_with_spades_input_sing = assembly_spades_output_sing
-
+prokka_trans_with_rnaspades_input_dir = join(data_dir,inference['prokka_trans_with_rnaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_trans_with_rnaspades_input_dir_sing = join(sing_dir,inference['prokka_trans_with_rnaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
 prokka_trans_with_rnaspades_prefix_files = inference['prokka_trans_with_rnaspades']['prefix_pattern']
 prokka_trans_rnaspades_threads = inference['prokka_trans_with_rnaspades']['threads']
 
@@ -159,11 +154,11 @@ def get_input_db_spades(wildcards):
 
 rule prokka_trans_with_spades:
     input:
-        assembly_spades_output
+        prokka_trans_with_rnaspades_input_dir
     output:
         directory(prokka_trans_with_rnaspades_output_dir)
     params:
-        input_files = assembly_spades_output_sing,
+        input_files = prokka_trans_with_rnaspades_input_dir_sing,
         output_dir = prokka_trans_with_rnaspades_output_dir_sing,
         prefix_files = prokka_trans_with_rnaspades_prefix_files,
         input_db = get_input_db_spades
