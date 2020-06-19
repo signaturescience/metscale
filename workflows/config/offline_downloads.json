@@ -32,6 +32,7 @@
         "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
         "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
         "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
+        "mtsv_1.0.6--py36hc9558a2_1.sif" : "docker://quay.io/biocontainers/mtsv:1.0.6--py36hc9558a2_1",
         "mash_2.2--h3d38be6_0.sif" : "docker://quay.io/biocontainers/mash:2.2--h3d38be6_0",
         "minikraken_8GB_202003.tgz" : "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
@@ -52,6 +53,10 @@
     "kaiju_db" : {
         "kaiju_index_nr_euk.tgz"  : "http://kaiju.binf.ku.dk/database/kaiju_index_nr_euk.tgz"
     },
+    
+    "mtsv_db" : {
+    	"complete_genome.tar.gz" : "https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz"
+    },
 
     "functional_inference" : {
         "prokka_1.14.5-1.sif" : "docker://ummidock/prokka:1.14.5-1",
@@ -67,7 +72,6 @@
         "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
         "customDBabricate.tgz" : "file:///resources/customDBabricate.tgz",
         "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta"
-
     },
 
     "post_processing" : {

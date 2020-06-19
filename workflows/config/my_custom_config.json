@@ -97,6 +97,9 @@
             # contigs the comparison workflow will be run on
             "kvalue"    : ["21","31","51"],
         },
+        "tax_class_mtsv_workflow" : {
+            "qual" : ["2","30"],
+        },
         "tax_class_signatures_workflow" : {
             "qual" : ["2","30"],
         },

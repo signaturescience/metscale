@@ -9,6 +9,7 @@ Documentation: docs/workflow_taxclass.md
 from common.utils  import container_image_is_external, container_image_name
 from os.path import join, isfile, dirname
 import os, re
+import shutil
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 
@@ -1511,7 +1512,132 @@ rule mash_screen_sort:
         "{input} > {output} "
 
 
+############################################
+# Taxonomic Classification:  update MTSV databases
 
+
+mtsv_threads = taxclass['mtsv']['threads']
+mtsv_customdb_name = '"' + taxclass['mtsv']['customdb_name'] + '"'
+mtsv_partitions = taxclass['mtsv']['partitions']
+mtsv_image = container_image_name(biocontainers, 'mtsv')
+mtsv_sing_db = join(sing_dir, taxclass['mtsv']['db_name'])
+mtsv_db = join(data_dir, taxclass['mtsv']['db_name'], "indices")
+
+rule tax_class_mtsv_update_db:
+    output:
+        directory(mtsv_db)
+    singularity:
+        mtsv_image
+    params:
+        sing_db = mtsv_sing_db,
+        threads = mtsv_threads,
+        customdb_name = mtsv_customdb_name,
+        partitions = mtsv_partitions,
+    shell:
+        "mtsv_setup json_update "
+        "--path {params.sing_db} -t {params.threads} && "
+        "mtsv_setup custom_db "
+        "--path {params.sing_db} -t {params.threads} "
+        "--customdb {params.customdb_name} --partitions {params.partitions}"
+
+
+
+############################################
+# Taxonomic Classification:  create MTSV cfg File
+
+mtsv_cfg_dest = join(data_dir,  '{sample}_trim{qual}_mtsv.cfg')
+mtsv_cfg_dest = mtsv_cfg_dest.format(sample='{sample}', qual='{qual}')
+mtsv_cfg_dest_sing = join(sing_dir,  '{sample}_trim{qual}_mtsv.cfg')
+mtsv_cfg_dest_sing = mtsv_cfg_dest_sing.format(sample='{sample}', qual='{qual}')
+mtsv_cfg_src = join('..','resources', 'mtsv.cfg')
+mtsv_dir_path = '{sample}_trim{qual}_MTSV'.format(sample='{sample}', qual='{qual}')
+mtsv_sing_dir_path = join(sing_dir, mtsv_dir_path)
+mtsv_data_dir_path = join(data_dir, mtsv_dir_path)
+mtsv_query_fasta_path = mtsv_data_dir_path + '/QueryFastas'
+mtsv_kmer_output = taxclass['mtsv']['kmer']
+mtsv_db_config = sing_dir + "/" + taxclass['mtsv']['db_name'] + "/artifacts/complete_genome.json"
+mtsv_n_kmers = taxclass['mtsv']['n_kmers']
+mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
+
+
+def get_input_files_mtsv_gz(wildcards):
+    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    str_mtsv_input_files_gz = mtsv_input_files[0]
+    return str_mtsv_input_files_gz
+
+def get_input_files_mtsv(wildcards):
+    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    str_mtsv_input_files_gz = mtsv_input_files[0]
+    str_mtsv_input_files = os.path.splitext(str_mtsv_input_files_gz)[0]
+    return str_mtsv_input_files
+
+def get_input_files_sing(wildcards):
+    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    str_mtsv_input_files = mtsv_input_files[0]
+    str_mtsv_input_files = os.path.splitext(str_mtsv_input_files)[0]    
+    interleave_output_sing = str_mtsv_input_files.replace(data_dir, sing_dir)
+    return interleave_output_sing
+
+
+rule mtsv_update_cfg:
+    input:
+        interleave_output
+    output:
+        mtsv_cfg_dest
+    params:
+        src = mtsv_cfg_src,
+        dest = mtsv_cfg_dest,
+        data_dir = mtsv_sing_dir_path,
+        dir_path_create = mtsv_data_dir_path,
+        input_files_gz  = get_input_files_mtsv_gz,
+        input_files = get_input_files_mtsv,
+        input_file_sing = get_input_files_sing,
+        kmer_output = mtsv_kmer_output,
+        database_config_output = mtsv_db_config,
+        n_kmers_output = mtsv_n_kmers,
+        signature_cutoff_output = mtsv_signature_cutoff,
+        query_fasta_file = mtsv_query_fasta_path
+    run:
+        shell("mkdir -p ~/.mtsv")
+        shell("mkdir -p {params.dir_path_create}")
+        shell("gunzip -c {params.input_files_gz} > {params.input_files}")
+        shell("cp ../resources/expected.csv ~/.mtsv")
+        with open(params.src, 'r') as f:
+            s1 = f.read().replace("{fastq_output}", params.input_file_sing, 1)
+            s2 = s1.replace("{data_dir}", params.data_dir, 15)
+            s3 = s2.replace("{kmer_output}", str(params.kmer_output), 1)
+            s4 = s3.replace("{database_config}", params.database_config_output)
+            s5 = s4.replace("{n_kmers}",str(params.n_kmers_output),1)
+            s6 = s5.replace("{signature_cutoff}", str(params.signature_cutoff_output),1)
+        with open(params.dest, 'w') as f:
+            f.write(s6)
+
+
+
+############################################
+# Taxonomic Classification:  run MTSV 
+
+output_summary_file = 'analysis.csv'
+output_summary_path = join(mtsv_data_dir_path,'Analysis', output_summary_file)
+
+rule tax_class_run_mtsv:
+    input:
+        mtsv_cfg_dest
+    output:
+        output_summary_path
+    singularity:
+        mtsv_image
+    params:
+        sing_dir_path = mtsv_sing_dir_path,
+        cfg = mtsv_cfg_dest_sing,
+        threads = mtsv_threads,
+    shell:
+        "mtsv readprep -c {params.cfg} -wd {params.sing_dir_path} && "
+        "mtsv binning -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
+        "mtsv summary -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path} && "
+        "mtsv analyze -c {params.cfg} --cores -t {params.threads} -wd {params.sing_dir_path}"
+
+        
 
 
 
@@ -1846,3 +1972,17 @@ rule tax_class_mash_screen_workflow:
         )
 
 
+rule tax_class_run_mtsv_workflow:
+    input:
+        expand( output_summary_path,
+            sample   = sample_input_files,
+            qual     = workflows['tax_class_mtsv_workflow']['qual'],
+        )
+
+              
+rule tax_class_create_mtsv_db_workflow:
+    input:
+        expand( directory(mtsv_db),
+            sample   = sample_input_files,
+            qual     = workflows['tax_class_mtsv_workflow']['qual'],
+        )

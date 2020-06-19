@@ -313,6 +313,17 @@ config_default = {
             "mash_screen_out" : "{sample}_trim{qual}_{db}_mash_screen.tab",
             "mash_screen_sort_out" : "{sample}_trim{qual}_{db}_mash_screen.sorted.tab",
         },
+        "mtsv" : {
+            "threads" : 20,
+            #db file dir name uncompressed
+            "db_name" : "Oct-28-2019",
+            #Static do not change
+            "customdb_name" : "Complete_Genome",
+            "partitions" : 2,
+            "kmer" : 50,
+            "n_kmers" : 100000,
+            "signature_cutoff" : 20
+        }
     },
 
     "functional_inference" : {
@@ -529,6 +540,13 @@ config_default = {
             "location" : "../container_images/",
             "version" : "2.8.1--py27_0",
             "quayurl" : "quay.io/biocontainers/humann2"
+        },
+        "mtsv" : {
+            "use_local" : True,
+            "filename" : "mtsv_1.0.6--py36hc9558a2_1.sif",
+            "location" : "../container_images/",
+            "version" : "1.0.6--py36hc9558a2_1",
+            "quayurl" : "quay.io/biocontainers/mtsv"
         },
     }
 

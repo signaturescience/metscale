@@ -331,8 +331,6 @@ srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_tr
 srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 
                         srst2_rev_post_trimmed_sing]
 
-
-
 srst2_db_location = join(sing_dir, '{db}')
 srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db='{db}'))
 #SRST2 likes to append some strings that are difficult to replicate with the db wildcard. So decided to simplify and just look for the log file.

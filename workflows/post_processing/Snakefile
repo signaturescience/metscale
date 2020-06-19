@@ -50,6 +50,7 @@ for sample in all_sample_names:
         sample_files_dir_mv.append(sample_file_dir)
 
 
+
 ##########################################################
 
 samples_output_dir = join(data_dir, output_dir_pattern)
@@ -96,10 +97,21 @@ rule move_samples_to_dir:
 
 
 def get_sample_filenames(wildcards):
-    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
-    input_file_pattern = input_file_pattern.replace(file_ext,'')
-    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    return sample_file
+    finshed_file_pattern = post_processing['move_samples_to_dir']['output_pattern']
+    finshed_file_pattern = finshed_file_pattern.replace('{sample}','')
+    finished_file = wildcards.sample_mv.split(finshed_file_pattern)[0]
+    finished_file = finished_file.replace(data_dir,'')
+    finished_file = wildcards.sample_mv + finished_file
+    return finished_file
+
+#This is not correct.
+#def get_sample_dir(wildcards):
+#    return wildcards.sample_mv
+
+#    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+#    input_file_pattern = input_file_pattern.replace(file_ext,'')
+#    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+#    return sample_file
 
 
 def get_sample_dir(wildcards):
