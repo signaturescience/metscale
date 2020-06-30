@@ -35,14 +35,15 @@ process_output <- function(data_dir, out_dir) {
     u_data <- data[substr(data[, 1], 1, 1) == "U", 1]
     u_data <- matrix(unlist(strsplit(u_data, "\t")), ncol = 3, byrow = T)
     u_data <- data.frame(classified = u_data[, 1], name = u_data[, 2], tax_id = u_data[, 3],
-                         length = NA, match_ids = NA, accession_num = NA, match_frag = NA)
+                         length = NA, match_ids = NA, accession_num = NA, match_frag = NA,
+                         stringsAsFactors = F)
     
     # Parse the classified reads
     c_data <- data[substr(data[, 1], 1, 1) == "C", 1]
     c_data <- matrix(unlist(strsplit(c_data, "\t")), ncol = 7, byrow = T)
     c_data <- data.frame(classified = c_data[, 1], name = c_data[, 2], tax_id = c_data[, 3],
                          length = c_data[, 4], match_ids = c_data[, 5], accession_num = c_data[, 6],
-                         match_frag = c_data[, 7])
+                         match_frag = c_data[, 7], stringsAsFactors = F)
     
     # Return the parsed data set
     return(rbind(u_data, c_data))
@@ -63,7 +64,7 @@ process_output <- function(data_dir, out_dir) {
     data <- strsplit(data, split = "\t")
     data <- do.call(rbind, data)
     colnames(data) <- var_names
-    data <- as.data.frame(data)
+    data <- data.frame(data, stringsAsFactors = F)
     
     data$percent  <- as.numeric(data$percent)
     data$reads    <- as.numeric(data$reads)
@@ -92,7 +93,7 @@ process_output <- function(data_dir, out_dir) {
     colnames(dat) <- dat[1, ]
     
     dat <- dat[2:nrow(dat), ]
-    dat <- data.frame(dat)
+    dat <- data.frame(dat, stringsAsFactors = F)
     
     dat$name                  <- as.character(dat$name)
     dat$taxonomy_id           <- as.numeric(dat$taxonomy_id)
@@ -203,18 +204,26 @@ process_output <- function(data_dir, out_dir) {
   file_list <- file_list[file_list$tool != "", ]
   
   # Add the trim value for each output file
-  file_list$trim <- stringr::str_extract_all(pattern = "trim[0-9]?[0-9]", string = file_list$file,
-                                             simplify = TRUE)
-  file_list$trim <- stringr::str_extract_all(pattern = "[0-9]?[0-9]", string = file_list$trim,
-                                             simplify = TRUE)
-  file_list$trim[file_list$trim == ""] <- NA
+  trim <- stringr::str_extract_all(pattern = "trim[0-9]?[0-9]", string = file_list$file, simplify = TRUE)
+  trim <- stringr::str_extract_all(pattern = "[0-9]?[0-9]", string = trim, simplify = TRUE)
+  if (nrow(trim) > 0) {
+    trim[trim == ""] <- NA
+  } else {
+    trim <- rep(NA, nrow(file_list))
+  }
+  file_list$trim <- trim
+  rm(trim)
   
   # Add the k-value for each output file (not all tools allow the setting of a k-value)
-  file_list$kmer <- stringr::str_extract_all(pattern = "k[0-9]?[0-9]", string = file_list$file, 
-                                                simplify = TRUE)
-  file_list$kmer <- stringr::str_extract_all(pattern = "[0-9]?[0-9]", string = file_list$kmer, 
-                                                simplify = TRUE)
-  file_list$kmer[file_list$kmer == ""] <- NA
+  kmer <- stringr::str_extract_all(pattern = "k[0-9]?[0-9]", string = file_list$file, simplify = TRUE)
+  kmer <- stringr::str_extract_all(pattern = "[0-9]?[0-9]", string = kmer, simplify = TRUE)
+  if (nrow(kmer) > 0) {
+    kmer[kmer == ""] <- NA
+  } else {
+    kmer <- rep(NA, nrow(file_list))
+  }
+  file_list$kmer <- kmer
+  rm(kmer)
   
   # Add the assembler name (used exclusively by Kaiju as far as I know)
   file_list$assembler <- NA
@@ -291,8 +300,7 @@ process_output <- function(data_dir, out_dir) {
       
       # Convert to a long (rather than wide) format
       tmp_output %>% 
-        select(species_id, kraken_assigned_reads, added_reads, new_est_reads, 
-               fraction_total_reads) %>%
+        select(species_id, kraken_assigned_reads, added_reads, new_est_reads, fraction_total_reads) %>%
         gather(kraken_assigned_reads, added_reads, new_est_reads, fraction_total_reads, 
                key = "var_name", value = "var_value") -> tmp_output
       
@@ -430,9 +438,16 @@ process_output <- function(data_dir, out_dir) {
   ####################################### JSON Formatting ##########################################
   ##################################################################################################
   
-  out <- list(files = file_list, variables = variables, taxa = tax_ids)
+  out <- list(files = file_list, variables = variables, taxa = all_lin)
   out <- rjson::toJSON(x = out)
   setwd(dir = out_dir)
   write(out, file = "combined_output.json")
   
 }
+args = commandArgs(trailingOnly=TRUE)
+data_dir = args[1]
+out_dir = args[2]
+print(paste0("data dir: ",data_dir))
+print(paste0("out dir: ",out_dir))
+
+process_output (data_dir, out_dir)
