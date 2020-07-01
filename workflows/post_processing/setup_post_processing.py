@@ -24,11 +24,11 @@ if __name__ == '__main__':
     subprocess.call (["Rscript", "-e", "taxizedb::db_download_ncbi()"])
     subprocess.call (["Rscript", "db_download_genbank.R"])
     subprocess.call (["Rscript", "db_download_uniprot.R"])
-    assembly_str_zip = args.input + "/assemblyAccession_to_taxid.zip"
-    assembly_str_txt = args.input + "/assemblyAccession_to_taxid.txt"
+    assembly_str_zip = args.post + "/assemblyAccession_to_taxid.zip"
+    assembly_str_txt = args.post + "/assemblyAccession_to_taxid.txt"
     subprocess.call (["Rscript", "add_assembly_lookup.R", assembly_str_zip, assembly_str_txt])
     #process_str = "process_output.R " + args.input + " " + args.post
-    subprocess.call (["Rscript", "process_output.R", args.input, args.output])
+    subprocess.call (["Rscript", "process_output.R", args.input, args.post])
     #Rscript -e 'library(devtools); install_github("ropensci/taxizedb")'   #<- this install 0.1.9.93
     #Rscript -e "taxizedb::db_download_ncbi()"
     #Rscript db_download_genbank.R
