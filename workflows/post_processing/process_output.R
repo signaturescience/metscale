@@ -322,6 +322,9 @@ process_output <- function(data_dir, out_dir) {
   if (any(file_list$tool == "Kraken2")) {
     tmp_files <- file_list[file_list$tool == "Kraken2", ]
     for (i in 1:nrow(tmp_files)) {
+      if (substr(tmp_files$path[i], nchar(tmp_files$path[i]) - 3, nchar(tmp_files$path[i])) == ".csv") {
+        next
+      }
       tmp_output <- read.table(file = tmp_files$path[i], sep = "\t", as.is = TRUE, header = FALSE, quote = '"')
       colnames(tmp_output) <- c("percent","fragments","tax_fragments","rank","species_id","species_name")
       tmp_output %>% 
