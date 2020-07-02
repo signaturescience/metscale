@@ -5,10 +5,6 @@ add_assembly_lookup <- function (zip_path, txt_path)
   require(taxizedb)
   db_path_dir <- file.path(tdb_cache$cache_path_get(),"assemblyAccession")
   tdb_cache$mkdir()
-  #db_path_file <- "/data/home/chulmelowe/assemblyAccession_to_taxid.zip"
-  #db_file <- "data/home/chulmelowe/assemblyAccession_to_taxid.txt"
-  #unzip(zipfile = "/data/home/chulmelowe/assemblyAccession_to_taxid.zip")
-  #foo <- read.table(file = "/data/home/chulmelowe/assemblyAccession_to_taxid.txt")
   db_path_file = zip_path
   db_file = txt_path
   unzip(zipfile = zip_path)
