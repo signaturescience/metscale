@@ -68,7 +68,6 @@ for sample in all_sample_names:
         sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
 
 
-
 ##########################################################
 
 samples_output_dir = join(data_dir, output_dir_pattern)
@@ -112,6 +111,37 @@ rule move_samples_to_dir:
 ##################################################
 # post processing: create the final HTML report
 
+abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
+abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
+
+print("abudance_graph: "+str(abudance_graph))
+print("abudance_graph_sing: "+str(abudance_graph_sing))
+
+
+def get_sample_dir(wildcards):
+    sample_path = os.getcwd() + "/" + data_dir + "/" + str(wildcards)
+    print("sample_path: "+str(sample_path))
+    return sample_path
+
+print("cwd: "+str(os.getcwd()))
+post_processing_dir = join(os.getcwd(), "post_processing")
+
+rule generate_abundance_graph:
+    '''
+    create abundance graph from R and py scripts
+    '''
+    output:
+        abudance_graph
+    params:
+        input_dir = get_sample_dir,
+        post_prcoessing_dir = post_processing_dir,
+    message: 
+        '--- Generating Abundance Graph'
+    script:
+        "create_combined_output.py"
+
+
+
 
 
 def get_sample_filenames(wildcards):
@@ -120,12 +150,8 @@ def get_sample_filenames(wildcards):
     sample_file = wildcard_sample.replace(sample_file_remove,"")
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
+    print("sample+file "+str(sample_file))
     return sample_file
-
-
-def get_sample_dir(wildcards):
-    sample_path = os.getcwd() + "/" + data_dir + "/" + str(wildcards)
-    return sample_path
 
 
 html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
@@ -134,6 +160,8 @@ rule generate_r_script:
     '''
     generate R script for final reports
     '''
+    input:
+        abudance_graph
     output:
         html_output_file
     params:
@@ -144,23 +172,6 @@ rule generate_r_script:
     script:
         "summary-report.Rmd"
 
-############################################
-# post processing rename file to sample file name
-
-sample_output_path = "{sample}/{sample}_summary-report.html".format(sample='{sample_mv}')
-final_html_report = join(data_dir, sample_output_path)
-
-
-rule rename_output_html:
-    '''
-    Do a move command to call it {sample}_summary-report.html
-    '''
-    input:
-        html_output_file
-    output:
-        final_html_report
-    shell:
-        "mv {input} {output}" 
 
 
  ###################################
@@ -183,6 +194,7 @@ rule post_processing_create_final_report_workflow:
     Build rule: Create a final HTML report
     '''
     input:
-        expand( final_html_report,
+        expand( html_output_file,
                 sample_mv    = sample_files_dir_mv,
+                sample       = sample_input_files
         )

@@ -9,6 +9,7 @@ if __name__ == '__main__':
     parser.add_argument("--input", help="input/data dir")
     parser.add_argument("--post", help="post_processing dir")
     args = parser.parse_args()
+    print(args)
 
     #process_str = "process_output.R " + args.input + " " + args.post
     subprocess.call (["Rscript", "process_output.R", args.input, args.post])
