@@ -283,7 +283,7 @@ config_default = {
         "kraken2" : {
             #
             # kraken2 output results
-            "kraken2_output" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.report",
+            "kraken2_output" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.out",
             "threads" : 6,
             "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified_{db}_confidence{conf}#.fq",
             "class_out" : "{sample}_trim{qual}_kraken2_classified_{db}_confidence{conf}#.fq",
