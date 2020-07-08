@@ -241,7 +241,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
     grey_patch = mpatches.Patch(color='grey', label='The grey data')
     white_patch = mpatches.Patch(color='white', label='The white data')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., handles=[red_patch, orange_patch, yellow_patch, green_patch, blue_patch, grey_patch, white_patch])
-    abundance_path = os.path.join(data_dir, "abundance_scatter_plot.png")
+    abundance_path = os.path.join(data_dir, "abundance_graph.png")
     plt.savefig(abundance_path, dpi=100, bbox_inches='tight')
 
 

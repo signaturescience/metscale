@@ -2,6 +2,8 @@ import argparse
 import subprocess
 
 '''
+python -m pip install -U matplotlib
+
 sudo yum install mysql-devel
 sudo yum install postgresql-devel
 
