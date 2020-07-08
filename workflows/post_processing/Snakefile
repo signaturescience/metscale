@@ -34,42 +34,43 @@ post_processing = config['post_processing']
 
 
 #We need to get the files if they have been moved to the completed dir.
-output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
-file_ext = readfilt['quality_trimming']['sample_file_ext']
 
-workflows = config['workflows']
+#file_ext = readfilt['quality_trimming']['sample_file_ext']
+
+#workflows = config['workflows']
 #TODO: Test What if we have multiple samples?
-sample_files_dir_mv = []
-for sample in all_sample_names:
-    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
-    input_file_pattern = input_file_pattern.replace(file_ext,'')
-    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    #for illumina wild cards in samples
-    if ('*' in sample_file) or ('?' in sample_file):
-        try:
-            sample_dir_wildcards = join(data_dir, sample_file+'*')
-            glob_finished_dir = glob.glob(sample_dir_wildcards)
-            for i in range(len(sample_file), 0, -1):
-                if (sample_file[i-1] == "*" or sample_file[i-1] == "?"):
-                    input_file_pattern_index = i-1
-                    break
-            result = glob_finished_dir[0].index(sample_file[input_file_pattern_index+1:])
-            finished_dir = glob_finished_dir[0][:result+input_file_pattern_index]
-            finished_dir = output_dir_pattern.replace("{sample}", finished_dir)
-        except:
-            print("Error in matching sample file patterns. Empty report generated")
-    else:
-        finished_dir = output_dir_pattern.replace("{sample}", sample_file)
-        finished_dir = join(data_dir, finished_dir)
+#sample_files_dir_mv = []
+#for sample in all_sample_names:
+#    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+#    input_file_pattern = input_file_pattern.replace(file_ext,'')
+#    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
+#    #for illumina wild cards in samples
+#    if ('*' in sample_file) or ('?' in sample_file):
+#        try:
+#            sample_dir_wildcards = join(data_dir, sample_file+'*')
+#            glob_finished_dir = glob.glob(sample_dir_wildcards)
+#            for i in range(len(sample_file), 0, -1):
+#                if (sample_file[i-1] == "*" or sample_file[i-1] == "?"):
+#                    input_file_pattern_index = i-1
+#                    break
+#            result = glob_finished_dir[0].index(sample_file[input_file_pattern_index+1:])
+#            finished_dir = glob_finished_dir[0][:result+input_file_pattern_index]
+#            finished_dir = output_dir_pattern.replace("{sample}", finished_dir)
+#        except:
+#            print("Error in matching sample file patterns. Empty report generated")
+#    else:
+#        finished_dir = output_dir_pattern.replace("{sample}", sample_file)
+#        finished_dir = join(data_dir, finished_dir)
+#
+#    if os.path.isdir(finished_dir):
+#        sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
 
-   
-    if os.path.isdir(finished_dir):
-        finished_dir = finished_dir.replace(data_dir+"/", "")
-        sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
+
+#sample_files_dir_mv = sample_finished_folders
 
 
 ##########################################################
-
+output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
 samples_output_dir = join(data_dir, output_dir_pattern)
 
 
@@ -111,7 +112,7 @@ rule move_samples_to_dir:
 ##################################################
 # post processing: create the final HTML report
 
-abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
+abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}'))
 abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
 
 print("abudance_graph: "+str(abudance_graph))
@@ -119,8 +120,8 @@ print("abudance_graph_sing: "+str(abudance_graph_sing))
 
 
 def get_sample_dir(wildcards):
-    sample_path = os.getcwd() + "/" + data_dir + "/" + str(wildcards)
-    print("sample_path: "+str(sample_path))
+    sample_path = os.getcwd()  + "/" + str(wildcards)
+    print("get_sample_dir: "+str(sample_path))
     return sample_path
 
 print("cwd: "+str(os.getcwd()))
@@ -150,7 +151,7 @@ def get_sample_filenames(wildcards):
     sample_file = wildcard_sample.replace(sample_file_remove,"")
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
-    print("sample+file "+str(sample_file))
+    print("get_sample_filenames: "+str(sample_file))
     return sample_file
 
 
@@ -195,6 +196,5 @@ rule post_processing_create_final_report_workflow:
     '''
     input:
         expand( html_output_file,
-                sample_mv    = sample_files_dir_mv,
-                sample       = sample_input_files
+                sample_mv    = sample_finished_folders,
         )
