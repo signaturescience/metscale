@@ -112,6 +112,35 @@ rule move_samples_to_dir:
 ##################################################
 # post processing: create the final HTML report
 
+
+combined_output = "{sample_mv}/combined_output.json".format(sample_mv= '{sample_mv}')
+print("combined_output: "+str(combined_output))
+
+def get_sample_dir(wildcards):
+    sample_path = os.getcwd()  + "/" + str(wildcards)
+    print("get_sample_dir: "+str(sample_path))
+    return sample_path
+
+
+post_processing_dir = join(os.getcwd(), "post_processing")
+
+
+rule generate_combined_output:
+    '''
+    create the combined output json file
+    '''
+    output:
+        combined_output
+    params:
+        input_dir = get_sample_dir,
+        post_prcoessing_dir = post_processing_dir,
+    message:
+        '--- Generating combined output file'
+    script:
+        "create_combined_output.py"
+
+
+
 #abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}'))
 abudance_graph = post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}')
 abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
@@ -120,18 +149,12 @@ print("abudance_graph: "+str(abudance_graph))
 print("abudance_graph_sing: "+str(abudance_graph_sing))
 
 
-def get_sample_dir(wildcards):
-    sample_path = os.getcwd()  + "/" + str(wildcards)
-    print("get_sample_dir: "+str(sample_path))
-    return sample_path
-
-print("cwd: "+str(os.getcwd()))
-post_processing_dir = join(os.getcwd(), "post_processing")
-
 rule generate_abundance_graph:
     '''
     create abundance graph from R and py scripts
     '''
+    input:
+        combined_output
     output:
         abudance_graph
     params:
@@ -140,8 +163,7 @@ rule generate_abundance_graph:
     message: 
         '--- Generating Abundance Graph'
     script:
-        "create_combined_output.py"
-        "create_abundance_graph.py"
+        "create_abundance_graph.py "
 
 
 
