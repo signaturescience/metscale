@@ -163,7 +163,7 @@ rule generate_abundance_graph:
     message: 
         '--- Generating Abundance Graph'
     script:
-        "create_abundance_graph.py "
+        "create_abundance_graph.py"
 
 
 
