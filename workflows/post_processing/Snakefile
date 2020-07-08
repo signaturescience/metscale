@@ -112,7 +112,8 @@ rule move_samples_to_dir:
 ##################################################
 # post processing: create the final HTML report
 
-abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}'))
+#abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}'))
+abudance_graph = post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}')
 abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
 
 print("abudance_graph: "+str(abudance_graph))
@@ -140,7 +141,7 @@ rule generate_abundance_graph:
         '--- Generating Abundance Graph'
     script:
         "create_combined_output.py"
-
+        "create_abundance_graph.py"
 
 
 

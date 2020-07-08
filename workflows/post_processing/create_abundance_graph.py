@@ -241,7 +241,8 @@ def create_graph(sorted_data, workflow_cols, data_dir):
     grey_patch = mpatches.Patch(color='grey', label='The grey data')
     white_patch = mpatches.Patch(color='white', label='The white data')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., handles=[red_patch, orange_patch, yellow_patch, green_patch, blue_patch, grey_patch, white_patch])
-    plt.savefig("abundance_scatter_plot_clh.png", dpi=100, bbox_inches='tight')
+    abundance_path = os.path.join(data_dir, "abundance_scatter_plot.png")
+    plt.savefig(abundance_path, dpi=100, bbox_inches='tight')
 
 
 def get_species_name(ids, data):
@@ -267,12 +268,15 @@ def get_all_rows_with_values(abundance_df):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data", help="data dir")
-    parser.add_argument("--post", help="post processing dir")
-    args = parser.parse_args()
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument("--data", help="data dir")
+    #parser.add_argument("--post", help="post processing dir")
+    #args = parser.parse_args()
+    #data_path = args.data
 
-    combined_output_path = args.data + "/combined_output.json"
+    data_path = snakemake.params[0]
+    #post_processing_path = snakemake.params[1]
+    combined_output_path = os.path.join(data_path, "combined_output.json")
     with open(combined_output_path) as json_file:
         data = json.load(json_file)
 
@@ -286,5 +290,5 @@ if __name__ == '__main__':
     #abundance_df.loc[('1318_2')]
     #sorted_data = abundance_df.loc[(abundance_df['Bracken'] > 0) & (abundance_df['Kaiju'] > 0) & (abundance_df['Kraken2'] > 0) & (abundance_df['Mash'] > 0) & (abundance_df['Sourmash'] > 0)]
 
-    create_graph(sorted_abundance_df, workflow_cols, args.data)  
+    create_graph(sorted_abundance_df, workflow_cols, data_path)  
     print("Done")

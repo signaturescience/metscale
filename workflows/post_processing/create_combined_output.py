@@ -14,10 +14,13 @@ if __name__ == '__main__':
 #   subprocess.call (["Rscript", "process_output.R", args.input, args.post])
     input = snakemake.params[0]
     print("input: "+str(input))
+
     post_processing = snakemake.params[1]
     print("pp: "+str(post_processing))
+    
     os.chdir(post_processing)
     print(os.getcwd())
+    
     path_to_script = os.path.join(post_processing, "process_output.R")
     subprocess.call (["Rscript", "process_output.R", input, post_processing])
     input_str = post_processing + "/combined_output.json"
