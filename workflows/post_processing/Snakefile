@@ -110,19 +110,16 @@ rule move_samples_to_dir:
 
 
 ##################################################
-# post processing: create the final HTML report
+# post processing: create combined output json file
 
 
 combined_output = "{sample_mv}/combined_output.json".format(sample_mv= '{sample_mv}')
-print("combined_output: "+str(combined_output))
+post_processing_dir = join(os.getcwd(), "post_processing")
+
 
 def get_sample_dir(wildcards):
     sample_path = os.getcwd()  + "/" + str(wildcards)
-    print("get_sample_dir: "+str(sample_path))
     return sample_path
-
-
-post_processing_dir = join(os.getcwd(), "post_processing")
 
 
 rule generate_combined_output:
@@ -141,12 +138,14 @@ rule generate_combined_output:
 
 
 
-#abudance_graph = join(data_dir, post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}'))
-abudance_graph = post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}')
-abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
+##################################################
+# post processing: create the abundance graph
 
-print("abudance_graph: "+str(abudance_graph))
-print("abudance_graph_sing: "+str(abudance_graph_sing))
+
+abudance_graph = post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}')
+#abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
+
+
 
 
 rule generate_abundance_graph:
@@ -167,10 +166,16 @@ rule generate_abundance_graph:
 
 
 
+##################################################
+# post processing: create the HTML final report
+
+html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
 
 def get_sample_filenames(wildcards):
     sample_file_remove = output_dir_pattern.replace('{sample}','')
+    print("sample_file_remove: "+str(sample_file_remove))
     wildcard_sample = str(wildcards)
+    print("wildcard_sample: "+ wildcard_sample)
     sample_file = wildcard_sample.replace(sample_file_remove,"")
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
@@ -178,7 +183,6 @@ def get_sample_filenames(wildcards):
     return sample_file
 
 
-html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
 
 rule generate_r_script:
     '''
@@ -195,6 +199,8 @@ rule generate_r_script:
         '--- Generating Final Report'
     script:
         "summary-report.Rmd"
+
+
 
 
 
