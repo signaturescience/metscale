@@ -142,7 +142,7 @@ def create_abundance_df(data):
     vars_df['Species_Trim'] = vars_df['SpeciesName'] + " Trim:" + vars_df['Trim']
     vars_df = vars_df.drop(['SpeciesName', 'Trim'], axis=1)
     vars_df.set_index('Species_Trim', inplace=True)
-    vars_df.to_csv("var_df_large.csv")
+    #vars_df.to_csv("var_df_large.csv")
 
     #Create smailler dataset that we will use
     bracken_df = vars_df[(vars_df['Tool']=='Bracken')&(vars_df['Measure']=='new_est_reads')]
