@@ -41,6 +41,7 @@ input_dir_param <- snakemake@params[1]
 input_dir <- toString(input_dir_param)
 # Set sample name (parameterized)
 id <- snakemake@params[2]
+#input_dir <- snakemake@params[1]
 
 
 # setup and load necessary libraries
@@ -56,6 +57,7 @@ theme_set(theme_bw())
 <big>
 <big>
 Sample ID: <mark>**`r id`**</mark>
+Input dir: <mark>**`r input_dir`**</mark>
 </big>
 </big>
 
@@ -597,7 +599,7 @@ glue::glue("- **[{x_png}]({bx_png})**") %>%
 ```
 
 
-### Inline graphics (in the same order as above)
+### Inline graphic
 
 ```{r}
 knitr::include_graphics(x_png_full)

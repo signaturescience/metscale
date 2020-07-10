@@ -119,6 +119,7 @@ post_processing_dir = join(os.getcwd(), "post_processing")
 
 def get_sample_dir(wildcards):
     sample_path = os.getcwd()  + "/" + str(wildcards)
+    print("SP:" +str(sample_path))
     return sample_path
 
 
@@ -169,17 +170,15 @@ rule generate_abundance_graph:
 ##################################################
 # post processing: create the HTML final report
 
-html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
+html_output_file = post_processing['move_samples_to_dir']['out_pattern']
+print("html_output_file "+str(html_output_file))
 
 def get_sample_filenames(wildcards):
     sample_file_remove = output_dir_pattern.replace('{sample}','')
-    print("sample_file_remove: "+str(sample_file_remove))
     wildcard_sample = str(wildcards)
-    print("wildcard_sample: "+ wildcard_sample)
     sample_file = wildcard_sample.replace(sample_file_remove,"")
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
-    print("get_sample_filenames: "+str(sample_file))
     return sample_file
 
 
