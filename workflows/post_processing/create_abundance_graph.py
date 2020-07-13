@@ -286,9 +286,7 @@ if __name__ == '__main__':
     #we are going to sort by - all rows have a value greater than 0.
     sorted_abundance_df = get_all_rows_with_values(abundance_df)
 
-    #return 1318, 287, 542
-    #abundance_df.loc[('1318_2')]
     #sorted_data = abundance_df.loc[(abundance_df['Bracken'] > 0) & (abundance_df['Kaiju'] > 0) & (abundance_df['Kraken2'] > 0) & (abundance_df['Mash'] > 0) & (abundance_df['Sourmash'] > 0)]
 
     create_graph(sorted_abundance_df, workflow_cols, data_path)  
-    print("Done")
+    #print("Done")

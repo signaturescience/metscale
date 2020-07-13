@@ -10,16 +10,10 @@ if __name__ == '__main__':
 #    parser.add_argument("--input", help="input/data dir")
 #    parser.add_argument("--post", help="post_processing dir")
 #    args = parser.parse_args()
-#    print(args)
 #   subprocess.call (["Rscript", "process_output.R", args.input, args.post])
     input = snakemake.params[0]
-    print("input: "+str(input))
-
     post_processing = snakemake.params[1]
-    print("pp: "+str(post_processing))
-    
     os.chdir(post_processing)
-    print(os.getcwd())
     
     path_to_script = os.path.join(post_processing, "process_output.R")
     subprocess.call (["Rscript", "process_output.R", input, post_processing])
