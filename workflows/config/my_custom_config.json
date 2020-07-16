@@ -215,6 +215,12 @@
             # from metaspades to run prokka on
             "qual"      : ["2","30"],
         },
+        "functional_prokka_metatrans_with_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "functional_prokka_trans_with_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
         "functional_prokka_with_spades_workflow" : {
             # these parameters determine which contig params
             # from spades to run prokka on
