@@ -192,7 +192,7 @@
             "level" : "S",
             "threshold" : 0,
             # directory that has DBs
-            "bdb" : "Bracken_Kraken2_DB"
+            "bdb" : "minikraken_8GB_20200312"
         },
         "tax_class_mash_dist_workflow" : {
             "qual" : ["2","30"],
