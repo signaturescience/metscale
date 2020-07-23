@@ -1211,7 +1211,7 @@ kraken2_input_rev_sing = kraken2_input_pattern_sing.format(
             conf='{conf}'
 )
 
-kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] )
+kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] ) 
 kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
 
 kraken2_image = container_image_name(biocontainers, 'kraken2')
@@ -1222,7 +1222,6 @@ kraken2_report_sing = join(sing_dir, taxclass['kraken2']['report'])
 kraken2_report = join(data_dir, taxclass['kraken2']['report'])
 kraken2_db_sing = join(sing_dir, '{db}')
 
-
 rule kraken2:
     """
     we do something with kraken2 here
@@ -1231,7 +1230,7 @@ rule kraken2:
         fwd = kraken2_input_fwd,
         rev = kraken2_input_rev,
     output:
-        kraken2_ouput
+        kraken2_report
     message:
         '''--- Running kraken2.'''
     threads:
@@ -1279,9 +1278,7 @@ bracken_output_raw = bracken_output_pattern.format(
 
 bracken_output = bracken_input + bracken_output_raw
 bracken_output_sing = bracken_input_sing + bracken_output_raw
-
 bracken_image = container_image_name(biocontainers, 'bracken')
-
 
 def get_bracken_DB(wildcards):
     return join(sing_dir, wildcards.bdb)
