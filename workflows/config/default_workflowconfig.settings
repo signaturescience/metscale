@@ -184,7 +184,7 @@ config_default = {
             "level" : "S",
             "threshold" : 0,
             #directory that has DB dir. defaults to default dir
-            "bdb" : "Bracken_Kraken2_DB"
+            "bdb" : "minikraken_8GB_20200312"
         },
         "tax_class_mash_dist_workflow" : {
             "qual" : ["2","30"],
@@ -196,6 +196,9 @@ config_default = {
             #mash db
             "mash_db" : "RefSeq_10K_Sketches.msh",
         },
+        "tax_class_mtsv_workflow" : {
+            "qual" : ["2","30"],
+        },
         "functional_humann2_workflow" : {
             "qual" : ["2","30"],
         },
@@ -204,8 +207,11 @@ config_default = {
             # from megahit to run prokka on
             "qual"      : ["2","30"],
         },
-        "tax_class_mtsv_workflow" : {
-            "qual" : ["2","30"],
+        "functional_prokka_metatrans_with_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "functional_prokka_trans_with_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
         },
         "functional_prokka_with_metaspades_workflow" : {
             # these parameters determine which contig params
