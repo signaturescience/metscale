@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+from os.path import join,
 
 '''
 python -m pip install -U matplotlib
@@ -27,7 +28,9 @@ if __name__ == '__main__':
     subprocess.call (["Rscript", "-e", "taxizedb::db_download_ncbi()"])
     subprocess.call (["Rscript", "db_download_genbank.R"])
     subprocess.call (["Rscript", "db_download_uniprot.R"])
-    subprocess.call (["Rscript", "add_assembly_lookup.R "])
+    zip_file = join(args.post, "assemblyAccession_to_taxid.zip")
+    txt_file = join(args.post, "assemblyAccession_to_taxid.txt")
+    subprocess.call (["Rscript", "add_assembly_lookup.R", zip_file, txt_file])
     #process_str = "process_output.R " + args.input + " " + args.post
     #subprocess.call (["Rscript", process_str])
     #Rscript -e 'library(devtools); install_github("ropensci/taxizedb")'   #<- this install 0.1.9.93
