@@ -1,6 +1,6 @@
 import argparse
 import subprocess
-from os.path import join,
+from os.path import join
 
 '''
 python -m pip install -U matplotlib
