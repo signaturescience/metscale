@@ -1,5 +1,6 @@
 import json
 import subprocess
+import requests
 from shutil import copyfile
 from distutils.dir_util import copy_tree
 import urllib.request
@@ -18,6 +19,37 @@ workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_d
 CHOCOPLAN_DIR = "chocophlan_plus_viral"
 UNIREF_DIR ="uniref90"
 BRACKEN_DIR = "Bracken_Kraken2_DB"
+
+
+def download_file_from_google_drive(id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+
+    response = session.get(URL, params = { 'id' : id }, stream = True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = { 'id' : id, 'confirm' : token }
+        response = session.get(URL, params = params, stream = True)
+
+    save_response_content(response, destination)    
+
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+
+    return None
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+
 
 
 def reporthook(count, block_size, total_size):
@@ -105,7 +137,7 @@ def download_file(workflow, data, install_dir):
                         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
                         urllib.request.install_opener(opener)
                         urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
-                        if (file_name.endswith('.tgz') or file_name.endswith('.tar') or file_name.endswith('.tar.gz')):
+                        if (file_name.endswith('.tgz') or file_name.endswith('.tar.gz')):
                             untar_command = "tar -zxvf " + install_dir+"/" + file_name + " -C " + install_dir + " && rm -f " + install_dir+"/" + file_name
                             subprocess.run([untar_command], shell=True) 
                         elif (file_name.endswith('.gz') and not file_name.endswith('fq.gz')):
@@ -149,7 +181,14 @@ def download_file(workflow, data, install_dir):
                             copyfile(".."+ url.path, install_dir+ "/"+ file_name)
                         except OSError as e:
                             print('File not copied. Error: ' +str(e))
-                        
+            elif (url.scheme == "gdrive"):
+                if not (os.path.isfile(os.path.join(install_dir, file_name))):
+                    print("Downloading "+ file_name)
+                    destination = os.path.join(install_dir, file_name)
+                    try:
+                        download_file_from_google_drive(url.netloc, destination)
+                    except OSError as e:
+                        print("Failed download from GDrive for " + file_name)
                          
     
 def main_func(user_input, install_dir, file_list='config/offline_downloads.json'):   
