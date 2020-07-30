@@ -1,14 +1,16 @@
-FROM centos:8.2
+FROM centos:8
 
 RUN yum -y update
-RUN yum update groupinstall -y 'Development Tools'
-RUN yum -y install epel-release libarchive-devel squashfs-tools libseccomp-devel libuuid-devel openssl-devel
-RUN yum -y install git python-pip wget gcc R-core
+#RUN yum update groupinstall -y 'Development Tools'
+RUN yum -y --enablerepo=extras install epel-release
+RUN yum -y install squashfs-tools libseccomp-devel libuuid-devel openssl-devel
+RUN yum -y install python3-pip
+RUN yum -y install git wget gcc R-core
 #RUN pip install coverage nose nose-watch
 
 RUN export VERSION=1.14.6 OS=linux ARCH=amd64 && \
     wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
-    sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
+    tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
     rm go$VERSION.$OS-$ARCH.tar.gz
 
 RUN echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
@@ -17,12 +19,11 @@ RUN echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
 
 RUN export VERSION=3.2.0 &&  \
     wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz && \
-    tar -xzf singularity-${VERSION}.tar.gz && \
-    cd singularity
+    tar -xzf singularity-${VERSION}.tar.gz
 
-RUN ./mconfig && \
+RUN cd singularity && ./mconfig && \
     make -C ./builddir && \
-    sudo make -C ./builddir install
+    make -C ./builddir install
 
 
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
