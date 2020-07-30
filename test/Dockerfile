@@ -1,14 +1,29 @@
-FROM centos:6.10
+FROM centos:8.2
 
-RUN yum -y install epel-release libarchive-devel squashfs-tools
+RUN yum -y update
+RUN yum update groupinstall -y 'Development Tools'
+RUN yum -y install epel-release libarchive-devel squashfs-tools libseccomp-devel libuuid-devel openssl-devel
 RUN yum -y install git python-pip wget gcc R-core
 #RUN pip install coverage nose nose-watch
-RUN wget https://github.com/singularityware/singularity/releases/download/2.6.1/singularity-2.6.1.tar.gz &&\
-		tar xvf singularity-2.6.1.tar.gz &&\
-		cd singularity-2.6.1 &&\
-		./configure --prefix=/usr/local --sysconfdir=/etc &&\
-		make &&\
-		make install
+
+RUN export VERSION=1.14.6 OS=linux ARCH=amd64 && \
+    wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
+    sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
+    rm go$VERSION.$OS-$ARCH.tar.gz
+
+RUN echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+    echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
+    source ~/.bashrc
+
+RUN export VERSION=3.2.0 &&  \
+    wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz && \
+    tar -xzf singularity-${VERSION}.tar.gz && \
+    cd singularity
+
+RUN ./mconfig && \
+    make -C ./builddir && \
+    sudo make -C ./builddir install
+
 
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
 RUN bash Miniconda3-latest-Linux-x86_64.sh -b
@@ -16,9 +31,10 @@ RUN bash Miniconda3-latest-Linux-x86_64.sh -b
 ENV PATH="~/miniconda3/bin:$PATH"
 RUN conda create -y --name metag
 RUN source activate metag
-RUN conda config --add channels bioconda
+RUN conda config --add channels bioconda r conda-forge 
 RUN conda install datrie -y
-RUN conda install snakemake -y
+RUN conda install psutil -y
+RUN conda install snakemake=5.5.3  -y
 RUN conda install -c r r-essentials r-base r-ggplot2 -y
 
 RUN pip install osfclient
