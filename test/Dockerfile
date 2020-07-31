@@ -42,9 +42,9 @@ RUN conda install snakemake=5.5.3  -y
 RUN conda install -c r r-essentials r-base r-ggplot2 -y
 
 RUN pip install osfclient
-RUN git clone https://github.com/signaturescience/metagenomics.
+RUN git clone https://github.com/signaturescience/metagenomics
 
 RUN cd /metagenomics/workflows && python download_offline_files.py --workflow all
 
 WORKDIR /metagenomics/test
-CMD [ "sh", "-c", "source activate metag && python test_all_workflows.py"]
+CMD [ "sh", "-c", "source activate metag && export SINGULARITY_BINDPATH="data:/tmp" && python test_all_workflows.py"]
