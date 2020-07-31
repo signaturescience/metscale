@@ -30,7 +30,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal rule
     def test_2_taxclass_gather_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_gather_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_gather_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_k51.gather_unassigned.csv")
@@ -86,7 +86,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_6_taxclass_add_taxonnames_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_add_taxonnames_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_add_taxonnames_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()   
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2.kaiju_names.out")
@@ -114,7 +114,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_9_taxclass_visualize_krona_kaijureport_workflow(self):
-        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30.kaiju_genus_krona.html")
@@ -123,7 +123,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_10_taxclass_visualize_krona_kaijureport_filtered_workflow(self):
-        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filtered_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filtered_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30.kaiju_genus_krona_filtered1_total.html")
@@ -132,7 +132,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_11_taxclass_visualize_krona_kaijureport_filteredclass_workflow(self):
-        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filteredclass_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filteredclass_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30.kaiju_genus_krona_filtered1_classified.html")
@@ -141,7 +141,7 @@ class TestTaxonomicClassification(unittest.TestCase):
         
     #terminal workflow
     def test_12_taxclass_visualize_krona_species_summary_workflow(self):
-        snakemake_command = "snakemake -q --core --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_species_summary_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_species_summary_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2.kaiju_species_krona.html")
@@ -188,7 +188,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_16_taxclass_add_taxonnames_to_contigs_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_add_taxonnames_to_contigs_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_add_taxonnames_to_contigs_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_megahit.kaiju_names.out")
@@ -211,7 +211,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_18_taxclass_visualize_krona_kaijureport_contigs_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_contigs_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_contigs_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_megahit.kaiju_genus_krona.html")
@@ -222,7 +222,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_19_taxclass_visualize_krona_kaijureport_filtered_contigs_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filtered_contigs_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filtered_contigs_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_megahit.kaiju_genus_krona_filtered1_total.html")
@@ -233,7 +233,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_20_taxclass_visualize_krona_kaijureport_filteredclass_contigs_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_kaijureport_filteredclass_contigs_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_metaspades.kaiju_genus_krona_filtered1_classified.html")
@@ -244,7 +244,7 @@ class TestTaxonomicClassification(unittest.TestCase):
         
     #terminal workflow
     def test_21_taxclass_visualize_krona_species_summary_contigs_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_species_summary_contigs_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_visualize_krona_species_summary_contigs_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_metaspades.kaiju_species_krona.html")
@@ -255,7 +255,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_22_tax_class_kraken2_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_kraken2_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_kraken2_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_kraken2_minikraken_8GB_20200312_confidence0.report")
@@ -264,7 +264,7 @@ class TestTaxonomicClassification(unittest.TestCase):
  
     #terminal workflow
     def test_23_tax_class_krakenuniq_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_krakenuniq_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_krakenuniq_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_krakenuniq_minikraken_20171019_8GB_hll12_report")
@@ -273,7 +273,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_24_tax_class_bracken_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_bracken_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_bracken_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_kraken2_minikraken_8GB_20200312_confidence0_bracken_db-minikraken_8GB_20200312_r-100_l-S_t-0")
@@ -282,7 +282,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_25_tax_class_mash_dist_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_mash_dist_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_mash_dist_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads__trim2_RefSeq_10K_Sketches.msh_mash_distances.sorted.tab")
@@ -291,7 +291,7 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_26_tax_class_mash_screen_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_mash_screen_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_mash_screen_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_RefSeq_10K_Sketches.msh_mash_screen.tab")
@@ -300,26 +300,20 @@ class TestTaxonomicClassification(unittest.TestCase):
 
     #terminal workflow
     def test_27_tax_class_create_mtsv_db_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_create_mtsv_db_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_create_mtsv_db_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         dirname_1 = os.path.join(dirname, "data/data/Oct-28-2019/indices")
         self.assertTrue(os.path.isdir(dirname_1))
 
-
     #terminal workflow
     def test_28_tax_class_run_mtsv_workflow(self):
-        snakemake_command = "snakemake -q --core=6 --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_run_mtsv_workflow"
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_tax_classification_workflow.json tax_class_run_mtsv_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd()
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_MTSV/Analysis/analysis.cfg")
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_MTSV/Analysis/analysis.cfg")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
-
-
-        
-
-
 
 
 if __name__ == "__main__":
