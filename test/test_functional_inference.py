@@ -17,6 +17,7 @@ class TestFunctionalInference(unittest.TestCase):
         os.chdir("../workflows/")
         os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
         
+    #terminal workflow
     def test_1_functional_inference_prokka_with_megahit_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_prokka_with_megahit_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -25,6 +26,7 @@ class TestFunctionalInference(unittest.TestCase):
         filedir_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation")
         self.assertTrue(os.path.isdir(filedir_1) and os.path.isdir(filedir_2))
         
+    #terminal workflow
     def test_2_functional_inference_prokka_with_metaspades_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_prokka_with_metaspades_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -33,6 +35,7 @@ class TestFunctionalInference(unittest.TestCase):
         filedir_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_metaspades.prokka_annotation")
         self.assertTrue(os.path.isdir(filedir_1) and os.path.isdir(filedir_2))
         
+    #terminal workflow
     def test_3_functional_inference_abricate_with_megahit_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_abricate_with_megahit_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -40,7 +43,8 @@ class TestFunctionalInference(unittest.TestCase):
         filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_megahit.abricate_vfdb.csv")
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_megahit.abricate_vfdb.csv")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))        
-     
+
+    #terminal workflow 
     def test_4_functional_inference_abricate_with_metaspades_workflow(self):    
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_abricate_with_metaspades_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -49,6 +53,7 @@ class TestFunctionalInference(unittest.TestCase):
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_metaspades.abricate_vfdb.csv")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
         
+    #terminal workflow
     def test_5_functional_inference_with_srst2_workflow(self):    
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_with_srst2_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -60,6 +65,7 @@ class TestFunctionalInference(unittest.TestCase):
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and 
         os.path.isfile(filename_3) and os.path.isfile(filename_4))
        
+    #terminal workflow
     def test_6_functional_prokka_with_spades_workflow(self):    
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_prokka_with_spades_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -68,6 +74,17 @@ class TestFunctionalInference(unittest.TestCase):
         filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_spades.prokka_annotation")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2))
 
+    #terminal workflow 
+    def test_7_functional_inference_abricate_with_spades_workflow(self):    
+        snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_functional_inference.json functional_abricate_with_spades_workflow"
+        subprocess.run([snakemake_command], shell=True)
+        dirname = os.getcwd()
+        filename_1 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_spades.abricate_card.csv")
+        filename_2 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim2_spades.abricate_vfdb.csv")
+        filename_3 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_spades.abricate_card.csv")
+        filename_4 = os.path.join(dirname,  "data/SRR606249_subset10_1_reads_trim30_spades.abricate_vfdb.csv")
+        self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and 
+        os.path.isfile(filename_3) and os.path.isfile(filename_4))
 
 
 if __name__ == '__main__':

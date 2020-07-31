@@ -13,7 +13,7 @@ from socket import error as SocketError
 from snakemake.io import expand
 
 
-workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'post_processing', 'all']  #keep all at the end of the list
+workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'all']  #keep all at the end of the list
 
 CHOCOPLAN_DIR = "chocophlan_plus_viral"
 UNIREF_DIR ="uniref90"
