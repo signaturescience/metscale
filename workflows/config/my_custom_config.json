@@ -82,6 +82,12 @@
             # which metagenome assembler to get input from
             "multiqc_assembler" :  ["megahit","metaspades"],
         },
+        "assembly_metaquast_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "assembly_multiqc_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
         "comparison_reads_workflow": {
             # these parameters determine which reads
             # the comparison workflow will be run on
