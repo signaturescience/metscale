@@ -157,6 +157,82 @@ rule assembly_rnaspades:
         'mv /{sing_dir}/{params.assembly_rnaspades_outprefix_wc}/transcripts.fasta /{params.rnaspades_output_expanded} '
         
 
+
+
+###################################
+# Assembly: metaquast statistics with rnaspades
+
+assembly_metaquast_rnaspades_output = join(data_dir,assembly['assembly_patterns']['metaquast_rnaspades_pattern'], "report.html")
+assembly_metaquast_rnaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['metaquast_rnaspades_pattern'])
+assembly_metaquast_threads = assembly['assembly_patterns']['metaquast_rnaspades_threads']
+metaquast_image = container_image_name(biocontainers, 'quast')
+
+
+assembly_metaquast_ref = assembly['assembly_patterns']['metaquast_rnaspades_ref']
+assembly_metaquast_ref_str = join(sing_dir, assembly_metaquast_ref)
+
+assembly_metaquast_rnaspades_input = assembly_rnaspades_output
+assembly_metaquast_rnaspades_input_sing = assembly_rnaspades_output_sing
+
+
+rule assembly_metaquast_rnaspades:
+    """
+    Compute assembly statistics with metaquast from rnaspades
+    """
+    input:
+        assembly_metaquast_rnaspades_input
+    output:
+        assembly_metaquast_rnaspades_output
+    params:
+        metaquast_input_sing = assembly_metaquast_rnaspades_input_sing,
+        metaquast_output_sing = assembly_metaquast_rnaspades_output_sing,
+        metaquast_ref_db = assembly_metaquast_ref_str
+    message: 
+        '--- Calculating assembly statistics with metaquast'
+    threads:
+        assembly_metaquast_threads
+    singularity:
+        metaquast_image
+    shell:
+        'export LC_ALL=C && '
+        'metaquast.py {params.metaquast_input_sing} '
+        '-R {params.metaquast_ref_db} --fragmented --gene-finding '
+        '-t {threads} -o {params.metaquast_output_sing} '
+
+
+
+###################################
+# Assembly: multiqc with rnaspades
+
+assembly_multiqc_rnaspades_input = assembly_metaquast_rnaspades_output
+assembly_multiqc_rnaspades_input_sing = assembly_metaquast_rnaspades_output_sing
+assembly_multiqc_rnaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['multiqc_rnaspades_pattern'])
+assembly_multiqc_rnaspades_output = join(data_dir, assembly['assembly_patterns']['multiqc_rnaspades_pattern'])
+assembly_multiqc_rnaspades_output_dir = join(sing_dir,assembly['assembly_patterns']['multiqc_rnaspades_dir_pattern'])
+
+
+rule assembly_multiqc_rnaspades:
+    '''
+    Compute multiqc statistics with metaquast rnaspades output
+    '''
+    input:
+        assembly_multiqc_rnaspades_input
+    output:
+        assembly_multiqc_rnaspades_output
+    message:
+        '--- Calculating assmebly statistics with multiqc'
+    params:
+        input_files = assembly_multiqc_rnaspades_input_sing,
+        output_files = assembly_multiqc_rnaspades_output_sing,
+        output_dir =  assembly_multiqc_rnaspades_output_dir
+    singularity:
+        multiqc_image
+    shell:
+        'multiqc {params.input_files} -n {params.output_files} -o {params.output_dir}'
+
+
+
+
 ###################################
 # Assembly: spades
 assembly_spades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['spades_pattern'])
@@ -568,6 +644,29 @@ rule assembly_rnaspades_workflow:
               qual      = workflows['assembly_rnaspades_workflow']['qual'],
               direction = directions,
       )
+
+rule assembly_rnaspades_metaquast_workflow:
+    '''
+    Build rule: trigger metaquast on RNA spades
+    '''
+    input:
+        expand( assembly_metaquast_rnaspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_metaquast_rnaspades_workflow']['qual'],
+                direction = directions,
+        )
+
+rule assembly_rnaspades_multiqc_workflow:
+    '''
+    Build rule: trigger metaquast on RNA spades
+    '''
+    input:
+        expand( assembly_multiqc_rnaspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_multiqc_rnaspades_workflow']['qual'],
+                direction = directions,
+        )
+
 
 rule assembly_spades_workflow:
     """
