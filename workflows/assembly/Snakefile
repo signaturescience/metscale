@@ -220,7 +220,7 @@ rule assembly_multiqc_rnaspades:
     output:
         assembly_multiqc_rnaspades_output
     message:
-        '--- Calculating assmebly statistics with multiqc'
+        '--- Calculating assembly statistics with multiqc'
     params:
         input_files = assembly_multiqc_rnaspades_input_sing,
         output_files = assembly_multiqc_rnaspades_output_sing,
