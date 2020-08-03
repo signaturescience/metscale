@@ -17,7 +17,7 @@ class TestReadFiltering(unittest.TestCase):
     def setUp(self):
         os.chdir("../workflows/")
         os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
-       
+    '''
     def test_1_read_filtering_pretrim_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_pretrim_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -35,14 +35,17 @@ class TestReadFiltering(unittest.TestCase):
         filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_2_fastqc.zip")
         filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_1_fastqc.zip")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )
-        
+    '''   
+
+    #terminal
     def test_3_read_filtering_multiqc_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_multiqc_workflow"
         subprocess.run([snakemake_command], shell=True)
         dirname = os.getcwd() 
         filename = os.path.join(dirname, "data/SRR606249_subset10_1_reads_fastqc_multiqc_report.html")
         self.assertTrue(os.path.isfile(filename) )
-        
+
+    '''    
     def test_4_read_filtering_khmer_interleave_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_interleave_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -58,8 +61,9 @@ class TestReadFiltering(unittest.TestCase):
         filename_1 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim30_subset10_interleaved_reads.fq.gz")
         filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_subset10_interleaved_reads.fq.gz")  
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2)) 
+    '''
         
-        
+    #terminal rule
     def test_6_read_filtering_khmer_split_interleaved_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_split_interleaved_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -70,7 +74,7 @@ class TestReadFiltering(unittest.TestCase):
         filename_4 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2_subset10_1.fq.gz")  
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3) and os.path.isfile(filename_4) )  
          
-        
+    #terminal rule
     def test_7_read_filtering_khmer_count_unique_kmers_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_readfilt_workflow.json read_filtering_khmer_count_unique_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
