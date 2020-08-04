@@ -1,6 +1,6 @@
 Bootstrap: yum
-OSVersion: 8
-MirrorURL: http://mirror.centos.org/centos-8/8/BaseOS/$basearch
+OSVersion: 6
+MirrorURL: http://mirror.centos.org/centos-6/6.10/os/$basearch
 Include: yum
 
 
@@ -14,29 +14,19 @@ Include: yum
 	
 	mkdir /metag
 	cd /metag
-
-	export VERSION=1.14.6 OS=linux ARCH=amd64 && \
-    wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
-    tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
-    rm go$VERSION.$OS-$ARCH.tar.gz
-
-    GOPATH="$HOME/go"
-	PATH="/usr/local/go/bin:$PATH:$GOPATH/bin"	
-
-	export VERSION=3.2.0 &&  \
-    wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-$VERSION.tar.gz && \
-    tar -xzf singularity-${VERSION}.tar.gz
-
-    cd singularity && ./mconfig && \
-    make -C ./builddir && \
-    make -C ./builddir install
-
-
+	
+	wget https://github.com/singularityware/singularity/releases/download/2.6.1/singularity-2.6.1.tar.gz &&\
+		tar xvf singularity-2.6.1.tar.gz &&\
+		cd singularity-2.6.1 &&\
+		./configure --prefix=/usr/local --sysconfdir=/etc &&\
+		make &&\
+		make install
+	cd /metag
+	rm singularity-2.6.1.tar.gz	
 	git clone https://github.com/signaturescience/metagenomics.git
 	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
 	bash Miniconda3-latest-Linux-x86_64.sh -b -p/metag/miniconda3
 	rm Miniconda3-latest-Linux-x86_64.sh
-	
 	PATH="/metag/miniconda3/bin:$PATH"
 	conda create -y --name metag
     . /metag/miniconda3/bin/activate metag
