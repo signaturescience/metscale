@@ -35,12 +35,13 @@ Because of permission issues it may be necessary to execute the container as roo
 
 sudo singularity build --sandbox centos.simg centos.def
 
-singularity exec --writable centos.simg  mkdir /metag/metagenomics/workflows/data
+singularity exec --writable centos.simg  mkdir /metag/metagenomics/workflows/data <-?? not sure what for
 
 sudo singularity shell --writable --bind data:/metag/metagenomics/workflows/data   centos.simg
+Where data is the host OS Dir that you want the data on and the second dir is the path to the guest OS dir.
 
-. /metag/miniconda3/bin/activate metag
+. /metag/miniconda3/bin/activate metag  <- not required
 
-snakemake --use-singularity  --verbose -p --singularity-args "-H /" read_filtering_posttrim_workflow
+snakemake --use-singularity  --verbose -p --singularity-args "-H /" read_filtering_posttrim_workflow  <-not required?
 
 Tried to create an image then build a sandbox from it. Getting some problems with snakemake not seeing singularity.
