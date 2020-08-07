@@ -494,6 +494,9 @@ rule srst2_with_raw_reads:
 humann2_image = container_image_name(biocontainers, 'humann2') 
 humann2_threads = inference['humann2']['threads']
 humann2_output = join(data_dir, '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv')
+tmp_bowtie2 = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann2_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bowtie2.txt')
+tmp_bugs = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann2_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bugs_list.tsv')
+tmp_dir = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann2_temp') 
 nucleotide_db = join(sing_dir, inference['humann2']['nucleotide_db'])
 protein_db = join(sing_dir, inference['humann2']['protein_db'])
 
@@ -526,9 +529,10 @@ rule run_humann2:
         out_folder = sing_dir,
         nucleotide_db = nucleotide_db,
         protein_db = protein_db,
-        threads = humann2_threads
-#    threads:
-#        humann2_threads
+        threads = humann2_threads,
+        bowtie2 = tmp_bowtie2,
+        bugs = tmp_bugs,
+        tmp_dir = tmp_dir
     singularity:
         humann2_image
     shell:
@@ -537,8 +541,10 @@ rule run_humann2:
         '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
         '--nucleotide-database  {params.nucleotide_db} '
         '--protein-database  {params.protein_db} '
-        '--remove-temp-output '
-        '--threads {params.threads} '
+        '--threads {params.threads} && '
+        'mv {params.bowtie2} {params.out_folder} && '
+        'mv {params.bugs} {params.out_folder} && '
+        'rm -rf {params.tmp_dir}'
 
 
 
