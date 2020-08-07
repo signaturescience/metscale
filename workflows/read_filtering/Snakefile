@@ -686,7 +686,7 @@ rule quality_trimming:
         'trimmomatic PE '
         '{params.quality_input_wc} '
         '{params.quality_output_wc} '
-        'ILLUMINACLIP:/{adapter_file_sing}:2:40:15 '
+        'ILLUMINACLIP:/{adapter_file_sing}:2:30:15:1:true '
         'LEADING:{params.qual} '
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
