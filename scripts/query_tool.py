@@ -66,7 +66,7 @@ ncbi_tax_levels = ['no rank', 'superkingdom', 'kingdom', 'subkingdom', 'superphy
                    'superclass', 'class', 'subclass', 'infraclass', 'cohort', 'subcohort', 'superorder', 'order',
                    'suborder', 'infraorder', 'parvorder', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe',
                    'genus', 'subgenus', 'section', 'subsection', 'series', 'species group', 'species subgroup',
-                   'species', 'subspecies', 'varietas', 'forma']
+                   'species', 'subspecies', 'varietas', 'forma', 'clade']
 hidden_args_help_strings = {}
 
 #
@@ -1174,7 +1174,7 @@ def ncbi_taxonid_to_lineage_vector(taxid, ncbi_dict):
             the lineage for <taxid> is not assigned at that level. If it is a different number, that is the taxon
             in that level of the lineage.
     '''
-    lineage = [-1,]*34
+    lineage = [-1,]*len(ncbi_tax_levels)
 
     tdata = ncbi_dict[taxid]
     lineage[rank2index(tdata[1])] = taxid
