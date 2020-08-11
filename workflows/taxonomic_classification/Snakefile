@@ -1,3 +1,4 @@
+
 '''
 Author: Phillip Brooks, Charles Reid
 Affiliation: UC Davis Lab for Data Intensive Biology
@@ -1979,7 +1980,7 @@ rule tax_class_run_mtsv_workflow:
               
 rule tax_class_create_mtsv_db_workflow:
     input:
-        expand( directory(mtsv_db),
+        expand( mtsv_db,
             sample   = sample_input_files,
             qual     = workflows['tax_class_mtsv_workflow']['qual'],
         )
