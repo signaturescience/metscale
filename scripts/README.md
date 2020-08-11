@@ -18,7 +18,7 @@ In its most basic form, the tool allows the user to input one or more taxon IDs 
 ## Initial Configuration and Setup
 
 ### Quick Start:
-After cloning the Metscale reposotory, some configuration is necessary before use. It can be done automatically using default settings by runing the command:
+After cloning the MetScale repository, some configuration is necessary before use. It can be done automatically using default settings by runing the command:
 ```
 python3 query_tool.py --setup
 ```
@@ -32,7 +32,7 @@ working_folder =
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 ```
-The command above first sets the value of the working_folder in this file to be the path to the scripts folder containing the DQT. After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the file needed to the path in the third setting above. Finally it decompresses the file `containment_dict.json.gz` to create the file in the middle entry abvoe.
+The command above first sets the value of `working_folder` in this file to be the path to the scripts folder containing the DQT. After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the file needed to the path in the third setting above. Finally it decompresses the file `containment_dict.json.gz` to create the file in the middle entry abvoe.
 
 These paths can be changed if needed, but by design they can be left alone except for periodic updates.
 
