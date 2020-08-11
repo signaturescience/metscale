@@ -46,5 +46,5 @@ RUN git clone https://github.com/signaturescience/metagenomics
 
 RUN cd /metagenomics/workflows && python download_offline_files.py --workflow all
 
-WORKDIR /metagenomics/test
-CMD [ "sh", "-c", "source activate metag && export SINGULARITY_BINDPATH="data:/tmp" && python test_all_workflows.py"]
+WORKDIR /metagenomics/workflows
+CMD source activate metag && export SINGULARITY_BINDPATH="data:/tmp" && python ../test/test_all_workflows.py
