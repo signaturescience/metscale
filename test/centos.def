@@ -1,48 +1,41 @@
 Bootstrap: yum
-OSVersion: 6
-MirrorURL: http://mirror.centos.org/centos-6/6.10/os/$basearch
+OSVersion: 7
+MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/os/$basearch
 Include: yum
-
 
 %post
 	yum -y install epel-release libarchive-devel squashfs-tools
 	yum -y install git python-pip wget gcc bzip2 tar
- 	yum -y install libXrender
- 	yum -y install libXext
- 	yum -y install dejavu-sans-mono-fonts
- 	
-	
+	yum -y install libXrender
+	yum -y install libXext
+	yum -y install dejavu-sans-mono-fonts
+        yum -y install singularity
+ 		
 	mkdir /metag
 	cd /metag
-	
-	wget https://github.com/singularityware/singularity/releases/download/2.6.1/singularity-2.6.1.tar.gz &&\
-		tar xvf singularity-2.6.1.tar.gz &&\
-		cd singularity-2.6.1 &&\
-		./configure --prefix=/usr/local --sysconfdir=/etc &&\
-		make &&\
-		make install
-	cd /metag
-	rm singularity-2.6.1.tar.gz	
 	git clone https://github.com/signaturescience/metagenomics.git
 	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh 
 	bash Miniconda3-latest-Linux-x86_64.sh -b -p/metag/miniconda3
 	rm Miniconda3-latest-Linux-x86_64.sh
+	
 	PATH="/metag/miniconda3/bin:$PATH"
 	conda create -y --name metag
-    . /metag/miniconda3/bin/activate metag
+	/metag/miniconda3/bin/activate metag
+	conda config --set allow_conda_downgrades true
 	conda config --add channels bioconda
+	conda config --add channels conda-forge
+	conda config --add channels r
 	conda install datrie -y
-	conda install snakemake -y
+	conda install psutil -y
+	conda install snakemake=5.5.3 -y
 	conda install -c r r-base -y
- 	conda install -c r r-essentials -y 
- 	conda install -c r r-ggplot2 -y
+	conda install -c r r-essentials -y 
+	conda install -c r r-ggplot2 -y
  	
 	pip install osfclient
-	ln -s /bin/sed /usr/bin/sed
-	
-	
-%environment	
+
+%environment
 	export LC_ALL=C
-	export PATH=/metag/miniconda3/bin:$PATH
-	export SINGULARITY_BINDPATH="data:/tmp"
-	
+        export PATH=/metag/miniconda3/bin:$PATH
+        export SINGULARITY_BINDPATH="data:/tmp"
+
