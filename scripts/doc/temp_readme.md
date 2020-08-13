@@ -41,48 +41,86 @@ If you are missing any of these files, you should re-clone the MetScale reposito
 
  
 ## Workflow Execution
-Workflows are executed according to the sample names and workflow parameters, as specified in the config file. For more information about config files, see the [Getting Started](https://github.com/signaturescience/metagenomics/wiki/04.-Getting-Started) wiki page.
+### Quick Start:
+After cloning the MetScale repository, some configuration is necessary before use. It can be done automatically using default settings by running the command:
+```
+python3 query_tool.py --setup
+```
+That will populate the setting `working_folder` in the default config file with the home folder of the DQT. Following that, the tool should be ready for use.
 
-After the config file is ready, be sure to specify the Singularity bind path from the `metagenomics/workflows` directory before running the read filtering workflow.
+### Detailed Settings
+The command above will automatically set the three important paths the DQT needs to run. Two of them are files: 1) the repository of taxon coverage information for the various MetScale tools, and 2) the full reference taxonomy maintained by NCBI. The third is a working folder for any outputs that are provided. Those are the first three settings listed in the config file:
+```
+[paths]
+working_folder = 
+path_to_containment_file = ${working_folder}/containment_dict.json
+path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
+```
+The command above first sets the value of `working_folder` in this file to be the path to the scripts folder containing the DQT. After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the file needed to the path in the third setting above. Finally it decompresses the file `containment_dict.json.gz` to create the file in the middle entry abvoe.
 
-```sh
-cd metagenomics/workflows
-export SINGULARITY_BINDPATH="data:/tmp"
+These paths can be changed if needed, but by design they can be left alone except for periodic updates.
+
+## Usage 
+*Note: a complete list of the commands and options is available using the `--help` flag at the command line:*
+
+```
+python3 query_tool.py --help
 ```
 
-You can then execute of the workflow through snakemake using the following command: 
+### Taxon ID Querying
 
-```sh
-snakemake --use-singularity {rules} {other options}
+The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The included metadata file includes many databases of interest, including several of tools in the Taxon Classification workflows and all versions of RefSeq through v98, and is described in more detail below.
+
+
+#### Details & Example
+
+The query tool can be run using the following command (for example):
+
+```
+python3 query_tool.py -t <taxid_source>
 ```
 
-The following rules are available for execution in the read filtering workflow (yellow stars indicate terminal rules): 
+Here, `<taxid_source>` can have one of three forms:
 
-![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/Read_Filtering_Rules.png)
+1. A file path to a text file with a list of line-separated taxon IDs. Excluding the newline and leading or trailing whitespace, each line must readily convert to an integer or the procedure will raise an error.
+2. The string `stdin` (i.e. `python3 query_tool.py -t stdin`). In this case a line-separated list (formatted as above) is expected from standard input. When an empty or all-whitespace line is encountered, input is terminated.
+3. A single integer representing a taxon ID. The procedure will run for only this taxon. Additionally, the output report will have a slightly different format than for multiple IDs.
 
-The read filtering rules and their parameters are listed under "workflows" in the `metagenomics/workflows/config/default_workflowconfig.settings` config file.
+**Example**:
 
-| Rule | Description |
-| ------------- | ------------- |
-| `read_filtering_pretrim_workflow` | FastQC generates quality reports for raw reads | 
-| `read_filtering_posttrim_workflow` | Trimmomatic trims raw reads, and FastQC generates quality reports for filtered reads | 
-| `read_filtering_multiqc_workflow` | MultiQC aggregates all FastQC outputs into a single report for each sample | 
-| `read_filtering_khmer_interleave_reads_workflow` | Khmer interleaves the quality trimmed, paired-end reads (forward and reverse) into a single *.fq.gz file | 
-| `read_filtering_khmer_count_unique_kmers_workflow` | Khmer counts the number of unique k-mers in the interleaved dataset |
-| `read_filtering_khmer_subsample_interleaved_reads_workflow` | Khmer subsamples a smaller percentage of the reads from the full interleaved dataset |
-| `read_filtering_khmer_split_interleaved_reads_workflow` | Khmer splits the subsampled interleaved read file into two paired-end read files | 
+<details><summary>(show example)</summary>
 
-For the read filtering workflow, rules can be run independently, or they can be run together by listing them back to back in the command as such:
+```
+(metag) :~$ python3 query_tool.py -t testtax.txt
 
-```sh
-snakemake --use-singularity read_filtering_pretrim_workflow read_filtering_posttrim_workflow read_filtering_multiqc_workflow read_filtering_khmer_interleave_reads_workflow read_filtering_khmer_count_unique_kmers_workflow read_filtering_khmer_subsample_interleaved_reads_workflow read_filtering_khmer_split_interleaved_reads_workflow
+DB Column Names:
+   1: minikraken_20171019_8GB
+   2: minikraken2_v2_8GB_201904_UPDATE
+   3: kaiju_db_nr_euk
+   4: NCBI_nucl_gb
+   5: NCBI_nucl_wgs
+   6: RefSeq_v98
+
+    taxid      rank 0 1 2 3 4 5
+  1913708   species - - 1 1 - -
+   980453   species - - - 1 - -
+   146582   species - - - 1 - -
+  1950923   species - - - - 1 -
+  1420363   species - - - 1 - -
+  1367599   species - - - 1 - -
+    48959   species - - - 1 - -
+  1594871   species - - - 1 - -
+    69507     genus - - - - - -
+   241522 subspecies - - - 1 - -
+  1068967   species - - - 1 - -
+  1007150   species - - - 1 - -
+   498356   no rank - 2 1 1 - -
+   
+   (...truncated...)
 ```
 
-Note that the default config will count the number of unique k-mers in the original interleaved dataset.
+</details>
 
-Additional options for snakemake can be found in the snakemake documentation: https://snakemake.readthedocs.io/en/stable/executable.html
-
-To specify your own parameters for this or any of the workflows prior to execution, see the [Workflow Architecture](https://github.com/signaturescience/metagenomics/wiki/11.-Workflow-Architecture) page for more information.
 
 ## Output
 After successful execution of the read filtering workflow, you will find all of your outputs in the `metagenomics/workflows/data/` directory. The output files generated with the test dataset were created with the default input file pattern of `{sample}_1_reads_{direction}.fq.gz`, so the outputs include the `{sample}_1_reads_*` pattern in their file names. If the default Illumina FASTQ naming convention or another one is used, then a pattern other than `{sample}_1_reads_*` will appear in the output file names. For the input file pattern of `{sample}_1_reads_{direction}.fq.gz`, the following files will be created for each sample and read direction:
