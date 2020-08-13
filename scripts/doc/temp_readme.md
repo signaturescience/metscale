@@ -5,8 +5,6 @@
 * [Required Files](#Required-Files)
 * [Workflow Execution](#Workflow-Execution)
 * [Additional Information](#Additional-Information)
-     * [Command Line Equivalents](#Command-Line-Equivalents)
-     * [Expected Output Files for the Example Dataset](#Expected-Output-Files-for-the-Example-Dataset)
 
 ## Workflow Overview 
 The Databse Query Tool is used to compare the contents of the reference databases used by the various taxonomic classification tools. Specifically, since the NCBI taxonomy is constantly changing and being updated, not all tools may be using the same version. Thus, comparing outputs from one tool to another requires accounting for differences in the coverage of their respective reference databases.
@@ -163,216 +161,57 @@ For the numeric values present in the matrix there are 3 possible outcomes:
 
 ## Additional Information
 
-### Command Line Equivalents
+### Inspecting and Editing Metadata
 
-To better understand how the workflows are operating, it may be helpful to see commands that could be used to generate equivalent outputs with the individual tools. Note that the file names in the below examples may not be exact replicates of the file naming conventions in the current workflows, but the commands are equivalent.
+The tool additionally contains several processes to update or change the metadata in `containment_dict.p`.
 
-The pre-trimming quality control step is equivalent to running FastQC with these commands:
-```sh
-fastqc {input_reads_1_fq.gz} -o {output_reads_1_fastqc}
-fastqc {input_reads_2_fq.gz} -o {output_reads_2_fastqc}
-fastqc SRR606249_subset10_1_reads.fq.gz -o SRR606249_subset10_1_reads_fastqc
-fastqc SRR606249_subset10_2_reads.fq.gz -o SRR606249_subset10_2_reads_fastqc
-```
+#### New Database Definitions
 
-Read filtering with a quality score threshold of 2 is equivalent to running Trimmomatic with these commands:
-```sh
-trimmomatic PE {input_reads_1_fq.gz} {input_reads_2_fq.gz} {trimmomatic_output_trim2_1_fq.gz} {trimmomatic_output_trim2_1_se} {trimmomatic_output_trim2_2_fq.gz} {trimmomatic_output_trim2_2_se} ILLUMINACLIP:adapters_combined_256_unique.fasta:2:40:15 LEADING:2 TRAILING:2 SLIDINGWINDOW:4:2 MINLEN:25
-trimmomatic PE SRR606249_subset10_1_reads.fq.gz SRR606249_subset10_2_reads.fq.gz SRR606249_subset10_trim2_1.fq.gz SRR606249_subset10_trim2_1_se SRR606249_subset10_trim2_2.fq.gz SRR606249_subset10_trim2_2_se ILLUMINACLIP:adapters_combined_256_unique.fasta:2:40:15 LEADING:2 TRAILING:2 SLIDINGWINDOW:4:2 MINLEN:25
-```
+To import a new database, the set of taxon IDs included must be contained somehow in a delimited text file (duplicates OK), which covers many common default metadata formats. If it does not exist, it must be created. A new database, therefore, must be specified by 1) a name, 2) a path to a delimited text file, 3) a format name specified in the config file. (Format specifications are documented in `dbqt_config`, but are simply a python tuple object containing `(<delimiter>, <column>, <# header rows to skip>)`. See `dbqt_config` for examples and additional documentation.)
 
-Read filtering with a quality score threshold of 30 is equivalent to running Trimmomatic with these commands:
-```sh
-trimmomatic PE {input_reads_1_fq.gz} {input_reads_2_fq.gz} {trimmomatic_output_trim30_1_fq.gz} {trimmomatic_output_trim30_1_se} {trimmomatic_output_trim30_2_fq.gz} {trimmomatic_output_trim30_2_se} ILLUMINACLIP:adapters_combined_256_unique.fasta:2:40:15 LEADING:30 TRAILING:30 SLIDINGWINDOW:4:30 MINLEN:25
-trimmomatic PE SRR606249_subset10_1_reads.fq.gz SRR606249_subset10_2_reads.fq.gz SRR606249_subset10_trim30_1.fq.gz SRR606249_subset10_trim30_1_se SRR606249_subset10_trim30_2.fq.gz SRR606249_subset10_trim30_2_se ILLUMINACLIP:adapters_combined_256_unique.fasta:2:40:15 LEADING:30 TRAILING:30 SLIDINGWINDOW:4:30 MINLEN:25
-```
+Before the metadata can be updated or appended, a roster of new databases must be specified. This can be done using either a config file or a tab-delimited text file in a specified form. (See comments in the default config file for how to use that. To see the specs for a roster as a tab-delimited text file, run `python3 query_tool.py --print_db_import_manifest_specs`.) In either case, an option is available to skip a particular database which can save time in parsing without heavy file editing.
 
-The post-trimming quality control step is the equivalent of running FastQC with these commands:
-```sh
-fastqc {input_trim2_1_fq.gz} -o {output_trim2_1_fastqc}
-fastqc {input_trim2_2_fq.gz} -o {output_trim2_2_fastqc}
-fastqc {input_trim30_1_fq.gz} -o {output_trim30_1_fastqc}
-fastqc {input_trim30_2_fq.gz} -o {output_trim30_2_fastqc}
-fastqc SRR606249_subset10_trim2_1.fq.gz -o SRR606249_subset10_trim2_1_fastqc
-fastqc SRR606249_subset10_trim2_2.fq.gz -o SRR606249_subset10_trim2_2_fastqc
-fastqc SRR606249_subset10_trim30_1.fq.gz -o SRR606249_subset10_trim30_1_fastqc
-fastqc SRR606249_subset10_trim30_2.fq.gz -o SRR606249_subset10_trim30_2_fastqc
-```
-The MultiQC step in the read filtering workflow is the equivalent of running this command (where each input file name is individually listed):
-```sh
-multiqc {output_reads_1_fastqc.zip} {output_reads_2_fastqc.zip} {output_trim2_1_fastqc.zip} {output_trim2_2_fastqc.zip} {output_trim30_1_fastqc.zip} {output_trim30_2_fastqc.zip} -n {sample_multiqc_fastqc_report}
-multiqc SRR606249_subset10_1_reads_fastqc.zip SRR606249_subset10_2_reads_fastqc.zip SRR606249_subset10_trim2_1_fastqc.zip SRR606249_subset10_trim2_2_fastqc.zip SRR606249_subset10_trim30_1_fastqc.zip SRR606249_subset10_trim30_2_fastqc.zip -n SRR606249_subset10_multiqc_fastqc_report
-```
+**RefSeq**: The exception to the database definition is RefSeq. In that case, a folder should be given rather than a file name. The tool recognizes this database name and will gather all the files in the folder and try to parse the names for RefSeq version numbers.  **The tool assumes that all files are in the form `RefSeq-release##.catalog.taxid`**. It uses python string splitting (not regex matching) to parse the version number, so filenames that are not in this form could cause an error.
 
-An equivalent MultiQC command could also be run by inputting all FastQC results in the directory (which in this case is from the same sample):
-```sh
-multiqc *_fastqc.zip -n {sample_multiqc_fastqc_report}
-multiqc *_fastqc.zip -n SRR606249_subset10_multiqc_fastqc_report
-```
+#### Commands
 
-The khmer interleave-reads.py script produces an interleaved file from each set of trimmed paired-end reads with the equivalent of these commands: 
-```sh
-interleave-reads.py {sample_trim2_1.fq.gz} {sample_trim2_2.fq.gz} --no-reformat -o {sample_trim2_interleave_reads.fq.gz} --gzip
-interleave-reads.py {sample_trim30_1.fq.gz} {sample_trim30_2.fq.gz} --no-reformat -o {sample_trim30_interleave_reads.fq.gz} --gzip
-interleave-reads.py SRR606249_subset10_trim2_1.fq.gz SRR606249_subset10_trim2_2.fq.gz --no-reformat -o SRR606249_subset10_trim2_interleave_reads.fq.gz --gzip
-interleave-reads.py SRR606249_subset10_trim30_1.fq.gz SRR606249_subset10_trim30_2.fq.gz --no-reformat -o SRR606249_subset10_trim30_interleave_reads.fq.gz --gzip
-```
+Four procedures dealing with the metadata are available at the command-line (corresponding command-line flag in parentheses):
 
-The khmer unique-kmers.py script estimates the number of unique k-mers within an interleaved file at specified k-mer lengths (default: k=21, k=31, k=51) with the equivalent of these commands: 
-```sh
-unique-kmers.py -k 21 {sample_trim2_interleave_reads.fq.gz} -R {sample_trim2_interleaved_uniqueK21.txt}
-unique-kmers.py -k 31 {sample_trim2_interleave_reads.fq.gz} -R {sample_trim2_interleaved_uniqueK31.txt}
-unique-kmers.py -k 51 {sample_trim2_interleave_reads.fq.gz} -R {sample_trim2_interleaved_uniqueK51.txt}
-unique-kmers.py -k 21 {sample_trim30_interleave_reads.fq.gz} -R {sample_trim30_interleaved_uniqueK21.txt}
-unique-kmers.py -k 31 {sample_trim30_interleave_reads.fq.gz} -R {sample_trim30_interleaved_uniqueK31.txt}
-unique-kmers.py -k 51 {sample_trim30_interleave_reads.fq.gz} -R {sample_trim30_interleaved_uniqueK51.txt}
-unique-kmers.py -k 21 SRR606249_subset10_trim2_interleaved_reads.fq.gz -R SRR606249_subset10_trim2_interleaved_uniqueK21.txt
-unique-kmers.py -k 31 SRR606249_subset10_trim2_interleaved_reads.fq.gz -R SRR606249_subset10_trim2_interleaved_uniqueK31.txt
-unique-kmers.py -k 51 SRR606249_subset10_trim2_interleaved_reads.fq.gz -R SRR606249_subset10_trim2_interleaved_uniqueK51.txt
-unique-kmers.py -k 21 SRR606249_subset10_trim30_interleaved_reads.fq.gz -R SRR606249_subset10_trim30_interleaved_uniqueK21.txt
-unique-kmers.py -k 31 SRR606249_subset10_trim30_interleaved_reads.fq.gz -R SRR606249_subset10_trim30_interleaved_uniqueK31.txt
-unique-kmers.py -k 51 SRR606249_subset10_trim30_interleaved_reads.fq.gz -R SRR606249_subset10_trim30_interleaved_uniqueK51.txt
-```
+* **Inspect Database Source Roster** (`-IFL`): Checks the source roster (however provided) for validity and prints the results to the console.
+* **Inspect Existing Taxon-Containment Metadata File (containment_dict.json)** (`-ICD`): Reads the default Metadata file (e.g. `containment_dict.p`) and prints a report of its contents to the console.
+* **Generate Metadata File Build Plan (i.e. Compare Source/Target)** (`-CMO`): Runs each of the two procedures above but does not print reports. Instead, compares the files in the source roster to the contents of the exsiting metadata file to identify which files from the roster should be imported (either to replace a database in the existing Metadata or as a new addition). Reports results to the console.
+* **Build Taxon-Containment Metadata File** (`-BCD`): Runs the above procedure to generate the build plan and then executes it. 
 
-The khmer sample-reads-randomly.py script uniformly subsamples reads from an interleaved file, using reservoir sampling. Note that the command line equivalent requires the exact number of subsampled reads to be specified (-N), so the read filtering workflow converts the specified percentage in the config file to a corresponding read number by multiplying it with the total number of reads in the sample. The following are the command line equivalents for subsampling reads:
-```sh
-sample-reads-randomly.py -N {10%_of_both_paired-ends_in_full_interleaved_file} -M {subsample_interleave_max_reads} -o {sample_trim2_subset_interleaved_reads.fq.gz} --gzip {sample_trim2_subset_interleaved_reads.fq.gz}
-sample-reads-randomly.py -N {10%_of_both_paired-ends_in_full_interleaved_file} -M {subsample_interleave_max_reads} -o {sample_trim30_subset_interleaved_reads.fq.gz} --gzip {sample_trim30_subset_interleaved_reads.fq.gz}
-sample-reads-randomly.py -N {number of reads representing a smaller percentage of the full interleaved file} -M 100000000 -o SRR606249_subset10_trim2_subset_interleaved_reads.fq.gz --gzip SRR606249_subset10_trim2_interleaved_reads.fq.gz 
-sample-reads-randomly.py -N {number of reads representing a smaller percentage of the full interleaved file} -M 100000000 -o SRR606249_subset10_trim30_subset_interleaved_reads.fq.gz --gzip SRR606249_subset10_trim30_interleaved_reads.fq.gz 
-```
+### Config File
 
-The khmer split-paired-reads.py script splits an interleaved file into two paired-end reads. The following command line equivalent is used to split the subsampled interleaved file into two paired-end reads:
-```sh
-split-paired-reads.py {sample_trim2_subset_interleaved_reads.fq.gz} -1 {sample_trim2_subset10_1.fq.gz} -2 {sample_trim2_subset10_2.fq.gz} --gzip
-split-paired-reads.py {sample_trim30_subset_interleaved_reads.fq.gz} -1 {sample_trim30_subset10_1.fq.gz} -2 {sample_trim30_subset10_2.fq.gz} --gzip
-split-paired-reads.py SRR606249_subset10_trim2_subset_interleaved_reads.fq.gz -1 SRR606249_subset10_trim2_subset10_1.fq.gz -2 SRR606249_subset10_trim2_subset10_2.fq.gz --gzip
-split-paired-reads.py SRR606249_subset10_trim30_subset_interleaved_reads.fq.gz -1 SRR606249_subset10_trim30_subset10_1.fq.gz -2 SRR606249_subset10_trim30_subset10_2.fq.gz --gzip
-```
 
-The khmer fastq-to-fasta.py script converts FASTQ files in the `metagenomics/workflows/data/` directory to FASTA files with equivalents of the following commands:
-```sh
-fastq-to-fasta.py -o {sample.fq.gz} {sample.fa}
-fastq-to-fasta.py -o SRR606249_subset10_1_reads.fq.gz SRR606249_subset10_1_reads.fa
-fastq-to-fasta.py -o SRR606249_subset10_2_reads.fq.gz SRR606249_subset10_2_reads.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim2_1.fq.gz SRR606249_subset10_1_reads_trim2_1.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim2_2.fq.gz SRR606249_subset10_1_reads_trim2_2.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim30_1.fq.gz SRR606249_subset10_1_reads_trim30_1.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim30_2.fq.gz SRR606249_subset10_1_reads_trim30_2.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim2_interleaved_reads.fq.gz SRR606249_subset10_1_reads_trim2_interleaved_reads.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim30_interleaved_reads.fq.gz SRR606249_subset10_1_reads_trim30_interleaved_reads.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim2_subset_interleaved_reads.fq.gz SRR606249_subset10_1_reads_trim2_subset10_interleaved_reads.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim30_subset_interleaved_reads.fq.gz SRR606249_subset10_1_reads_trim30_subset10_interleaved_reads.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim2_subset10_1.fq.gz SRR606249_subset10_1_reads_trim2_subset10_1.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim2_subset10_2.fq.gz SRR606249_subset10_1_reads_trim2_subset10_2.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim30_subset10_1.fq.gz SRR606249_subset10_1_reads_trim30_subset10_1.fa
-fastq-to-fasta.py -o SRR606249_subset10_trim30_subset10_2.fq.gz SRR606249_subset10_1_reads_trim30_subset10_2.fa
-```
+The tool relies on a config file for several key settings. Many of these settings can be overridden by command-line arguments (any conflicting command-line argument given will be prioritized), but values stored in the config will be used as defaults. The default config file is [`dbqt_config`](../blob/master/scripts/dbqt_config), though a different file can be given at the command line. 
 
-### Expected Output Files for the Example Dataset
+The file is read using the Python [`configparse`](https://docs.python.org/3.7/library/configparser.html) module, so the documentation of the file format can be found [here](https://docs.python.org/3.7/library/configparser.html#supported-ini-file-structure). 
 
-Below is a more detailed description of the output files expected in the `metagenomics/workflows/data/` directory after the read filtering workflow has been successfully run.
+#### Contents
 
-Using these example raw FASTQ files:
+The `[paths]` section specifies a few important paths for the tool:
 
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads.fq.gz` | `375 MB` |
-| `SRR606249_subset10_2_reads.fq.gz` | `368 MB` |
+* **Working Folder** (`working_folder`): Not strictly used if all other files and folders required by the tool are given explicitly, but it is a useful relative path for storing the NCBI taxonomy, any database files that are added, output files, etc... Can be overridden via command-line using `-wd` flag. (Defaults to the folder containing `query_tool.py`.) 
 
-The following files are produced by [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) after running the `read_filtering_pretrim_workflow` rule to generate quality reports on the raw reads:
+* **Containment Metadata File** (`path_to_containment_file`): The path to the desired pickle file with the taxon-containment metadata. Can be overridden via command-line using `-pf` flag. (Default: `scripts/pickle_dir`).
 
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_1_reads_fastqc.html` | `223 KB` |
-| `SRR606249_subset10_1_reads_1_reads_fastqc.zip` | `235 KB` |
-| `SRR606249_subset10_1_reads_2_reads_fastqc.html` | `224 KB` |
-| `SRR606249_subset10_1_reads_2_reads_fastqc.zip` | `238 KB` |
+* **NCBI Taxonomy Nodes File** (`path_to_ncbi_taxonomy_nodes`): The path to the downloaded NCBI-taxonomy `nodes.dmp` file. (No Default.)
 
-There are 5,400,000 reads of 101bp in length within these FastQC HTML reports.
+The `[import_locs]` section specifies a two more paths useful for importing new databases, particular those which might be regularly updated and re-imported:
 
-[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) generates the following files after running the `read_filtering_posttrim_workflow` rule with a quality score threshold of 2:
+* **Database Source Roster (Text-File)** (`path_to_db_import_manifest`): (OPTIONAL) The path to a tab-delimited text file containing a roster of databases and associated taxon list files. This can be given in addition to or instead of the roster via the config file. Can be overridden via command-line using `-dbs` flag.
 
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim2_1.fq.gz` | `381 MB` |
-| `SRR606249_subset10_1_reads_trim2_1_se` | `5 MB` |
-| `SRR606249_subset10_1_reads_trim2_2.fq.gz` | `374 MB` |
-| `SRR606249_subset10_1_reads_trim2_2_se` | `4 MB` |
-| `SRR606249_subset10_1_reads_trim2_trimmomatic_pe.log` | `364 MB` |
+* **RefSeq Folder** (`refseq_folder`): (OPTIONAL) The path to a folder containing text files for many refseq databases. This should ideally not be needed unless re-importing many old versions of RefSeq (though they are contained in the packaged containment_dict.json.gz). In that event, however, the entire set can be imported by specifying this single folder in the manifest or in the config file.
 
-[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) generates the following files after running the `read_filtering_posttrim_workflow` rule with a quality score threshold of 30:
+The remaining sections (`[formats]`, `[db_source_files]`, and `[db_source_formats]`) are used to define the specifications for any source files to be imported. This can be left empty if the only planned use is to query the included metadata. See [`dbqt_config`](../blob/master/scripts/dbqt_config) for documentation in comments about what each of these sections must contain.
 
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim30_1.fq.gz` | `327 MB` |
-| `SRR606249_subset10_1_reads_trim30_1_se` | `25 MB` |
-| `SRR606249_subset10_1_reads_trim30_2.fq.gz` | `313 MB` |
-| `SRR606249_subset10_1_reads_trim30_2_se` | `21 MB` |
-| `SRR606249_subset10_1_reads_trim30_trimmomatic_pe.log` | `359 MB` |
 
-[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) generates the following files after running the `read_filtering_posttrim_workflow` rule:
+### Command Line Arguments
 
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim2_1_fastqc.html` | `218 KB` |
-| `SRR606249_subset10_1_reads_trim2_1_fastqc.zip` | `228 KB` |
-| `SRR606249_subset10_1_reads_trim2_2_fastqc.html` | `222 KB` |
-| `SRR606249_subset10_1_reads_trim2_2_fastqc.zip` | `232 KB` |
-| `SRR606249_subset10_1_reads_trim30_1_fastqc.html` | `226 KB` |
-| `SRR606249_subset10_1_reads_trim30_1_fastqc.zip` | `238 KB` |
-| `SRR606249_subset10_1_reads_trim30_2_fastqc.html` | `228 KB` |
-| `SRR606249_subset10_1_reads_trim30_2_fastqc.zip` | `240 KB` |
+* __`--all_refseq_versions`__: RefSeq is treated differently than other databases in the tool. Since many versions are included by default, only the latest version is included in the output unless this option is given at the command-line.
+* __Logging__: the tool does extensive logging of the steps involved. That log can be sunk to a file using the `--logfile` option. It can also be made more or less verbose using the `--debug` (more) or '-qt' (less) or `-vqt` flags.
+* __`-o/--output`__: Specifies a file for the output of the procedure. If this is printing a report then it will print the report to the output file instead of the console. This applies to most of the procedures.
 
-There are 5,337,063 reads of 25-101bp in length within the FastQC HTML reports after conservative trimming (trim2) and 5,044,284 reads of 25-101bp in length after aggressive trimming (trim30).
-
-[MultiQC](https://multiqc.info/) produces the following HTML report of aggregated FastQC results, as well as a directory with supporting data files, after running the `read_filtering_multiqc_workflow` rule:
-
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_fastqc_multiqc_report.html` | `1181 KB` |
-| `SRR606249_subset10_1_reads_fastqc_multiqc_report_data` | `4 KB` |
-
-MultiQC allows all of the FastQC HTML reports to be visualized at one time. Compared to the raw reads, the quality of the example dataset improves slightly after trim2 and moderately after trim30. Overall, this dataset was of fairly high quality before and after trimming, so the filtered reads do not look drastically different than the raw reads. In a lower quality dataset, the difference between raw and filtered reads would be more pronounced.
-
-[Khmer](https://khmer.readthedocs.io/en/v2.1.2/user/scripts.html) is used within the read filtering workflow to process quality filtered reads. The following files are generated after interleaving paired-end reads with the khmer script interleave-reads.py, which is called by the `read_filtering_khmer_interleave_reads_workflow` rule:
-
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim2_interleaved_reads.fq.gz` | `719 MB` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz` | `605 MB` |
-
-There are 10,674,126 reads in the interleaved example dataset that was trimmed with a quality threshold of 2, and there are 10,088,568 reads in the interleaved example dataset that was trimmed with a quality threshold of 30. This is the expected result, since there were individually 5,337,063 reads in the paired-end files from trim2 (5,337,063 forward reads + 5,337,063 reverse reads = 10,674,126 total interleaved reads) and 5,044,284 reads in trim30 (5,044,284 forward reads + 5,044,284 reverse reads = 10,088,568 total interleaved reads).
-
-The number of unique k-mers with default lengths of k=21, k=31, and k=51 are estimated within an interleaved file using the khmer script unique-kmers.py. The following files are created when that script is called by the `read_filtering_khmer_count_unique_kmers_workflow` rule:
-
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim2_interleaved_uniqueK21.txt` | `1 KB` |
-| `SRR606249_subset10_1_reads_trim2_interleaved_uniqueK31.txt` | `1 KB` |
-| `SRR606249_subset10_1_reads_trim2_interleaved_uniqueK51.txt` | `1 KB` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_uniqueK21.txt` | `1 KB` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_uniqueK31.txt` | `1 KB` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_uniqueK51.txt` | `1 KB` |
-
-These are the number of unique k-mers recorded within the above text files, as estimated at different k-mer lengths from the original interleaved files (note that as the length of the k-mer size increased, the number of unique k-mers decreased):
-
-| File Name | Unique K-mer Count |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim2_interleaved_uniqueK21.txt` | `203,749,322` |
-| `SRR606249_subset10_1_reads_trim2_interleaved_uniqueK31.txt` | `201,383,388` |
-| `SRR606249_subset10_1_reads_trim2_interleaved_uniqueK51.txt` | `186,396,385` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_uniqueK21.txt` | `170,724,835` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_uniqueK31.txt` | `165,019,600` |
-| `SRR606249_subset10_1_reads_trim30_interleaved_uniqueK51.txt` | `148,673,196` |
-
-In cases where there is expected to be substantial redundancy in sequence information (beyond what is needed to capture the diversity of organisms within a sample), it may be helpful to work with a smaller percentage of the original dataset. The khmer script sample-reads-randomly.py can be used to down-sample a smaller percentage of the interleaved file with the `read_filtering_khmer_subsample_interleaved_reads_workflow` rule, which will generate the following files for the example dataset:
-
-| File Name | File Size |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads_trim2_subset10_interleaved_reads.fq.gz` | `144 MB` |
-| `SRR606249_subset10_1_reads_trim30_subset10_interleaved_reads.fq.gz` | `121 MB` |
-
-There are 2,134,824 reads in the subsampled `SRR606249_subset10_1_reads_trim2_subset10_interleaved_reads.fq.gz` dataset (2,134,824 subsampled reads / 10,674,126 reads in the original `SRR606249_subset10_1_reads_trim2_interleaved_reads.fq.gz` dataset = 20% of the original dataset) and 2,017,712 reads in the subsampled `SRR606249_subset10_1_reads_trim30_subset10_interleaved_reads.fq.gz` dataset (2,017,712 subsampled reads / 10,088,568 reads in the original `SRR606249_subset10_1_reads_trim30_interleaved_reads.fq.gz` dataset = 20% of the original dataset). Trimmomatic is not run again on the subsampled dataset, since the subsampling was performed on data that had already been trimmed.
-
-In this example, the original dataset was actually a subsample of the full Shakya dataset, so the nomenclature has multiple "subset" instances in the file name. The second instance of "subset" after its trim quality information is meant to indicate that it is a smaller subsample of the original dataset, and in this case the first instance of "subset" occurred because original sample name was named "SRR606249_subset10." 
+**Note:** Only one argument specifying a procedure can be specified at a time. These are the arguments whose short-hand is three capital letters (e.g. `-BCD`) or whose long-hand starts with `--cmd_` (e.g. `--cmd_inspect_filelist`).
