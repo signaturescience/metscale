@@ -155,9 +155,9 @@ DB Column Names:
 ```
 
 For the numeric values present in the matrix there are 3 possible outcomes:
-    1: Taxon ID is present in that database
-    2: Taxon ID is not present but it's species-level ancestor is
-    0: Neither is present
+* 1: Taxon ID is present in that database
+* 2: Taxon ID is not present but it's species-level ancestor is
+* 0: Neither is present
     
 *Note:* For taxon IDs above species level, only outcomes 1/0 are possible.
 
