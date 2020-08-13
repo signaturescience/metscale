@@ -1,4 +1,4 @@
-# Database Query Tool
+# Database Query Tool (DQT)
 
 ## Table of Contents
 * [Workflow Overview](#Workflow-Overview)
@@ -9,53 +9,36 @@
      * [Expected Output Files for the Example Dataset](#Expected-Output-Files-for-the-Example-Dataset)
 
 ## Workflow Overview 
-The tools within this workflow perform read filtering and adapter trimming with [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) version 0.36, quality assessment of paired-end Illumina reads with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) version 0.11.7 and [MultiQC](https://multiqc.info/) version 1.4, and additional read processing options with scripts from [Khmer](https://khmer.readthedocs.io/en/v2.1.2/user/scripts.html) version 2.1. To successfully run this workflow, it is assumed that you first ran through the [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install) and [Offline Setup](https://github.com/signaturescience/metagenomics/wiki/03.-Offline-Setup) pages of this documentation. 
+The Databse Query Tool is used to compare the contents of the reference databases used by the various taxonomic classification tools. Specifically, since the NCBI taxonomy is constantly changing and being updated, not all tools may be using the same version. Thus, comparing outputs from one tool to another requires accounting for differences in the coverage of their respective reference databases.
 
-![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/Read_Filtering_Flowchart.png)
+In its most basic form, the DQT allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID. The metadata about the taxa in all of the various databases is contained in a single json file called (by default) `containment_dict.json`. The tool also contains several algorithms to construct, examine, add to, update or replace this file. It additionally has several functions that interface with the NCBI taxonomy to facilitate interpretation.
+
+![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool.png)
 
 ## Required Files
-If you have not already, you will need to activate your metag environment and perform the [Offline Setup](https://github.com/signaturescience/metagenomics/wiki/03.-Offline-Setup) for the read filtering workflow before proceeding:
+If you have not already, you will need to clone the MetScale repository and activate your metag environment [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install) before proceeding:
 
 ```sh
 [user@localhost ~]$ source activate metag 
 
-(metag)[user@localhost ~]$ cd metagenomics/workflows 
+(metag)[user@localhost ~]$ cd metagenomics/scripts
 
-(metag)[user@localhost workflows]$ python download_offline_files.py --workflow test_files 
-
-(metag)[user@localhost workflows]$ python download_offline_files.py --workflow read_filtering
 ```
-
-### Singularity Images
-
-In the `metagenomics/container_images/` directory, you should see the following Singularity images that were created when running the _read_filtering_ or _all_ flag during the [Offline Setup](https://github.com/signaturescience/metagenomics/wiki/03.-Offline-Setup):
-
-| File Name | File Size |
-| ------------- | ------------- |
-| `trimmomatic_0.36--5.sif` | `76 MB` |
-| `fastqc_0.11.7--pl5.22.0_2.sif` | `107 MB` |
-| `multiqc_1.4--py35_0.sif` | `453 MB` |
-| `khmer_2.1--py35_0.sif` | `47 MB` |
 
 ### Input Files
 
-If you ran the setup with the _test_files_ and _read_filtering_ flags (or the _all_ flag), the following files should be present in the `metagenomics/workflows/data/` directory.
-
-| File Name | Description |
-| ------------- | ------------- |
-| `SRR606249_subset10_1_reads.fq.gz` | Forward reads, downloaded with the _test_files_ flag |
-| `SRR606249_subset10_2_reads.fq.gz` | Reverse reads, downloaded with the _test_files_ flag |
-| `adapters_combined_256_unique.fasta` | Adapter file downloaded with the _read_filtering_ flag |
+If you ran the MetScale installation correctly, the following files should be present in the `metagenomics/scripts` directory.
 
 | File Name | File Size | MD5 Checksum |
 | ------------- | ------------- | ------------- |
-| `SRR606249_subset10_1_reads.fq.gz` | `358 MB` | `44f730ecada62ee6bd4a3543e092c907` |
-| `SRR606249_subset10_2_reads.fq.gz` | `352 MB` | `0d469c0cc4e220e94e2c312f3187d34e` |
-| `adapters_combined_256_unique.fasta` | `26 KB` | `755f8f496747675bcdb56b90f7ac51a2` |
+| `databases.png` | `177 KB` | `a37ee46c79ddbf59421f961fa7e440fb` |
+| `DB_querytool.png` | `112 KB` | `f56f449cecc4851d85adac8e25f5eb0d` |
+| `dictionary_maker_parameters.py` | `3.5 KB` | `27db92f1cecec971f18dfaf693142a2a` |
+| `dictionary_maker.py` | `12 KB` | `175100ab02be48b65a2a21bd0c9c555b` |
+| `query_tool.py` | `1.9 KB` | `6e3829b603ddf6d492b35aff5fe871d0` | 
 
-If you are missing any of these files, you should re-run the appropriate offline setup command in the `metagenomics/workflows` directory, as per instructions in the [Offline Setup](https://github.com/signaturescience/metagenomics/wiki/03.-Offline-Setup). 
+If you are missing any of these files, you should re-clone the MetScale repository, as per instructions in [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install). 
 
-It is recommended that users edit and run custom configs based on their samples' [default](https://github.com/signaturescience/metagenomics/blob/master/workflows/config/my_custom_config.json) `{sample}_1_reads.fq.gz` or [Illumina](https://github.com/signaturescience/metagenomics/blob/master/workflows/config/illumina_custom_config.json) `{sample}_*_S*_L*_R1_001.fastq.gz` naming pattern.
  
 ## Workflow Execution
 Workflows are executed according to the sample names and workflow parameters, as specified in the config file. For more information about config files, see the [Getting Started](https://github.com/signaturescience/metagenomics/wiki/04.-Getting-Started) wiki page.
