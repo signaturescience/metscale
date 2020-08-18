@@ -74,9 +74,8 @@ The default usage of the tool is to give one or more taxon IDs and output a text
  8: NCBI_nucl_gb
  9: MTSV_Oct-28-2019
  10: RefSeq_v98
-
 ```
-All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user-end removal or addition of databases. These features are planned to be part of future releases. :) 
+All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user-end removal or addition of databases. These features are planned to be part of future releases. 
 
 #### Details & Example
 
@@ -164,8 +163,9 @@ For the numeric values present in the matrix there are 3 possible outcomes:
 * 1: Taxon ID is present in that database
 * 2: Taxon ID is not present but it's species-level ancestor is
 * -: Neither is present
+*Note:* For taxon IDs above species level, only outcomes 1/0 are possible.
 
-If only a single taxon ID is input, the DQT will output the rank of that taxon ID and a `Yes/No` response for containment in each database.
+If only a single taxon ID is input, the DQT will output the rank of that taxon ID and a `Yes` or `--` (No) response for containment in each database.
 ```
 (metag) :~$ python3 query_tool.py -t 10
 Taxon ID:         10 (rank: genus)
@@ -181,8 +181,6 @@ DB results:
                        MTSV_Oct-28-2019: --
                              RefSeq_v98: Yes
 ```
-
-*Note:* For taxon IDs above species level, only outcomes 1/0 are possible.
 
 A complete list of the commands and options is available using the `--help` flag at the command line:
 
