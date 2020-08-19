@@ -66,28 +66,15 @@ The default usage of the tool is to give one or more taxon IDs and output a text
 
 |Database|Metadata Key|Source|
 |:---|:---|:---|
-|RefSeq|RefSeq_v##|[NCBI RefSeq FTP](ftp://ftp.ncbi.nlm.nih.gov/refseq/release/release-catalog/archive/)|
-|Kraken2* |minikraken2_v2_8GB_201904_UPDATE |[Kraken2: minikraken2_v2 DB](ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz) |
-|Krakenuniq* |minikraken_20171019_8GB|[kraken1: minikraken_8GB `seqid2taxid.map`](https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map)|
-|Kaiju* |kaiju_db_nr_euk|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
-|GenBank|NCBI_nucl_gb|[NCBI accn2taxid (nucl_gb)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
-|GenBank (WGS/TSA)|NCBI_nucl_wgs|[NCBI accn2taxid (nucl_wgs)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
-|MetaPhlAn2|metaphlan_mpa_v20_m200|MetaPhlAn2 Bitbucket (new link needed)|
-|MTSV|MTSV_Oct-28-2019|[MTSV Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
+|RefSeq|`RefSeq_v##`|[NCBI RefSeq FTP](ftp://ftp.ncbi.nlm.nih.gov/refseq/release/release-catalog/archive/)|
+|Kraken2|`minikraken2_v2_8GB_201904_UPDATE`|[Kraken2: minikraken2_v2 DB](ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz) |
+|Krakenuniq|`minikraken_20171019_8GB`|[kraken1: minikraken_8GB `seqid2taxid.map`](https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map)|
+|Kaiju|`kaiju_db_nr_euk`|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
+|GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
+|GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
+|MetaPhlAn2|`metaphlan_mpa_v20_m200`|[MetaPhlAn2 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
+|MTSV|`MTSV_Oct-28-2019`|[MTSV Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
 
-
-```
- 1: minikraken_20171019_8GB
- 2: minikraken2_v2_8GB_201904_UPDATE
- 3: kaiju_db_nr_euk
- 4: MTSV_May-22-2019
- 5: MasonLab_Covid_Kraken_microDB_20200313
- 6: NCBI_nucl_wgs
- 7: metaphlan_mpa_v20_m200
- 8: NCBI_nucl_gb
- 9: MTSV_Oct-28-2019
- 10: RefSeq_v98
-```
 All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user-end removal or addition of databases. These features are planned to be part of future releases. 
 
 #### Details & Example
