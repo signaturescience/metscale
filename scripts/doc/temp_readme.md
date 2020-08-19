@@ -183,10 +183,20 @@ DB results:
                              RefSeq_v98: Yes
 ```
 
+## Additional Information
+
 A complete list of the commands and options is available using the `--help` flag at the command line:
 
 ```
 python3 query_tool.py --help
 ```
 
-## Additional Information
+### Logging Options:
+Options related to how much information the program prints while running:
+
+  `-qt`, `--quiet`      If given, disables logging to the console except for
+                        warnings or errors (overrides `--debug`)
+  -`vqt`, `--veryquiet` If given, disables logging to the console (overrides
+                        `--quiet` and `--debug`)
+  `--debug`             If given, enables more detailed logging useful in
+                        debugging.
