@@ -196,7 +196,9 @@ Options related to how much information the program prints while running:
 
   `-qt`, `--quiet`      If given, disables logging to the console except for
                         warnings or errors (overrides `--debug`)
+                        
   -`vqt`, `--veryquiet` If given, disables logging to the console (overrides
                         `--quiet` and `--debug`)
+                        
   `--debug`             If given, enables more detailed logging useful in
                         debugging.
