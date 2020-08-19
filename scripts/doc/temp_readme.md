@@ -9,7 +9,7 @@
 ## Workflow Overview 
 The Databse Query Tool is used to compare the contents of the reference databases used by the various taxonomic classification tools. Specifically, since the NCBI taxonomy is constantly changing and being updated, not all tools may be using the same version. Thus, comparing outputs from one tool to another requires accounting for differences in the coverage of their respective reference databases.In its most basic form, the DQT allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID, or that contain a species-level ancestor.
 
-![]()
+![](https://github.com/signaturescience/metagenomics-wiki/blob/master/documentation/figures/DQT%20v1.png)
 
 ## Required Files
 If you have not already, you will need to clone the MetScale repository and activate your metag environment [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install) before proceeding:
@@ -163,6 +163,7 @@ For the numeric values present in the matrix there are 3 possible outcomes:
 * 1: Taxon ID is present in that database
 * 2: Taxon ID is not present but it's species-level ancestor is
 * -: Neither is present
+
 *Note:* For taxon IDs above species level, only outcomes 1/0 are possible.
 
 If only a single taxon ID is input, the DQT will output the rank of that taxon ID and a `Yes` or `--` (No) response for containment in each database.
