@@ -64,14 +64,14 @@ The command `--setup` first sets the value of `working_folder` in this file to b
 
 The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The default queried databases include several of the tools in the Taxon Classification workflows and RefSeq_v98. The full list of databases is below.
 
-|Database|Metadata Key|Source|
+|Tool|Database Name|Source|
 |:---|:---|:---|
-|RefSeq|`RefSeq_v##`|[NCBI RefSeq FTP](ftp://ftp.ncbi.nlm.nih.gov/refseq/release/release-catalog/archive/)|
-|Kraken2|`minikraken2_v2_8GB_201904_UPDATE`|[Kraken2: minikraken2_v2 DB](ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz) |
+|RefSeq|`RefSeq_v98`|[NCBI RefSeq FTP](https://ftp.ncbi.nlm.nih.gov/refseq/release/release-catalog/archive/)|
+|Kraken2|`minikraken2_v2_8GB_201904_UPDATE`|[Kraken2: minikraken2_v2 DB](https://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz) |
 |Krakenuniq|`minikraken_20171019_8GB`|[kraken1: minikraken_8GB `seqid2taxid.map`](https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map)|
 |Kaiju|`kaiju_db_nr_euk`|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
-|GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
-|GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
+|GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
+|GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
 |MetaPhlAn2|`metaphlan_mpa_v20_m200`|[MetaPhlAn2 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
 |MTSV|`MTSV_Oct-28-2019`|[MTSV Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
 
