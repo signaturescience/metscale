@@ -59,60 +59,114 @@ for file in sample_input_files:
 sample_input_files = file_names
 if (sample_input_files == []):
     print("Warning: No input files found!")
+print("sample_input_files: "+str(sample_input_files))
 
 ###################################
 # Pretrimming code needed for convert_illumina_to_internal_format and pre_trimming_quality_assessment
 
-
-fq_fwd_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+if readfilt['read_patterns']['type'] == "pe":
+    fq_fwd_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
-fq_rev_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_rev_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
 
-fq_fwd_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_fwd_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
 
-fq_rev_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_rev_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
 
                      
-pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing, 
+    pre_trimming_inputs_sing = [ fq_fwd_pre_trimmed_sing, 
                         fq_rev_pre_trimmed_sing]
                         
-pre_trimming_inputs = [ fq_fwd_pre_trimmed, 
+    pre_trimming_inputs = [ fq_fwd_pre_trimmed, 
                         fq_rev_pre_trimmed]
+
+else:
+    fq_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}'))
+
+    fq_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}'))
+    pre_trimming_inputs_sing = [fq_pre_trimmed_sing]
+    pre_trimming_inputs = [fq_pre_trimmed]
 
 
 ###################################
-# Convert illumina files to internal file formats
+# Convert sample files to internal file  names - paired end
 
 
-def convert_illumina_input_files(wildcards):
+def convert_external_input_files(wildcards):
     input_file = join(data_dir, wildcards.sample + readfilt["quality_trimming"]["sample_file_ext"])
+    print("convert_input_files pe/input_file: "+str(input_file))
     return input_file
     
-def create_output_internal_format_fwd(wildcards):
-   return fq_fwd_pre_trimmed.format(**wildcards)
-
-def create_output_internal_format_rev(wildcards):
-   return fq_rev_pre_trimmed.format(**wildcards)
+def create_output_internal_format_fwd_pe(wildcards):
+    return fq_fwd_pre_trimmed.format(**wildcards)
 
 
-rule convert_external_to_internal_format:
+def create_output_internal_format_rev_pe(wildcards):
+    return fq_rev_pre_trimmed.format(**wildcards)
+
+
+
+rule convert_external_to_internal_format_pe:
     '''
-    Convert the external file format to our internal file format
+    Convert the external file names to our internal file names
     '''
     input:
-        convert_illumina_input_files
+        convert_external_input_files
     output:
         pre_trimming_inputs
     params:
-        dest_fwd = create_output_internal_format_fwd,
-        dest_rev = create_output_internal_format_rev,
+        dest_fwd = create_output_internal_format_fwd_pe,
+        search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"],
+    run:
+        src_fwd_str = str(input)
+        src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
+        #print("rev: "+str(src_rev_str))
+        #print("fwd: " +str(src_fwd_str))
+        shutil.copy(src_fwd_str, params.dest_fwd)
+    
+
+
+
+###################################
+# Convert sample files to internal file  names - single end
+
+
+def convert_external_input_files(wildcards):
+    input_file = join(data_dir, wildcards.sample + readfilt["quality_trimming"]["sample_file_ext"])
+    print("convert_external input_files_se/input_file: "+str(input_file))
+    return input_file
+    
+def create_output_internal_format_fwd_se(wildcards):
+    return fq_fwd_pre_trimmed.format(**wildcards)
+
+
+def create_output_internal_format_rev_se(wildcards):
+    return fq_rev_pre_trimmed.format(**wildcards)
+
+
+
+rule convert_external_to_internal_format_se:
+    '''
+    Convert the external file names to our internal file names
+    '''
+    input:
+        convert_external_input_files
+    output:
+        pre_trimming_inputs
+    params:
+        dest_fwd = create_output_internal_format_fwd_se,
+        dest_rev = create_output_internal_format_rev_se,
         search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"],
         replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
     run:
@@ -120,10 +174,6 @@ rule convert_external_to_internal_format:
         src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
         shutil.copy(src_fwd_str, params.dest_fwd)
         shutil.copy(src_rev_str, params.dest_rev)
-
-
-
-
 
 
 ###################################
@@ -136,28 +186,34 @@ target_ext = "_%s.zip"%(target_suffix)
 
 sample_file_ext = readfilt['quality_trimming']['sample_file_ext']
 
-
-pre_trimming_output_fwd = re.sub(sample_file_ext, target_ext, fq_fwd_pre_trimmed)
-pre_trimming_output_rev = re.sub(sample_file_ext, target_ext, fq_rev_pre_trimmed)
-
-pre_trimming_output_fwd_sing = re.sub(sample_file_ext, target_ext, fq_fwd_pre_trimmed_sing)
-pre_trimming_output_rev_sing = re.sub(sample_file_ext, target_ext, fq_rev_pre_trimmed_sing)
-
-pre_trimming_outputs = [pre_trimming_output_fwd,
+if readfilt['read_patterns']['type'] == "pe":
+    pre_trimming_output_fwd = re.sub(sample_file_ext, target_ext, fq_fwd_pre_trimmed)
+    pre_trimming_output_rev = re.sub(sample_file_ext, target_ext, fq_rev_pre_trimmed)
+    pre_trimming_output_fwd_sing = re.sub(sample_file_ext, target_ext, fq_fwd_pre_trimmed_sing)
+    pre_trimming_output_rev_sing = re.sub(sample_file_ext, target_ext, fq_rev_pre_trimmed_sing)
+    pre_trimming_outputs = [pre_trimming_output_fwd,
                         pre_trimming_output_rev]
-
-pre_trimming_outputs_sing = [pre_trimming_output_fwd_sing,
+    pre_trimming_outputs_sing = [pre_trimming_output_fwd_sing,
                         pre_trimming_output_rev_sing]
+else:
+    pre_trimming_output = re.sub(sample_file_ext, target_ext, fq_pre_trimmed)
+    pre_trimming_output_sing = re.sub(sample_file_ext, target_ext, fq_pre_trimmed_sing)
+    pre_trimming_outputs = [pre_trimming_output]
+    pre_trimming_outputs_sing = [pre_trimming_output_sing]
+print("pre_trimming_output: "+str(pre_trimming_output))
+
 
 fastqc_image = container_image_name(biocontainers, 'fastqc')
 
 def pre_trimming_qa_inputs(wildcards):
     # input already includes data/ prefix
+    print("pre_trimming_inputs_sing: "+str(pre_trimming_inputs_sing))
     pre_inputs_wc = [x.format(**wildcards) for x in pre_trimming_inputs_sing]
-
+    print("pre_inputs_wc: "+str(pre_inputs_wc))
     # for containers, turn prefix data/ into /data/
     pre_inputs_wc = ["/%s"%(x) for x in pre_inputs_wc]
     pre_inputs_wcs = " ".join(pre_inputs_wc)
+    print("pre_inputs_wc: "+str(pre_inputs_wc))
     return pre_inputs_wc
 
 def pre_trimming_qa_outputs(wildcards):
@@ -167,9 +223,10 @@ def pre_trimming_qa_outputs(wildcards):
     # for containers, turn prefix data/ into /data/
     pre_outputs_wc = ["/%s"%(x) for x in pre_outputs_wc]
     pre_outputs_wcs = " ".join(pre_outputs_wc)
+    print("pre_outputs_wcs: "+str(pre_outputs_wcs))
     return pre_outputs_wcs
 
-
+print("pre_trimming_inputs: "+str(pre_trimming_inputs))
 rule pre_trimming_quality_assessment:
     """
     Perform a pre-trimming quality check of the reads from the sequencer.

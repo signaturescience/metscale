@@ -15,22 +15,24 @@ config_default = {
             "pre_trimming_pattern"  : "{sample}_{direction}_reads",
             #
             #shakya glob pattern
-            "pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
+            #"pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
             # Illumina glob pattern
-            #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
+            "pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fq.gz",
             #
             # file pattern to locate reverse end string
             # we are searching from the right of the filename for the unique file pattern that is locates the reverse reads
             # for the shakya dataset that is 1_ for reverse_pe_pattern_search (forward read) 2_ for reverse_pe_pattern_replace (reverse read)
             # for Illumina that would be R1 for reverse_pe_pattern_search(forward read) R2 for reverse_pe_pattern_replace (reverse read)
-            "reverse_pe_pattern_search"  : "1_",
+            "reverse_pe_pattern_search"  : "R1",
             "reverse_pe_pattern_replace" : "2_",
             #
             # filename pattern for post-trimmed reads
             "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
             #
             # number of threads to use.
-            "threads" : 2
+            "threads" : 2,
+            #sample read file types se or pe
+            "type" : "se"
         },
         "quality_trimming" : {
             # 
