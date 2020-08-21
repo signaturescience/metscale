@@ -410,19 +410,19 @@ rule abricate_with_spades:
 ###################################
 # Functional Inference: SRST2
 
-srst2_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+srst2_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}', qual='{qual}'))
-srst2_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+srst2_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}', qual='{qual}'))
 srst2_post_trimming_inputs = [ srst2_fwd_post_trimmed, 
                         srst2_rev_post_trimmed]
 
-srst2_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+srst2_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}', qual='{qual}'))
-srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}', qual='{qual}'))
 srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 

@@ -46,9 +46,14 @@ workflows = config['workflows']
 all_sample_names = workflows['samples_input_workflow']['samples']
 sample_input_files = []
 for sample in all_sample_names:
-    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    if readfilt['read_patterns']['type'] == "pe":
+        input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
+    else:
+        input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']+"_SE"
+        print("input_file_pattern "+str(input_file_pattern))
     input_file_pattern = re.sub(r"\*", sample, input_file_pattern, 1)
     input_file_pattern = join(data_dir, input_file_pattern)
+    print("input_file_pattern "+str(input_file_pattern))
     sample_input_files.extend(glob.glob(input_file_pattern))
 
 #nnow we need to remove file extension and data_dir
@@ -65,18 +70,18 @@ print("sample_input_files: "+str(sample_input_files))
 # Pretrimming code needed for convert_illumina_to_internal_format and pre_trimming_quality_assessment
 
 if readfilt['read_patterns']['type'] == "pe":
-    fq_fwd_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_fwd_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
-    fq_rev_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_rev_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
 
-    fq_fwd_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_fwd_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
 
-    fq_rev_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_rev_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}'))
 
@@ -88,15 +93,16 @@ if readfilt['read_patterns']['type'] == "pe":
                         fq_rev_pre_trimmed]
 
 else:
-    fq_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_pre_trimmed = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
 
-    fq_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+    fq_pre_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}'))
-    pre_trimming_inputs_sing = [fq_pre_trimmed_sing]
-    pre_trimming_inputs = [fq_pre_trimmed]
+    pre_trimming_inputs_sing = fq_pre_trimmed_sing
+    pre_trimming_inputs = fq_pre_trimmed
+print("pre_trimming_inputs: "+str(pre_trimming_inputs))
 
 
 ###################################
@@ -127,13 +133,17 @@ rule convert_external_to_internal_format_pe:
         pre_trimming_inputs
     params:
         dest_fwd = create_output_internal_format_fwd_pe,
+        dest_rev = create_output_internal_format_rev_pe,
         search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"],
+        replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
     run:
         src_fwd_str = str(input)
         src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
-        #print("rev: "+str(src_rev_str))
-        #print("fwd: " +str(src_fwd_str))
         shutil.copy(src_fwd_str, params.dest_fwd)
+        shutil.copy(src_rev_str, params.dest_rev)
+
+
+
     
 
 
@@ -148,11 +158,13 @@ def convert_external_input_files(wildcards):
     return input_file
     
 def create_output_internal_format_fwd_se(wildcards):
-    return fq_fwd_pre_trimmed.format(**wildcards)
+    temp = fq_pre_trimmed.format(**wildcards)
+    print("T: "+str(temp))
+    return temp
 
 
 def create_output_internal_format_rev_se(wildcards):
-    return fq_rev_pre_trimmed.format(**wildcards)
+    return fq_pre_trimmed.format(**wildcards)
 
 
 
@@ -166,14 +178,21 @@ rule convert_external_to_internal_format_se:
         pre_trimming_inputs
     params:
         dest_fwd = create_output_internal_format_fwd_se,
-        dest_rev = create_output_internal_format_rev_se,
         search_pattern = readfilt["read_patterns"]["reverse_pe_pattern_search"],
-        replace_pattern = readfilt["read_patterns"]["reverse_pe_pattern_replace"],
     run:
         src_fwd_str = str(input)
         src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
+        #print("rev: "+str(src_rev_str))
+        #print("fwd: " +str(src_fwd_str))
         shutil.copy(src_fwd_str, params.dest_fwd)
-        shutil.copy(src_rev_str, params.dest_rev)
+
+###################################
+
+
+#def aggregate_sample_files(wildcards):
+#    if readfilt['read_patterns']['type'] == "pe":
+
+
 
 
 ###################################
@@ -200,7 +219,7 @@ else:
     pre_trimming_output_sing = re.sub(sample_file_ext, target_ext, fq_pre_trimmed_sing)
     pre_trimming_outputs = [pre_trimming_output]
     pre_trimming_outputs_sing = [pre_trimming_output_sing]
-print("pre_trimming_output: "+str(pre_trimming_output))
+print("pre_trimming_outputs "+str(pre_trimming_outputs))
 
 
 fastqc_image = container_image_name(biocontainers, 'fastqc')
@@ -255,21 +274,21 @@ rule pre_trimming_quality_assessment:
 # Read Filtering: post trimming
 
 
-fq_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['forward'],
                             sample='{sample}',
                             qual='{qual}'))
-fq_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['reverse'],
                             sample='{sample}',
                             qual='{qual}'))
                             
-fq_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['forward'],
                             sample='{sample}',
                             qual='{qual}'))
 
-fq_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                             direction=readfilt['direction_labels']['reverse'],
                             sample='{sample}',
                             qual='{qual}'))
@@ -340,22 +359,22 @@ rule post_trimming_quality_assessment:
 # Read Filtering: interleave
 
 # These are strings containing templates of .fq.gz file names.
-fq_fwd_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_fwd_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_rev_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
@@ -611,41 +630,41 @@ rule convert_fastq_to_fasta:
 # We use this trick several times in these rules.
 # 
 
-fq_fwd = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['forward'],
                     sample='{sample}'))
 
-fq_rev = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev = join(data_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['reverse'],
                     sample='{sample}'))
                     
-fq_fwd_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['forward'],
                     sample='{sample}'))
             
-fq_rev_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_sing = join(sing_dir, (readfilt['read_patterns']['pre_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                     direction=readfilt['direction_labels']['reverse'],
                     sample='{sample}'))
 
 quality_input = [fq_fwd, fq_rev]
 quality_input_sing = [fq_fwd_sing, fq_rev_sing]
 
-fq_fwd_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_rev_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_fwd_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['forward'],
                         sample='{sample}',
                         qual='{qual}'))
 
-fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                         direction=readfilt['direction_labels']['reverse'],
                         sample='{sample}',
                         qual='{qual}'))

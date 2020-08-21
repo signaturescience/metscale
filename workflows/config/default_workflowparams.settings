@@ -11,8 +11,10 @@ config_default = {
         # 
         "read_patterns" : {
             #
-            # filename pattern for pre-trimmed reads
-            "pre_trimming_pattern"  : "{sample}_{direction}_reads",
+            # filename pattern for pre-trimmed reads PE
+            "pre_trimming_pattern_PE"  : "{sample}_{direction}_reads",
+            # filename pattern for pre-trimmed reads SE
+            "pre_trimming_pattern_SE"  : "{sample}_{direction}_reads_SE",
             #
             #shakya glob pattern
             #"pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
@@ -24,10 +26,10 @@ config_default = {
             # for the shakya dataset that is 1_ for reverse_pe_pattern_search (forward read) 2_ for reverse_pe_pattern_replace (reverse read)
             # for Illumina that would be R1 for reverse_pe_pattern_search(forward read) R2 for reverse_pe_pattern_replace (reverse read)
             "reverse_pe_pattern_search"  : "R1",
-            "reverse_pe_pattern_replace" : "2_",
+            "reverse_pe_pattern_replace" : "R2",
             #
             # filename pattern for post-trimmed reads
-            "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
+            "post_trimming_pattern_PE" : "{sample}_trim{qual}_{direction}",
             #
             # number of threads to use.
             "threads" : 2,

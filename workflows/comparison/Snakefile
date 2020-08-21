@@ -41,22 +41,22 @@ comparison = config['comparison']
 # Comparison: compute read signatures
 
 # input is fwd/rev reads
-read_sig_input_fwd = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+read_sig_input_fwd = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['forward']))
-read_sig_input_rev = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+read_sig_input_rev = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['reverse']))
 compute_read_sig_inputs  = [read_sig_input_fwd,
                     read_sig_input_rev]
 
-read_sig_input_fwd_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+read_sig_input_fwd_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['forward']))
-read_sig_input_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+read_sig_input_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                                 sample = '{sample}',
                                 qual = '{qual}',
                                 direction = readfilt['direction_labels']['reverse']))
@@ -65,7 +65,7 @@ read_sig_input_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimmi
 # signature file output replaces .fq.gz with sig_suffix variable
 # (also remove direction)
 read_base_output_name = re.sub('_{direction}', '', 
-                        (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+                        (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']))
 compute_read_sig_output_name = re.sub(r'.fq.gz',  comparison['compute_read_signatures']['sig_suffix'], read_base_output_name)
 
 #TODO: Have kvalues in both workflowconfig and workflowparams. Because of this.

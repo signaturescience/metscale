@@ -199,20 +199,20 @@ rule unpack_kaijudb:
 ############################################
 # Taxonomic Classification: run kaiju
 
-fq_fwd = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['forward']))
-fq_rev = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['reverse']))
 
-fq_fwd_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_fwd_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['forward']))
-fq_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+fq_rev_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']).format(
                 sample = '{sample}',
                 qual = '{qual}',
                 direction = readfilt['direction_labels']['reverse']))
@@ -1177,8 +1177,8 @@ rule visualize_kaiju_species_contigs:
 # Taxonomic Classification: kraken2
 
 
-kraken2_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
-kraken2_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+kraken2_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']))
+kraken2_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']))
 
 kraken2_input_fwd = kraken2_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
@@ -1315,8 +1315,8 @@ rule bracken:
 # Taxonomic Classification: krakenUniq
 
 
-krakenuniq_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
-krakenuniq_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+krakenuniq_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']))
+krakenuniq_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_PE']+readfilt['quality_trimming']['sample_file_ext']))
 
 krakenuniq_input_fwd = krakenuniq_input_pattern.format(
             direction=readfilt['direction_labels']['forward'], 
