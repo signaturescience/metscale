@@ -21,6 +21,9 @@ process_output <- function(data_dir, out_dir) {
     "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv"
   )
   
+  # Vector for warnings
+  warnings = NULL
+  
   ##################################################################################################
   ####################################### Function Definitions #####################################
   ##################################################################################################
@@ -113,13 +116,17 @@ process_output <- function(data_dir, out_dir) {
   
   # Parse Mash Screen text files
   parse_mash_screen <- function(path) {
+    
     data <- readLines(con = path)
     data <- strsplit(x = data, split = ",")
     data <- do.call(rbind, data)
     data <- strsplit(x = data, split = "\t")
     data <- do.call(rbind, data)
+    
     colnames(data) <- c("identity", "shared_hashes", "median_multiplicity", "p_value", "query_id")
+    
     data <- as.data.frame(data, stringsAsFactors = FALSE)
+    
     data$identity <- as.numeric(data$identity)
     data$median_multiplicity <- as.numeric(data$median_multiplicity)
     data$p_value <- as.numeric(data$p_value)
@@ -127,7 +134,9 @@ process_output <- function(data_dir, out_dir) {
       data$query_id <- trimws(stringr::str_remove(string = data$query_id, pattern = "\\[[0-9]?[0-9] seqs\\]"))
     }
     data$accession = stringr::str_extract(data$query_id, "[[:alpha:]]{3}_[[:digit:]]{1,10}")
+    
     return(data)
+    
   }
   
   # Convert GenBank IDs to NCBI Taxon IDs
@@ -255,28 +264,39 @@ process_output <- function(data_dir, out_dir) {
       ncbi_lin <- do.call(rbind, ncbi_lin)
       ncbi_lin$reported_id <- trunc(as.numeric(row.names(ncbi_lin)))
       row.names(ncbi_lin) <- NULL
-      ncbi_lin <- ncbi_lin[ncbi_lin$rank == "species", ]
-      colnames(ncbi_lin)[colnames(ncbi_lin) == "id"] <- "species_id"
-      colnames(ncbi_lin)[colnames(ncbi_lin) == "name"] <- "species_name"
-      ncbi_lin <- subset(x = ncbi_lin, select = c("species_id", "reported_id"))
-      tmp_output <- merge(x = tmp_output, y = ncbi_lin, by.x = "tax_id", by.y = "reported_id", 
-                          all.x = TRUE)
       
-      # Count the number of reads for each taxon ID
-      tmp_output %>%
-        filter(classified == "C" & !is.na(species_id)) %>%
-        group_by(species_id) %>%
-        summarise(var_value = n()) %>%
-        mutate(var_name = "read_count") -> read_counts
+      if (any(ncbi_lin$rank == "species")) {
+        
+        ncbi_lin <- ncbi_lin[ncbi_lin$rank == "species", ]
+        colnames(ncbi_lin)[colnames(ncbi_lin) == "id"] <- "species_id"
+        colnames(ncbi_lin)[colnames(ncbi_lin) == "name"] <- "species_name"
+        ncbi_lin <- subset(x = ncbi_lin, select = c("species_id", "reported_id"))
+        tmp_output <- merge(x = tmp_output, y = ncbi_lin, by.x = "tax_id", by.y = "reported_id", 
+                            all.x = TRUE)
       
-      # Add the output file ID to the variables table
-      read_counts$out_id <- tmp_files$out_id[i]
-      
-      # Construct the variable ID
-      read_counts$var_id <- paste(read_counts$out_id, read_counts$species_id, sep = "_")
-      
-      # Append the read counts to the variables
-      variables <- rbind(variables, read_counts)
+        # Count the number of reads for each taxon ID
+        tmp_output %>%
+          filter(classified == "C" & !is.na(species_id)) %>%
+          group_by(species_id) %>%
+          summarise(var_value = n()) %>%
+          mutate(var_name = "read_count") -> read_counts
+        
+        # Add the output file ID to the variables table
+        read_counts$out_id <- tmp_files$out_id[i]
+        
+        # Construct the variable ID
+        read_counts$var_id <- paste(read_counts$out_id, read_counts$species_id, sep = "_")
+        
+        # Append the read counts to the variables
+        variables <- rbind(variables, read_counts)
+        
+      } else {
+        
+        new_warning = paste("Warning: File", tmp_files$file[i], "contained no species-level taxa and was skipped.")
+        warnings = c(warnings, new_warning)
+        rm(new_warning)
+        
+      }
       
       # Remove objects
       if(exists('tmp_output'))  rm(tmp_output)
@@ -320,20 +340,38 @@ process_output <- function(data_dir, out_dir) {
   }
   
   if (any(file_list$tool == "Kraken2")) {
+    
     tmp_files <- file_list[file_list$tool == "Kraken2", ]
+    
     for (i in 1:nrow(tmp_files)) {
+      
       if (substr(tmp_files$path[i], nchar(tmp_files$path[i]) - 3, nchar(tmp_files$path[i])) == ".csv") {
         next
       }
-      tmp_output <- read.table(file = tmp_files$path[i], sep = "\t", as.is = TRUE, header = FALSE, quote = '"')
-      colnames(tmp_output) <- c("percent","fragments","tax_fragments","rank","species_id","species_name")
-      tmp_output %>% 
-        filter(rank == "S") %>%
-        select(species_id, percent, fragments, tax_fragments) %>% 
-        gather(percent, fragments, tax_fragments, key = "var_name", value = "var_value") -> tmp_output
-      tmp_output$out_id <- tmp_files$out_id[i]
-      tmp_output$var_id <- paste(tmp_output$out_id, tmp_output$species_id, sep = "_")
-      variables <- rbind(variables, tmp_output)
+      
+      tmp_output <- read.table(file = tmp_files$path[i], sep = "\t", as.is = TRUE, header = FALSE, 
+                               quote = '"')
+      colnames(tmp_output) <- c("percent", "fragments", "tax_fragments", "rank", "species_id",
+                                "species_name")
+      
+      if (any(tmp_output$rank == "S")) {
+        
+        tmp_output <- tmp_output %>% 
+          filter(rank == "S") %>%
+          select(species_id, percent, fragments, tax_fragments) %>% 
+          gather(percent, fragments, tax_fragments, key = "var_name", value = "var_value")
+        tmp_output$out_id <- tmp_files$out_id[i]
+        tmp_output$var_id <- paste(tmp_output$out_id, tmp_output$species_id, sep = "_")
+        variables <- rbind(variables, tmp_output)
+        
+      } else {
+        
+        new_warning = paste("Warning: File", tmp_files$file[i], "contained no species-level taxa and was skipped.")
+        warnings = c(warnings, new_warning)
+        rm(new_warning)
+        
+      }
+      
       if (exists("tmp_output")) {
         rm(tmp_output)
       }
@@ -347,18 +385,22 @@ process_output <- function(data_dir, out_dir) {
     tmp_files <- file_list[file_list$tool == "KrakenUniq", ]
     for (i in 1:nrow(tmp_files)) {
       tmp_output <- parse_kraken_rept(path = tmp_files$path[i])
-      colnames(tmp_output)[colnames(tmp_output) == "taxID"]   <- "species_id"
-      colnames(tmp_output)[colnames(tmp_output) == "taxName"] <- "species_name"
-      tmp_output %>%
-        filter(rank == "species") %>%
-        select(species_id, percent, reads, tax_reads = taxReads, kmers, dup, cov) %>%
-        gather(percent, reads, tax_reads, kmers, dup, cov, key = "var_name", value = "var_value") -> tmp_output
-      tmp_output$out_id <- tmp_files$out_id[i]
-      tmp_output$var_id <- paste(tmp_output$out_id, tmp_output$species_id, sep = "_")
-      variables <- rbind(variables, tmp_output)
-      if (exists('tmp_output')) {
-        rm(tmp_output)
+      if (any(tmp_output$rank == "species")) {
+        colnames(tmp_output)[colnames(tmp_output) == "taxID"]   <- "species_id"
+        colnames(tmp_output)[colnames(tmp_output) == "taxName"] <- "species_name"
+        tmp_output %>%
+          filter(rank == "species") %>%
+          select(species_id, percent, reads, tax_reads = taxReads, kmers, dup, cov) %>%
+          gather(percent, reads, tax_reads, kmers, dup, cov, key = "var_name", value = "var_value") -> tmp_output
+        tmp_output$out_id <- tmp_files$out_id[i]
+        tmp_output$var_id <- paste(tmp_output$out_id, tmp_output$species_id, sep = "_")
+        variables <- rbind(variables, tmp_output)
+      } else {
+        new_warning = paste("Warning: File", tmp_files$file[i], "contained no species-level taxa and was skipped.")
+        warnings = c(warnings, new_warning)
+        rm(new_warning)
       }
+      if (exists('tmp_output')) {rm(tmp_output)}
     }
     if (exists('tmp_files')) {
       rm(tmp_files)
@@ -366,22 +408,34 @@ process_output <- function(data_dir, out_dir) {
   }
   
   if (any(file_list$tool == "Sourmash")) {
+    
     tmp_files <- file_list[file_list$tool == "Sourmash", ]
+    
     for (i in 1:nrow(tmp_files)) {
+      
       tmp_output <- read.csv(file = tmp_files$path[i], header = TRUE, as.is = TRUE)
+      
       tmp_output$genbank_id <- unlist(lapply(strsplit(tmp_output$name, " "), '[[', 1))
       tmp_output$accession  <- unlist(lapply(strsplit(tmp_output$genbank_id, '[.]'), '[[', 1))
       tmp_ncbi <- genbank2uid(tmp_output$accession)
-      if(nrow(tmp_ncbi)>0){
+      
+      if (nrow(tmp_ncbi) > 0) {
+        
         tmp_output <- merge(tmp_output, tmp_ncbi, by = "accession", all.x = TRUE)
+        
       } else {
+        
         tmp_output$taxid <- NA
+        
       }
-      tmp_output %>%
-        select(species_id = taxid, intersect_bp, f_orig_query, f_match, f_unique_to_query, average_abund,median_abund,std_abund) %>%
-        gather(intersect_bp, f_orig_query, f_match, f_unique_to_query, average_abund,median_abund,std_abund, key = "var_name", value = "var_value") -> tmp_output
+      
+      tmp_output <- tmp_output %>%
+        select(species_id = taxid, intersect_bp, f_orig_query, f_match, f_unique_to_query, 
+               average_abund, median_abund, std_abund) %>%
+        gather(intersect_bp, f_orig_query, f_match, f_unique_to_query, average_abund, median_abund,
+               std_abund, key = "var_name", value = "var_value")
       tmp_output$out_id <- tmp_files$out_id[i]
-      tmp_output$var_id <- paste(tmp_output$out_id,tmp_output$species_id,sep = "_")
+      tmp_output$var_id <- paste(tmp_output$out_id, tmp_output$species_id, sep = "_")
       variables <- rbind(variables,tmp_output)
       if(exists("tmp_output")){rm(tmp_output)}
     }
@@ -391,40 +445,55 @@ process_output <- function(data_dir, out_dir) {
   }
   
   if (any(file_list$tool == "Mash Screen")) {
-    tmp_files <- file_list[file_list$tool=="Mash Screen",]
-    for(i in 1:nrow(tmp_files)){
+    
+    tmp_files <- file_list[file_list$tool == "Mash Screen", ]
+    
+    for (i in 1:nrow(tmp_files)) {
+      
       tmp_output <- parse_mash_screen(path=tmp_files$path[i])
+      
       tmp_ncbi <- assembly2uid(id = tmp_output$accession)
+      
       tmp_output <- merge(tmp_output, tmp_ncbi, by = "accession", all.x = TRUE)
-      tmp_output$total_hashes <- unlist(lapply(strsplit(tmp_output$shared_hashes, "/"), '[[', 2))
-      tmp_output$total_hashes <- as.numeric(tmp_output$total_hashes)
+      tmp_output$total_hashes  <- unlist(lapply(strsplit(tmp_output$shared_hashes, "/"), '[[', 2))
+      tmp_output$total_hashes  <- as.numeric(tmp_output$total_hashes)
       tmp_output$shared_hashes <- unlist(lapply(strsplit(tmp_output$shared_hashes, "/"), '[[', 1))
       tmp_output$shared_hashes <- as.numeric(tmp_output$shared_hashes)
-      tmp_output %>%
+      
+      tmp_output <- tmp_output %>%
         select(species_id, identity, shared_hashes, total_hashes, median_multiplicity, p_value) %>%
-        gather(identity, shared_hashes, total_hashes, median_multiplicity, p_value, key = "var_name", value = "var_value") -> tmp_output
+        gather(identity, shared_hashes, total_hashes, median_multiplicity, p_value, 
+               key = "var_name", value = "var_value")
+      
       tmp_output$out_id <- tmp_files$out_id[i]
       tmp_output$var_id <- paste(tmp_output$out_id, tmp_output$species_id, sep = "_")
       variables <- rbind(variables, tmp_output)
+      
     }
   }
   
   if (any(file_list$tool == "MTSV")) {
-    tmp_files <- file_list[file_list$tool == "MTSV",]
+    
+    tmp_files <- file_list[file_list$tool == "MTSV", ]
+    
     for (i in 1:nrow(tmp_files)){
+      
       tmp_output <- read.csv(file = tmp_files$path[i], header = FALSE, as.is = TRUE, skip = 2)
-      colnames(tmp_output) <- c("species_id", "division", "name", "total_hits", "unique_hits", "signature_hits", "unique_signature_hits")
+      colnames(tmp_output) <- c("species_id", "division", "name", "total_hits", "unique_hits", 
+                                "signature_hits", "unique_signature_hits")
       tmp_output %>%
         select(species_id, total_hits, unique_hits, signature_hits, unique_signature_hits) %>%
-        gather(total_hits, unique_hits, signature_hits, unique_signature_hits, key = "var_name", value = "var_value")
+        gather(total_hits, unique_hits, signature_hits, unique_signature_hits, key = "var_name", 
+               value = "var_value")
+      
       variables <- rbind(variables, tmp_output)
-      if (exists("tmp_output")) {
-        rm(tmp_output)
-      }
+      
+      if (exists("tmp_output")) {rm(tmp_output)}
+      
     }
-    if (exists("tmp_files")) {
-      rm(tmp_files)
-    }
+    
+    if (exists("tmp_files")) {rm(tmp_files)}
+    
   }
   
   ##################################################################################################
@@ -446,11 +515,14 @@ process_output <- function(data_dir, out_dir) {
   setwd(dir = out_dir)
   write(out, file = "combined_output.json")
   
+  if (is.null(warnings)) {
+    warnings = 0
+  }
+  return(warnings)
+  
 }
 args = commandArgs(trailingOnly=TRUE)
 data_dir = args[1]
 out_dir = args[2]
-print(paste0("data dir: ",data_dir))
-print(paste0("out dir: ",out_dir))
 
 process_output (data_dir, out_dir)
