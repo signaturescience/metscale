@@ -27,7 +27,7 @@ class Opts:
     fpath_ncbi_tax_nodes = None
     db_import_manifest = None
     # The following is deprecated, but I don't have time to test it if I delete it (MN 5/15/20)
-    cfg_parameter_short_ids = {  # <-- this variable is for storing argument requirements more easily later
+    cfg_parameter_short_ids = {  # this variable is for storing argument requirements more easily later
         1: 'refseq_folder',
         2: 'containment_metadata_json_path',
         3: 'fpath_ncbi_tax_nodes',
@@ -81,16 +81,17 @@ def command_args_parse():
     :return:
     '''
     global options
-    p = argparse.ArgumentParser(description='Module to build and manipulate the Taxon ID metadata and the database'
-                                            ' containment_dict.json')
+    p = argparse.ArgumentParser()
+#description='Module to build and manipulate the Taxon ID metadata and the database'
+#                                            ' containment_dict.json')
 
     help_taxid_list = 'The NCBI taxonomy ID(s) to query against the containment_dict metadatabase. Can be in one of ' \
-                      'three forms: a) a single integer, which will be queried and the results output, b) a valid path' \
+                      'three forms: a) a single integer, which will be queried and the results output, b) a valid path ' \
                       'to a text file containing one taxon ID per line, all of which will be queried and the results ' \
                       'output as tab-delimited text, or c) \'stdin\' in which case a list of taxon_ids is pulled from ' \
                       'standard input and processed as with a file.'
     p.add_argument('-t', '--taxids', dest='taxid_list', type=str, default=None, help=help_taxid_list)
-    p.add_argument('-o', '--output', dest='output_path', type=str, default=None, help='output file path')
+    p.add_argument('-o', '--output', dest='output_path', type=str, default=None, help=argparse.SUPPRESS)#help='output file path')
     p.add_argument('--all_refseq_versions', action='store_true', default=False,
                    help='Prints whatever results are called for including all versions of RefSeq, not just the latest '
                         'version (default).')
@@ -98,21 +99,22 @@ def command_args_parse():
                    help='runs a general setup routine to prepare for a first use. Does two things: 1) sets \'working_folder\''
                         'in the config file dbqt_config to be the path to this scripts folder. 2) Downloads the NCBI '
                         'taxonomy and extracts the file needed for the DQT.')
-    configgroup = p.add_argument_group('Configuration Options',
-                                       'Paths to key locations and files required by the tool. Arguments not supplied '
-                                       'will be pulled from the default config file \'dbqt_config\' and if needed will '
-                                       'be assigned their default values (where applicable).')
-    configgroup.add_argument('-wd', '--workdir', type=str, default=None,
-                   help='The working folder in which we assume the script \'prepare_taxid_metadata.sh\' has run. '
-                        '(default: current directory)')
-    configgroup.add_argument('-cn', '--containment_json', type=str, default=None,
-                             help='Path to the containment_dict.json file.')
-    configgroup.add_argument('-dbs', '--db_import_manifest', type=str, default=None,
-                   help='Path to the file containing the Source File List. Typically named \'db_import_manifest.txt\'. '
-                        'This is a specifically formatted text file (tab-delimited) containing the target DBs and '
-                        'metadata files.')
-    configgroup.add_argument('-c', '--config', type=str, default=None,
-                             help='Optional config file (overrides default file path: \'dbqt_config\'')
+    configgroup = p.add_argument_group()
+    #configgroup = p.add_argument_group('Configuration Options',
+    #                                   'Paths to key locations and files required by the tool. Arguments not supplied '
+    #                                   'will be pulled from the default config file \'dbqt_config\' and if needed will '
+    #                                   'be assigned their default values (where applicable).')
+    configgroup.add_argument('-wd', '--workdir', type=str, default=None, help=argparse.SUPPRESS)
+                   #help='The working folder in which we assume the script \'prepare_taxid_metadata.sh\' has run. '
+                   #     '(default: current directory)')
+    configgroup.add_argument('-cn', '--containment_json', type=str, default=None, help=argparse.SUPPRESS)
+                             #help='Path to the containment_dict.json file.')
+    configgroup.add_argument('-dbs', '--db_import_manifest', type=str, default=None, help=argparse.SUPPRESS)
+                #   help='Path to the file containing the Source File List. Typically named \'db_import_manifest.txt\'. '
+                #        'This is a specifically formatted text file (tab-delimited) containing the target DBs and '
+                #        'metadata files.')
+    configgroup.add_argument('-c', '--config', type=str, default=None, help=argparse.SUPPRESS)
+                        #     help='Optional config file (overrides default file path: \'dbqt_config\'')
 
 
     logginggroup = p.add_argument_group('Logging Options', 'Options related to how much information the program prints '
@@ -123,20 +125,21 @@ def command_args_parse():
                    help='If given, disables logging to the console (overrides --quiet and --debug)')
     logginggroup.add_argument('--debug', action='store_true', default=False,
                    help='If given, enables more detailed logging useful in debugging.')
-    logginggroup.add_argument('-lf', '--logfile', type=str, default=None,
-                   help='If given, sends logging messages to a file instead of the console. Note that if the path'
-                        'given is not a valid path to open a new file, the behavior is undefined.')
+    logginggroup.add_argument('-lf', '--logfile', type=str, default=None, help=argparse.SUPPRESS)
+                  # help='If given, sends logging messages to a file instead of the console. Note that if the path'
+#                        'given is not a valid path to open a new file, the behavior is undefined.')
 
     # COMMAND ARGUMENTS (determine what procedure for the tool to run):
     # NOTE: each one of these arguments that determine which command will be run must be stored in a variable
     #   that starts with 'cmd_', otherwise odd behavior may ensue.
-    commandgroup = p.add_argument_group('Procedures Available', 'Each of these options describes a different subroutine to '
-                                                                'run. Only one can be given and if none are, defaults to '
-                                                                'querying a taxon ID against the containment file (i.e. -QRY)')
+    commandgroup = p.add_argument_group()
+    #commandgroup = p.add_argument_group('Procedures Available', 'Each of these options describes a different subroutine to '
+    #                                                            'run. Only one can be given and if none are, defaults to '
+    #                                                            'querying a taxon ID against the containment file (i.e. -QRY)')
     # 1) cmd_query_taxids
     help_cmd_query_taxid = 'query one or more taxids against the containment file. Report back which DBs contain the taxid ' \
                            '(adjusted to the species level). (Requires \'-t/--taxids\')'
-    commandgroup.add_argument('-test', '-testing', action='store_true', help=help_cmd_query_taxid,
+    commandgroup.add_argument('-test', '-testing', action='store_true', help=argparse.SUPPRESS,
                               default=False)
 
     # 2) cmd_inspect_filelist
@@ -144,30 +147,31 @@ def command_args_parse():
                         'the soure_file_list file or from the config file (or both). Prints the results to the console ' \
                         '(readably), and then exits. Primarily for checking accuracy of source file roster before building ' \
                         'a new containment_dict.json file.'
-    commandgroup.add_argument('-IFL', '--cmd_inspect_filelist', action='store_true', help=help_cmd_filelist, default=False)
+    commandgroup.add_argument('-IFL', '--cmd_inspect_filelist', action='store_true', help=argparse.SUPPRESS, default=False)
 
     help_cmd_inspect_contain = 'Prints some summary data about the existing containment_dict.json file to the console and ' \
                                'then exits. Primarily for inspecting contents of the file.'
-    commandgroup.add_argument('-ICD', '--cmd_inspect_contain', action='store_true', help=help_cmd_inspect_contain, default=False)
+    commandgroup.add_argument('-ICD', '--cmd_inspect_contain', action='store_true', help=argparse.SUPPRESS, default=False)
     help_cmd_show_build_plan = 'Runs procedures to inspect and generate a roster of database sources, as well as to inspect' \
                                'the contaiment_dict.p file. Compares the two and identifies the plan for which files ' \
                                'to be added, ignored or replaced. This procedure is run automatically prior to building ' \
                                'a new containment_dict.json file. (Optional: \'--clober\')'
-    commandgroup.add_argument('-CMO', '--cmd_compare_sources', action='store_true', help=help_cmd_show_build_plan,
+    commandgroup.add_argument('-CMO', '--cmd_compare_sources', action='store_true', help=argparse.SUPPRESS,
                               default=False)
     help_cmd_build_containment = 'Build a new containment dictionary. Requires doing just about every step along ' \
                                  'the way: 1) parses db_import_manifest, 2) opens old containment dict, 3) parses ' \
                                  'each individual database file, 4) gently replaces containment_dict.json and saves ' \
                                  'new stuff elsewhere.  (Optional: \'--clober\')'
-    commandgroup.add_argument('-BCD', '--cmd_build_containment', action='store_true', help=help_cmd_build_containment, default=False)
+    commandgroup.add_argument('-BCD', '--cmd_build_containment', action='store_true', help=argparse.SUPPRESS, default=False)
     commandgroup.add_argument('--print_debug_args_help', action='store_true', default = False, dest='cmd_print_debug_args_help',
-                              help = 'Prints a help message for some additional command-line arguments. Most of thiese '
-                                     'are intended for debugging only and are not especially interesting.')
+                              help=argparse.SUPPRESS)
+                              #help = 'Prints a help message for some additional command-line arguments. Most of thiese '
+                              #       'are intended for debugging only and are not especially interesting.')
     help_cmd_download_ncbi_tax = 'Download the the NCBI reference taxonomy from NCBI and extract the file ' \
                                  '\'nodes.dmp\' so it can be used in the DQT. Attempts to pull the zip ' \
                                  'file from \'ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip\'.'
     commandgroup.add_argument('--download_ncbi_taxonomy', action='store_true', default = False,
-                              dest='cmd_download_ncbi_taxonomy', help = help_cmd_download_ncbi_tax)
+                              dest='cmd_download_ncbi_taxonomy', help=argparse.SUPPRESS)
 
     #
     # Misc Args
@@ -1562,3 +1566,4 @@ def main():
 
 if __name__=='__main__':
     main()
+
