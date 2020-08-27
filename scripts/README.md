@@ -23,15 +23,15 @@ If you have not already, you will need to clone the MetScale repository and acti
 
 ### Input Files
 
-If you ran the MetScale installation correctly, the following files should be present in the `metagenomics/scripts` directory.
+If you ran the MetScale installation correctly, the following files and directories should be present in the `metagenomics/scripts` directory.
 
 | File Name | File Size | MD5 Checksum |
 | ------------- | ------------- | ------------- |
-| `databases.png` | `177 KB` | `a37ee46c79ddbf59421f961fa7e440fb` |
-| `DB_querytool.png` | `112 KB` | `f56f449cecc4851d85adac8e25f5eb0d` |
-| `dictionary_maker_parameters.py` | `3.5 KB` | `27db92f1cecec971f18dfaf693142a2a` |
-| `dictionary_maker.py` | `12 KB` | `175100ab02be48b65a2a21bd0c9c555b` |
-| `query_tool.py` | `1.9 KB` | `6e3829b603ddf6d492b35aff5fe871d0` | 
+| `query_tool.py` | `74 KB` | `6281df76ea6e5e1b3546af5f0cd6ad2b` |
+| `testtax.txt` | `188 B` | `195cd9131bcbcfcc1bea2aa1793a5740` |
+| `containment_dict_.json.gz` | `14 MB` | `ab3dc6fe977be177554c1ab7919036c9` |
+| `doc/` | `4 KB` | `directory` |
+| `example_input_files/` | `4 KB` | `directory` | 
 
 If you are missing any of these files, you should re-clone the MetScale repository, as per instructions in [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install). 
 
