@@ -158,7 +158,14 @@ config_default = {
             "quast_plasmidspades_threads" : 4,
             "quast_plasmidspades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
             #
-
+            #metaquast with RNAspades output file pattern
+            "metaquast_rnaspades_pattern" : "{sample}_trim{qual}.rnaspades_metaquast_report_data",
+            "metaquast_rnaspades_threads" : 4,
+            "metaquast_rnaspades_ref" : "Shakya_Refs",
+            #
+            #multiqc with RNAspades output file pattern
+            "multiqc_rnaspades_pattern" : "{sample}_trim{qual}.rnaspades_multiqc_report.html",
+            "multiqc_rnaspades_dir_pattern" : "{sample}_trim{qual}.rnaspades_multiqc_report_data"
 
         }
     },

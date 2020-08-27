@@ -12,7 +12,7 @@ class TestComparison(unittest.TestCase):
     def setUp(self):
         os.chdir("../workflows/")
         os.environ['SINGULARITY_BINDPATH'] = "data:/tmp"
-    
+    '''
     def test_1_comparison_reads_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_reads_workflow"
         subprocess.run([snakemake_command], shell=True)
@@ -66,8 +66,9 @@ class TestComparison(unittest.TestCase):
         filename_2 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_assembly_comparison.k51.png")
         filename_3 = os.path.join(dirname, "data/SRR606249_subset10_1_reads_trim2and30_assembly_comparison.k31.png")
         self.assertTrue(os.path.isfile(filename_1) and os.path.isfile(filename_2) and os.path.isfile(filename_3))
+    '''
         
-
+    #terminal
     def test_6_comparison_output_heatmap_plots_all_workflow(self):
         snakemake_command = "snakemake -q --cores --use-singularity --configfile=../test/test_comparison_workflow.json comparison_output_heatmap_plots_all_workflow"
         subprocess.run([snakemake_command], shell=True)
