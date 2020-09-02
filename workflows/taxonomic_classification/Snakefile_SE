@@ -1404,7 +1404,7 @@ rule krakenuniq:
 ############################################
 # Taxonomic Classification:  mash dist with reference DB
 
-mash_dist_input = interleave_output
+mash_dist_input = quality_output #interleave_output
 mash_dist_input_sing = mash_dist_input.replace(data_dir, sing_dir)
 
 mash_dist_output = join(data_dir, taxclass['mash']['mash_dist_out'] )
@@ -1461,8 +1461,8 @@ rule mash_sort:
 ############################################
 # Taxonomic Classification:  mash screen 
 
-mash_screen_input = interleave_output
-mash_screen_input_sing = interleave_output.replace(data_dir, sing_dir)
+mash_screen_input = quality_output #interleave_output
+mash_screen_input_sing = quality_output.replace(data_dir, sing_dir)  # interleave_output.replace(data_dir, sing_dir)
 
 mash_screen_output = join(data_dir, taxclass['mash']['mash_screen_out'] )
 mash_screen_output = mash_screen_output.format(
@@ -1559,18 +1559,22 @@ mtsv_signature_cutoff = taxclass['mtsv']['signature_cutoff']
 
 
 def get_input_files_mtsv_gz(wildcards):
-    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    #mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    mtsv_input_files = expand(quality_output, sample = wildcards.sample, qual=wildcards.qual)
+    quality_output
     str_mtsv_input_files_gz = mtsv_input_files[0]
     return str_mtsv_input_files_gz
 
 def get_input_files_mtsv(wildcards):
-    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    #mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    mtsv_input_files = expand(quality_output, sample = wildcards.sample, qual=wildcards.qual)
     str_mtsv_input_files_gz = mtsv_input_files[0]
     str_mtsv_input_files = os.path.splitext(str_mtsv_input_files_gz)[0]
     return str_mtsv_input_files
 
 def get_input_files_sing(wildcards):
-    mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    #mtsv_input_files = expand(interleave_output, sample = wildcards.sample, qual=wildcards.qual)
+    mtsv_input_files = expand(quality_output, sample = wildcards.sample, qual=wildcards.qual)
     str_mtsv_input_files = mtsv_input_files[0]
     str_mtsv_input_files = os.path.splitext(str_mtsv_input_files)[0]    
     interleave_output_sing = str_mtsv_input_files.replace(data_dir, sing_dir)
@@ -1579,7 +1583,7 @@ def get_input_files_sing(wildcards):
 
 rule mtsv_update_cfg:
     input:
-        interleave_output
+        quality_output #interleave_output
     output:
         mtsv_cfg_dest
     params:

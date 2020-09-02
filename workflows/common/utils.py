@@ -1,3 +1,6 @@
+from os.path import join
+import re, glob
+
 def container_image_is_external(biocontainers, app):
     """
     Return a boolean: is this container going to be run
@@ -55,3 +58,27 @@ def container_image_name(biocontainers, app):
             err += "was specified using the 'local' key."
             raise Exception(err)
 
+
+def get_sample_inputs(all_sample_names, read_glob_pattern, read_file_ext, data_dir):
+    ###################################
+    # Code to get samples input files based on sample name and glob file pattern
+
+    #Using user defined params get input file list
+    #workflows = config['workflows']
+    #all_sample_names = workflows['samples_input_workflow']['samples']
+    sample_input_files = []
+    for sample in all_sample_names:
+        input_file_pattern = read_glob_pattern #readfilt['read_patterns']['pre_trimming_glob_pattern']
+        input_file_pattern = re.sub(r"\*", sample, input_file_pattern, 1)
+        input_file_pattern = join(data_dir, input_file_pattern)
+        print("input_file_pattern: "+str(input_file_pattern))
+        sample_input_files.extend(glob.glob(input_file_pattern))
+
+    #now we need to remove file extension and data_dir
+    file_names = []
+    for file in sample_input_files:
+        file_path_no_dir = file.replace(data_dir+'/','')
+        #file_names.append(file_path_no_dir.replace(readfilt["quality_trimming"]["sample_file_ext"],''))
+        file_names.append(file_path_no_dir.replace(read_file_ext,''))
+    sample_input_files = file_names
+    return sample_input_files
