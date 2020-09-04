@@ -419,6 +419,9 @@ config_default = {
             "output_pattern" : "{sample}_finished",
             "out_pattern"    : "{sample_mv}/summary-report.html"
         },
+        "abundance_graph" : {
+            "file_name" : "{sample_mv}/abundance_graph.png"
+        }
     },
 
     # This is for airgapped systems or other systems that need to use only local biocontainers.
