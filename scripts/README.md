@@ -1,129 +1,204 @@
-
 # Database Query Tool (DQT)
 
-**NOTE:** The DQT works with python3.
+## Table of Contents
+* [Workflow Overview](#Workflow-Overview)
+* [Required Files](#Required-Files)
+* [Workflow Execution](#Workflow-Execution)
+* [Additional Information](#Additional-Information)
 
-This is a database query tool that can be used to query the contents of reference databases that are used with taxonomic classification tools. This tool integrates the contents of many databases used in the taxonomic workflows, and it allows an end-user to query NCBI taxonomic ids to find databases that contain a refence back to the taxonomic id in the query file. 
+## Workflow Overview 
+The Databse Query Tool is used to compare the contents of the reference databases used by the various taxonomic classification tools. Specifically, since the NCBI taxonomy is constantly changing and being updated, not all tools may be using the same version. Thus, comparing outputs from one tool to another requires accounting for differences in the coverage of their respective reference databases.In its most basic form, the DQT allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID, or that contain a species-level ancestor.
 
-![](https://github.com/signaturescience/metagenomics/blob/master/scripts/DB_querytool.png)
+![](https://github.com/signaturescience/metagenomics-wiki/blob/master/documentation/figures/DQT%20v1.png)
 
+## Required Files
+If you have not already, you will need to clone the MetScale repository and activate your metag environment [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install) before proceeding:
 
-## Databases and Corresponding Tools
-Below is an image of the programs and tools used in the workflows with the corresponding databases. When using the query_tool.py, this table may be used to map the output databases back with the tools that are used. 
+```sh
+[user@localhost ~]$ source activate metag 
 
-![](https://github.com/signaturescience/metagenomics/blob/master/scripts/databases.png)
-
-## How to use the DQT
-
-### query_tool.py (Using the tool)
-To query for specific tax ids, a line delimited file is used as input. For example, a test file, query_file.txt, could look like the following:
-
-```
-29760
-160
-3223
-22
-9606
-```
-
-When using query_tool.py on the input file, query_file.txt, there needs to be a precomputed query database. This query database is a pickled python dictionary containing information for all of the input databases. The dictionary_maker.py and dictionary_maker_parameters.py together create a containment_dict.p file that aggregates all of the information for the databases used in the taxonomic classification tools. This file can be downloaded from https://osf.io/2d3nw/. The first argument for the tool is the path to the containment_dict.p pickle file, and the second argument is the path to the file containing the tax id's being queried. For example:
+(metag)[user@localhost ~]$ cd metagenomics/scripts
 
 ```
-python query_tool.py <PATH TO PICKLE FILE> <QUERY FILE>
-```
 
-In the specific example given here, this would be:
+### Input Files
 
- ```
- python query_tool.py pickle_dir/containment_dict.p query_file.txt
- ```
-#### Example with Shakya dataset used in demo
-Another example use case are the tax IDs present in the Shakya dataset. Here we are using the provided 'Shakya_Taxa.txt' dataset, which lists all of the tax ids line by line. We use the following command to run the tool: 
+If you ran the MetScale installation correctly, the following files and directories should be present in the `metagenomics/scripts` directory.
 
-```
- python query_tool.py pickle_dir/containment_dict.p Shakya_Taxa.txt
-```
+| File Name | File Size | MD5 Checksum |
+| ------------- | ------------- | ------------- |
+| `query_tool.py` | `74 KB` | `6281df76ea6e5e1b3546af5f0cd6ad2b` |
+| `testtax.txt` | `188 B` | `195cd9131bcbcfcc1bea2aa1793a5740` |
+| `containment_dict_.json.gz` | `14 MB` | `ab3dc6fe977be177554c1ab7919036c9` |
+| `doc/` | `4 KB` | `directory` |
+| `example_input_files/` | `4 KB` | `directory` | 
 
-This returns a list of all the associated taxa from the dataset and the databases they are present within. In this specific example, we have the tax id 314267 which shows up in all the databases except for Kraken. 
+If you are missing any of these files, you should re-clone the MetScale repository, as per instructions in [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install). 
 
-### dictionary_maker.py (Building query database for the tool)
-To use the dictionary_maker.py (v2), the end user only needs to modify the dictionary_maker_parameters.py file. This allows for a friendly interface, where a user only needs to change the paths and the boolean statements for what they would like to build. This therefore supports an easy-to-use method for adding databases as they are released, in addition to completely rebuilding indexes used by the tool from scratch if desired. 
-
-Below are a couple examples of how to use the dictionary_maker.py tool. 
-
-#### Scenario #1 - Creating a new query database from scratch
-To create a new query database, the end user miust supply the paths to the downloaded databases for the different tools used by the taxonomic classification tools. All that needs to be done for this is editing paths and boolean switch-like statements
-in dictionary_maker_parameters.py. To accomplish this, the use must turn on the create_full_dict switch, as well as the create switches for the databases they would like incorporate. 
-
-For example, the dictionary_maker_parameters.py could look like:
-```
-## To run a process below, change value to true (change these as needed!)
-calculate_jaccard = False; # This will calculate the jaccard between DBs
-create_full_dict = True; # This will create a new full dictionary
-use_old_containment = False; # This will import the old containment
-import_refseq_dict = False; # This will import the pickled refseq
-import_nucleo_dict = False; # This will import the picked genebank
-import_kraken_dict = False; # This will import the picked kraken DBs
-import_kaiju_dict = False; # This will import the picked kraken DBs
-
-## The below rebuilds the dictionaries.(change these as needed!)
-create_genebank_dict = True; # This will create a genebank dictionary
-create_refseq_dict = True; # This will create a refseq dictionary
-create_kraken_dict = True; # This will create a kraken dictionary
-create_nucleo_dict = True; # This will create a nucleo dictionary
-create_taxid_dict = True; # This will create a NCBI taxid dictionary
-create_wgsmap_dict = True; # This will create a wgsmap dictionary
-create_kaiju_dict = True; # This will import the picked kraken DBs
-```
-
-#### Scenario #2 - Adding a new DB
-If the user would just like to add a database to the existing query database, then the only switch that needs to be changed is the "use_old_containment" switch. For example, if the only DB being updated is a kraken database, then the end user could supply a new path to the kraken DB in the dictionary_maker_parameters.py file:
-
-```
-## input file/directory names for processing (recommended to not change these!)
-genebank_file = "genebank_livelist/GbAccList.0602.2019" # genebank file path
-nucleo_file = "accession2taxid_files/nucl_gb.accession2taxid" #nt DB file path
-wgsmap_file = "accession2taxid_files/nucl_wgs.accession2taxid" #wgsmap file path
-kaiju_file = "kaiju_files/kaiju_nr.taxids.txt" #kaiju file path
-refseq_dir = "refseq_archives" #refseq directory path
-kraken_dir = "kraken_versions" #kraken directory path <------- CHANGE THIS ONE FOR KRAKEN
-```
-
-Thereafter, the following switch statements could be used:
-
-```
-## To run a process below, change value to true (change these as needed!)
-calculate_jaccard = False; # This will calculate the jaccard between DBs
-create_full_dict = True; # This will create a new full dictionary
-use_old_containment = True; # This will import the old containment
-import_refseq_dict = False; # This will import the pickled refseq
-import_nucleo_dict = False; # This will import the picked genebank
-import_kraken_dict = False; # This will import the picked kraken DBs
-import_kaiju_dict = False; # This will import the picked kraken DBs
-
-## The below rebuilds the dictionaries.(change these as needed!)
-create_genebank_dict = False; # This will create a genebank dictionary
-create_refseq_dict = False; # This will create a refseq dictionary
-create_kraken_dict = False; # This will create a kraken dictionary
-create_nucleo_dict = False; # This will create a nucleo dictionary
-create_taxid_dict = False; # This will create a NCBI taxid dictionary
-create_wgsmap_dict = False; # This will create a wgsmap dictionary
-create_kaiju_dict = False; # This will import the picked kraken DBs
-```
-
-#### Scenario #3 - Rebuilding the query database from pickle files
-To rebuild the query database from pickled python dictionaries, the paths to the pickled files must be changed (within dictionary_maker_parameters.py): 
-
- ```
- ## pickled file names (recommended to not change these!)
-containment_dictionary_pickle = "containment_dict.p" #Complete dictionary (use this)
-genebank_dict_pickle = "genebank_dict.p" #genebank dictionary
-refseq_dict_pickle = "refseq_dict.p" #refseq dictionary
-kraken_dict_pickle = "kraken_dict.p" #kraken dictionary
-nucleo_dict_pickle = "nucleo_dict.p" #nucleo dictionary
-taxid_dict_pickle = "taxid_dict.p" #taxid dictionary
-wgsmap_dict_pickle = "wgsmap_dict.p" #wgsim dictionary
-kaiju_dict_pickle = "kaiju_dict.p" #kaiju dictionary
- ```
- Note, is recommended to keep these file names the same. In addition, make sure to change the path in the 'path_for_storing_pickles' variable within dictionary_maker_parameters.py. 
  
+## Workflow Execution
+### Quick Start:
+After cloning the MetScale repository, some configuration is necessary before use. It can be done automatically using default settings by running the command:
+```
+python3 query_tool.py --setup
+```
+That will populate the setting `working_folder` in the default config file with the home folder of the DQT. Following that, the tool should be ready for use.
+
+### Detailed Settings
+The `--setup` command will automatically set the three important paths the DQT needs to run:
+* 1) The repository of taxon coverage information for the various MetScale tools
+* 2) The full reference taxonomy maintained by NCBI. 
+* 3) The working folder for any outputs that are provided. 
+These are the first three settings listed in the config file:
+```
+[paths]
+working_folder = 
+path_to_containment_file = ${working_folder}/containment_dict.json
+path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
+```
+The command `--setup` first sets the value of `working_folder` in this file to be the path to the scripts folder containing the DQT (by default this is `metagenomics/scripts`). After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the needed `nodes.dmp` to `path_to_ncbi_taxonomy_nodes`. Finally it decompresses the file `containment_dict.json.gz` to create the `containment_dict.json` which contains metadata about the taxa in all of the various databases in a single json file.
+
+## Usage 
+
+### Taxon ID Querying
+
+The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The default queried databases include several of the tools in the Taxon Classification workflows and RefSeq_v98. The full list of databases is below.
+
+|Tool|Database Name|Source|
+|:---|:---|:---|
+|RefSeq|`RefSeq_v98`|[NCBI RefSeq FTP](https://ftp.ncbi.nlm.nih.gov/refseq/release/release-catalog/archive/)|
+|Kraken2|`minikraken2_v2_8GB_201904_UPDATE`|[Kraken2: minikraken2_v2 DB](https://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz) |
+|Krakenuniq|`minikraken_20171019_8GB`|[kraken1: minikraken_8GB `seqid2taxid.map`](https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map)|
+|Kaiju|`kaiju_db_nr_euk`|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
+|GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
+|GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
+|MetaPhlAn2|`metaphlan_mpa_v20_m200`|[MetaPhlAn2 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
+|MTSV|`MTSV_Oct-28-2019`|[MTSV Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
+
+All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user-end removal or addition of databases. These features are planned to be part of future releases. 
+
+#### Details & Example
+
+The query tool can be run using the following command (for example):
+
+```
+python3 query_tool.py -t <taxid_source>
+```
+
+Here, `<taxid_source>` can have one of three forms:
+
+1. A file path to a text file with a list of line-separated taxon IDs. Excluding the newline and leading or trailing whitespace, each line must readily convert to an integer or the procedure will raise an error.
+2. The string `stdin` (i.e. `python3 query_tool.py -t stdin`). In this case a line-separated list (formatted as above) is expected from standard input. When an empty or all-whitespace line is encountered, input is terminated.
+3. A single integer representing a taxon ID. The procedure will run for only this taxon. Additionally, the output report will have a slightly different format than for multiple IDs.
+
+**Example**:
+
+<details><summary>(show example)</summary>
+
+```
+(metag) :~$ python3 query_tool.py -t testtax.txt
+
+DB Column Names:
+   1: minikraken_20171019_8GB
+   2: minikraken2_v2_8GB_201904_UPDATE
+   3: kaiju_db_nr_euk
+   4: NCBI_nucl_gb
+   5: NCBI_nucl_wgs
+   6: RefSeq_v98
+
+    taxid      rank 0 1 2 3 4 5
+  1913708   species - - 1 1 - -
+   980453   species - - - 1 - -
+   146582   species - - - 1 - -
+  1950923   species - - - - 1 -
+  1420363   species - - - 1 - -
+  1367599   species - - - 1 - -
+    48959   species - - - 1 - -
+  1594871   species - - - 1 - -
+    69507     genus - - - - - -
+   241522 subspecies - - - 1 - -
+  1068967   species - - - 1 - -
+  1007150   species - - - 1 - -
+   498356   no rank - 2 1 1 - -
+   
+   (...truncated...)
+```
+
+</details>
+
+
+## Output
+To understand how to interpret the output of the DQT we will use the example query from the previous section:
+
+```
+(metag) :~$ python3 query_tool.py -t testtax.txt
+
+DB Column Names:
+   1: minikraken_20171019_8GB
+   2: minikraken2_v2_8GB_201904_UPDATE
+   3: kaiju_db_nr_euk
+   4: NCBI_nucl_gb
+   5: NCBI_nucl_wgs
+   6: RefSeq_v98
+
+    taxid      rank 0 1 2 3 4 5
+  1913708   species - - 1 1 - -
+   980453   species - - - 1 - -
+   146582   species - - - 1 - -
+  1950923   species - - - - 1 -
+  1420363   species - - - 1 - -
+  1367599   species - - - 1 - -
+    48959   species - - - 1 - -
+  1594871   species - - - 1 - -
+    69507     genus - - - - - -
+   241522 subspecies - - - 1 - -
+  1068967   species - - - 1 - -
+  1007150   species - - - 1 - -
+   498356   no rank - 2 1 1 - -
+   
+   (...truncated...)
+```
+
+For the numeric values present in the matrix there are 3 possible outcomes:
+* 1: Taxon ID is present in that database
+* 2: Taxon ID is not present but it's species-level ancestor is
+* -: Neither is present
+
+*Note:* For taxon IDs above species level, only outcomes 1/0 are possible.
+
+If only a single taxon ID is input, the DQT will output the rank of that taxon ID and a `Yes` or `--` (No) response for containment in each database.
+```
+(metag) :~$ python3 query_tool.py -t 10
+Taxon ID:         10 (rank: genus)
+DB results:
+                minikraken_20171019_8GB: --
+       minikraken2_v2_8GB_201904_UPDATE: Yes
+                        kaiju_db_nr_euk: Yes
+                       MTSV_May-22-2019: --
+ MasonLab_Covid_Kraken_microDB_20200313: --
+                          NCBI_nucl_wgs: --
+                 metaphlan_mpa_v20_m200: --
+                           NCBI_nucl_gb: Yes
+                       MTSV_Oct-28-2019: --
+                             RefSeq_v98: Yes
+```
+
+## Additional Information
+
+A complete list of the commands and options is available using the `--help` flag at the command line:
+
+```
+python3 query_tool.py --help
+```
+
+### Logging Options:
+Options related to how much information the program prints while running:
+
+  `-qt`, `--quiet`      If given, disables logging to the console except for
+                        warnings or errors (overrides `--debug`)
+                        
+  -`vqt`, `--veryquiet` If given, disables logging to the console (overrides
+                        `--quiet` and `--debug`)
+                        
+  `--debug`             If given, enables more detailed logging useful in
+                        debugging.
