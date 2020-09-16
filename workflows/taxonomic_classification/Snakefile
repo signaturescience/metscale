@@ -1212,9 +1212,7 @@ kraken2_input_rev_sing = kraken2_input_pattern_sing.format(
             conf='{conf}'
 )
 
-kraken2_ouput = join(data_dir, taxclass['kraken2']['kraken2_output'] ) 
 kraken2_ouput_sing = join(sing_dir, taxclass['kraken2']['kraken2_output'] )
-
 kraken2_image = container_image_name(biocontainers, 'kraken2')
 kraken2_threads = taxclass['kraken2']['threads'] 
 kraken2_unclass_out = join(sing_dir, taxclass['kraken2']['unclass_out'])
@@ -1222,6 +1220,7 @@ kraken2_class_out = join(sing_dir, taxclass['kraken2']['class_out'])
 kraken2_report_sing = join(sing_dir, taxclass['kraken2']['report'])
 kraken2_report = join(data_dir, taxclass['kraken2']['report'])
 kraken2_db_sing = join(sing_dir, '{db}')
+
 
 rule kraken2:
     """
@@ -1910,7 +1909,7 @@ rule tax_class_kraken2_workflow:
     kraken2 workflow
     '''
     input:
-        expand( kraken2_ouput,
+        expand( kraken2_report,
                 sample    = sample_input_files,
                 qual      = workflows['tax_class_kraken2_workflow']['qual'],
                 direction = directions,
