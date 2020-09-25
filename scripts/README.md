@@ -7,7 +7,7 @@
 * [Additional Information](#Additional-Information)
 
 ## Workflow Overview 
-The Databse Query Tool is used to compare the contents of the reference databases used by the various taxonomic classification tools. Specifically, since the NCBI taxonomy is constantly changing and being updated, not all tools may be using the same version. Thus, comparing outputs from one tool to another requires accounting for differences in the coverage of their respective reference databases.In its most basic form, the DQT allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID, or that contain a species-level ancestor.
+The Databse Query Tool is used to compare the contents of the reference databases used by various taxonomic classification tools. Specifically, since NCBI taxonomy is constantly being updated and different taxonomic classification tools use different databases, not all tools have the same reference organisms in their database. Thus, comparing outputs from one tool to another requires accounting for differences in the presence of organisms in their respective reference databases. If a taxonomic classification tool does not report an expected species in a metagenome, the DQT allows users to quickly query whether or not that species was present in the tool's reference database. The DQT allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID or its ancestor. While taxons from any level can be queried, this tool was specifically designed to work with species-level taxons. 
 
 ![](https://github.com/signaturescience/metagenomics-wiki/blob/master/documentation/figures/DQT%20v1.png)
 
@@ -15,9 +15,9 @@ The Databse Query Tool is used to compare the contents of the reference database
 If you have not already, you will need to clone the MetScale repository and activate your metag environment [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install) before proceeding:
 
 ```sh
-[user@localhost ~]$ source activate metag 
+[user@localhost ~]$ source activate metscale 
 
-(metag)[user@localhost ~]$ cd metagenomics/scripts
+(metscale)[user@localhost ~]$ cd metagenomics/scripts
 
 ```
 
@@ -62,24 +62,24 @@ The command `--setup` first sets the value of `working_folder` in this file to b
 
 ### Taxon ID Querying
 
-The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The default queried databases include several of the tools in the Taxon Classification workflows and RefSeq_v98. The full list of databases is below.
+The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The default queried databases include several of the tools in the MetScale Taxonomic Classification Workflow, as well as versions of the NCBI RefSeq Database. The full list of databases is below.
 
 |Tool|Database Name|Source|
 |:---|:---|:---|
 |RefSeq|`RefSeq_v98`|[NCBI RefSeq FTP](https://ftp.ncbi.nlm.nih.gov/refseq/release/release-catalog/archive/)|
-|Kraken2|`minikraken2_v2_8GB_201904_UPDATE`|[Kraken2: minikraken2_v2 DB](https://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken2_v2_8GB_201904_UPDATE.tgz) |
-|Krakenuniq|`minikraken_20171019_8GB`|[kraken1: minikraken_8GB `seqid2taxid.map`](https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map)|
+|Kraken2|`minikraken2_v2_8GB_201904_UPDATE`|[Kraken2: minikraken2_v2 DB](https://genome-idx.s3.amazonaws.com/kraken/minikraken2_v2_8GB_201904.tgz) |
+|KrakenUniq|`minikraken_20171019_8GB`|[Kraken1: minikraken_8GB `seqid2taxid.map`](https://ccb.jhu.edu/software/kraken/dl/seqid2taxid.map)|
 |Kaiju|`kaiju_db_nr_euk`|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
 |GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
 |GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
 |MetaPhlAn2|`metaphlan_mpa_v20_m200`|[MetaPhlAn2 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
-|MTSV|`MTSV_Oct-28-2019`|[MTSV Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
+|MTSv|`MTSV_Oct-28-2019`|[MTSv Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
 
-All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user-end removal or addition of databases. These features are planned to be part of future releases. 
+All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user removal or addition of databases. These features are planned to be part of future releases. 
 
 #### Details & Example
 
-The query tool can be run using the following command (for example):
+The query functionality can be run using the following command (for example):
 
 ```
 python3 query_tool.py -t <taxid_source>
@@ -96,7 +96,7 @@ Here, `<taxid_source>` can have one of three forms:
 <details><summary>(show example)</summary>
 
 ```
-(metag) :~$ python3 query_tool.py -t testtax.txt
+(metscale) :~$ python3 query_tool.py -t testtax.txt
 
 DB Column Names:
    1: minikraken_20171019_8GB
@@ -131,7 +131,7 @@ DB Column Names:
 To understand how to interpret the output of the DQT we will use the example query from the previous section:
 
 ```
-(metag) :~$ python3 query_tool.py -t testtax.txt
+(metscale) :~$ python3 query_tool.py -t testtax.txt
 
 DB Column Names:
    1: minikraken_20171019_8GB
@@ -168,7 +168,7 @@ For the numeric values present in the matrix there are 3 possible outcomes:
 
 If only a single taxon ID is input, the DQT will output the rank of that taxon ID and a `Yes` or `--` (No) response for containment in each database.
 ```
-(metag) :~$ python3 query_tool.py -t 10
+(metscale) :~$ python3 query_tool.py -t 10
 Taxon ID:         10 (rank: genus)
 DB results:
                 minikraken_20171019_8GB: --
