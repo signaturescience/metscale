@@ -12,18 +12,18 @@ The Databse Query Tool is used to compare the contents of the reference database
 ![](https://github.com/signaturescience/metagenomics-wiki/blob/master/documentation/figures/DQT%20v1.png)
 
 ## Required Files
-If you have not already, you will need to clone the MetScale repository and activate your metag environment [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install) before proceeding:
+If you have not already, you will need to clone the MetScale repository and activate your metscale environment [Install](https://github.com/signaturescience/metscale/wiki/02.-Install) before proceeding:
 
 ```sh
 [user@localhost ~]$ source activate metscale 
 
-(metscale)[user@localhost ~]$ cd metagenomics/scripts
+(metscale)[user@localhost ~]$ cd metscale/scripts
 
 ```
 
 ### Input Files
 
-If you ran the MetScale installation correctly, the following files and directories should be present in the `metagenomics/scripts` directory.
+If you ran the MetScale installation correctly, the following files and directories should be present in the `metscale/scripts` directory.
 
 | File Name | File Size | MD5 Checksum |
 | ------------- | ------------- | ------------- |
@@ -33,7 +33,7 @@ If you ran the MetScale installation correctly, the following files and director
 | `doc/` | `4 KB` | `directory` |
 | `example_input_files/` | `4 KB` | `directory` | 
 
-If you are missing any of these files, you should re-clone the MetScale repository, as per instructions in [Install](https://github.com/signaturescience/metagenomics/wiki/02.-Install). 
+If you are missing any of these files, you should re-clone the MetScale repository, as per instructions in [Install](https://github.com/signaturescience/metscale/wiki/02.-Install). 
 
  
 ## Workflow Execution
