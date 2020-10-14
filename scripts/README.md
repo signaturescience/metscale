@@ -56,7 +56,7 @@ working_folder =
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 ```
-The command `--setup` first sets the value of `working_folder` in this file to be the path to the scripts folder containing the DQT (by default this is `metagenomics/scripts`). After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the needed `nodes.dmp` to `path_to_ncbi_taxonomy_nodes`. Finally it decompresses the file `containment_dict.json.gz` to create the `containment_dict.json` which contains metadata about the taxa in all of the various databases in a single json file.
+The command `--setup` first sets the value of `working_folder` in this file to be the path to the scripts folder containing the DQT (by default this is `metascale/scripts`). After this, it creates a folder for the NCBI taxonomy, then downloads and extracts the needed `nodes.dmp` to `path_to_ncbi_taxonomy_nodes`. Finally it decompresses the file `containment_dict.json.gz` to create the `containment_dict.json` which contains metadata about the taxa in all of the various databases in a single json file.
 
 ## Usage 
 
