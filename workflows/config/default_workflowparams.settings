@@ -460,6 +460,14 @@ config_default = {
             "location" : "../container_images/",
             "version" : "2.1--py35_0"
         },
+        "flash" : {
+            "use_local" : True,
+            "filename" : "1.2.11--hed695b0_5.sif",
+            "quayurl" : "quay.io/biocontainers/flash",
+            "location" : "../container_images/",
+            "version" : "1.2.11--hed695b0_5"
+        },
+        }
         "megahit" : {
             "use_local" : True,
             "filename" : "megahit_1.1.2--py35_0.sif",
