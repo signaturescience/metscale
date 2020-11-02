@@ -12,6 +12,7 @@ This project builds off open source work that began in the Dahak project.
 
 -Dahak
 	-github.com/dahak-metagenomics/dahak
+	-Developed by the Lab for Data Intensive Biology at the University of California, Davis
 	-Copyright © 2017, The Regents of the University of California
 	-BSD 3-Clause License
 
@@ -20,6 +21,7 @@ The metagenomics workflows use the following tools:
 
 -Git
 	-https://git-scm.com/
+	-Trademark owned by Software Freedom Conservancy (https://git-scm.com/about/trademark)
 	-GNU General Public License v2
 	
 -Singularity
@@ -44,7 +46,8 @@ The metagenomics workflows use the following tools:
 
 -python-datrie
 	-https://github.com/pytries/datrie
-	-GNU Lesser General Public License v2.1
+	-Author Mikhail Korobov
+	-GNU Lesser General Public License v2.1 or later (LGPLv2+)
 	
 -python-psutils
 	-https://github.com/giampaolo/psutil/blob/master/LICENSE
@@ -79,6 +82,7 @@ The metagenomics workflows use the following tools:
 	
 -Biocontainers
 	-https://biocontainers.pro/
+	-Copyright © 2019, Yasset Perez-Riverol
 	-Apache 2.0 License
 	
 
@@ -87,93 +91,113 @@ The metagenomics workflows use the following tools:
 	-Trimmomatic version 0.36--5
 		-quay.io/biocontainers/trimmomatic
 		-github.com/timflutre/trimmomatic
+		-Developed by the Usadel Lab of RWTH Aachen University, Germany
 		-GNU General Public License v3
 
 	-FastQC version 0.11.7--p15.22.0_2
 		-quay.io/biocontainers/fastqc
 		-github.com/s-andrews/FastQC
+		-Developed by the Bioinformatics Group at the Babraham Institute, England
 		-GNU General Public License v2
 
 	-MultiQC version 1.4--py35_0
 		-quay.io/biocontainers/multiqc
-		-multiqc.iCopyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of Californianfo/
+		-https://multiqc.info/
+		-Developed by SciLifeLab National Genomics Infrastructure in Stockholm, Sweden
 		-GNU General Public License v3
 		
 	-Khmer version 2.1--py35_0
 		-quay.io/biocontainers/khmer
 		-khmer.readthedocs.io/en/v2.1.2/user/scripts.html
-		-Copyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of California
+		-Developed by the Lab for Data Intensive Biology at the University of California, Davis
+		-Copyright (c) 2010-2015, Michigan State University. Copyright (c) 2015, The Regents of the University of California, USA
 		-BSD-3-Clause License
 	
-	-SPAdes version 3.11--py36_zlib1.2.8_0
+	-SPAdes version 3.14.0--h2d02072_0
 		-quay.io/biocontainers/spades
 		-cab.spbu.ru/software/spades
+		-Developed by the Center for Algorithmic Biotechnology at St. Petersburg State University, Russia
 		-GNU General Public License v2
  
 	-MEGAHIT version 1.1.2--py35_0
 		-quay.io/biocontainers/megahit
 		-github.com/voutcn/megahit
+		-Developed by HKU-BGI Bioinformatics Algorithms Research Laboratory & Department of Computer Science, University of Hong Kong
 		-GNU General Public License v3
 
 	-QUAST version 5.0.2--py27pl526ha92aebf_0
 		-quay.io/biocontainers/quast
 		-quast.sourceforge.net/
+		-Developed by the Center for Algorithmic Biotechnology at St. Petersburg State University, Russia
+		-Copyright (c) 2015-2018 Saint Petersburg State University
+		-Copyright (c) 2011-2015 Saint Petersburg Academic University
 		-GNU General Public License v2
 
-	-Mash version mash_2.2--h3d38be6_0
+	-Mash version 2.2--h3d38be6_0
 		-quay.io/biocontainers/mash
 		-github.com/marbl/Mash
+		-Developed for the U.S. Department of Homeland Security by the Battelle National Biodefense Institute, LLC, USA
 		-Copyright © 2015, Battelle National Biodefense Institute (BNBI)
 		-MIT License, and others as described in github.com/marbl/Mash/blob/master/LICENSE.txt
 	
 	-Sourmash version 2.1.0--py27he1b5a44_0
 		-quay.io/biocontainers/sourmash
 		-github.com/dib-lab/sourmash
+		-Developed by the Lab for Data Intensive Biology at the University of California, Davis, USA
 		-Copyright © 2016 The Regents of the University of California
 		-BSD-3-Clause License
 
-	-Kaiju version 1.6.1--pl5.22.0_0.sif
+	-Kaiju version 1.6.1--pl5.22.0_0
 		-quay.io/biocontainers/kaiju
 		-kaiju.binf.ku.dk/
+		-Developed by the University of Copenhagen, Denmark
+		-Copyright (c) 2015-2020 Peter Menzel and Anders Krogh
 		-GNU General Public License v3
 
 	-Krona version 2.7--pl5.22.0_1
 		-quay.io/biocontainers/krona
 		-github.com/marbl/Krona
+		-Developed for the U.S. Department of Homeland Security by the Battelle National Biodefense Institute, LLC, USA
 		-Copyright © 2011, Battelle National Biodefense Institute (BNBI)
 		-BSD 2-clause “Simplified” License
 		
 	-KrakenUniq version krakenuniq_0.5.8--pl526he860b03_0
 		-quay.io/biocontainers/krakenuniq
 		-github.com/fbreitwieser/krakenuniq
+		-Developed by the Johns Hopkins School of Medicine, Baltimore, MD, USA
 		-GNU General Public License v3
 	
 	-Kraken2 version 2.0.8_beta--pl526h6bb024c_0
 		-quay.io/biocontainers/kraken2
 		-ccb.jhu.edu/software/kraken2/
+		-Developed by the Johns Hopkins School of Medicine, Baltimore, MD, USA
 		-Copyright (c) 2017-2018 Derrick Wood
 		-MIT License
 	
 	-Bracken version 2.2--py27h2d50403_1
 		-quay.io/biocontainers/bracken
 		-ccb.jhu.edu/software/bracken/
+		-Developed by the Johns Hopkins School of Medicine, Baltimore, MD, USA
 		-GNU General Public License v3
 	
-	-MTSv version 1.0.5--py36hc9558a2_0
+	-MTSv version 1.0.6--py36hc9558a2_1
 		-quay.io/biocontainers/mtsv
 		-github.com/FofanovLab/MTSv
+		-Developed by the Fofanov Bioinformatics Lab at Northern Arizona University, USA
 		-Copyright (c) 2018 FofanovLab
 		-MIT License
 		
-	-SRST2 version 2-0.2.0--py27_2
+	-SRST2 version 0.2.0--py27_2
 		-quay.io/biocontainers/srst2
 		-github.com/katholt/srst2
+		-Developed by the University of Melbourne, Australia
 		-Copyright (c) 2013, Michael Inouye, Bernie Pope, Harriet Dashnow, Kathryn Holt
 		-BSD License
 		
 	-HUMAnN2 version 2.8.1--py27_0
 		-quay.io/biocontainers/humann2
 		-huttenhower.sph.harvard.edu/humann
+		-Developed by the Huttenhower Lab at Harvard T.H. Chan School of Public Health, Boston, MA, USA
 		-MIT License
 
 -Docker
@@ -186,11 +210,13 @@ The metagenomics workflows use the following tools:
 	-ABRicate version 0.5-dev
 		-hub.docker.com/r/thanhleviet/abricate/
 		-github.com/tseemann/abricate
+		-Developed by the Seemann Lab at the University of Melbourne, Australia
 		-GNU General Public License v2
 		
 	-Prokka version 1.14.5-1
 		-hub.docker.com/r/ummidock/prokka/
 		-github.com/tseemann/prokka
+		-Developed by the Seemann Lab at the University of Melbourne, Australia
 		-GNU General Public License v3
 		
 -R and R Markdown
@@ -200,69 +226,88 @@ The metagenomics workflows use the following tools:
 	-GNU General Public License v3
 
 	-R packages used:
-		-package version (date)
-		-assertthat 0.2.1 (2019-03-21)
-		-backports 1.1.2 (2017-12-13)
-		-base 3.5.1 (2018-07-05)
-		-broom 0.5.0 (2018-07-17)
-		-cellranger 1.1.0 (2016-07-27)
-		-cli 1.0.1 (2018-09-25)
-		-clipr 0.4.1 (2018-06-23)
-		-colorspace 1.3-2 (2016-12-14)
-		-compiler 3.5.1 (2018-07-05)
-		-crayon 1.3.4 (2017-09-16)
-		-datasets 3.5.1 (2018-07-05)
-		-devtools 1.13.6 (2018-06-27)
-		-digest 0.6.18 (2018-10-10)
-		-dplyr 0.8.1 (2019-05-14)
-		-DT 0.5 (2018-11-05)
-		-evaluate 0.11 (2018-07-17)
-		-forcats 0.3.0 (2018-02-19)
-		-ggplot2 3.1.0 (2018-10-25)
-		-glue 1.3.1 (2019-03-12)
-		-graphics 3.5.1 (2018-07-05)
-		-grDevices 3.5.1 (2018-07-05)
-		-grid 3.5.1 (2018-07-05)
-		-gtable 0.2.0 (2016-02-26)
-		-haven 1.1.2 (2018-06-27)
-		-hms 0.4.2 (2018-03-10)
-		-htmltools 0.3.6 (2017-04-28)
-		-htmlwidgets 1.3 (2018-09-30)
-		-httr 1.3.1 (2017-08-20)
-		-jsonlite 1.5 (2017-06-01)
-		-knitr 1.20 (2018-02-20)
-		-lattice 0.20-35 (2017-03-25)
-		-lazyeval 0.2.1 (2017-10-29)
-		-lubridate 1.7.4 (2018-04-11)
-		-magrittr 1.5 (2014-11-22)
-		-memoise 1.1.0 (2017-04-21)
-		-methods 3.5.1 (2018-07-05)
-		-modelr 0.1.2 (2018-05-11)
-		-munsell 0.5.0 (2018-06-12)
-		-nlme 3.1-137 (2018-04-07)
-		-pillar 1.4.1 (2019-05-28)
-		-pkgconfig 2.0.2 (2018-08-16)
-		-plyr 1.8.4 (2016-06-08)
-		-purrr 0.2.5 (2018-05-29)
-		-R6 2.4.0 (2019-02-14)
-		-Rcpp 1.0.1 (2019-03-17)
-		-readr 1.1.1 (2017-05-16)
-		-readxl 1.1.0 (2018-04-20)
-		-rlang 0.3.4 (2019-04-07)
-		-rmarkdown 1.10 (2018-06-11)
-		-rprojroot 1.3-2 (2018-01-03)
-		-rstudioapi 0.8 (2018-10-02)
-		-rvest 0.3.2 (2016-06-17)
-		-scales 1.0.0 (2018-08-09)
-		-stats 3.5.1 (2018-07-05)
-		-stringi 1.2.4 (2018-07-20)
-		-stringr 1.3.1 (2018-05-10)
-		-tibble 2.1.1 (2019-03-16)
-		-tidyr 0.8.2 (2018-10-28)
-		-tidyselect 0.2.5 (2018-10-11)
-		-tidyverse 1.2.1 (2017-11-14)
-		-tools 3.5.1 (2018-07-05)
-		-utils 3.5.1 (2018-07-05)
-		-withr 2.1.2 (2018-03-15)
-		-xml2 1.2.0 (2018-01-24)
-		-yaml 2.2.0 (2018-07-25)
+		-package version license
+		-dplyr 0.8.4 MIT
+		-tidyr 0.8.1 MIT
+		-stringr 1.3.1 GPL-2
+		-rjson 0.2.20 GPL-2
+		-RSQLite 2.2.0 LGPL (>= 2.1)
+		-remotes 2.1.1 GPL (>= 2)
+		-hoardr 0.5.2 MIT
+		-curl 3.2 MIT
+		-DBI 1.1.0 LGPL (>= 2.1)
+		-dbplyr 1.2.2 MIT
+		-magrittr 1.5 MIT
+		-roxygen2 7.0.2 GPL (>= 2)
+		-testthat 2.3.1 MIT
+		-taxizedb 0.1.9.9130 MIT
+		-ggplot2 3.0.0 GPL-2
+		-ggfittext 0.9.0 GPL-2
+		-ellipsis 0.3.0 GPL-3
+		-generics 0.0.2 GPL-2
+		-glue 1.3.0 MIT
+		-lifecycle 0.2.0 GPL-3
+		-R6 2.3.0 MIT
+		-rlang 0.4.4 GPL-3
+		-tibble 2.1.3 MIT
+		-tidyselect 1.0.0 GPL-3
+		-vctrs 0.2.3 GPL-3
+		-cli 2.0.1 MIT
+		-crayon 1.3.4 MIT
+		-fansi 0.4.0 GPL (>= 2)
+		-pillar 1.4.3 GPL-3
+		-pkgconfig 2.0.2 MIT
+		-purrr 0.3.3 GPL-3
+		-digest 0.6.17 GPL (>= 2)
+		-assertthat 0.2.0 GPL-3
+		-utf8 1.1.4 Apache License (== 2.0)
+		-cpp11 0.2.3 MIT
+		-stringi 1.2.4 file LICENSE
+		-bit64 0.9.7 GPL-2
+		-blob 1.2.1 GPL-3
+		-memoise 1.1.0 MIT
+		-Rcpp 1.0.3 GPL (>= 2)
+		-BH 1.66.0.1 BSL-1.0
+		-plogr 0.2.0 MIT
+		-bit 1.1.15.2 GPL-2
+		-rappdirs 0.3.1 MIT
+		-brew 1.0.6 GPL-2
+		-commonmark 1.7 BSD_2_clause
+		-desc 1.2.0 MIT
+		-knitr 1.2 GPL
+		-pkgload 1.0.2 GPL-3
+		-xml2 1.2.5 GPL (>= 2)
+		-rprojroot 1.3.2 GPL-3
+		-evaluate 0.12 MIT
+		-highr 0.7 GPL
+		-markdown 0.8 GPL-2
+		-yaml 2.2.0 BSD_3_clause
+		-xfun 0.3 MIT
+		-pkgbuild 1.0.6 GPL-3
+		-rstudioapi 0.8 MIT
+		-withr 2.1.2 GPL (>= 2)
+		-mime 0.6 GPL
+		-callr 3.4.2 MIT
+		-prettyunits 1.1.1 MIT
+		-backports 1.1.2 GPL-2
+		-processx 3.4.2 MIT
+		-ps 1.3.2 BSD_3_clause
+		-praise 1.0.0 MIT
+		-readr 1.1.1 GPL (>= 2)
+		-clipr 0.4.1 GPL-3
+		-hms 0.4.2 GPL-3
+		-gtable 0.2.0 GPL-2
+		-isoband 0.2.2 MIT
+		-MASS 7.3.51.4 GPL-2 | GPL-3
+		-mgcv 1.8.28 GPL (>= 2)
+		-scales 1.0.0 MIT
+		-nlme 3.1.139 GPL (>= 2)
+		-Matrix 1.2.17 GPL (>= 2)
+		-farver 2.0.3 MIT
+		-labeling 0.3 MIT
+		-munsell 0.5.0 MIT
+		-RColorBrewer 1.1.2 Apache License 2.0
+		-viridisLite 0.3.0 MIT
+		-lattice 0.20.38 GPL (>= 2)
+		-colorspace 1.3.2 BSD_3_clause
+		-shades 1.4.0 BSD_3_clause
