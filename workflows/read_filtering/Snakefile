@@ -66,6 +66,7 @@ def get_samples_filenames():
     
 sample_input_files, sample_finished_folders = get_samples_filenames()
 
+
 ###################################
 # Pretrimming code needed for convert_illumina_to_internal_format and pre_trimming_quality_assessment
 
@@ -126,10 +127,6 @@ rule convert_external_to_internal_format:
         src_rev_str =  params.replace_pattern.join(src_fwd_str.rsplit(params.search_pattern, 1))
         shutil.copy(src_fwd_str, params.dest_fwd)
         shutil.copy(src_rev_str, params.dest_rev)
-
-
-
-
 
 
 ###################################
@@ -197,6 +194,121 @@ rule pre_trimming_quality_assessment:
         'fastqc -t {threads} '
         '/{params.pre_trimming_input_wc} '
         '-o /{sing_dir} '
+
+
+###################################
+## Read Filtering: Four rules to convert PE to SE
+
+flash_merged_pair_out_extendedFrags = join(data_dir, (readfilt['convert_pe_to_se']['flash_pe_output_extendedFrags'].format(sample='{sample}')))
+flash_merged_pair_out_notCombined_1 =  join(data_dir, (readfilt['convert_pe_to_se']['flash_pe_output_notCombined_1'].format(sample='{sample}')))
+flash_merged_pair_out_notCombined_2 =  join(data_dir, (readfilt['convert_pe_to_se']['flash_pe_output_notCombined_2'].format(sample='{sample}')))
+flash_merged_pair_out_sing = (readfilt['convert_pe_to_se']['flash_pe_output_sing'].format(sample='{sample}'))
+
+flash_merged_pair_log = join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_log'].format(sample='{sample}')))
+flash_image = container_image_name(biocontainers, 'flash')
+
+flash_merge_pair_output = [flash_merged_pair_out_extendedFrags, flash_merged_pair_out_notCombined_1, flash_merged_pair_out_notCombined_2]
+
+def flash_merge_pair_output_sing(wildcards):
+    return flash_merged_pair_out_sing.format(**wildcards)
+
+#Rule 1
+rule merge_pair_ends_with_flash:
+    input:
+        pre_trimming_inputs
+    output:
+        flash_merge_pair_output
+    singularity:
+        flash_image
+    params:
+        merged_pair_input = pre_trimming_qa_inputs,
+        merged_pair_output = flash_merge_pair_output_sing,
+        merged_pair_log = flash_merged_pair_log
+    shell:
+        'flash {params.merged_pair_input} -M 70 -o {params.merged_pair_output} '
+        '-d {sing_dir} 2>&1 | tee {params.merged_pair_log}'
+
+#############################################
+
+merged_reads_with_trim_SE_input = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_input'].format(sample='{sample}')))
+merged_reads_trim_SE_output = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_output'].format(sample='{sample}')))
+trimmo_image = container_image_name(biocontainers,'trimmomatic')
+
+def merged_reads_with_trimmomatic_SE_out_sing(wildcards):
+    return join(sing_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_output'].format(**wildcards)))
+
+def merged_reads_with_trimmomatic_SE_input_sing(wildcards):
+    return join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_output_extendedFrags'].format(**wildcards)))
+
+#Rule 2
+rule merged_reads_with_trimmomatic_SE:
+    input:
+        merged_reads_with_trim_SE_input
+    output:
+        merged_reads_trim_SE_output
+    singularity:
+        trimmo_image
+    params:
+        trim_SE_output = merged_reads_with_trimmomatic_SE_out_sing,
+        trim_SE_input =  merged_reads_with_trimmomatic_SE_input_sing
+    shell:
+        'trimmomatic SE {params.trim_SE_input} {params.trim_SE_output} ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
+        'LEADING:25 TRAILING:25 SLIDINGWINDOW:4:25 MINLEN:25'
+
+#############################################
+
+merged_reads_trim_PE_input = [flash_merged_pair_out_notCombined_1, flash_merged_pair_out_notCombined_2]
+flash_merged_pair_out_notCombined_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_output_notCombined_1'].format(sample='{sample}')))
+flash_merged_pair_out_notCombined_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_output_notCombined_2'].format(sample='{sample}')))
+merged_reads_trim_PE_input_sing = [flash_merged_pair_out_notCombined_1_sing, flash_merged_pair_out_notCombined_2_sing]
+
+merged_reads_trimm_PE_out_tr25_fastq_1 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_1'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr25_fastq_2 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_2'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr25_se_1 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_1'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr25_se_2 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_2'].format(sample='{sample}')))
+            
+merged_reads_trim_PE_output = [merged_reads_trimm_PE_out_tr25_fastq_1, merged_reads_trimm_PE_out_tr25_fastq_2, merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
+
+merged_reads_trimm_PE_out_tr25_fastq_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_1'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr25_fastq_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_2'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr25_se_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_1'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr25_se_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_2'].format(sample='{sample}')))
+
+merged_reads_trim_PE_out_sing = [merged_reads_trimm_PE_out_tr25_fastq_1_sing, 
+        merged_reads_trimm_PE_out_tr25_fastq_2_sing, merged_reads_trimm_PE_out_tr25_se_1_sing, merged_reads_trimm_PE_out_tr25_se_2_sing]
+
+
+#rule 3
+rule filter_merged_reads_trimmomatic_PE:
+    input:
+        merged_reads_trim_PE_input
+    output:
+        merged_reads_trim_PE_output
+    singularity:
+        trimmo_image
+    params:
+        trim_PE_input = merged_reads_trim_PE_input_sing,
+        trim_PE_out = merged_reads_trim_PE_out_sing
+    shell:
+        'trimmomatic PE {params.trim_PE_input} {params.trim_PE_out} ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
+        'LEADING:25 TRAILING:25 SLIDINGWINDOW:4:25 MINLEN:25'
+
+
+#############################################
+combine_read_trim_input = [merged_reads_trim_SE_output, merged_reads_trimm_PE_out_tr25_fastq_1, merged_reads_trimm_PE_out_tr25_fastq_2,
+                merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
+combine_read_trim_output = join(data_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output'].format(sample='{sample}')))
+
+#rule 4
+rule combine_PE_reads_outputs_and_compress:
+    input:
+        combine_read_trim_input
+    output:
+        combine_read_trim_output
+    params:
+
+    shell:
+        'gzip -c {input} > {output}'
 
 
 
@@ -918,3 +1030,10 @@ rule read_filtering_fastq_to_fasta_workflow:
     '''
     input:  
         expand("data/{file}.fa", file=files)
+
+
+rule read_filtering_convert_PE_to_SE_workflow:
+    input:
+        expand( combine_read_trim_output,
+            sample    = sample_input_files
+        )

@@ -32,6 +32,20 @@ config_default = {
             # number of threads to use.
             "threads" : 2
         },
+        "convert_pe_to_se" : {
+            "flash_pe_output_extendedFrags" : "{sample}.extendedFrags.fastq",
+            "flash_pe_output_notCombined_1" : "{sample}.notCombined_1.fastq",
+            "flash_pe_output_notCombined_2" : "{sample}.notCombined_2.fastq",
+            "flash_se_output_notCombined_tr25_fastq_1" : "{sample}.notCombined_trim25_1.fastq",
+            "flash_se_output_notCombined_tr25_fastq_2" : "{sample}.notCombined_trim25_2.fastq",
+            "flash_se_output_notCombined_tr25_se_1" : "{sample}.notCombined_trim25_1_se",
+            "flash_se_output_notCombined_tr25_se_2" : "{sample}.notCombined_trim25_2_se",
+            "combine_reads_compress_output" : "{sample}_combined_trim25.fq.gz",
+            "trim_se_trim25_input" : "{sample}.extendedFrags.fastq",
+            "trim_se_trim25_output" : "{sample}_extendedFrags_trim25.fq",
+            "flash_pe_output_sing" : "{sample}",
+            "flash_pe_log" : "{sample}_flash.log",
+        },
         "quality_trimming" : {
             # 
             # suffix for quality trimming files (replaces file extension)
@@ -462,12 +476,11 @@ config_default = {
         },
         "flash" : {
             "use_local" : True,
-            "filename" : "1.2.11--hed695b0_5.sif",
+            "filename" : "flash_1.2.11--hed695b0_5.sif",
             "quayurl" : "quay.io/biocontainers/flash",
             "location" : "../container_images/",
             "version" : "1.2.11--hed695b0_5"
         },
-        }
         "megahit" : {
             "use_local" : True,
             "filename" : "megahit_1.1.2--py35_0.sif",
