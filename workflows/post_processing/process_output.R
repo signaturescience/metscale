@@ -18,7 +18,8 @@ process_output <- function(data_dir, out_dir) {
     "Bracken" = "._bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}",
     "Sourmash" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv",
     "Mash Screen" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_[[:print:]]{1,}_mash_screen[.]sorted[.]tab",
-    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv"
+    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv",
+    "Humann2" = "[[:print:]]{1,}_trim[[:digit:]]{1,}_interleaved_reads_metaphlan_bugs_list.tsv"
   )
   
   # Vector for warnings
@@ -481,7 +482,7 @@ process_output <- function(data_dir, out_dir) {
       tmp_output <- read.csv(file = tmp_files$path[i], header = FALSE, as.is = TRUE, skip = 2)
       colnames(tmp_output) <- c("species_id", "division", "name", "total_hits", "unique_hits", 
                                 "signature_hits", "unique_signature_hits")
-      tmp_output %>%
+      tmp_output <- tmp_output %>%
         select(species_id, total_hits, unique_hits, signature_hits, unique_signature_hits) %>%
         gather(total_hits, unique_hits, signature_hits, unique_signature_hits, key = "var_name", 
                value = "var_value")
@@ -495,6 +496,35 @@ process_output <- function(data_dir, out_dir) {
     if (exists("tmp_files")) {rm(tmp_files)}
     
   }
+
+  if (any(file_list$tool == "Humann2")) {
+    tmp_files <- file_list[file_list$tool == "Humann2",]
+    for (i in 1:nrow(tmp_files)) {
+      tmp_output <- read.table(file = tmp_files[i], sep = "\t", header = FALSE, as.is = TRUE)
+      colnames(tmp_output) <- c("taxa", "abundance")
+      tmp_output$name <- character(nrow(tmp_output))
+      tmp_output$species_id <- numeric(nrow(tmp_output))
+      tmp_split <- stringr::str_split(string = tmp_output$taxa, pattern = "[|]")
+      for (j in 1:length(tmp_split)) {
+        if (any(stringr::str_detect(string = tmp_split[[j]], pattern = "s__[[:print:]]{1,}"))) {
+          tmp_output$name[j] <- tmp_split[[j]][grepl("s__[[:print:]]{1,}", tmp_split[[j]])]
+          tmp_output$name[j] <- substr(tmp_output$name[j], 4, nchar(tmp_output$name[j]))
+          tmp_output$name[j] <- gsub("_", " ", tmp_output$name[j])
+	  tmp_output$species_id[j] <- taxizedb::name2taxid(x = tmp_output$species_name[j])
+	} else {
+	  tmp_output$name[j] <- NA
+   	  tmp_output$species_id[j] <- NA
+	}
+      } # End for (j in...
+      tmp_output <- tmp_output[!is.na(tmp_output$name),]
+      tmp_output <- tmp_output %>%
+        select(species_id, var_value = abundance) %>%
+        mutate(var_name = "abundance")
+      variables <- rbind(variables, tmp_output)
+      if (exists("tmp_output") rm(tmp_output)
+    } # End for (i in...
+    if (exists("tmp_files")) rm(tmp_files)
+  } # End if (any...
   
   ##################################################################################################
   ########################################## Query Taxon Lineage ###################################
