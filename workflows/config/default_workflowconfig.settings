@@ -174,7 +174,7 @@ config_default = {
         "tax_class_kraken2_workflow" : {
             "qual" : ["2","30"],
             # db to run against, this is the default DB downloaded from download python script.
-            "db" : "minikraken2_v2_8GB_201904_UPDATE",
+            "db" : "minikraken_8GB_20200312", 
             # confidence score between 0 and 1
             "confidence" : 0,
         },
@@ -190,7 +190,7 @@ config_default = {
             "level" : "S",
             "threshold" : 0,
             #directory that has DB dir. defaults to default dir
-            "bdb" : "minikraken2_v2_8GB_201904_UPDATE"
+            "bdb" : "minikraken_8GB_20200312"
         },
         "tax_class_mash_dist_workflow" : {
             "qual" : ["2","30"],

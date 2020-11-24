@@ -35,7 +35,7 @@
         "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
         "mtsv_1.0.6--py36hc9558a2_1.sif" : "docker://quay.io/biocontainers/mtsv:1.0.6--py36hc9558a2_1",
         "mash_2.2--h3d38be6_0.sif" : "docker://quay.io/biocontainers/mash:2.2--h3d38be6_0",
-        "minikraken2_v2_8GB_201904.tgz" : "https://genome-idx.s3.amazonaws.com/kraken/minikraken2_v2_8GB_201904.tgz",
+        "minikraken_8GB_202003.tgz":  "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
         "database100mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database100mers.kmer_distrib",
         "database150mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database150mers.kmer_distrib",
