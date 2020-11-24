@@ -1,6 +1,6 @@
 library("ggplot2")
 library("stringr")
-
+library("ggfittext")
 
 options(stringsAsFactors = FALSE)
 options(warn=-1)
@@ -66,10 +66,9 @@ out_file <- paste(substr(file_name, 1, nchar(file_name) - 4), ".png",
                   sep = "")
 png(file = out_file, height = 8.5, width = 8.5, units = "in", res = 250)
 p <- ggplot(data = plot_df, 
-            mapping = aes(x = Sample.x, y = Sample.y, fill = Jaccard.Index))
-p <- p + geom_tile()
-p <- p + geom_text(aes(x = Sample.x, y = Sample.y, label = round(Jaccard.Index, 2)),
-                   color = "white", size = 8)
+            mapping = aes(x = Sample.x, y = Sample.y, fill = Jaccard.Index, label = round(Jaccard.Index, 2)))
+p <- p + geom_tile(color = "black")
+p <- p + geom_fit_text(grow = TRUE, contrast = TRUE)
 p <- p + theme_classic()
 p <- p + theme(text = element_text(size = 20), aspect.ratio = 1)
 p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
