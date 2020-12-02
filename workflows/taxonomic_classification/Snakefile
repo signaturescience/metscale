@@ -778,6 +778,7 @@ def kaiju_filteredclass_report_output_name(wildcards):
     return kaiju_filteredclass_report_out
 
 
+print("rule kaiju_filteredclass_report output: "+str(kaiju_filteredclass_report_output_file))
 rule kaiju_filteredclass_report:
     """
     Generate a kaiju report from *classified* kaiju results,
@@ -1027,11 +1028,14 @@ visualize_krona_filteredclass_output_file_sing = re.sub(
 )
 
 def visualize_krona_filteredclass_input_func(wildcards):
-    return visualize_krona_filtered_input_file_sing.format(**wildcards)
+    return kaiju_filteredclass_report_output_file_sing.format(**wildcards)
 
 def visualize_krona_filteredclass_output_func(wildcards):
     return visualize_krona_filteredclass_output_file_sing.format(**wildcards)
 
+print("New kaiju_filteredclass_report_output_file_sing: "+str(kaiju_filteredclass_report_output_file_sing))
+print("rule visualize_krona_filteredclass input"+str(visualize_krona_filteredclass_input_file))
+print("rule visualize_krona_filteredclass sing input"+str(visualize_krona_filtered_input_file_sing))
 rule visualize_krona_filteredclass:
     """
     Visualize classified, filtered (>X%) kaiju results using krona
