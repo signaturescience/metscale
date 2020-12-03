@@ -37,9 +37,6 @@
         "mash_2.2--h3d38be6_0.sif" : "docker://quay.io/biocontainers/mash:2.2--h3d38be6_0",
         "minikraken_8GB_202003.tgz":  "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
-        "database100mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database100mers.kmer_distrib",
-        "database150mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database150mers.kmer_distrib",
-        "database200mers.kmer_distrib" : "https://ccb.jhu.edu/software/bracken/dl/minikraken2_v2/database200mers.kmer_distrib",
         "RefSeq_10K_Sketches.msh.gz": "https://obj.umiacs.umd.edu/diamond/RefSeq_10K_Sketches.msh.gz"
     },
 
@@ -76,9 +73,5 @@
     },
 
     "post_processing" : {
-        "dead_nucl.accession2taxid.gz": "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/dead_nucl.accession2taxid.gz",
-        "dead_wgs.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/dead_wgs.accession2taxid.gz",
-        "nucl_gb.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz",
-        "nucl_wgs.accession2taxid.gz" : "ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz"
     }
 }
