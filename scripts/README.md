@@ -174,8 +174,6 @@ DB results:
                 minikraken_20171019_8GB: --
        minikraken2_v2_8GB_201904_UPDATE: Yes
                         kaiju_db_nr_euk: Yes
-                       MTSV_May-22-2019: --
- MasonLab_Covid_Kraken_microDB_20200313: --
                           NCBI_nucl_wgs: --
                  metaphlan_mpa_v20_m200: --
                            NCBI_nucl_gb: Yes
