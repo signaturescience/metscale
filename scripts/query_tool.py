@@ -66,7 +66,7 @@ ncbi_tax_levels = ['no rank', 'superkingdom', 'kingdom', 'subkingdom', 'superphy
                    'superclass', 'class', 'subclass', 'infraclass', 'cohort', 'subcohort', 'superorder', 'order',
                    'suborder', 'infraorder', 'parvorder', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe',
                    'genus', 'subgenus', 'section', 'subsection', 'series', 'species group', 'species subgroup',
-                   'species', 'subspecies', 'varietas', 'forma', 'clade']
+                   'species', 'subspecies', 'varietas', 'forma','strain', 'clade']
 hidden_args_help_strings = {}
 
 #
