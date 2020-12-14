@@ -41,10 +41,12 @@ config_default = {
             "flash_se_output_notCombined_tr25_se_1" : "{sample}.notCombined_trim25_1_se",
             "flash_se_output_notCombined_tr25_se_2" : "{sample}.notCombined_trim25_2_se",
             "combine_reads_compress_output" : "{sample}_combined_trim25.fq.gz",
+            "combine_reads_compress_output_fq" : "{sample}_combined_trim25.fq",
             "trim_se_trim25_input" : "{sample}.extendedFrags.fastq",
-            "trim_se_trim25_output" : "{sample}_extendedFrags_trim25.fq",
+            "trim_se_trim25_output" : "{sample}_trim{qual}_extendedFrags_trim25.fq",
             "flash_pe_output_sing" : "{sample}",
             "flash_pe_log" : "{sample}_flash.log",
+            "qual"         : ["2","30"],
         },
         "quality_trimming" : {
             # 

@@ -231,7 +231,7 @@ rule merge_pair_ends_with_flash:
 #############################################
 
 merged_reads_with_trim_SE_input = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_input'].format(sample='{sample}')))
-merged_reads_trim_SE_output = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_output'].format(sample='{sample}')))
+merged_reads_trim_SE_output = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_output'].format(sample='{sample}', qual=readfilt['convert_pe_to_se']['qual'])))
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
 def merged_reads_with_trimmomatic_SE_out_sing(wildcards):
@@ -298,6 +298,13 @@ rule filter_merged_reads_trimmomatic_PE:
 combine_read_trim_input = [merged_reads_trim_SE_output, merged_reads_trimm_PE_out_tr25_fastq_1, merged_reads_trimm_PE_out_tr25_fastq_2,
                 merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
 combine_read_trim_output = join(data_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output'].format(sample='{sample}')))
+#combine_read_trim_output_sing = join(sing_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output_sing'].format(sample='{sample}')))
+print(combine_read_trim_output)
+#print(combine_read_trim_output_sing)
+
+
+def combine_read_trim_output_fq(wildcards):
+    return join(data_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output_fq'].format(**wildcards)))
 
 #rule 4
 rule combine_PE_reads_outputs_and_compress:
@@ -306,9 +313,11 @@ rule combine_PE_reads_outputs_and_compress:
     output:
         combine_read_trim_output
     params:
-
+        combine_sing_output = combine_read_trim_output_fq
     shell:
-        'gzip -c {input} > {output}'
+        'cat {input} > {params.combine_sing_output}; gzip {params.combine_sing_output}'
+
+
 
 
 
@@ -1035,5 +1044,5 @@ rule read_filtering_fastq_to_fasta_workflow:
 rule read_filtering_convert_PE_to_SE_workflow:
     input:
         expand( combine_read_trim_output,
-            sample    = sample_input_files
+            sample    = sample_input_files,
         )
