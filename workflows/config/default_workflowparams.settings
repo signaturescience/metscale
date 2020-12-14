@@ -551,12 +551,12 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/krakenuniq",
             "version" : "0.5.8--pl526he860b03_0"
         },
-        "prokka" : {
+        "prokka" :
             "use_local" : True,
-            "filename" : "prokka_1.14.5-1.sif",
+            "filename" : "prokka_1.14.6--pl526_0.sif",
             "location" : "../container_images/",
             "quayurl" : "ummidock/prokka",
-            "version" : "1.14.5-1"
+            "version" : "1.14.6--pl526"
         },
         "abricate" : {
             "use_local" : True,
