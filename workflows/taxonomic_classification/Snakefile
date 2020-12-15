@@ -1760,7 +1760,7 @@ rule tax_class_add_taxonnames_workflow:
         )
 
 
-rule tax_class_add_taxonnames_to_contigs_workflow:
+rule tax_class_add_taxonnames_contigs_workflow:
     """
     Takes the output tsv from contigs kaiju run (*.out) and adds the associated taxon names for each result (*.names.out)
     Runs def run_kaiju -> def add_taxon_names
