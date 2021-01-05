@@ -102,25 +102,30 @@ DB Column Names:
    1: minikraken_20171019_8GB
    2: minikraken2_v2_8GB_201904_UPDATE
    3: kaiju_db_nr_euk
-   4: NCBI_nucl_gb
-   5: NCBI_nucl_wgs
-   6: RefSeq_v98
+   4: NCBI_nucl_wgs
+   5: metaphlan_mpa_v20_m200
+   6: NCBI_nucl_gb
+   7: MTSV_Oct-28-2019
+   8: RefSeq_v98
 
-    taxid      rank 0 1 2 3 4 5
-  1913708   species - - 1 1 - -
-   980453   species - - - 1 - -
-   146582   species - - - 1 - -
-  1950923   species - - - - 1 -
-  1420363   species - - - 1 - -
-  1367599   species - - - 1 - -
-    48959   species - - - 1 - -
-  1594871   species - - - 1 - -
-    69507     genus - - - - - -
-   241522 subspecies - - - 1 - -
-  1068967   species - - - 1 - -
-  1007150   species - - - 1 - -
-   498356   no rank - 2 1 1 - -
-   
+    taxid      rank 0 1 2 3 4 5 6 7
+  1251942   species - - - - - 1 - -
+  1913708   species - - 1 - - 1 - -
+   980453   species - - - - - 1 - -
+   743653   species - - - - - 1 - -
+  2196333   species - - - - - 1 - -
+   146582   species - - - - - 1 - -
+  1950923   species - - - 1 - - - -
+  1420363   species - - - - - 1 - -
+  1367599   species - - - - - 1 - -
+    48959   species - - - - - 1 - -
+  1594871   species - - - - - 1 - -
+    69507     genus - - - - - - - -
+   241522 subspecies - - - - - 1 - -
+  1068967   species - - - - - 1 - -
+  1007150   species - - - - - 1 - -
+   498356   no rank - 2 1 - - 1 - -
+
    (...truncated...)
 ```
 
@@ -137,24 +142,29 @@ DB Column Names:
    1: minikraken_20171019_8GB
    2: minikraken2_v2_8GB_201904_UPDATE
    3: kaiju_db_nr_euk
-   4: NCBI_nucl_gb
-   5: NCBI_nucl_wgs
-   6: RefSeq_v98
+   4: NCBI_nucl_wgs
+   5: metaphlan_mpa_v20_m200
+   6: NCBI_nucl_gb
+   7: MTSV_Oct-28-2019
+   8: RefSeq_v98
 
-    taxid      rank 0 1 2 3 4 5
-  1913708   species - - 1 1 - -
-   980453   species - - - 1 - -
-   146582   species - - - 1 - -
-  1950923   species - - - - 1 -
-  1420363   species - - - 1 - -
-  1367599   species - - - 1 - -
-    48959   species - - - 1 - -
-  1594871   species - - - 1 - -
-    69507     genus - - - - - -
-   241522 subspecies - - - 1 - -
-  1068967   species - - - 1 - -
-  1007150   species - - - 1 - -
-   498356   no rank - 2 1 1 - -
+    taxid      rank 0 1 2 3 4 5 6 7
+  1251942   species - - - - - 1 - -
+  1913708   species - - 1 - - 1 - -
+   980453   species - - - - - 1 - -
+   743653   species - - - - - 1 - -
+  2196333   species - - - - - 1 - -
+   146582   species - - - - - 1 - -
+  1950923   species - - - 1 - - - -
+  1420363   species - - - - - 1 - -
+  1367599   species - - - - - 1 - -
+    48959   species - - - - - 1 - -
+  1594871   species - - - - - 1 - -
+    69507     genus - - - - - - - -
+   241522 subspecies - - - - - 1 - -
+  1068967   species - - - - - 1 - -
+  1007150   species - - - - - 1 - -
+   498356   no rank - 2 1 - - 1 - -
    
    (...truncated...)
 ```
