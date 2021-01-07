@@ -3,6 +3,7 @@
 
 import json
 import glob
+import argparse
 
 def get_input_required_options(text,required_options):
     print(text)
@@ -31,8 +32,12 @@ def get_input_required_options(text,required_options):
 
 
 
-default_qual = ["2"]
+
+assembler_labels = ['assembler', 'multiqc_assembler']
+assembler_type = ""
+default_qual = ["2","20"]
 default_kvalue = ["21","31","51"]
+config_internals = ['pre_trimming_pattern','pre_trimming_pattern','pre_trimming_pattern', 'reverse_pe_pattern_replace','sample_file_ext']
 with open("config/my_custom_config_strict.json", "r") as f:
     data = json.load(f)
 
@@ -83,7 +88,7 @@ quals=[]
 qual_range = []
 for i in range(2,39):
     qual_range.append(str(i))
-keep = get_input_required_options("keep default quality trimming at [\"2\"]? (y/n)",['y', 'n'] )
+keep = get_input_required_options("keep default quality trimming at"+str(default_qual)+"? (y/n)",['y', 'n'] )
 if keep == 'n':
     qual_list = get_input_required_options("select quality to trim at, extra qualities separate by (,):", qual_range)
     if len(qual_list) == 0:
@@ -94,7 +99,7 @@ if keep == 'n':
         else:
             quals.append(qual_list)
 else:
-    quals.append("2")
+    quals.append(default_qual)
 
 print("default is to use the following kmers:",default_kvalue)
 keep = get_input_required_options("accept? y/n", ['y', 'n'])
@@ -139,7 +144,6 @@ while True:
 
     file_list = glob.glob("data/"+read_info['read_patterns']['pre_trimming_glob_pattern'])
     data_list = []
-
     for name in file_list:
         pattern = read_info['read_patterns']['pre_trimming_glob_pattern'].replace("*", "")
         print(pattern)
@@ -147,7 +151,6 @@ while True:
     #replace with \/ when porting to unix
         name = name.replace("data/", "")
         data_list.append(name)
-
     print("patterns will result in list:" ,data_list)
     if 'y' in get_input_required_options("approve? (y/n)", ["y", "n"]):
         print("OK")
@@ -169,7 +172,9 @@ while True:
             exit(1)
 
 customize = get_input_required_options("Do you want to customize databases or other values? (y/n)\n(Select no unless you know what you're doing):", ['y', 'n'])
-
+if customize == 'y':
+    assembler_type=get_input_required_options("Please select your assemblers: ('megahit', 'metaspades', or 'megahit,metaspades'):", ['megahit', 'metaspades', 'megahit,metaspades'])
+comment = ""
 for level1 in data:
     if level1 == "read_patterns":
         data[level1] = read_info
@@ -179,22 +184,33 @@ for level1 in data:
             data[level1][subs]['samples'] = file_list
             continue
         for values in data[level1][subs]:
-            if "comment" in values:
-                if "y" in customize:
-                    print(subs,level1,data[level1][subs][values])
-            elif values == "qual":
+
+            if values == "qual":
                 data[level1][subs][values] = quals
             elif values == "kvalue":
                 data[level1][subs][values] = default_kvalue
             elif values == 'kmers':
                 data[level1][subs][values] = default_kvalue
             elif "y" in customize:
-                print("select value for",level1,values,", leave blank to keep:\n", data[level1][subs][values])
-                take = input()
-                if len(take) == 0:
-                   take = data[level1][subs][values]
-                print("you selected",take,"for:" , values)
-                data[level1][subs][values] = take
+                if values in assembler_labels:
+                    #print("you previously selected",assembler_type,"for:", values)
+                    data[level1][subs][values] = assembler_type
+                    comment = ""
+                    continue
+                elif values in config_internals:
+                    comment = "__\n"
+                    continue
+                elif "comment" in values:
+                    comment = comment+" ".join([subs, level1, data[level1][subs][values]])
+                else:
+                    print(comment)
+                    comment = "--\n"
+                    print("select value for",level1,values,", leave blank to keep:\n", data[level1][subs][values])
+                    take = input()
+                    if len(take) == 0:
+                        take = data[level1][subs][values]
+                        print("you selected",take,"for:" , values, "\n--\n")
+                    data[level1][subs][values] = take
             else:
                 continue
 
