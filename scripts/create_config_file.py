@@ -35,7 +35,7 @@ def get_input_required_options(text,required_options):
 
 assembler_labels = ['assembler', 'multiqc_assembler']
 assembler_type = ""
-default_qual = ["2","20"]
+default_qual = ["2","30"]
 default_kvalue = ["21","31","51"]
 config_internals = ['pre_trimming_pattern','pre_trimming_pattern','pre_trimming_pattern', 'reverse_pe_pattern_replace','sample_file_ext']
 with open("config/my_custom_config_strict.json", "r") as f:
