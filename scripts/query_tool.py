@@ -1446,7 +1446,7 @@ def run_query_taxids_against_containment():
 
         rpt = rpt + '\n'
         rpt = rpt + ('%9s' % 'taxid') + ' ' + ('%9s' % 'rank') + ' '
-        rpt = rpt + ' '.join(map(str,range(len(main_keys)))) + '\n'
+        rpt = rpt + ' '.join(map(str, range(1,len(main_keys)+1) )) + '\n'
         for r in results:
             rpt = rpt + '%9s %9s ' % (r[0], r[1])
             mystr = ' '.join(map(str,r[2:]))
