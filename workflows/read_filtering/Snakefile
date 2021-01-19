@@ -295,8 +295,8 @@ rule filter_merged_reads_trimmomatic_PE:
 
 
 #############################################
-combine_read_trim_input = [merged_reads_trim_SE_output, merged_reads_trimm_PE_out_tr25_fastq_1, merged_reads_trimm_PE_out_tr25_fastq_2,
-                merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
+combine_read_trim_input = [merged_reads_trim_SE_output, merged_reads_trimm_PE_out_tr25_fastq_1, 
+                           merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
 combine_read_trim_output = join(data_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output'].format(sample='{sample}')))
 
 #rule 4
