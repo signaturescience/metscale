@@ -274,8 +274,8 @@ if __name__ == '__main__':
     #args = parser.parse_args()
     #data_path = args.data
 
-    data_path = snakemake.params[0]
-    #post_processing_path = snakemake.params[1]
+    data_path = snakemake.params[0]  
+
     combined_output_path = os.path.join(data_path, "combined_output.json")
     with open(combined_output_path) as json_file:
         data = json.load(json_file)
@@ -285,8 +285,8 @@ if __name__ == '__main__':
 
     #we are going to sort by - all rows have a value greater than 0.
     sorted_abundance_df = get_all_rows_with_values(abundance_df)
-
-    #sorted_data = abundance_df.loc[(abundance_df['Bracken'] > 0) & (abundance_df['Kaiju'] > 0) & (abundance_df['Kraken2'] > 0) & (abundance_df['Mash'] > 0) & (abundance_df['Sourmash'] > 0)]
+    sorted_abundance_filepath = os.path.join(data_path, 'abundance.tsv')
+    sorted_abundance_df.to_csv(sorted_abundance_filepath, sep='\t')
 
     create_graph(sorted_abundance_df, workflow_cols, data_path)  
     #print("Done")
