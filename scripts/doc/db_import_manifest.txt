@@ -1,5 +1,5 @@
 DB_Name	Path	Format	Import	Comments
-RefSeq	/home/mnute/sigsci/work/db_query_tool/refseq/catalog_taxid	refseq	1	RefSeq is parsed differently than everything else. Only the folder is provided, a special regex is used to find files.
+RefSeq	/data/home/sjessa/DQT/refseq/catalog_taxid	refseq	1	RefSeq is parsed differently than everything else. Only the folder is provided, a special regex is used to find files.
 minikraken_20171019_8GB	/home/mnute/sigsci/work/db_query_tool/krakenuniq/seqid2taxid.map	seqid2taxid	1	(same format as kaiju)
 minikraken2_v2_8GB_201904_UPDATE	/home/mnute/sigsci/work/db_query_tool/kraken/kraken2_inspect_wzerocounts.txt	kraken2_inspect	1	(made from db in ./data/minikraken2_v2… folder)
 kaiju_db_nr_euk	/home/mnute/sigsci/work/db_query_tool/kaiju/nr_euk_2017_seqnames_fromPeter/kaiju_db_nr_euk_origUniqTaxa.txt	first_col	1	(included with the kaiju db download)
