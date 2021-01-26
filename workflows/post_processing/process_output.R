@@ -112,6 +112,10 @@ process_output <- function(data_dir, out_dir) {
         
         return(data)
         
+      } else {
+        
+        return(paste(path, "is empty.")) # Generate an error message indicating that the file is empty.
+        
       }
 
     } else {
