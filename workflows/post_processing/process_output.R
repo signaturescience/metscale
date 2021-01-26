@@ -83,32 +83,36 @@ process_output <- function(data_dir, out_dir) {
     
     if (length(file_in) > 0) {
       
-      file_in <- file_in[which(grepl("^%", file_in)):length(file_in)]
-      
-      var_names <- file_in[1]
-      var_names <- stringr::str_replace(string = var_names, pattern = "%", replacement = "percent")
-      var_names <- unlist(strsplit(x = var_names, split = "\t"))
-      
-      data <- file_in[2:length(file_in)]
-      data <- strsplit(data, split = "\t")
-      data <- do.call(rbind, data)
-      colnames(data) <- var_names
-      data <- data.frame(data, stringsAsFactors = F)
-      
-      data$percent  <- as.numeric(data$percent)
-      data$reads    <- as.numeric(data$reads)
-      data$taxReads <- as.numeric(data$taxReads)
-      data$kmers    <- as.numeric(data$kmers)
-      data$dup      <- as.numeric(data$dup)
-      data$cov      <- as.numeric(data$cov)
-      data$taxID    <- as.numeric(data$taxID)
-      data$rank     <- as.character(data$rank)
-      data$taxName  <- trimws(x = as.character(data$taxName), which = "both")
-      
-      colnames(data)[colnames(data) == "taxID"]   <- "species_id"
-      colnames(data)[colnames(data) == "taxName"] <- "species_name"
-      
-      return(data)
+      if (stringr::str_detect(string = file_in, pattern = "^%")) {
+        
+        file_in <- file_in[which(grepl("^%", file_in)):length(file_in)]
+        
+        var_names <- file_in[1]
+        var_names <- stringr::str_replace(string = var_names, pattern = "%", replacement = "percent")
+        var_names <- unlist(strsplit(x = var_names, split = "\t"))
+        
+        data <- file_in[2:length(file_in)]
+        data <- strsplit(data, split = "\t")
+        data <- do.call(rbind, data)
+        colnames(data) <- var_names
+        data <- data.frame(data, stringsAsFactors = F)
+        
+        data$percent  <- as.numeric(data$percent)
+        data$reads    <- as.numeric(data$reads)
+        data$taxReads <- as.numeric(data$taxReads)
+        data$kmers    <- as.numeric(data$kmers)
+        data$dup      <- as.numeric(data$dup)
+        data$cov      <- as.numeric(data$cov)
+        data$taxID    <- as.numeric(data$taxID)
+        data$rank     <- as.character(data$rank)
+        data$taxName  <- trimws(x = as.character(data$taxName), which = "both")
+        
+        colnames(data)[colnames(data) == "taxID"]   <- "species_id"
+        colnames(data)[colnames(data) == "taxName"] <- "species_name"
+        
+        return(data)
+        
+      }
 
     } else {
         
