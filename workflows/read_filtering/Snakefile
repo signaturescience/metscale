@@ -240,20 +240,29 @@ def merged_reads_with_trimmomatic_SE_out_sing(wildcards):
 def merged_reads_with_trimmomatic_SE_input_sing(wildcards):
     return join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_output_extendedFrags'].format(**wildcards)))
 
+
+trimmmo_threads = readfilt['adapter_file']['threads']
 #Rule 2
 rule merged_reads_with_trimmomatic_SE:
     input:
         merged_reads_with_trim_SE_input
     output:
         merged_reads_trim_SE_output
+    threads:
+        trimmmo_threads
     singularity:
         trimmo_image
     params:
         trim_SE_output = merged_reads_with_trimmomatic_SE_out_sing,
         trim_SE_input =  merged_reads_with_trimmomatic_SE_input_sing
     shell:
-        'trimmomatic SE {params.trim_SE_input} {params.trim_SE_output} ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
-        'LEADING:25 TRAILING:25 SLIDINGWINDOW:4:25 MINLEN:25'
+        'trimmomatic SE '
+        '{params.trim_SE_input} '
+        '{params.trim_SE_output} '
+        'ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
+        'LEADING:25 TRAILING:25 SLIDINGWINDOW:4:25 MINLEN:25 '
+        '-threads {threads} '
+        
 
 #############################################
 
@@ -274,8 +283,10 @@ merged_reads_trimm_PE_out_tr25_fastq_2_sing = join(sing_dir, (readfilt['convert_
 merged_reads_trimm_PE_out_tr25_se_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_1'].format(sample='{sample}')))
 merged_reads_trimm_PE_out_tr25_se_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_2'].format(sample='{sample}')))
 
-merged_reads_trim_PE_out_sing = [merged_reads_trimm_PE_out_tr25_fastq_1_sing, 
-        merged_reads_trimm_PE_out_tr25_fastq_2_sing, merged_reads_trimm_PE_out_tr25_se_1_sing, merged_reads_trimm_PE_out_tr25_se_2_sing]
+merged_reads_trim_PE_out_sing = [merged_reads_trimm_PE_out_tr25_fastq_1_sing, merged_reads_trimm_PE_out_tr25_se_1_sing,
+        merged_reads_trimm_PE_out_tr25_fastq_2_sing, merged_reads_trimm_PE_out_tr25_se_2_sing]
+
+
 
 
 #rule 3
@@ -284,14 +295,24 @@ rule filter_merged_reads_trimmomatic_PE:
         merged_reads_trim_PE_input
     output:
         merged_reads_trim_PE_output
+    threads:
+        trimmmo_threads
     singularity:
         trimmo_image
     params:
+        #qual = quality_trimming_qual,
         trim_PE_input = merged_reads_trim_PE_input_sing,
         trim_PE_out = merged_reads_trim_PE_out_sing
     shell:
-        'trimmomatic PE {params.trim_PE_input} {params.trim_PE_out} ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
-        'LEADING:25 TRAILING:25 SLIDINGWINDOW:4:25 MINLEN:25'
+        'trimmomatic PE '
+        '{params.trim_PE_input} '
+        '{params.trim_PE_out} '
+        'ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
+        'LEADING:25 '
+        'TRAILING:25 '
+        'SLIDINGWINDOW:4:25 '
+        'MINLEN:25 '
+        '-threads {threads}'
 
 
 #############################################
@@ -713,7 +734,6 @@ fq_rev_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_patter
                       
 trim_target_ext = readfilt['quality_trimming']['trim_suffix']
 sample_file_ext = readfilt['quality_trimming']['sample_file_ext']
-trimmmo_threads = readfilt['adapter_file']['threads']
 
 #fq_fwd_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_fwd_trimmed)
 #fq_rev_se = re.sub('\.fq\.gz',"_%s"%(trim_target_ext),fq_rev_trimmed)
@@ -742,14 +762,13 @@ quality_log_sing = join(sing_dir,'{sample}_trim{qual}_trimmomatic_pe.log')
 
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
+def quality_trimming_qual(wildcards):
+    """Get quality threshold for trimming"""
+    return "{qual}".format(**wildcards)
 
 def quality_trimming_quality_log_sing(wildcards):
     """Get the log file for this quality trimming param set"""
     return quality_log_sing.format(**wildcards)
-
-def quality_trimming_qual(wildcards):
-    """Get quality threshold for trimming"""
-    return "{qual}".format(**wildcards)
 
 def quality_trimming_quality_input(wildcards):
     """
