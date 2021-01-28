@@ -230,18 +230,22 @@ rule merge_pair_ends_with_flash:
 
 #############################################
 
-merged_reads_with_trim_SE_input = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_input'].format(sample='{sample}')))
-merged_reads_trim_SE_output = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_output'].format(sample='{sample}')))
+merged_reads_with_trim_SE_input = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim_input'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trim_SE_output = join(data_dir, (readfilt['convert_pe_to_se']['trim_se_trim_output'].format(sample='{sample}', qual='{qual}')))
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
+trimmmo_threads = readfilt['adapter_file']['threads']
 
 def merged_reads_with_trimmomatic_SE_out_sing(wildcards):
-    return join(sing_dir, (readfilt['convert_pe_to_se']['trim_se_trim25_output'].format(**wildcards)))
+    return join(sing_dir, (readfilt['convert_pe_to_se']['trim_se_trim_output'].format(**wildcards)))
 
 def merged_reads_with_trimmomatic_SE_input_sing(wildcards):
     return join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_output_extendedFrags'].format(**wildcards)))
 
+def quality_trimming_qual(wildcards):
+    """Get quality threshold for trimming"""
+    return "{qual}".format(**wildcards)
+    
 
-trimmmo_threads = readfilt['adapter_file']['threads']
 #Rule 2
 rule merged_reads_with_trimmomatic_SE:
     input:
@@ -253,6 +257,7 @@ rule merged_reads_with_trimmomatic_SE:
     singularity:
         trimmo_image
     params:
+        qual = quality_trimming_qual,
         trim_SE_output = merged_reads_with_trimmomatic_SE_out_sing,
         trim_SE_input =  merged_reads_with_trimmomatic_SE_input_sing
     shell:
@@ -260,7 +265,10 @@ rule merged_reads_with_trimmomatic_SE:
         '{params.trim_SE_input} '
         '{params.trim_SE_output} '
         'ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
-        'LEADING:25 TRAILING:25 SLIDINGWINDOW:4:25 MINLEN:25 '
+        'LEADING:{params.qual} '
+        'TRAILING:{params.qual} '
+        'SLIDINGWINDOW:4:{params.qual} '
+        'MINLEN:25 '
         '-threads {threads} '
         
 
@@ -271,20 +279,20 @@ flash_merged_pair_out_notCombined_1_sing = join(sing_dir, (readfilt['convert_pe_
 flash_merged_pair_out_notCombined_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_pe_output_notCombined_2'].format(sample='{sample}')))
 merged_reads_trim_PE_input_sing = [flash_merged_pair_out_notCombined_1_sing, flash_merged_pair_out_notCombined_2_sing]
 
-merged_reads_trimm_PE_out_tr25_fastq_1 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_1'].format(sample='{sample}')))
-merged_reads_trimm_PE_out_tr25_fastq_2 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_2'].format(sample='{sample}')))
-merged_reads_trimm_PE_out_tr25_se_1 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_1'].format(sample='{sample}')))
-merged_reads_trimm_PE_out_tr25_se_2 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_2'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr_fastq_1 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_fastq_1'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trimm_PE_out_tr_fastq_2 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_fastq_2'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trimm_PE_out_tr_se_1 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_se_1'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trimm_PE_out_tr_se_2 = join(data_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_se_2'].format(sample='{sample}', qual='{qual}''')))
             
-merged_reads_trim_PE_output = [merged_reads_trimm_PE_out_tr25_fastq_1, merged_reads_trimm_PE_out_tr25_fastq_2, merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
+merged_reads_trim_PE_output = [merged_reads_trimm_PE_out_tr_fastq_1, merged_reads_trimm_PE_out_tr_fastq_2, merged_reads_trimm_PE_out_tr_se_1, merged_reads_trimm_PE_out_tr_se_2]
 
-merged_reads_trimm_PE_out_tr25_fastq_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_1'].format(sample='{sample}')))
-merged_reads_trimm_PE_out_tr25_fastq_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_fastq_2'].format(sample='{sample}')))
-merged_reads_trimm_PE_out_tr25_se_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_1'].format(sample='{sample}')))
-merged_reads_trimm_PE_out_tr25_se_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr25_se_2'].format(sample='{sample}')))
+merged_reads_trimm_PE_out_tr_fastq_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_fastq_1'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trimm_PE_out_tr_fastq_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_fastq_2'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trimm_PE_out_tr_se_1_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_se_1'].format(sample='{sample}', qual='{qual}')))
+merged_reads_trimm_PE_out_tr_se_2_sing = join(sing_dir, (readfilt['convert_pe_to_se']['flash_se_output_notCombined_tr_se_2'].format(sample='{sample}', qual='{qual}')))
 
-merged_reads_trim_PE_out_sing = [merged_reads_trimm_PE_out_tr25_fastq_1_sing, merged_reads_trimm_PE_out_tr25_se_1_sing,
-        merged_reads_trimm_PE_out_tr25_fastq_2_sing, merged_reads_trimm_PE_out_tr25_se_2_sing]
+merged_reads_trim_PE_out_sing = [merged_reads_trimm_PE_out_tr_fastq_1_sing, merged_reads_trimm_PE_out_tr_se_1_sing,
+        merged_reads_trimm_PE_out_tr_fastq_2_sing, merged_reads_trimm_PE_out_tr_se_2_sing]
 
 
 
@@ -300,7 +308,7 @@ rule filter_merged_reads_trimmomatic_PE:
     singularity:
         trimmo_image
     params:
-        #qual = quality_trimming_qual,
+        qual = quality_trimming_qual,
         trim_PE_input = merged_reads_trim_PE_input_sing,
         trim_PE_out = merged_reads_trim_PE_out_sing
     shell:
@@ -308,17 +316,17 @@ rule filter_merged_reads_trimmomatic_PE:
         '{params.trim_PE_input} '
         '{params.trim_PE_out} '
         'ILLUMINACLIP:{sing_dir}/adapters_combined_256_unique.fasta:2:30:15:1:true '
-        'LEADING:25 '
-        'TRAILING:25 '
-        'SLIDINGWINDOW:4:25 '
+        'LEADING:{params.qual} '
+        'TRAILING:{params.qual} '
+        'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
         '-threads {threads}'
 
 
 #############################################
-combine_read_trim_input = [merged_reads_trim_SE_output, merged_reads_trimm_PE_out_tr25_fastq_1, 
-                           merged_reads_trimm_PE_out_tr25_se_1, merged_reads_trimm_PE_out_tr25_se_2]
-combine_read_trim_output = join(data_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output'].format(sample='{sample}')))
+combine_read_trim_input = [merged_reads_trim_SE_output, merged_reads_trimm_PE_out_tr_fastq_1, 
+                           merged_reads_trimm_PE_out_tr_se_1, merged_reads_trimm_PE_out_tr_se_2]
+combine_read_trim_output = join(data_dir, (readfilt['convert_pe_to_se']['combine_reads_compress_output'].format(sample='{sample}', qual='{qual}')))
 
 #rule 4
 rule combine_PE_reads_outputs_and_compress:
@@ -762,9 +770,6 @@ quality_log_sing = join(sing_dir,'{sample}_trim{qual}_trimmomatic_pe.log')
 
 trimmo_image = container_image_name(biocontainers,'trimmomatic')
 
-def quality_trimming_qual(wildcards):
-    """Get quality threshold for trimming"""
-    return "{qual}".format(**wildcards)
 
 def quality_trimming_quality_log_sing(wildcards):
     """Get the log file for this quality trimming param set"""
@@ -1054,5 +1059,6 @@ rule read_filtering_fastq_to_fasta_workflow:
 rule read_filtering_convert_PE_to_SE_workflow:
     input:
         expand( combine_read_trim_output,
-            sample    = sample_input_files
+            sample    = sample_input_files,
+            qual      = workflows['read_filtering_convert_PE_to_SE_workflow']['qual']
         )

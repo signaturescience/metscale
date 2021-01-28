@@ -29,6 +29,9 @@ config_default = {
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
         },
+        "read_filtering_convert_PE_to_SE_workflow" : {
+            "qual"   : ["25"]
+        },
         "assembly_metaspades_workflow" : {
             # the assembly workflow will be run on.
             # (metaspades assembler only).
