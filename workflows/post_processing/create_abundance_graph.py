@@ -285,7 +285,7 @@ if __name__ == '__main__':
 
     #we are going to sort by - all rows have a value greater than 0.
     sorted_abundance_df = get_all_rows_with_values(abundance_df)
-    sorted_abundance_filepath = os.path.join(data_path, 'abundance.tsv')
+    sorted_abundance_filepath = os.path.join(data_path, 'signal_graph.tsv')
     sorted_abundance_df.to_csv(sorted_abundance_filepath, sep='\t')
 
     create_graph(sorted_abundance_df, workflow_cols, data_path)  
