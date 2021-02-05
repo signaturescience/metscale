@@ -176,13 +176,13 @@ def command_args_parse():
     #
     # Misc Args
     #
-#    miscgroup = p.add_argument_group('Miscellaneous Arguments',
-#                                        'These arguments are mostly optional and in many cases only operate with certain'
-#                                        'of the commands, and are ignored otherwise.')
-#    miscgroup.add_argument('--clobber', action='store_true', help='If provided, previous containment_dict.json is removed and'
-#                           'rebuilt from scratch based on the source files. (If given along with the \'--setup\' argument, '
-#                           'the existing containment json file will be overwritten by re-extracting the packaged ' 
-#                           '`containment_dict.json.gz`).',default=False)
+    miscgroup = p.add_argument_group('Miscellaneous Arguments',
+                                        'These arguments are mostly optional and in many cases only operate with certain'
+                                        'of the commands, and are ignored otherwise.')
+    miscgroup.add_argument('--clobber', action='store_true', help='If provided, previous containment_dict.json is removed and'
+                           'rebuilt from scratch based on the source files. (If given along with the \'--setup\' argument, '
+                           'the existing containment json file will be overwritten by re-extracting the packaged ' 
+                           '`containment_dict.json.gz`).',default=False)
     #
     # Hidden arguments
     #
