@@ -232,7 +232,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
         plt.axhline(y = species, color ="green", linestyle =":")
     figure = plt.gcf()
     figure.set_size_inches(16,8)
-    plt.title("Signal Graph v2")
+    plt.title("Signal Plot v2")
     red_patch = mpatches.Patch(color='red', label='Very strong species signal')
     orange_patch = mpatches.Patch(color='orange', label='Strong species signal')
     yellow_patch = mpatches.Patch(color='yellow', label='Moderately strong species signal')
@@ -241,7 +241,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
     grey_patch = mpatches.Patch(color='grey', label='Very weak species signal')
     white_patch = mpatches.Patch(color='white', label='No species signal')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., handles=[red_patch, orange_patch, yellow_patch, green_patch, blue_patch, grey_patch, white_patch])
-    signal_path = os.path.join(data_dir, "signal_graph.png")
+    signal_path = os.path.join(data_dir, "signal_plot.png")
     plt.savefig(signal_path, dpi=100, bbox_inches='tight')
 
 
@@ -274,8 +274,8 @@ if __name__ == '__main__':
     #args = parser.parse_args()
     #data_path = args.data
 
-    data_path = snakemake.params[0]
-    #post_processing_path = snakemake.params[1]
+    data_path = snakemake.params[0]  
+
     combined_output_path = os.path.join(data_path, "combined_output.json")
     with open(combined_output_path) as json_file:
         data = json.load(json_file)
@@ -285,8 +285,8 @@ if __name__ == '__main__':
 
     #we are going to sort by - all rows have a value greater than 0.
     sorted_abundance_df = get_all_rows_with_values(abundance_df)
-
-    #sorted_data = abundance_df.loc[(abundance_df['Bracken'] > 0) & (abundance_df['Kaiju'] > 0) & (abundance_df['Kraken2'] > 0) & (abundance_df['Mash'] > 0) & (abundance_df['Sourmash'] > 0)]
+    sorted_abundance_filepath = os.path.join(data_path, 'signal_plot.tsv')
+    sorted_abundance_df.to_csv(sorted_abundance_filepath, sep='\t')
 
     create_graph(sorted_abundance_df, workflow_cols, data_path)  
     #print("Done")
