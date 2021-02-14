@@ -658,6 +658,7 @@ def db_import_manifest_read(skip_refseq = False, from_config = True, from_file_i
                 logging.warning('In Manifest: line %d cannot be parsed (fewer than 3 tab-delimited fields). Line as read: \n\t%s' % (lno, ln.strip()))
             if f[0] in db_import_manifest_parsed:
                 logging.info('Database %s was given in both the config and manifest file. Manifest will be used.')
+                #print(f[0])
             db_import_manifest_parsed[f[0]] = [f[0], f[1], f[2], f[3], 'manifest']
             lno += 1
 
