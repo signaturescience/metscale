@@ -57,7 +57,7 @@
     },
 
     "functional_inference" : {
-        "prokka_1.14.6--pl526_0.sif" : "docker://quay.io/biocontainers/prokka:1.14.6--pl526_0",
+        "prokka_1.14.5.sif" : "docker://staphb/prokka:1.14.5",
         "abricate_latest.sif" : "docker://thanhleviet/abricate",
         "srst2_0.2.0--py27_2.sif" : "docker://quay.io/biocontainers/srst2:0.2.0--py27_2",
         "humann2_2.8.1--py27_0.sif" :"docker://quay.io/biocontainers/humann2:2.8.1--py27_0",
