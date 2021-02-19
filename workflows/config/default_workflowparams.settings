@@ -34,6 +34,20 @@ config_default = {
             # number of threads to use.
             "threads" : 2
         },
+        "convert_pe_to_se" : {
+            "flash_pe_output_extendedFrags" : "{sample}.extendedFrags.fastq",
+            "flash_pe_output_notCombined_1" : "{sample}.notCombined_1.fastq",
+            "flash_pe_output_notCombined_2" : "{sample}.notCombined_2.fastq",
+            "flash_se_output_notCombined_tr_fastq_1" : "{sample}.notCombined_trim{qual}_1.fastq",
+            "flash_se_output_notCombined_tr_fastq_2" : "{sample}.notCombined_trim{qual}_2.fastq",
+            "flash_se_output_notCombined_tr_se_1" : "{sample}.notCombined_trim{qual}_1_se",
+            "flash_se_output_notCombined_tr_se_2" : "{sample}.notCombined_trim{qual}_2_se",
+            "combine_reads_compress_output" : "{sample}_combined_trim{qual}.fq.gz",
+            "trim_se_trim_input" : "{sample}.extendedFrags.fastq",
+            "trim_se_trim_output" : "{sample}_extendedFrags_trim{qual}.fq",
+            "flash_pe_output_sing" : "{sample}",
+            "flash_pe_log" : "{sample}_flash.log",
+        },
         "quality_trimming" : {
             # 
             # suffix for quality trimming files (replaces file extension)
@@ -123,7 +137,7 @@ config_default = {
             #
             # filename pattern for metaspades output and threads to run
             "metaspades_pattern" : "{sample}_trim{qual}.metaspades.contigs.fa",
-            "metaspades_threads" : 8,
+            "metaspades_threads" : 16,
             #
             # filename pattern for rnaspades output and threads to run
             "rnaspades_pattern" : "{sample}_trim{qual}.rnaspades.transcripts.fasta",
@@ -131,7 +145,7 @@ config_default = {
             #
             # filename pattern for megahit output amd threads to run
             "megahit_pattern" : "{sample}_trim{qual}.megahit.contigs.fa",
-            "megahit_threads" : 8,
+            "megahit_threads" : 16,
             #
             # filename pattern for spades output and threads to run. Note I use the string kmer to do a replace with the kmer values listed.
             "spades_pattern" : "{sample}_trim{qual}_kkmer.spades.contigs.fa",
@@ -171,7 +185,14 @@ config_default = {
             "quast_plasmidspades_threads" : 4,
             "quast_plasmidspades_ref" : "GCF_000008565.1_ASM856v1_genomic.fna.gz",
             #
-
+            #metaquast with RNAspades output file pattern
+            "metaquast_rnaspades_pattern" : "{sample}_trim{qual}.rnaspades_metaquast_report_data",
+            "metaquast_rnaspades_threads" : 4,
+            "metaquast_rnaspades_ref" : "Shakya_Refs",
+            #
+            #multiqc with RNAspades output file pattern
+            "multiqc_rnaspades_pattern" : "{sample}_trim{qual}.rnaspades_multiqc_report.html",
+            "multiqc_rnaspades_dir_pattern" : "{sample}_trim{qual}.rnaspades_multiqc_report_data"
 
         }
     },
@@ -254,7 +275,7 @@ config_default = {
             #"url"  : "https://s3.amazonaws.com/dahak-project-ucdavis/kaiju",
             "out"  : "{sample}_trim{qual}.kaiju.out",
             "contig_out" : "{sample}_trim{qual}_{assembler}.kaiju.out",
-            "threads" : 8
+            "threads" : 16
         },
         "kaiju_report" : {
             #
@@ -297,7 +318,7 @@ config_default = {
             #
             # kraken2 output results
             "kraken2_output" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.out",
-            "threads" : 6,
+            "threads" : 4,
             "unclass_out" : "{sample}_trim{qual}_kraken2_unclassified_{db}_confidence{conf}#.fq",
             "class_out" : "{sample}_trim{qual}_kraken2_classified_{db}_confidence{conf}#.fq",
             "report" : "{sample}_trim{qual}_kraken2_{db}_confidence{conf}.report"
@@ -306,7 +327,7 @@ config_default = {
             #
             # krakenuniq output results
             "krakenuniq_output" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_out",
-            "threads" : 6,
+            "threads" : 12,
             "unclass_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_unclassified",
             "class_out" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_classified",
             "report" : "{sample}_trim{qual}_krakenuniq_{db}_hll{hll_prec}_report"
@@ -346,35 +367,35 @@ config_default = {
             "input_pattern"  : "{sample}_trim{qual}.megahit.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_megahit",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
-            "threads" : 8
+            "threads" : 16
         },
         "prokka_metatrans_with_rnaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metatrans_rnaspades.prokka_annotation",
             "input_pattern"  : "{sample}_trim{qual}.rnaspades.transcripts.fasta",
             "prefix_pattern" : "{sample}_trim{qual}_metatrans_rnaspades",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
-            "threads" : 8
+            "threads" : 16
         },
         "prokka_trans_with_rnaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_trans_rnaspades.prokka_annotation",
             "input_pattern"  : "{sample}_trim{qual}.rnaspades.transcripts.fasta",
             "prefix_pattern" : "{sample}_trim{qual}_trans_rnaspades",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
-            "threads" : 8
+            "threads" : 16
         },
         "prokka_with_metaspades" : {
             "outdir_pattern" : "{sample}_trim{qual}_metaspades.prokka_annotation",
             "input_pattern"  : "{sample}_trim{qual}.metaspades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_metaspades",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
-            "threads" : 8
+            "threads" : 16
         },
         "prokka_with_spades" : {
             "outdir_pattern" : "{sample}_trim{qual}_spades.prokka_annotation",
             "input_pattern"  : "{sample}_trim{qual}.spades.contigs.fa",
             "prefix_pattern" : "{sample}_trim{qual}_spades",
             "input_db" : "/NGStools/prokka/db/kingdom/Bacteria/IS",
-            "threads" : 8
+            "threads" : 16
         },
         "abricate_with_metaspades" : {
             "output_pattern" : "{sample}_trim{qual}_metaspades.abricate_{db}.csv",
@@ -406,7 +427,7 @@ config_default = {
         },
         # input param for srst2 is pulled from read filtering post_trimming_pattern
         "srst2" : {
-            "threads" : 4,
+            "threads" : 8,
             "output_pattern" : "{sample}_trim{qual}_{db}.srst2",
         },
         "humann2" : {
@@ -425,6 +446,9 @@ config_default = {
             "output_pattern" : "{sample}_finished",
             "out_pattern"    : "{sample_mv}/summary-report.html"
         },
+        "abundance_graph" : {
+            "file_name" : "{sample_mv}/abundance_graph.png"
+        }
     },
 
     # This is for airgapped systems or other systems that need to use only local biocontainers.
@@ -462,6 +486,13 @@ config_default = {
             "quayurl" : "quay.io/biocontainers/khmer",
             "location" : "../container_images/",
             "version" : "2.1--py35_0"
+        },
+        "flash" : {
+            "use_local" : True,
+            "filename" : "flash_1.2.11--hed695b0_5.sif",
+            "quayurl" : "quay.io/biocontainers/flash",
+            "location" : "../container_images/",
+            "version" : "1.2.11--hed695b0_5"
         },
         "megahit" : {
             "use_local" : True,
@@ -535,10 +566,10 @@ config_default = {
         },
         "prokka" : {
             "use_local" : True,
-            "filename" : "prokka_1.14.5-1.sif",
+            "filename" : "prokka_1.14.6--pl526_0.sif",
             "location" : "../container_images/",
-            "quayurl" : "ummidock/prokka",
-            "version" : "1.14.5-1"
+            "quayurl" : "quay.io/bioncontainers/prokka",
+            "version" : "1.14.6--pl526"
         },
         "abricate" : {
             "use_local" : True,

@@ -35,6 +35,9 @@
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
         },
+        "read_filtering_convert_PE_to_SE_workflow" : {
+            "qual"   : ["25"]
+        },
         "assembly_metaspades_workflow" : {
             # the assembly workflow will run
             # metaspades assembler only
@@ -77,6 +80,12 @@
             "qual"      : ["2","30"],
         },
         "assembly_quast_plasmidspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "assembly_metaquast_rnaspades_workflow" : {
+            "qual"      : ["2","30"],
+        },
+        "assembly_multiqc_rnaspades_workflow" : {
             "qual"      : ["2","30"],
         },
         "assembly_multiqc_workflow" : {

@@ -41,6 +41,7 @@ input_dir_param <- snakemake@params[1]
 input_dir <- toString(input_dir_param)
 # Set sample name (parameterized)
 id <- snakemake@params[2]
+#input_dir <- snakemake@params[1]
 
 
 # setup and load necessary libraries
@@ -56,6 +57,7 @@ theme_set(theme_bw())
 <big>
 <big>
 Sample ID: <mark>**`r id`**</mark>
+Input dir: <mark>**`r input_dir`**</mark>
 </big>
 </big>
 
@@ -578,6 +580,30 @@ glue::glue("- **[{x}]({bx})**") %>%
   cat(sep="\n")
 ```
 
+
+# Abundance Graph {.tabset .tabset-fade}
+
+Here be info about the abundance graph
+
+
+## PNGs
+
+### Direct links to images
+
+```{r, results='asis'}
+x_png <- list.files(pattern="abundance_graph\\.png$", recursive=TRUE)
+bx_png <- basename(x_png)
+x_png_full <- file.path(getwd(), x_png)
+glue::glue("- **[{x_png}]({bx_png})**") %>% 
+  cat(sep="\n")
+```
+
+
+### Inline graphic
+
+```{r}
+knitr::include_graphics(x_png_full)
+```
 
 
 

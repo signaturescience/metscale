@@ -33,44 +33,11 @@ post_processing = config['post_processing']
 ##################################################
 
 
-#We need to get the files if they have been moved to the completed dir.
-output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
-file_ext = readfilt['quality_trimming']['sample_file_ext']
-
-workflows = config['workflows']
-#TODO: Test What if we have multiple samples?
-sample_files_dir_mv = []
-for sample in all_sample_names:
-    input_file_pattern = readfilt['read_patterns']['pre_trimming_glob_pattern']
-    input_file_pattern = input_file_pattern.replace(file_ext,'')
-    sample_file = re.sub(r"\*", sample, input_file_pattern, 1)
-    #for illumina wild cards in samples
-    if ('*' in sample_file) or ('?' in sample_file):
-        try:
-            sample_dir_wildcards = join(data_dir, sample_file+'*')
-            glob_finished_dir = glob.glob(sample_dir_wildcards)
-            for i in range(len(sample_file), 0, -1):
-                if (sample_file[i-1] == "*" or sample_file[i-1] == "?"):
-                    input_file_pattern_index = i-1
-                    break
-            result = glob_finished_dir[0].index(sample_file[input_file_pattern_index+1:])
-            finished_dir = glob_finished_dir[0][:result+input_file_pattern_index]
-            finished_dir = output_dir_pattern.replace("{sample}", finished_dir)
-        except:
-            print("Error in matching sample file patterns. Empty report generated")
-    else:
-        finished_dir = output_dir_pattern.replace("{sample}", sample_file)
-        finished_dir = join(data_dir, finished_dir)
-
-   
-    if os.path.isdir(finished_dir):
-        finished_dir = finished_dir.replace(data_dir+"/", "")
-        sample_files_dir_mv.append(finished_dir)   #used in create_final_report_worflow to locate dir
 
 
 
 ##########################################################
-
+output_dir_pattern = post_processing['move_samples_to_dir']['output_pattern']
 samples_output_dir = join(data_dir, output_dir_pattern)
 
 
@@ -110,9 +77,66 @@ rule move_samples_to_dir:
 
 
 ##################################################
-# post processing: create the final HTML report
+# post processing: create combined output json file
 
 
+combined_output = "{sample_mv}/combined_output.json".format(sample_mv= '{sample_mv}')
+post_processing_dir = join(os.getcwd(), "post_processing")
+
+
+def get_sample_dir(wildcards):
+    sample_path = os.getcwd()  + "/" + str(wildcards)
+    #print("SP:" +str(sample_path))
+    return sample_path
+
+
+rule generate_combined_output:
+    '''
+    create the combined output json file
+    '''
+    output:
+        combined_output
+    params:
+        input_dir = get_sample_dir,
+        post_prcoessing_dir = post_processing_dir,
+    message:
+        '--- Generating combined output file'
+    script:
+        "create_combined_output.py"
+
+
+
+##################################################
+# post processing: create the abundance graph
+
+
+abudance_graph = post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}')
+#abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
+
+
+rule generate_abundance_graph:
+    '''
+    create abundance graph from R and py scripts
+    '''
+    input:
+        combined_output
+    output:
+        abudance_graph
+    params:
+        input_dir = get_sample_dir,
+        post_prcoessing_dir = post_processing_dir,
+    message: 
+        '--- Generating Abundance Graph'
+    script:
+        "create_abundance_graph.py"
+
+
+
+##################################################
+# post processing: create the HTML final report
+
+html_output_file = post_processing['move_samples_to_dir']['out_pattern']
+#print("html_output_file "+str(html_output_file))
 
 def get_sample_filenames(wildcards):
     sample_file_remove = output_dir_pattern.replace('{sample}','')
@@ -123,17 +147,13 @@ def get_sample_filenames(wildcards):
     return sample_file
 
 
-def get_sample_dir(wildcards):
-    sample_path = os.getcwd() + "/" + data_dir + "/" + str(wildcards)
-    return sample_path
-
-
-html_output_file = join(data_dir, post_processing['move_samples_to_dir']['out_pattern'])
 
 rule generate_r_script:
     '''
     generate R script for final reports
     '''
+    input:
+        abudance_graph
     output:
         html_output_file
     params:
@@ -144,23 +164,8 @@ rule generate_r_script:
     script:
         "summary-report.Rmd"
 
-############################################
-# post processing rename file to sample file name
-
-sample_output_path = "{sample}/{sample}_summary-report.html".format(sample='{sample_mv}')
-final_html_report = join(data_dir, sample_output_path)
 
 
-rule rename_output_html:
-    '''
-    Do a move command to call it {sample}_summary-report.html
-    '''
-    input:
-        html_output_file
-    output:
-        final_html_report
-    shell:
-        "mv {input} {output}" 
 
 
  ###################################
@@ -183,6 +188,6 @@ rule post_processing_create_final_report_workflow:
     Build rule: Create a final HTML report
     '''
     input:
-        expand( final_html_report,
-                sample_mv    = sample_files_dir_mv,
+        expand( html_output_file,
+                sample_mv    = sample_finished_folders,
         )

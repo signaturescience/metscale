@@ -511,7 +511,7 @@ rule read_filtering_khmer_subsample_reads_workflow:
                 qual      = workflows['read_filtering_khmer_subsample_interleaved_reads_workflow']['qual'],
         )
 
-rule read_filtering_khmer_count_unique_kmers_SE_workflow:
+rule read_filtering_khmer_count_unique_kmers_workflow:
     '''
     Build rule: run unique-kmers python script return txt file
     '''
