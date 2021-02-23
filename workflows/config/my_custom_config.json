@@ -216,7 +216,7 @@
             # from megahit to run prokka on
             "qual"      : ["2","30"],
         },
-        "functional_humann2_workflow" : {
+        "functional_humann3_workflow" : {
             "qual" : ["2","30"],
         },
         "functional_prokka_with_metaspades_workflow" : {
