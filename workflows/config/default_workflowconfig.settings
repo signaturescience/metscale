@@ -211,6 +211,9 @@ config_default = {
         "functional_humann2_workflow" : {
             "qual" : ["2","30"],
         },
+        "functional_humann3_workflow" : {
+            "qual" : ["2","30"],
+        },
         "functional_prokka_with_megahit_workflow" : {
             # these parameters determine which contig params 
             # from megahit to run prokka on
