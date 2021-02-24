@@ -6,6 +6,4 @@ kaiju_db_nr_euk	/data/home/sjessa/DQT/kaiju/nr_euk_2017_seqnames_fromPeter/kaiju
 NCBI_nucl_gb	/data/home/sjessa/DQT/ncbi_taxonomy/accn2taxid_orig/nucl_gb.accession2taxid	accn2taxid	1	(from accession2taxid database)
 NCBI_nucl_wgs	/data/home/sjessa/DQT/ncbi_taxonomy/accn2taxid_orig/nucl_wgs.accession2taxid	accn2taxid	1	(from accession2taxid database)
 metaphlan_mpa_v20_m200	/data/home/sjessa/DQT/humann2/metaphlan_taxonIDs/mpa_v20_m200.TaxonIDlist.FINAL.txt	first_col	1	(based on fasta sequence names in metaphlan mpa_v20_m200.fna)
-MasonLab_Covid_Kraken_microDB_20200313	/home/sjessa/DQT/covid_kraken_cmason/seqid2taxid.map	seqid2taxid	1	(kfrom seqid2taxid.map file included in the Kraken DB provided by the mason lab)
-MTSV_May-22-2019	/data/home/sjessa/DQT/mtsv_db/20190522_taxid_list.txt	first_col	1	(based on accessions from complete_genome.fas)
 MTSV_Oct-28-2019	/data/home/sjessa/DQT/mtsv_db/20191028_taxid_list.txt	first_col	1	(based on accessions from complete_genome.fas)
