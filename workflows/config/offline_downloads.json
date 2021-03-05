@@ -10,7 +10,8 @@
         "adapters_combined_256_unique.fasta": "file:///resources/adapters_combined_256_unique.fasta",
         "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
         "khmer_2.1--py35_0.sif" : "docker://quay.io/biocontainers/khmer:2.1--py35_0",
-        "flash_1.2.11--hed695b0_5.sif": "docker://quay.io/biocontainers/flash:1.2.11--hed695b0_5"
+        "flash_1.2.11--hed695b0_5.sif": "docker://quay.io/biocontainers/flash:1.2.11--hed695b0_5",
+        "fastp_0.20.1--h8b12597_0.sif": "docker://quay.io/biocontainers/fastp:0.20.1--h8b12597_0"
     },
 
     "assembly": {
