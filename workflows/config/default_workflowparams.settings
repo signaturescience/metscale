@@ -566,10 +566,10 @@ config_default = {
         },
         "prokka" : {
             "use_local" : True,
-            "filename" : "prokka_1.14.6--pl526_0.sif",
+            "filename" : "prokka_1.14.5.sif",
             "location" : "../container_images/",
-            "quayurl" : "quay.io/bioncontainers/prokka",
-            "version" : "1.14.6--pl526"
+            "quayurl" : "staphb/prokka",
+            "version" : "1.14.5"
         },
         "abricate" : {
             "use_local" : True,
