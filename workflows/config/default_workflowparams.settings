@@ -126,6 +126,9 @@ config_default = {
             "output_pattern" : "{file}.fa",
             "output_dir" : "fasta"
         },
+        "complexity_filter" :{
+            "input_pattern" :
+        }
     },
 
     "assembly" : {
