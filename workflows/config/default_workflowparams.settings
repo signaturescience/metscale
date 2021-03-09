@@ -128,7 +128,9 @@ config_default = {
         },
         "low_complexity_pattern_SE" :{
             "input_pattern" : "{sample}_trim{qual}_reads.fq.gz",
-            "output_pattern" : "{sample}_trim{qual}_lc_filter.fq.gz"
+            "output_pattern" : "{sample}_trim{qual}_lc_filter.fq.gz",
+            "html" : "{sample}_trim{qual}_lc_filter.html",
+            "json" : "{sample}_trim{qual}_lc_filter.json"
         }
     },
 
