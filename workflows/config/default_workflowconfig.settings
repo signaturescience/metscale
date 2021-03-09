@@ -264,8 +264,11 @@ config_default = {
             "qual"      : ["2","30"],
             #srst2 db's - {ARGannot.r3.fasta, ResFinder.fasta, PlasmidFinder.fasta, EcOH.fasta} or external DBs
             "db"        : ["ARGannot.r3.fasta", "ResFinder.fasta"]
+        },
+        "low_complexity_workflow":{
+           "qual"       : ["2", "30"]
         }
-    }
+    },
 }
 
 update_config(config_default, config)

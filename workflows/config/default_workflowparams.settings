@@ -126,8 +126,9 @@ config_default = {
             "output_pattern" : "{file}.fa",
             "output_dir" : "fasta"
         },
-        "complexity_filter" :{
-            "input_pattern" :
+        "low_complexity_pattern_SE" :{
+            "input_pattern" : "{sample}_trim{qual}_reads.fq.gz",
+            "output_pattern" : "{sample}_trim{qual}_lc_filter.fq.gz"
         }
     },
 
@@ -612,7 +613,7 @@ config_default = {
         "fastp" :{
 	    "use_local" : True,
             "filename" : "fastp_0.20.1--h8b12597_0.sif",
-            "location" : "../container_images",
+            "location" : "../container_images/",
             "version"  :  "0.20.1--h8b12597_0",
             "quayurl"  :  "quay.io/biocontainers/fastp",
        }
