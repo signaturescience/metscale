@@ -233,7 +233,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
         plt.axhline(y = species, color ="green", linestyle =":")
     figure = plt.gcf()
     figure.set_size_inches(16,8)
-    plt.title("Signal Plot v3")
+    plt.title("Signal Graph v3")
     red_patch = mpatches.Patch(color='red', label='Very strong species signal')
     orange_patch = mpatches.Patch(color='orange', label='Strong species signal')
     yellow_patch = mpatches.Patch(color='yellow', label='Moderately strong species signal')
@@ -242,7 +242,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
     grey_patch = mpatches.Patch(color='grey', label='Very weak species signal')
     white_patch = mpatches.Patch(color='white', label='No species signal')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0., handles=[red_patch, orange_patch, yellow_patch, green_patch, blue_patch, grey_patch, white_patch])
-    signal_path = os.path.join(data_dir, "signal_plot.png")
+    signal_path = os.path.join(data_dir, "signal_graph.png")
     plt.savefig(signal_path, dpi=100, bbox_inches='tight')
 
 
@@ -290,6 +290,6 @@ if __name__ == '__main__':
     #create abundance dataframe from the json file
     abundance_df, workflow_cols = create_abundance_df(data)
     sorted_abundance_df = sorted_values(abundance_df)
-    abundance_filepath = os.path.join(data_path, 'signal_plot.tsv')
+    abundance_filepath = os.path.join(data_path, 'signal_graph.tsv')
     abundance_df.to_csv(abundance_filepath, sep='\t')
     create_graph(sorted_abundance_df, workflow_cols, data_path)  
