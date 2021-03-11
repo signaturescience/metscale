@@ -447,7 +447,7 @@ config_default = {
             "out_pattern"    : "{sample_mv}/summary-report.html"
         },
         "abundance_graph" : {
-            "file_name" : "{sample_mv}/abundance_graph.png"
+            "file_name" : "{sample_mv}/signal_plot.png"
         }
     },
 

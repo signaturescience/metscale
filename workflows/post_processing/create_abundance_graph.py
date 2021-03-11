@@ -14,6 +14,7 @@ GREEN = [0,128,0]
 BLUE = [0,0,255]
 GREY = [128,128,128]
 WHITE = [255,255,255]
+NUM_SPECIES_ROWS = 16
 
 
 def get_bracken_color(val):
@@ -192,7 +193,7 @@ def create_abundance_df(data):
     if (not sourmash_df.empty):
         populated_workflows_df.append(sourmash_df)
         workflow_cols.append("Sourmash")
-    abundance_df = pd.concat(populated_workflows_df)
+    abundance_df = pd.concat(populated_workflows_df, sort=True)
     for workflow in workflow_cols:
         abundance_df[workflow] = abundance_df[workflow].fillna(0)
     abundance_df = abundance_df.groupby(['Species_Trim']).sum()
@@ -232,7 +233,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
         plt.axhline(y = species, color ="green", linestyle =":")
     figure = plt.gcf()
     figure.set_size_inches(16,8)
-    plt.title("Signal Plot v2")
+    plt.title("Signal Plot v3")
     red_patch = mpatches.Patch(color='red', label='Very strong species signal')
     orange_patch = mpatches.Patch(color='orange', label='Strong species signal')
     yellow_patch = mpatches.Patch(color='yellow', label='Moderately strong species signal')
@@ -267,9 +268,15 @@ def get_all_rows_with_values(abundance_df):
     return sorted_abundance_df
 
 
+def sorted_values(abundance_df):
+    df = abundance_df.sort_values(by=list(abundance_df.columns), ascending=False)
+    df = df.head(NUM_SPECIES_ROWS)
+    return df
+
+
 if __name__ == '__main__':
     #parser = argparse.ArgumentParser()
-    #parser.add_argument("--data", help="data dir",default="/data/home/cgrahlmann/metag2/metagenomics/workflows/data/SRR606249_subset10_1_reads_finished/")
+    #parser.add_argument("--data", help="data dir",default="/data/home/")
     #parser.add_argument("--post", help="post processing dir")
     #args = parser.parse_args()
     #data_path = args.data
@@ -282,10 +289,7 @@ if __name__ == '__main__':
 
     #create abundance dataframe from the json file
     abundance_df, workflow_cols = create_abundance_df(data)
-
-    #we are going to sort by - all rows have a value greater than 0.
-    sorted_abundance_df = get_all_rows_with_values(abundance_df)
+    sorted_abundance_df = sorted_values(abundance_df)
     abundance_filepath = os.path.join(data_path, 'signal_plot.tsv')
     abundance_df.to_csv(abundance_filepath, sep='\t')
-
     create_graph(sorted_abundance_df, workflow_cols, data_path)  
