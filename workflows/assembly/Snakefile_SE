@@ -40,6 +40,8 @@ readfilt = config['read_filtering']
 # We have to explicitly expand {direction} to _1 and _2.
 # (If we rely on wildards, _1 and _2 are two separate rules - bad.)
 
+
+# Commented out to test SE rules 
 #Used for both spades and metaspades and plasmidspades rules
 assembly_all_spades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
 assembly_all_spades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
@@ -66,6 +68,25 @@ assembly_all_spades_input_rev_sing = assembly_all_spades_input_pattern_sing.form
             qual='{qual}'
 )
 
+
+# SE rules for input patterns
+
+assembly_all_spades_input_pattern_SE = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+asssembly_all_spades_input_pattern_SE_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+assembly_all_spades_input_SE = assembly_all_spades_input_pattern_SE.format(
+            direction=readfilt['direction_labels']['SE'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+assembly_all_spades_input_SE_sing = asssembly_all_spades_input_pattern_SE_sing.format(
+            direction=readfilt['direction_labels']['SE'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
 ###################################
 # Assembly: metaspades
 
@@ -86,14 +107,12 @@ rule assembly_metaspades:
     Perform read assembly of trimmed reads using metaspades.
     """
     input:
-        fwd = assembly_all_spades_input_fwd,
-        rev = assembly_all_spades_input_rev
+        SE = assembly_all_spades_input_SE
     output:
         assembly_metaspades_output
     params:
         assembly_metaspades_outprefix_wc = assembly_metaspades_outprefix_sub,
-        fwd_sing = assembly_all_spades_input_fwd_sing,
-        rev_sing = assembly_all_spades_input_rev_sing,
+        SE_sing = assembly_all_spades_input_SE_sing,
         metaspades_output_expanded = assembly_metaspades_output_sing
     message: 
          '--- Assembling quality trimmed reads with SPAdes'
@@ -106,8 +125,7 @@ rule assembly_metaspades:
     shell:
         'metaspades.py -t {threads} '
         '-m 240 '
-         '-1 {params.fwd_sing} '
-         '-2 {params.rev_sing} '
+         '-s {params.SE_sing} '
         '-o /{sing_dir}/{params.assembly_metaspades_outprefix_wc} '
         '&& '
         'mv /{sing_dir}/{params.assembly_metaspades_outprefix_wc}/contigs.fasta /{params.metaspades_output_expanded} '
@@ -289,6 +307,17 @@ assembly_megahit_input_rev_sing = assembly_megahit_input_pattern_sing.format(
             qual='{qual}'
 )
 
+assembly_megahit_input_SE = assembly_megahit_input_pattern.format(
+            direction=readfilt['direction_labels']['SE'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_megahit_input_SE_sing = assembly_megahit_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['SE'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
 assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
 assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
 
@@ -301,13 +330,12 @@ def assembly_megahit_outprefix_sub(wildcards):
     return assembly_megahit_outprefix.format(**wildcards)
 
 
-rule assembly_megahit:
+rule assembly_megahit_SE:
     """
     Perform read assembly of trimmed reads using megahit.
     """
     input:
-        fwd = assembly_megahit_input_fwd,
-        rev = assembly_megahit_input_rev,
+        SE=assembly_megahit_input_SE
     output:
         assembly_megahit_output
     message: 
@@ -320,14 +348,12 @@ rule assembly_megahit:
         assembly_megahit_benchfile
     params:
         assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub,
-        fwd_sing = assembly_megahit_input_fwd_sing,
-        rev_sing = assembly_megahit_input_rev_sing,
+        SE_sing = assembly_megahit_input_SE_sing
     shell:
         'rm -rf /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
         'megahit -t {threads} '  
-        '-1 {params.fwd_sing} '
-        '-2 {params.rev_sing} '
+        '-r {params.SE_sing} '
         '--out-prefix={params.assembly_megahit_outprefix_wc} '
         '-o /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
         '&& '
