@@ -59,7 +59,8 @@ config_default = {
         },
         "direction_labels" : {
             "forward" : "1",
-            "reverse" : "2"
+            "reverse" : "2",
+            "SE" : "SE"
         },
         "quality_assessment" : {
             #
