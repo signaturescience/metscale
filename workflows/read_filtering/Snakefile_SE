@@ -379,20 +379,20 @@ def convert_fast_to_fasta_output_sing(wildcards):
     return fastq_to_fasta_output_sing.format(**wildcards)
 
 
-rule convert_fastq_to_fasta:
-    input:  
-        fastq_to_fasta_input
-    output: 
-        fastq_to_fasta_output
-    message: 
-        """--- Convert fastq to fasta."""
-    singularity:
-        khmer_image
-    params:
-        convert_input = convert_fastq_to_fasta_input_sing,
-        convert_output = convert_fast_to_fasta_output_sing
-    shell:  
-        "fastq-to-fasta.py -o {params.convert_output} {params.convert_input}"
+#rule convert_fastq_to_fasta:
+#    input:  
+#        fastq_to_fasta_input
+#    output: 
+#        fastq_to_fasta_output
+#    message: 
+#        """--- Convert fastq to fasta."""
+#    singularity:
+#        khmer_image
+#    params:
+#        convert_input = convert_fastq_to_fasta_input_sing,
+#        convert_output = convert_fast_to_fasta_output_sing
+#    shell:  
+#        "fastq-to-fasta.py -o {params.convert_output} {params.convert_input}"
 
 
 
