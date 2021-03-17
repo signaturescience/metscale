@@ -5,7 +5,6 @@ minikraken2_v2_8GB_201904_UPDATE	/home/mnute/sigsci/work/db_query_tool/kraken/kr
 kaiju_db_nr_euk	/home/mnute/sigsci/work/db_query_tool/kaiju/nr_euk_2017_seqnames_fromPeter/kaiju_db_nr_euk_origUniqTaxa.txt	first_col	1	(included with the kaiju db download)
 NCBI_nucl_gb	/home/mnute/sigsci/work/db_query_tool/ncbi_taxonomy/accn2taxid_orig/nucl_gb.accession2taxid	accn2taxid	1	(from accession2taxid database)
 NCBI_nucl_wgs	/home/mnute/sigsci/work/db_query_tool/ncbi_taxonomy/accn2taxid_orig/nucl_wgs.accession2taxid	accn2taxid	1	(from accession2taxid database)
-metaphlan_mpa_v20_m200	/home/mnute/sigsci/work/humann2/metaphlan_taxonIDs/mpa_v20_m200.TaxonIDlist.FINAL.txt	first_col	1	(based on fasta sequence names in metaphlan mpa_v20_m200.fna)
 MasonLab_Covid_Kraken_microDB_20200313	/home/mnute/sigsci/work/db_query_tool/covid_kraken_cmason/seqid2taxid.map	seqid2taxid	1	(kfrom seqid2taxid.map file included in the Kraken DB provided by the mason lab)
 MTSV_May-22-2019	/home/mnute/sigsci/work/mtsv_db/20190522_taxid_list.txt	first_col	1	(based on accessions from complete_genome.fas)
 MTSV_Oct-28-2019	/home/mnute/sigsci/work/mtsv_db/20191028_taxid_list.txt	first_col	1	(based on accessions from complete_genome.fas)

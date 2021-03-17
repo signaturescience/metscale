@@ -1,0 +1,691 @@
+'''
+Author: Chris Grahlmann
+Affiliation: Signature Science
+Objective: A Snakemake workflow to annotate prokaryotic genomes and screen for genes of interest
+Date: Nov 28, 2018
+Documentation: docs/workflow_assembly.md
+'''
+
+from common.utils  import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname, islink
+import os, re
+import random, string
+from shutil import copyfile
+
+
+
+############################################
+# Inference: default config
+
+data_dir = config['data_dir']
+sing_dir = config['sing_dir']
+image_dir = 'images/read'
+biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
+assembly = config['assembly']
+readfilt = config['read_filtering']
+inference = config['functional_inference']
+
+
+###################################
+# Functional Inference: prokka with megahit input
+
+
+prokka_image = container_image_name(biocontainers, 'prokka')
+
+prokka_with_megahit_output_dir = join(data_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+
+prokka_with_megahit_output_dir_sing = join(sing_dir,inference['prokka_with_megahit']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_input_dir = join(data_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_input_dir_sing = join(sing_dir,inference['prokka_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_megahit_prefix_files = inference['prokka_with_megahit']['prefix_pattern']
+prokka_megahit_threads = inference['prokka_with_megahit']['threads']
+
+
+def get_input_db_megahit(wildcards):
+    if (inference['prokka_with_megahit']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_with_megahit']['input_db'])
+
+
+rule prokka_with_megahit:
+    input:
+        prokka_with_megahit_input_dir
+    output:
+        directory(prokka_with_megahit_output_dir)
+    params:
+        input_files = prokka_with_megahit_input_dir_sing,
+        output_dir = prokka_with_megahit_output_dir_sing,
+        prefix_files = prokka_with_megahit_prefix_files,
+        input_db = get_input_db_megahit
+    threads:
+        prokka_megahit_threads
+    singularity:
+        prokka_image
+    shell:
+    	'export LC_ALL=C '
+    	'&& '
+        'prokka '
+        '{params.input_files} '
+        '--metagenome --eval 1e-06 '
+        '--proteins {params.input_db} '
+        '--notrna --rnammer --rawproduct '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads}'
+
+
+###################################
+# Functional Inference: prokka metatranscriptome with rnaspades input
+
+prokka_metatrans_with_rnaspades_output_dir = join(data_dir,inference['prokka_metatrans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_metatrans_with_rnaspades_output_dir_sing = join(sing_dir,inference['prokka_metatrans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_metatrans_with_rnaspades_input_dir = join(data_dir,inference['prokka_metatrans_with_rnaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_metatrans_with_rnaspades_input_dir_sing = join(sing_dir,inference['prokka_metatrans_with_rnaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_metatrans_with_rnaspades_prefix_files = inference['prokka_metatrans_with_rnaspades']['prefix_pattern']
+prokka_metatrans_rnaspades_threads = inference['prokka_metatrans_with_rnaspades']['threads']
+
+
+def get_input_db_rnaspades(wildcards):
+    if (inference['prokka_metatrans_with_rnaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_metatrans_with_rnaspades']['input_db'])
+
+
+rule prokka_metatrans_with_rnaspades:
+    input:
+        #assembly_rnaspades_output
+        prokka_metatrans_with_rnaspades_input_dir
+    output:
+        directory(prokka_metatrans_with_rnaspades_output_dir)
+    params:
+        input_files = prokka_metatrans_with_rnaspades_input_dir_sing,
+        #input_files = assembly_rnaspades_output_sing,
+        output_dir = prokka_metatrans_with_rnaspades_output_dir_sing,
+        prefix_files = prokka_metatrans_with_rnaspades_prefix_files,
+        input_db = get_input_db_rnaspades
+    threads:
+        prokka_metatrans_rnaspades_threads
+    singularity:
+        prokka_image
+    shell:
+        'export LC_ALL=C '
+        '&& '
+        'prokka '
+        '{params.input_files} '
+        '--metagenome --eval 1e-06  '
+        '--proteins {params.input_db} '
+        '--notrna --rnammer --rawproduct --compliant '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads} '
+
+
+
+###################################
+# Functional Inference: prokka with trascriptome spades input for isolates
+
+prokka_trans_with_rnaspades_output_dir = join(data_dir,inference['prokka_trans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_trans_with_rnaspades_output_dir_sing = join(sing_dir,inference['prokka_trans_with_rnaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_trans_with_rnaspades_input_dir = join(data_dir,inference['prokka_trans_with_rnaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_trans_with_rnaspades_input_dir_sing = join(sing_dir,inference['prokka_trans_with_rnaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_trans_with_rnaspades_prefix_files = inference['prokka_trans_with_rnaspades']['prefix_pattern']
+prokka_trans_rnaspades_threads = inference['prokka_trans_with_rnaspades']['threads']
+
+def get_input_db_spades(wildcards):
+    if (inference['prokka_trans_with_rnaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_trans_with_spades']['input_db'])
+
+
+rule prokka_trans_with_spades:
+    input:
+        prokka_trans_with_rnaspades_input_dir
+    output:
+        directory(prokka_trans_with_rnaspades_output_dir)
+    params:
+        input_files = prokka_trans_with_rnaspades_input_dir_sing,
+        output_dir = prokka_trans_with_rnaspades_output_dir_sing,
+        prefix_files = prokka_trans_with_rnaspades_prefix_files,
+        input_db = get_input_db_spades
+    threads:
+        prokka_trans_rnaspades_threads
+    singularity:
+        prokka_image
+    shell:
+        'export LC_ALL=C '
+        '&& '
+        'prokka '
+        '{params.input_files} '
+        '--notrna --rnammer --rawproduct --compliant '
+        '--proteins {params.input_db} '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads}'
+
+
+###################################
+# Functional Inference: prokka with metaspades input
+
+prokka_with_metaspades_output_dir = join(data_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_output_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_input_dir = join(data_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_input_dir_sing = join(sing_dir,inference['prokka_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_metaspades_prefix_files = inference['prokka_with_metaspades']['prefix_pattern']
+prokka_metaspades_threads = inference['prokka_with_metaspades']['threads']
+
+
+def get_input_db_metaspades(wildcards):
+    if (inference['prokka_with_metaspades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_with_metaspades']['input_db'])
+
+
+rule prokka_with_metaspades:
+    input:
+        prokka_with_metaspades_input_dir
+    output:
+        directory(prokka_with_metaspades_output_dir)
+    params:
+        input_files = prokka_with_metaspades_input_dir_sing,
+        output_dir = prokka_with_metaspades_output_dir_sing,
+        prefix_files = prokka_with_metaspades_prefix_files,
+        input_db = get_input_db_metaspades
+    threads:
+        prokka_metaspades_threads
+    singularity:
+        prokka_image
+    shell:
+    	'export LC_ALL=C '
+    	'&& '
+        'prokka '
+        '{params.input_files} '
+        '--metagenome --eval 1e-06  '
+        '--proteins {params.input_db} '
+        '--notrna --rnammer --rawproduct --compliant '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads} '
+
+
+
+
+
+###################################
+# Functional Inference: prokka with spades input for isolates
+
+prokka_with_spades_output_dir = join(data_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+prokka_with_spades_output_dir_sing = join(sing_dir,inference['prokka_with_spades']['outdir_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+
+
+prokka_with_spades_input = assembly_spades_output
+prokka_with_spades_input_sing = assembly_spades_output_sing
+
+prokka_with_spades_prefix_files = inference['prokka_with_spades']['prefix_pattern']
+prokka_spades_threads = inference['prokka_with_spades']['threads']
+
+def get_input_db_spades(wildcards):
+    if (inference['prokka_with_spades']['input_db'] == "/NGStools/prokka/db/kingdom/Bacteria/IS"):
+        return "/NGStools/prokka/db/kingdom/Bacteria/IS"
+    else:
+        return join(sing_dir,inference['prokka_with_spades']['input_db'])
+
+rule prokka_with_spades:
+    input:
+        prokka_with_spades_input
+    output:
+        directory(prokka_with_spades_output_dir)
+    params:
+        input_files = prokka_with_spades_input_sing,
+        output_dir = prokka_with_spades_output_dir_sing,
+        prefix_files = prokka_with_spades_prefix_files,
+        input_db = get_input_db_spades
+    threads:
+        prokka_spades_threads
+    singularity:
+        prokka_image
+    shell:
+        'export LC_ALL=C '
+        '&& '
+        'prokka '
+        '{params.input_files} '
+        '--notrna --rnammer --rawproduct '
+        '--proteins {params.input_db} '
+        '--outdir {params.output_dir} '
+        '--prefix {params.prefix_files} '
+        '--cpus {threads}'
+
+
+
+
+###################################
+# Functional Inference: abricate with megahit input
+
+abricate_image = container_image_name(biocontainers, 'abricate')
+abricate_with_megahit_output = join(data_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_megahit_output_sing = join(sing_dir,inference['abricate_with_megahit']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_megahit_input = join(data_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_megahit_input_sing = join(sing_dir,inference['abricate_with_megahit']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_megahit_db = '{db}'
+
+def get_db_dir_megahit(wildcards):
+    abricate_db_dir = inference['abricate_with_megahit']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
+
+rule abricate_with_megahit:
+    input:
+        abricate_with_megahit_input
+    output:
+        abricate_with_megahit_output
+    params:
+        input_files = abricate_with_megahit_input_sing,
+        output_files = abricate_with_megahit_output_sing,
+        gene_db = abricate_with_megahit_db,
+        db_dir = get_db_dir_megahit
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '-datadir {params.db_dir} '
+        '--db {params.gene_db} '
+        '{params.input_files}>'
+        '{params.output_files} '
+
+
+
+
+###################################
+# Functional Inference: abricate with metaspades input
+
+
+abricate_with_metaspades_output = join(data_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_metaspades_output_sing = join(sing_dir,inference['abricate_with_metaspades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_metaspades_input = join(data_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_metaspades_input_sing = join(sing_dir,inference['abricate_with_metaspades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_metaspades_db = '{db}'
+
+
+def get_db_dir_metaspades(wildcards):
+    abricate_db_dir = inference['abricate_with_metaspades']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
+
+
+rule abricate_with_metaspades:
+    input:
+        abricate_with_metaspades_input
+    output:
+        abricate_with_metaspades_output
+    params:
+        input_files = abricate_with_metaspades_input_sing,
+        output_files = abricate_with_metaspades_output_sing,
+        gene_db = abricate_with_metaspades_db,
+        db_dir = get_db_dir_metaspades
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '-datadir {params.db_dir} '
+        '--db {params.gene_db} '
+        '{params.input_files}>'
+        '{params.output_files} '
+
+
+###################################
+# Functional Inference: abricate with spades input
+
+abricate_with_spades_output = join(data_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+abricate_with_spades_output_sing = join(sing_dir,inference['abricate_with_spades']['output_pattern'].format(sample='{sample}',
+                            qual='{qual}', db='{db}'))
+
+abricate_with_spades_input = join(data_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_spades_input_sing = join(sing_dir,inference['abricate_with_spades']['input_pattern'].format(sample='{sample}',
+                            qual='{qual}'))
+abricate_with_spades_db = '{db}'
+
+
+def get_db_dir_spades(wildcards):
+    abricate_db_dir = inference['abricate_with_spades']['db_dir']
+    if "sing_dir" in abricate_db_dir:
+        abricate_db_dir = abricate_db_dir.replace("sing_dir", sing_dir)
+    return abricate_db_dir
+
+
+rule abricate_with_spades:
+    input:
+        abricate_with_spades_input = assembly_spades_output
+    output:
+        abricate_with_spades_output
+    params:
+        input_files = assembly_spades_output_sing,
+        output_files = abricate_with_spades_output_sing,
+        gene_db = abricate_with_spades_db,
+        db_dir = get_db_dir_spades
+    singularity:
+        abricate_image
+    shell:
+        'abricate --csv '
+        '-datadir {params.db_dir} '
+        '--db {params.gene_db} '
+        '{params.input_files}>'
+        '{params.output_files} '
+
+
+
+###################################
+# Functional Inference: SRST2
+
+srst2_fwd_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}', qual='{qual}'))
+srst2_rev_post_trimmed = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}', qual='{qual}'))
+srst2_post_trimming_inputs = [ srst2_fwd_post_trimmed, 
+                        srst2_rev_post_trimmed]
+
+srst2_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+                        direction=readfilt['direction_labels']['forward'],
+                        sample='{sample}', qual='{qual}'))
+srst2_rev_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']).format(
+                        direction=readfilt['direction_labels']['reverse'],
+                        sample='{sample}', qual='{qual}'))
+srst2_post_trimming_inputs_list = [ srst2_fwd_post_trimmed_sing, 
+                        srst2_rev_post_trimmed_sing]
+
+srst2_db_location = join(sing_dir, '{db}')
+srst2_output_sing = join(sing_dir, inference['srst2']['output_pattern'].format(sample='{sample}', qual='{qual}', db='{db}'))
+#SRST2 likes to append some strings that are difficult to replicate with the db wildcard. So decided to simplify and just look for the log file.
+srst2_log_out = "data/{sample}_trim{qual}_{db}.srst2.log"
+
+srst2_image = container_image_name(biocontainers, 'srst2')
+srst2_threads = inference['srst2']['threads']
+
+def srst2_output_sub_sing(wildcards):
+    return srst2_output_sing.format(**wildcards)
+
+#srst2 freaks out with our quasi illumina filenaming pattern and doesn't accept it. As a workaround I just create a random filename
+#to create a copy of input files then delete them.
+
+srst2_input_list = []
+def srst2_input_files_sing(wildcards):
+    for num, file in enumerate(srst2_post_trimming_inputs):
+        in_file = expand(file, sample = wildcards.sample, qual = wildcards.qual)
+        input_file = in_file[0]
+        if (num ==0):  #forward 
+            letters = string.ascii_lowercase
+            rand_file = ''.join(random.choice(letters) for i in range(8))
+            srst2_input_file = data_dir + '/' + rand_file + '_1' + readfilt['quality_trimming']['sample_file_ext']     
+        else:   #reverse
+            srst2_input_file = data_dir + '/' + rand_file + '_2' + readfilt['quality_trimming']['sample_file_ext']
+        if (os.path.isfile(input_file)):
+            shutil.copyfile(input_file, srst2_input_file)
+            srst2_input_file = srst2_input_file.replace(data_dir, sing_dir)
+        srst2_input_list.append(srst2_input_file)
+    return srst2_input_list
+
+
+rule srst2_with_raw_reads:
+    input:
+        srst2_post_trimming_inputs
+    output:
+        srst2_log_out
+    params:
+        input_files = srst2_input_files_sing,
+        output_files = srst2_output_sub_sing,
+        db = srst2_db_location
+    threads:
+        srst2_threads
+    singularity:
+        srst2_image
+    shell:
+        'srst2 '
+        '--input_pe {params.input_files} '
+        '--forward _1 '
+        '--reverse _2 '
+        '--merge_pair '
+        '--output {params.output_files} '
+        '--log --gene_db {params.db} '
+        '--threads {threads} '
+        '--min_coverage 0 '
+
+
+
+
+###################################
+# Functional Inference: Run humann3
+
+
+humann3_image = container_image_name(biocontainers, 'humann3') 
+humann3_threads = inference['humann3']['threads']
+humann3_output = join(data_dir, '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv')
+tmp_bowtie2 = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bowtie2.txt')
+tmp_bugs = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bugs_list.tsv')
+tmp_dir = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann_temp') 
+nucleotide_db = join(sing_dir, inference['humann3']['nucleotide_db'])
+protein_db = join(sing_dir, inference['humann3']['protein_db'])
+
+metaphlan_db_tar_input = inference['humann3']['metaphlan_db_tar']
+metaphlan_db_tar = [join(data_dir, db) for db in metaphlan_db_tar_input]
+metaphlan_db_out = inference['humann3']['metaphlan_db']
+metaphlan_db_bt2_path = [join(data_dir, db) for db in metaphlan_db_out]
+
+
+rule install_metaphlan_db:
+    input:
+        metaphlan_db_tar
+    output:
+        metaphlan_db_bt2_path
+    params:
+        out_folder = sing_dir
+    singularity:
+        humann3_image
+    shell:
+        'export LC_ALL=C && '
+        'metaphlan --bowtie2db {params.out_folder} --install'
+
+
+rule run_humann3:
+    input:
+        interleave_output, metaphlan_db_bt2_path
+    output:
+        humann3_output
+    params:
+        out_folder = sing_dir,
+        nucleotide_db = nucleotide_db,
+        protein_db = protein_db,
+        threads = humann3_threads,
+        bowtie2 = tmp_bowtie2,
+        bugs = tmp_bugs,
+        tmp_dir = tmp_dir
+    singularity:
+        humann3_image
+    shell:
+        'export LC_ALL=C && '
+        'humann3 -i {input[0]} -o {params.out_folder} '
+        '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
+        '--nucleotide-database  {params.nucleotide_db} '
+        '--protein-database  {params.protein_db} '
+        '--threads {params.threads} && '
+        'mv {params.bowtie2} {params.out_folder} && '
+        'mv {params.bugs} {params.out_folder} && '
+        'rm -rf {params.tmp_dir}'
+
+
+
+###################################
+# Functional Inference: build rules
+
+workflows = config['workflows']
+
+directions = [readfilt['direction_labels']['forward'],
+              readfilt['direction_labels']['reverse']]
+
+
+rule functional_prokka_with_megahit_workflow:
+    """
+    Run prokka with MEGAHIT contigs
+    """
+    input:
+        expand( prokka_with_megahit_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_with_megahit_workflow']['qual']
+        )
+
+
+rule functional_prokka_metatranscriptome_with_rnaspades_workflow:
+    """
+    Run prokka with metatranscriptome rna spades
+    """
+    input:
+        expand( prokka_metatrans_with_rnaspades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_metatrans_with_rnaspades_workflow']['qual']
+        )
+
+
+rule functional_prokka_transcriptome_with_rnaspades_workflow:
+    """
+    Run prokka with transcriptome rna spades
+    """
+    input:
+        expand( prokka_trans_with_rnaspades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_trans_with_rnaspades_workflow']['qual']
+        )
+
+
+rule functional_prokka_with_metaspades_workflow:
+    """
+    Run prokka with metaspades contigs
+    """
+    input:
+        expand( prokka_with_metaspades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_with_metaspades_workflow']['qual']
+        )
+
+
+rule functional_prokka_with_spades_workflow:
+    """
+    Run prokka with spades contigs
+    """
+    input:
+        expand( prokka_with_spades_output_dir,
+                sample    = sample_input_files,
+                qual   = workflows['functional_prokka_with_spades_workflow']['qual']
+        )
+
+
+rule functional_abricate_with_megahit_workflow:
+    """
+    Run abricate with assembled megahit contigs as input
+    """
+    input:
+        expand( abricate_with_megahit_output,
+                sample    = sample_input_files,
+                qual   = workflows['functional_abricate_with_megahit_workflow']['qual'],
+                db     = workflows['functional_abricate_with_megahit_workflow']['db'],
+        )
+
+
+rule functional_abricate_with_metaspades_workflow:
+    """
+    Run abricate with assembled metaspades contigs as input
+    """
+    input:
+        expand( abricate_with_metaspades_output,
+                sample    = sample_input_files,
+                qual   = workflows['functional_abricate_with_metaspades_workflow']['qual'],
+                db     = workflows['functional_abricate_with_metaspades_workflow']['db'],
+        )
+
+
+rule functional_abricate_with_spades_workflow:
+    """
+    Run abricate with assembled spades contigs as input
+    """
+    input:
+        expand( abricate_with_spades_output,
+                sample    = sample_input_files,
+                qual   = workflows['functional_abricate_with_spades_workflow']['qual'],
+                db     = workflows['functional_abricate_with_spades_workflow']['db'],
+        )
+
+
+rule functional_with_srst2_workflow:
+    '''
+    Run srst2 on raw reads
+    '''
+    input:
+       expand( srst2_log_out,
+                sample    = sample_input_files,
+                qual      = workflows['functional_with_srst2_workflow']['qual'],
+                db        = workflows['functional_with_srst2_workflow']['db'],
+                direction = directions,
+        )
+
+
+rule functional_humann3_workflow:
+    '''
+    run humann3 workflow
+    '''
+    input:
+        expand(humann3_output,
+            sample      = sample_input_files,
+            qual        = workflows['functional_humann3_workflow']['qual'],
+            )
+
+
+#Cleanup on success, check for srst2 dummy input files and delete
+onsuccess:
+    for file in srst2_input_list:
+        file = file.replace(sing_dir, data_dir)
+        try:
+            os.remove(file)
+        except:
+            pass
+ 
+
+onerror:
+    for file in srst2_input_list:
+        file = file.replace(sing_dir, data_dir)
+        try:
+            os.remove(file)
+        except:
+            pass

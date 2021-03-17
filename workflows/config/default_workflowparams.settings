@@ -13,11 +13,12 @@ config_default = {
             #
             # filename pattern for pre-trimmed reads
             "pre_trimming_pattern"  : "{sample}_{direction}_reads",
+            "pre_trimming_pattern_SE"  : "{sample}_reads",
             #
             #shakya glob pattern
             "pre_trimming_glob_pattern"  : "*_1_reads.fq.gz",
             # Illumina glob pattern
-            #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
+            #"pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fq.gz",
             #
             # file pattern to locate reverse end string
             # we are searching from the right of the filename for the unique file pattern that is locates the reverse reads
@@ -28,6 +29,7 @@ config_default = {
             #
             # filename pattern for post-trimmed reads
             "post_trimming_pattern" : "{sample}_trim{qual}_{direction}",
+            "post_trimming_pattern_SE" : "{sample}_trim{qual}",
             #
             # number of threads to use.
             "threads" : 2
@@ -84,12 +86,21 @@ config_default = {
             # 
             # output pattern for khmer interleave reads
             "interleave_output_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+            "interleave_output_pattern_se" : "{sample}_trim{qual}.fq.gz"
         },
         "subsample_interleaving" : {
              #
-             # output of subset percentage (10 = 10%, don't use zero!)
+             # output of subset percentage (10 = 10%, don't use zero!) for pair ends
              "percent" : 10,
              "subsample_output_pattern" : "{sample}_trim{qual}_subset{percent}_interleaved_reads.fq.gz",
+             "subsample_output_pattern_SE" : "{sample}_trim{qual}_subset{percent}_reads.fq.gz",
+             "max_reads" : 100000000
+        },
+        "subsamples" : {
+             #
+             # output of subset percentage (10 = 10%, don't use zero!) for single end
+             "percent" : 10,
+             "subsample_output_pattern_SE" : "{sample}_trim{qual}_subset{percent}_reads.fq.gz",
              "max_reads" : 100000000
         },
         "split_interleaved_reads" : {
@@ -101,10 +112,12 @@ config_default = {
             #
             # input file pattern. Right now set to the output from interleaving
             "input_pattern" : "{sample}_trim{qual}_interleaved_reads.fq.gz",
+            "input_pattern_SE" : "{sample}_trim{qual}_reads.fq.gz",
             # input pattern from the subsample interleave
             #"input_pattern" : "{sample}_trim{qual}_subset_interleaved_reads.fq.gz",
             # output file pattern.
             "output_pattern" : "{sample}_trim{qual}_interleaved_uniqueK{kmers}.txt",
+            "output_pattern_SE" : "{sample}_trim{qual}_uniqueK{kmers}.txt",
         },
         "convert_fastq_fasta" : {
             #
@@ -560,10 +573,10 @@ config_default = {
         },
         "prokka" : {
             "use_local" : True,
-            "filename" : "prokka_1.14.6--pl526_0.sif",
+            "filename" : "prokka_1.14.5.sif",
             "location" : "../container_images/",
-            "quayurl" : "quay.io/bioncontainers/prokka",
-            "version" : "1.14.6--pl526"
+            "quayurl" : "staphb/prokka",
+            "version" : "1.14.5"
         },
         "abricate" : {
             "use_local" : True,

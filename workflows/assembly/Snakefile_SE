@@ -1,0 +1,658 @@
+'''
+Author: Phillip Brooks, Charles Reid
+Affiliation: UC Davis Lab for Data Intensive Biology
+Objective: A Snakemake workflow to assemble quality trimmed reads using SPAdes and MEGAHIT  
+Date: 2018-06-11
+Documentation: docs/workflow_assembly.md
+'''
+
+from common.utils  import container_image_is_external, container_image_name
+from os.path import join, isfile, dirname
+import os, re
+
+
+
+############################################
+# Assembly: default config
+
+data_dir = config['data_dir']
+sing_dir = config['sing_dir']
+image_dir = 'images/read'
+biocontainers = config['biocontainers']
+taxclass = config['taxonomic_classification']
+assembly = config['assembly']
+readfilt = config['read_filtering']
+
+
+
+###################################
+# Assembly: build rules
+
+# Skip to the very end of the file 
+# to see the high-level build rules
+# that trigger cascades of workflow
+# tasks.
+
+
+
+
+# Post trimming pattern uses the {direction} wildcard.
+# We have to explicitly expand {direction} to _1 and _2.
+# (If we rely on wildards, _1 and _2 are two separate rules - bad.)
+
+#Used for both spades and metaspades and plasmidspades rules
+assembly_all_spades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_all_spades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+assembly_all_spades_input_fwd = assembly_all_spades_input_pattern.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_all_spades_input_rev = assembly_all_spades_input_pattern.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+assembly_all_spades_input_fwd_sing = assembly_all_spades_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_all_spades_input_rev_sing = assembly_all_spades_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+###################################
+# Assembly: metaspades
+
+assembly_metaspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['metaspades_pattern'])
+assembly_metaspades_output = join(data_dir, assembly['assembly_patterns']['metaspades_pattern'])
+assembly_metaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['metaspades_pattern'])
+
+assembly_metaspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_metaspades_output)
+assembly_metaspades_threads =  assembly['assembly_patterns']['metaspades_threads']
+
+spades_image = container_image_name(biocontainers, 'spades')
+
+def assembly_metaspades_outprefix_sub(wildcards):
+    return assembly_metaspades_outprefix.format(**wildcards)
+
+rule assembly_metaspades:
+    """
+    Perform read assembly of trimmed reads using metaspades.
+    """
+    input:
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
+    output:
+        assembly_metaspades_output
+    params:
+        assembly_metaspades_outprefix_wc = assembly_metaspades_outprefix_sub,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
+        metaspades_output_expanded = assembly_metaspades_output_sing
+    message: 
+         '--- Assembling quality trimmed reads with SPAdes'
+    singularity: 
+        spades_image
+    threads: 
+        assembly_metaspades_threads
+    benchmark:
+        assembly_metaspades_benchfile
+    shell:
+        'metaspades.py -t {threads} '
+        '-m 240 '
+         '-1 {params.fwd_sing} '
+         '-2 {params.rev_sing} '
+        '-o /{sing_dir}/{params.assembly_metaspades_outprefix_wc} '
+        '&& '
+        'mv /{sing_dir}/{params.assembly_metaspades_outprefix_wc}/contigs.fasta /{params.metaspades_output_expanded} '
+
+
+###################################
+# Assembly: rnaspades
+
+assembly_rnaspades_outprefix = re.sub('.transcripts.fasta','',assembly['assembly_patterns']['rnaspades_pattern'])
+assembly_rnaspades_output = join(data_dir, assembly['assembly_patterns']['rnaspades_pattern'])
+assembly_rnaspades_output_sing = join(sing_dir, assembly['assembly_patterns']['rnaspades_pattern'])
+                         
+assembly_rnaspades_threads =  assembly['assembly_patterns']['rnaspades_threads']
+spades_image = container_image_name(biocontainers, 'spades')
+
+def assembly_rnaspades_outprefix_sub(wildcards):
+    return assembly_rnaspades_outprefix.format(**wildcards)
+
+
+rule assembly_rnaspades:
+    """
+    Perform read assembly of trimmed reads using rnaspades.
+    """
+    input:
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
+    output:
+        assembly_rnaspades_output
+    params:
+        assembly_rnaspades_outprefix_wc = assembly_rnaspades_outprefix_sub,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
+        rnaspades_output_expanded = assembly_rnaspades_output_sing
+    message:
+         '--- Assembling quality trimmed reads with rnaSPAdes'
+    singularity:
+        spades_image
+    threads:
+        assembly_rnaspades_threads
+    shell:
+        'rnaspades.py -t {threads} '
+        '-m 240 '
+        '-1 {params.fwd_sing} '
+        '-2 {params.rev_sing} '
+        '-o /{sing_dir}/{params.assembly_rnaspades_outprefix_wc} '
+        '&& '
+        'mv /{sing_dir}/{params.assembly_rnaspades_outprefix_wc}/transcripts.fasta /{params.rnaspades_output_expanded} '
+        
+
+###################################
+# Assembly: spades
+assembly_spades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_output = join(data_dir, assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['spades_pattern'])
+
+assembly_spades_kmer_filename = "_".join([str(el) for el in assembly['assembly_patterns']['kmer']])
+assembly_spades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_outprefix = assembly_spades_outprefix.replace('kmer', assembly_spades_kmer_filename)
+
+assembly_spades_output = join(data_dir, assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_output = assembly_spades_output.replace('kmer', assembly_spades_kmer_filename)
+
+assembly_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['spades_pattern'])
+assembly_spades_output_sing = assembly_spades_output_sing.replace('kmer', assembly_spades_kmer_filename)
+
+assembly_spades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_spades_output)
+assembly_spades_threads =  assembly['assembly_patterns']['spades_threads']
+assembly_spades_kmer = assembly['assembly_patterns']['kmer']
+assembly_spades_kmer = ",".join(map(str, assembly_spades_kmer))
+
+def assembly_spades_outprefix_sub(wildcards):
+    return assembly_spades_outprefix.format(**wildcards)
+
+rule assembly_spades:
+    """
+    Perform read assembly of trimmed reads using spades.
+    """
+    input:
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
+    output:
+        assembly_spades_output
+    params:
+        assembly_spades_outprefix_wc = assembly_spades_outprefix_sub,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
+        spades_output_expanded = assembly_spades_output_sing,
+        kmer = assembly_spades_kmer
+    message: 
+         '--- Assembling quality trimmed reads of isolates with SPAdes'
+    singularity: 
+        spades_image
+    threads: 
+        assembly_spades_threads
+    benchmark:
+        assembly_spades_benchfile
+    shell:
+        'spades.py -t {threads} '
+        '-k {params.kmer} '
+         '-1 {params.fwd_sing} '
+         '-2 {params.rev_sing} '
+        '-o /{sing_dir}/{params.assembly_spades_outprefix_wc} '
+        '&& '
+        'mv /{sing_dir}/{params.assembly_spades_outprefix_wc}/contigs.fasta /{params.spades_output_expanded} '
+
+
+
+###################################
+# Assembly:plasmid spades
+assembly_plasmidspades_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['plasmidspades_pattern'])
+assembly_plasmidspades_output = join(data_dir, assembly['assembly_patterns']['plasmidspades_pattern'])
+assembly_plasmidspades_output_sing = join(sing_dir, assembly['assembly_patterns']['plasmidspades_pattern'])
+
+assembly_plasmidspades_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_plasmidspades_output)
+assembly_plasmidspades_threads =  assembly['assembly_patterns']['plasmidspades_threads']
+
+def assembly_plasmidspades_outprefix_sub(wildcards):
+    return assembly_plasmidspades_outprefix.format(**wildcards)
+
+
+rule assembly_plasmidspades:
+    """
+    Perform read assembly of trimmed reads using plasmidspades.
+    """
+    input:
+        fwd = assembly_all_spades_input_fwd,
+        rev = assembly_all_spades_input_rev
+    output:
+        assembly_plasmidspades_output
+    params:
+        assembly_plasmidspades_outprefix_wc = assembly_plasmidspades_outprefix_sub,
+        fwd_sing = assembly_all_spades_input_fwd_sing,
+        rev_sing = assembly_all_spades_input_rev_sing,
+        spades_plasmidoutput_expanded = assembly_plasmidspades_output_sing,
+    message: 
+         '--- Assembling quality trimmed reads of isolates with plasmidSPAdes'
+    singularity: 
+        spades_image
+    threads: 
+        assembly_plasmidspades_threads
+    benchmark:
+        assembly_plasmidspades_benchfile
+    shell:
+        'plasmidspades.py -t {threads} '
+         '-1 {params.fwd_sing} '
+         '-2 {params.rev_sing} '
+        '-o /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc} '
+        '&& '
+        'mv /{sing_dir}/{params.assembly_plasmidspades_outprefix_wc}/contigs.fasta /{params.spades_plasmidoutput_expanded} '
+
+
+
+
+###################################
+# Assembly: megahit
+
+assembly_megahit_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_megahit_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+
+assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_megahit_input_rev = assembly_megahit_input_pattern.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+assembly_megahit_input_fwd_sing = assembly_megahit_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['forward'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+assembly_megahit_input_rev_sing = assembly_megahit_input_pattern_sing.format(
+            direction=readfilt['direction_labels']['reverse'], 
+            sample='{sample}', 
+            qual='{qual}'
+)
+
+assembly_megahit_outprefix = re.sub('.contigs.fa','',assembly['assembly_patterns']['megahit_pattern'])
+assembly_megahit_output = join(data_dir, assembly['assembly_patterns']['megahit_pattern'])
+
+assembly_megahit_benchfile = re.sub('contigs.fa','benchmark.txt',assembly_megahit_output)
+assembly_megahit_threads =  assembly['assembly_patterns']['megahit_threads']
+
+megahit_image = container_image_name(biocontainers, 'megahit')
+
+def assembly_megahit_outprefix_sub(wildcards):
+    return assembly_megahit_outprefix.format(**wildcards)
+
+
+rule assembly_megahit:
+    """
+    Perform read assembly of trimmed reads using megahit.
+    """
+    input:
+        fwd = assembly_megahit_input_fwd,
+        rev = assembly_megahit_input_rev,
+    output:
+        assembly_megahit_output
+    message: 
+        '''--- Assembling quality trimmed reads with Megahit'''
+    singularity:
+        megahit_image
+    threads:
+        assembly_megahit_threads
+    benchmark:
+        assembly_megahit_benchfile
+    params:
+        assembly_megahit_outprefix_wc = assembly_megahit_outprefix_sub,
+        fwd_sing = assembly_megahit_input_fwd_sing,
+        rev_sing = assembly_megahit_input_rev_sing,
+    shell:
+        'rm -rf /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
+        '&& '
+        'megahit -t {threads} '  
+        '-1 {params.fwd_sing} '
+        '-2 {params.rev_sing} '
+        '--out-prefix={params.assembly_megahit_outprefix_wc} '
+        '-o /{sing_dir}/{params.assembly_megahit_outprefix_wc} '
+        '&& '
+        'mv '
+        '/{sing_dir}/{params.assembly_megahit_outprefix_wc}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
+        '/{sing_dir}/{params.assembly_megahit_outprefix_wc}.contigs.fa '
+
+
+###################################
+# Assembly: quast statistics
+
+assembly_quast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_quast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_quast_output = join(data_dir, assembly['assembly_patterns']['quast_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
+assembly_quast_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_pattern'])
+assembly_quast_threads = assembly['assembly_patterns']['quast_threads']
+quast_image = container_image_name(biocontainers, 'quast')
+
+
+rule assembly_statistics_quast:
+    """
+    Compute assembly statistics with quast
+    """
+    input:
+        assembly_quast_input
+    output:
+        assembly_quast_output
+    params:
+        quast_input_sing = assembly_quast_input_sing,
+        quast_output_sing = assembly_quast_output_sing
+    message: 
+        '--- Calculating assembly statistics with quast'
+    threads:
+        assembly_quast_threads
+    singularity:
+        quast_image
+    shell:
+        'quast.py {params.quast_input_sing} -t {threads} -o {params.quast_output_sing}'
+
+
+###################################
+# Assembly: metaquast statistics
+
+assembly_metaquast_input = join(data_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_metaquast_input_sing = join(sing_dir, assembly['assembly_patterns']['assembly_pattern'])
+assembly_metaquast_output = join(data_dir, assembly['assembly_patterns']['metaquast_pattern'],assembly['assembly_patterns']['metaquast_output_multiqc_input_file'] )
+assembly_metaquast_output_sing = join(sing_dir, assembly['assembly_patterns']['metaquast_pattern'])
+assembly_metaquast_threads = assembly['assembly_patterns']['metaquast_threads']
+metaquast_image = container_image_name(biocontainers, 'quast')
+
+
+assembly_metaquast_ref = assembly['assembly_patterns']['metaquast_ref']
+assembly_metaquast_ref_str =  sing_dir + "/" + assembly_metaquast_ref
+
+
+rule assembly_statistics_metaquast:
+    """
+    Compute assembly statistics with metaquast
+    """
+    input:
+        assembly_metaquast_input
+    output:
+        assembly_metaquast_output
+    params:
+        metaquast_input_sing = assembly_metaquast_input_sing,
+        metaquast_output_sing = assembly_metaquast_output_sing,
+        metaquast_ref_db = assembly_metaquast_ref_str
+    message: 
+        '--- Calculating assembly statistics with metaquast'
+    threads:
+        assembly_metaquast_threads
+    singularity:
+        metaquast_image
+    shell:
+        'export LC_ALL=C && '
+        'metaquast.py {params.metaquast_input_sing} '
+        '-R {params.metaquast_ref_db} --fragmented --gene-finding '
+        '-t {threads} -o {params.metaquast_output_sing} '
+
+
+###################################
+# Assembly: quast with SPAdes workflow
+
+assembly_quast_spades_output = join(data_dir, assembly['assembly_patterns']['quast_spades_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
+assembly_quast_spades_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_spades_pattern'])
+assembly_quast_spades_threads = assembly['assembly_patterns']['quast_spades_threads']
+
+
+#FOR multiple refs
+#assembly_quast_spades_ref = assembly['assembly_patterns']['quast_spades_ref']
+#assembly_quast_spades_ref = [ sing_dir + "/" + file for file in assembly_quast_spades_ref]
+#assembly_quast_spades_ref_str = ",".join(assembly_quast_spades_ref)
+
+assembly_quast_spades_ref = assembly['assembly_patterns']['quast_spades_ref']
+assembly_quast_spades_ref_str =  sing_dir + "/" + assembly_quast_spades_ref
+
+rule assemly_statistic_quast_spades:
+    """
+    take the output of SPADes and run quast on it
+    """
+    input:
+        input_contigs = assembly_spades_output
+    output:
+        assembly_quast_spades_output
+    params:
+        quast_input_sing = assembly_spades_output_sing,
+        quast_output_sing = assembly_quast_spades_output_sing,
+        quast_ref_db = assembly_quast_spades_ref_str
+    message: 
+        '--- Calculating assembly statistics with quast and SPAdes'
+    threads:
+        assembly_quast_spades_threads
+    singularity:
+        quast_image
+    shell:
+        'quast.py {params.quast_input_sing} -R {params.quast_ref_db} -t {threads} -o {params.quast_output_sing}'
+
+
+###################################
+# Assembly: quast with plasmidSPAdes workflow
+
+assembly_quast_plasmidspades_output = join(data_dir, assembly['assembly_patterns']['quast_plasmidspades_pattern'],assembly['assembly_patterns']['quast_output_multiqc_input_file'] )
+assembly_quast_plasmidspades_output_sing = join(sing_dir, assembly['assembly_patterns']['quast_plasmidspades_pattern'])
+assembly_quast_plasmidspades_threads = assembly['assembly_patterns']['quast_plasmidspades_threads']
+
+assembly_quast_plasmidspades_ref = assembly['assembly_patterns']['quast_plasmidspades_ref']
+assembly_quast_plasmidspades_ref_str =  sing_dir + "/" + assembly_quast_plasmidspades_ref
+
+
+
+rule assemly_statistics_quast_plasmidspades:
+    """
+    take the output of plasmidSPADes and run quast on it
+    """
+    input:
+        input_contigs = assembly_plasmidspades_output
+    output:
+        assembly_quast_plasmidspades_output
+    params:
+        quast_input_sing = assembly_plasmidspades_output_sing,
+        quast_output_sing = assembly_quast_plasmidspades_output_sing,
+        quast_ref_db = assembly_quast_plasmidspades_ref_str
+    message: 
+        '--- Calculating assembly statistics with quast and plasmidSPAdes'
+    threads:
+        assembly_quast_plasmidspades_threads
+    singularity:
+        quast_image
+    shell:
+        'quast.py {params.quast_input_sing} -R {params.quast_ref_db}  -t {threads} -o {params.quast_output_sing}'
+
+
+
+###################################
+# Assembly: multiqc statistics
+
+assembly_multiqc_input_pattern = assembly_quast_output
+assembly_multiqc_input_pattern_sing = assembly_quast_output_sing
+assembly_multiqc_output_dir = join(data_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
+assembly_multiqc_output_dir = assembly_multiqc_output_dir + '_data'
+assembly_multiqc_output_dir_sing = join(sing_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
+assembly_multiqc_output_file_sing = join(sing_dir, assembly['assembly_patterns']['assembly_multiqc_pattern_report'])
+
+multiqc_image = container_image_name(biocontainers, 'multiqc')
+
+#TODO: Not sure if using 'qual' from assembly_all_workflow is the best idea
+def assembly_expand_multiqc_input(wildcards):
+    """
+    Return input list for multiqc input
+    """
+    wildcards.qual = workflows['assembly_all_workflow']['qual']
+    multiqc_input = expand(assembly_multiqc_input_pattern, sample = wildcards.sample, qual=wildcards.qual, assembler = wildcards.assembler)
+    return multiqc_input
+
+
+def expand_assembly_multiqc_input_sing(wildcards):
+    """
+    Return input list for multiqc input for sing image
+    """
+    wildcards.qual = workflows['assembly_all_workflow']['qual']
+    multiqc_input = expand(assembly_multiqc_input_pattern_sing, sample = wildcards.sample, qual=wildcards.qual, assembler = wildcards.assembler)
+    return multiqc_input
+
+
+def expand_assembly_multiqc_output_file_sing(wildcards):
+    output_file = expand(assembly_multiqc_output_file_sing, sample = wildcards.sample, assembler = wildcards.assembler)
+    return output_file
+    
+
+rule assembly_statistics_multiqc:
+    """
+    Compute assembly statistics with multiqc
+    """
+    input:
+        assembly_expand_multiqc_input 
+    output:
+        directory(assembly_multiqc_output_dir)
+    params:
+        input_files = expand_assembly_multiqc_input_sing,
+        output_files = expand_assembly_multiqc_output_file_sing,
+        output_dir = assembly_multiqc_output_dir_sing
+    message: 
+        '--- Compiling assembly statistics with multiqc'
+    singularity:
+        multiqc_image
+    shell:
+        'multiqc {params.input_files} -n {params.output_files} -o {params.output_dir}'
+
+
+
+###################################
+# Assembly: build rules
+
+workflows = config['workflows']
+
+directions = [readfilt['direction_labels']['forward'],
+              readfilt['direction_labels']['reverse']]
+
+
+rule assembly_metaspades_workflow:
+    """
+    Build rule: trigger the metaspades assembly step.
+    """
+    input:
+        expand( assembly_metaspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_metaspades_workflow']['qual'],
+                direction = directions,
+        )
+
+rule assembly_rnaspades_workflow:
+   """
+   Build rule: trigger the rnaspades worflow
+   """
+   input:
+      expand( assembly_rnaspades_output,
+              sample    = sample_input_files,
+              qual      = workflows['assembly_rnaspades_workflow']['qual'],
+              direction = directions,
+      )
+
+rule assembly_spades_workflow:
+    """
+    Build rule: trigger the spades assembly step on isolates.
+    """
+    input:
+        expand( assembly_spades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_spades_workflow']['qual'],
+                direction = directions,
+        )
+
+
+rule assembly_plasmidspades_workflow:
+    """
+    Build rule: trigger the spades assembly step on isolates.
+    """
+    input:
+        expand( assembly_plasmidspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_plasmidspades_workflow']['qual'],
+                direction = directions,
+        )
+
+rule assembly_megahit_workflow:
+    """
+    Build rule: trigger the megahit assembly step.
+    """
+    input:
+        expand( assembly_megahit_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_megahit_workflow']['qual'],
+                direction = directions,
+        )
+
+rule assembly_all_workflow:
+    """
+    Build rule: trigger the assembly step with all assemblers.
+    """
+    input:
+        expand( assembly_metaspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_all_workflow']['qual'],
+                direction = directions,
+        ),
+        expand( assembly_megahit_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_all_workflow']['qual'],
+                direction = directions,
+        )
+
+rule assembly_quast_workflow:
+    input:
+        expand( assembly_quast_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_quast_workflow']['qual'],
+                assembler = workflows['assembly_quast_workflow']['assembler'],
+        )
+
+rule assembly_metaquast_workflow:
+    input:
+        expand( assembly_metaquast_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_metaquast_workflow']['qual'],
+                assembler = workflows['assembly_metaquast_workflow']['assembler'],
+        )
+
+rule assembly_multiqc_workflow:
+    input:
+        expand( assembly_multiqc_output_dir,
+                sample    = sample_input_files,
+                assembler = workflows['assembly_multiqc_workflow']['multiqc_assembler'],
+        )
+
+rule assembly_quast_reference_with_spades_workflow:
+    input:
+        expand( assembly_quast_spades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_quast_spades_workflow']['qual'],
+        )
+
+rule assembly_quast_reference_with_plasmidspades_workflow:
+    input:
+        expand( assembly_quast_plasmidspades_output,
+                sample    = sample_input_files,
+                qual      = workflows['assembly_quast_plasmidspades_workflow']['qual'],
+        )
+

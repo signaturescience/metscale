@@ -1,0 +1,20 @@
+from snakemake.utils import update_config
+
+# global wildcard constraints
+wildcard_constraints:
+    qual="\d+",
+    kvalue="\d+",
+    assembler="\w+",
+    sample="\w+",
+    direction="\d+"
+
+include: "config/default_workflowparams.settings"
+include: "config/default_workflowconfig.settings"
+
+include: "read_filtering/Snakefile_PE"
+include: "assembly/Snakefile_PE"
+include: "comparison/Snakefile_PE"
+include: "taxonomic_classification/Snakefile_PE"
+include: "functional_inference/Snakefile_PE"
+include: "post_processing/Snakefile_PE"
+
