@@ -18,7 +18,7 @@ process_output <- function(data_dir, out_dir) {
     "Bracken" = "._bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}",
     "Sourmash" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv",
     "Mash Screen" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_[[:print:]]{1,}_mash_screen[.]sorted[.]tab",
-    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv"
+    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_reads_finished"
   )
   
   # Vector for warnings
@@ -474,18 +474,28 @@ process_output <- function(data_dir, out_dir) {
   
   if (any(file_list$tool == "MTSV")) {
     
+    # Read in and process MTSV Results.
     tmp_files <- file_list[file_list$tool == "MTSV", ]
     
     for (i in 1:nrow(tmp_files)){
       
-      tmp_output <- read.csv(file = tmp_files$path[i], header = FALSE, as.is = TRUE, skip = 2)
-      colnames(tmp_output) <- c("species_id", "division", "name", "total_hits", "unique_hits", 
-                                "signature_hits", "unique_signature_hits")
-      tmp_output %>%
-        select(species_id, total_hits, unique_hits, signature_hits, unique_signature_hits) %>%
-        gather(total_hits, unique_hits, signature_hits, unique_signature_hits, key = "var_name", 
+      # Look for the analysis.csv file
+      mtsv_file <- list.files(path = tmp_files$path[i], pattern = "analysis.csv", full.names = T, recursive = T)
+      if (all(mtsv_file == "")) {next}
+      
+      # Read in and label the analysis.csv file
+      tmp_output <- read.csv(file = file_name, header = TRUE, as.is = TRUE, skip = 1)
+      colnames(tmp_output) <- c("species_id", "division", "name", "exp_prop", "total_hits", 
+                                "unique_hits", "signature_hits", "unique_signature_hits", 
+                                "obs_prop", "p_value", "cohen_h")
+      
+      # Pivot the output into the variables table format
+      tmp_output <- tmp_output %>%
+        dplyr::select(species_id, total_hits, unique_hits, signature_hits, unique_signature_hits) %>%
+        tidyr::gather(total_hits, unique_hits, signature_hits, unique_signature_hits, key = "var_name", 
                value = "var_value")
       
+      # Add the pivoted table to the variables table
       variables <- rbind(variables, tmp_output)
       
       if (exists("tmp_output")) {rm(tmp_output)}
