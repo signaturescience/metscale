@@ -7,7 +7,6 @@ wildcard_constraints:
     assembler="\w+",
     sample="\w+",
     direction="\d+"
-
 include: "config/default_workflowparams.settings"
 include: "config/default_workflowconfig.settings"
 
@@ -17,4 +16,3 @@ include: "comparison/Snakefile_SE"
 include: "taxonomic_classification/Snakefile_SE"
 include: "functional_inference/Snakefile_SE"
 include: "post_processing/Snakefile_SE"
-
