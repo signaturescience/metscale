@@ -35,7 +35,7 @@
             "kmers" : [21,31,51]
         },
         "read_filtering_convert_PE_to_SE_workflow" : {
-            "qual"   : ["25"]
+            "qual"   : ["2","30"]
         },
         "assembly_metaspades_workflow" : {
             # the assembly workflow will run
@@ -51,7 +51,7 @@
             # the assembly workflow will be run on.
             # (rnaspades assembler only).
             "qual"      : ["2","30"],
-        },  
+        },
         "assembly_plasmidspades_workflow" : {
             # the assembly workflow will run
             # plasmidspades assembler only
@@ -240,7 +240,7 @@
             # from megahit to run abricate on
             "qual"      : ["2","30"],
             # abricate internal DBs - card, vfdb, argannot, resfinder, ncbibetalactamase, plasmidfinder
-            # replace "customDBabricate" with custom/external DB name 
+            # replace "customDBabricate" with custom/external DB name
             "db"        : ["card", "vfdb"],
             #"db"        : ["customDBabricate"],
         },
@@ -270,5 +270,3 @@
         },
     },
 }
-
-

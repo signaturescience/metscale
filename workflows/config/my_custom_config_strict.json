@@ -30,6 +30,9 @@
         "read_filtering_khmer_split_interleaved_reads_workflow" : {
             "qual"   : ["2","30"]
         },
+        "read_filtering_convert_PE_to_SE_workflow":{
+            "qual"   : ["2","30"]
+        },
         "read_filtering_khmer_count_unique_kmers_workflow" : {
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
@@ -249,5 +252,3 @@
         }
     }
 }
-
-
