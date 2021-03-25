@@ -488,21 +488,21 @@ rule srst2_with_raw_reads:
 
 
 ###################################
-# Functional Inference: Run humann2
+# Functional Inference: Run humann3
 
 
-humann2_image = container_image_name(biocontainers, 'humann2') 
-humann2_threads = inference['humann2']['threads']
-humann2_output = join(data_dir, '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv')
-tmp_bowtie2 = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann2_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bowtie2.txt')
-tmp_bugs = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann2_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bugs_list.tsv')
-tmp_dir = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann2_temp') 
-nucleotide_db = join(sing_dir, inference['humann2']['nucleotide_db'])
-protein_db = join(sing_dir, inference['humann2']['protein_db'])
+humann3_image = container_image_name(biocontainers, 'humann3') 
+humann3_threads = inference['humann3']['threads']
+humann3_output = join(data_dir, '{sample}_trim{qual}_interleaved_reads_genefamilies.tsv')
+tmp_bowtie2 = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bowtie2.txt')
+tmp_bugs = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann_temp', '{sample}_trim{qual}_interleaved_reads_metaphlan_bugs_list.tsv')
+tmp_dir = join(sing_dir, '{sample}_trim{qual}_interleaved_reads_humann_temp') 
+nucleotide_db = join(sing_dir, inference['humann3']['nucleotide_db'])
+protein_db = join(sing_dir, inference['humann3']['protein_db'])
 
-metaphlan_db_tar_input = inference['humann2']['metaphlan_db_tar']
+metaphlan_db_tar_input = inference['humann3']['metaphlan_db_tar']
 metaphlan_db_tar = [join(data_dir, db) for db in metaphlan_db_tar_input]
-metaphlan_db_out = inference['humann2']['metaphlan_db']
+metaphlan_db_out = inference['humann3']['metaphlan_db']
 metaphlan_db_bt2_path = [join(data_dir, db) for db in metaphlan_db_out]
 
 
@@ -514,30 +514,30 @@ rule install_metaphlan_db:
     params:
         out_folder = sing_dir
     singularity:
-        humann2_image
+        humann3_image
     shell:
         'export LC_ALL=C && '
-        'metaphlan2.py --bowtie2db {params.out_folder} --install'
+        'metaphlan --bowtie2db {params.out_folder} --install'
 
 
-rule run_humann2:
+rule run_humann3:
     input:
         interleave_output, metaphlan_db_bt2_path
     output:
-        humann2_output
+        humann3_output
     params:
         out_folder = sing_dir,
         nucleotide_db = nucleotide_db,
         protein_db = protein_db,
-        threads = humann2_threads,
+        threads = humann3_threads,
         bowtie2 = tmp_bowtie2,
         bugs = tmp_bugs,
         tmp_dir = tmp_dir
     singularity:
-        humann2_image
+        humann3_image
     shell:
         'export LC_ALL=C && '
-        'humann2 -i {input[0]} -o {params.out_folder} '
+        'humann3 -i {input[0]} -o {params.out_folder} '
         '--metaphlan-options "-t rel_ab --bowtie2db {params.out_folder}" '
         '--nucleotide-database  {params.nucleotide_db} '
         '--protein-database  {params.protein_db} '
@@ -661,14 +661,14 @@ rule functional_with_srst2_workflow:
         )
 
 
-rule functional_humann2_workflow:
+rule functional_humann3_workflow:
     '''
-    run humann2 workflow
+    run humann3 workflow
     '''
     input:
-        expand(humann2_output,
+        expand(humann3_output,
             sample      = sample_input_files,
-            qual        = workflows['functional_humann2_workflow']['qual'],
+            qual        = workflows['functional_humann3_workflow']['qual'],
             )
 
 

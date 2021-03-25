@@ -17,8 +17,10 @@ from snakemake.io import expand
 workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'mtsv_db', 'all']  #keep all at the end of the list
 
 
-CHOCOPLAN_DIR = "chocophlan_plus_viral"
-UNIREF_DIR ="uniref90"
+CHOCOPLAN_DIR = "full_chocophlan"
+CHOCOPHLAN_FILE = "full_chocophlan.v296_201901.tar.gz"
+UNIREF_DIR ="uniref"
+UNIREF_FILE = "uniref90_annotated_v201901.tar.gz"
 BRACKEN_DIR = "Bracken_Kraken2_DB"
 
 
@@ -124,9 +126,9 @@ def download_file(workflow, data, install_dir):
                 pass
             if (file_name == 'sbttar'):     #sourmash files from the taxonomic classification workflow.
                 download_sourmash_files(data, workflow, install_dir)
-            elif (file_name == 'full_chocophlan_plus_viral.v0.1.1.tar.gz'):
+            elif (file_name == CHOCOPHLAN_FILE):
                 download_extract_targz_file(file_name, CHOCOPLAN_DIR, install_dir, url_string)
-            elif (file_name == 'uniref90_annotated_1_1.tar.gz'):
+            elif (file_name == UNIREF_FILE):
                 download_extract_targz_file(file_name, UNIREF_DIR, install_dir, url_string)
             elif (file_name.endswith("kmer_distrib")):
                 download_kmer_files(file_name, BRACKEN_DIR, install_dir, url_string)

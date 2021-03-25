@@ -434,9 +434,16 @@ config_default = {
             "nucleotide_db" : "chocophlan_plus_viral",
             "protein_db" : "uniref90",
             "threads" : 16,
-            "metaphlan_db_tar" : ["mpa_v20_m200.tar", "mpa_v20_m200.md5"],
-            "metaphlan_db" : ["mpa_v20_m200.1.bt2", "mpa_v20_m200.2.bt2", "mpa_v20_m200.3.bt2", "mpa_v20_m200.4.bt2", "mpa_v20_m200.rev.1.bt2", "mpa_v20_m200.rev.2.bt2", "mpa_v20_m200.fna.bz2", "mpa_v20_m200.pkl"]
-        }
+            "metaphlan_db_tar" : ["mpa_v30_CHOCOPhlAn_201901.tar","mpa_v30_CHOCOPhlAn_201901.md5"],
+            "metaphlan_db" : ["mpa_v30_CHOCOPhlAn_201901.1.bt2", "mpa_v30_CHOCOPhlAn_201901.2.bt2", "mpa_v30_CHOCOPhlAn_201901.3.bt2", "mpa_v30_CHOCOPhlAn_201901.4.bt2", "mpa_v30_CHOCOPhlAn_201901.rev.1.bt2", "mpa_v30_CHOCOPhlAn_201901.rev.2.bt2", "mpa_v30_CHOCOPhlAn_201901.fna.bz2", "mpa_v30_CHOCOPhlAn_201901.pkl"]
+        },
+        "humann3" : {
+            "nucleotide_db" : "full_chocophlan",
+            "protein_db" : "uniref",
+            "threads" : 16,
+            "metaphlan_db_tar" : ["mpa_v30_CHOCOPhlAn_201901.tar", "mpa_v30_CHOCOPhlAn_201901.md5"],
+            "metaphlan_db" : ["mpa_v30_CHOCOPhlAn_201901.1.bt2", "mpa_v30_CHOCOPhlAn_201901.2.bt2", "mpa_v30_CHOCOPhlAn_201901.3.bt2", "mpa_v30_CHOCOPhlAn_201901.4.bt2", "mpa_v30_CHOCOPhlAn_201901.rev.1.bt2", "mpa_v30_CHOCOPhlAn_201901.rev.2.bt2", "mpa_v30_CHOCOPhlAn_201901.fna.bz2", "mpa_v30_CHOCOPhlAn_201901.pkl"]
+        },
     },
 
     "post_processing" : {
@@ -591,6 +598,13 @@ config_default = {
             "location" : "../container_images/",
             "version" : "0.2.0--py27_2",
             "quayurl" : "quay.io/biocontainers/srst2"
+        },
+        "humann3" : {
+            "use_local" : True,
+            "filename" : "humann_3.0.0.a.4.sif",
+            "location" : "../container_images/",
+            "version" : "3.0.0.a.4",
+            "quayurl" : "biobakery/humann:3.0.0.a.4"
         },
         "humann2" : {
             "use_local" : True,
