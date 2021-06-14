@@ -176,13 +176,13 @@ def command_args_parse():
     #
     # Misc Args
     #
-#    miscgroup = p.add_argument_group('Miscellaneous Arguments',
-#                                        'These arguments are mostly optional and in many cases only operate with certain'
-#                                        'of the commands, and are ignored otherwise.')
-#    miscgroup.add_argument('--clobber', action='store_true', help='If provided, previous containment_dict.json is removed and'
-#                           'rebuilt from scratch based on the source files. (If given along with the \'--setup\' argument, '
-#                           'the existing containment json file will be overwritten by re-extracting the packaged ' 
-#                           '`containment_dict.json.gz`).',default=False)
+    miscgroup = p.add_argument_group('Miscellaneous Arguments',
+                                        'These arguments are mostly optional and in many cases only operate with certain'
+                                        'of the commands, and are ignored otherwise.')
+    miscgroup.add_argument('--clobber', action='store_true', help='If provided, previous containment_dict.json is removed and'
+                           'rebuilt from scratch based on the source files. (If given along with the \'--setup\' argument, '
+                           'the existing containment json file will be overwritten by re-extracting the packaged ' 
+                           '`containment_dict.json.gz`).',default=False)
     #
     # Hidden arguments
     #
@@ -656,10 +656,11 @@ def db_import_manifest_read(skip_refseq = False, from_config = True, from_file_i
             f = ln.strip().split('\t')
             if len(f)<3:
                 logging.warning('In Manifest: line %d cannot be parsed (fewer than 3 tab-delimited fields). Line as read: \n\t%s' % (lno, ln.strip()))
-            if f[0] in db_import_manifest_parsed:
-                logging.info('Database %s was given in both the config and manifest file. Manifest will be used.')
-            db_import_manifest_parsed[f[0]] = [f[0], f[1], f[2], f[3], 'manifest']
-            lno += 1
+           # if f[0] in db_import_manifest_parsed:
+           #     logging.info('Database %s was given in both the config and manifest file. Manifest will be used.')
+                #print(f[0])
+           # db_import_manifest_parsed[f[0]] = [f[0], f[1], f[2], f[3], 'manifest']
+           # lno += 1
 
     for flds in db_import_manifest_parsed.values():
         # logging.debug(str(flds))
