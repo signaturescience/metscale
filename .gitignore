@@ -33,3 +33,4 @@ workflows/data/*
 
 # python
 __pycache__
+.Rproj.user
