@@ -136,7 +136,8 @@ rule generate_abundance_graph:
 # post processing: create the HTML final report
 
 html_output_file = post_processing['move_samples_to_dir']['out_pattern']
-#print("html_output_file "+str(html_output_file))
+print("html_output_file "+str(html_output_file))
+
 
 def get_sample_filenames(wildcards):
     sample_file_remove = output_dir_pattern.replace('{sample}','')
@@ -145,7 +146,6 @@ def get_sample_filenames(wildcards):
     if sample_file == "":
         print("Error: Rscript input file patterns not found.")
     return sample_file
-
 
 
 rule generate_r_script:
@@ -162,7 +162,43 @@ rule generate_r_script:
     message: 
         '--- Generating Final Report'
     script:
-        "summary-report.Rmd"
+        'summary-report.Rmd'
+
+
+##################################################
+# post processing: rename the HTML final report
+
+
+
+def get_final_report(wildcards):
+    print("html_output_file "+str(html_output_file))
+    a = html_output_file.replace('/', '/'+str(wildcards)+'_')
+    print(a)
+    return 
+a = html_output_file.replace('/','/{sample}_')
+
+
+
+b= '{sample_mv}/{sample}_Summary-Report-Final.html'
+final_report_file = b.format(sample='{sample}', sample_mv='{sample_mv}')
+print(final_report_file)
+#final_report_file = "SRR10402317_1_reads_finished/SRR10402317_summary-report.html"
+
+rule rename_HTML_output_file:
+    '''
+    Add sample name to HTML report file
+    '''
+    input:
+        html_output_file
+    output:
+        final_report_file 
+    params:
+        final_report_file
+    message:
+        '--- Rename Final Report File'
+    shell:
+        'mv html_output_file {params.final_report_file}'
+
 
 
 
@@ -188,6 +224,7 @@ rule post_processing_create_final_report_workflow:
     Build rule: Create a final HTML report
     '''
     input:
-        expand( html_output_file,
+        expand( final_report_file,
                 sample_mv    = sample_finished_folders,
+                sample    = sample_input_files,
         )
