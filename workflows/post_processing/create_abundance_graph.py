@@ -233,7 +233,7 @@ def create_graph(sorted_data, workflow_cols, data_dir):
         plt.axhline(y = species, color ="green", linestyle =":")
     figure = plt.gcf()
     figure.set_size_inches(16,8)
-    plt.title("Signal Graph v3")
+    plt.title("Signal Graph v4")
     red_patch = mpatches.Patch(color='red', label='Very strong species signal')
     orange_patch = mpatches.Patch(color='orange', label='Strong species signal')
     yellow_patch = mpatches.Patch(color='yellow', label='Moderately strong species signal')
@@ -269,19 +269,23 @@ def get_all_rows_with_values(abundance_df):
 
 
 def sorted_values(abundance_df):
-    df = abundance_df.sort_values(by=list(abundance_df.columns), ascending=False)
+    #df = abundance_df.reindex(abundance_df.rank(ascending=False).mean(axis=1).sort_values().index)  #.0113
+    df = abundance_df.iloc[abundance_df.rank(ascending=False).mean(1).argsort()]   #.009
     df = df.head(NUM_SPECIES_ROWS)
     return df
 
 
 if __name__ == '__main__':
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument("--data", help="data dir",default="/data/home/")
-    #parser.add_argument("--post", help="post processing dir")
-    #args = parser.parse_args()
-    #data_path = args.data
+    '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data", help="data dir",default="/data/home/cgrahlmann/metagenomics/workflows/data/SRR10402317_1_reads_finished")
+    parser.add_argument("--post", help="post processing dir")
+    args = parser.parse_args()
+    data_path = args.data
 
+    '''
     data_path = snakemake.params[0]  
+    
 
     combined_output_path = os.path.join(data_path, "combined_output.json")
     with open(combined_output_path) as json_file:
