@@ -214,9 +214,21 @@ def get_color(name, val):
     else:
         return get_sourmash_color(val)
 
+def add_DB_names(workflow_cols, DB_names):
+    for idx, workflow in enumerate(workflow_cols):
+        if workflow == 'Mash':
+            workflow_cols[idx] = 'Mash\n' + DB_names[0] + ' ' + DB_names[1]
+        elif workflow == 'Kraken2':
+            workflow_cols[idx] = 'Kraken2\n ' + DB_names[2]
+        elif workflow == 'Bracken':
+            workflow_cols[idx]  = 'Bracken\n ' + DB_names[3]
+        elif workflow == 'KrakenUniq':
+            workflow_cols[idx] = 'KrakenUniq\n ' + DB_names[4]
+    return workflow_cols
 
-def create_graph(sorted_data, workflow_cols, data_dir):
+def create_graph(sorted_data, workflow_cols, data_dir, DB_names):
     c = []
+    workflow_cols = add_DB_names(workflow_cols, DB_names)
     for _, row in sorted_data.iterrows():
         c_row = []
         for idx, val in enumerate(row):
@@ -275,14 +287,20 @@ def sorted_values(abundance_df):
 
 
 if __name__ == '__main__':
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument("--data", help="data dir",default="/data/home/")
-    #parser.add_argument("--post", help="post processing dir")
-    #args = parser.parse_args()
-    #data_path = args.data
-
-    data_path = snakemake.params[0]  
-
+    '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data", help="data dir",default="/data/home/cgrahlmann/metagenomics/workflows/data/SRR10402317_1_reads_finished/")
+    parser.add_argument("--post", help="post processing dir")
+    parser.add_argument("--DB", default=['0','0','minikraken_8GB_20200312','minikraken_8GB_20200312','minikraken_20171019_8GB'])
+    args = parser.parse_args()
+    data_path = args.data
+    DB_names = args.DB
+    '''
+    data_path = snakemake.params[0]
+    post_processing_dir = snakemake.params[1]
+    DB_names = snakemake.params[2]
+    
+    
     combined_output_path = os.path.join(data_path, "combined_output.json")
     with open(combined_output_path) as json_file:
         data = json.load(json_file)
@@ -292,4 +310,4 @@ if __name__ == '__main__':
     sorted_abundance_df = sorted_values(abundance_df)
     abundance_filepath = os.path.join(data_path, 'signal_graph.tsv')
     abundance_df.to_csv(abundance_filepath, sep='\t')
-    create_graph(sorted_abundance_df, workflow_cols, data_path)  
+    create_graph(sorted_abundance_df, workflow_cols, data_path, DB_names)  

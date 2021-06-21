@@ -86,7 +86,6 @@ post_processing_dir = join(os.getcwd(), "post_processing")
 
 def get_sample_dir(wildcards):
     sample_path = os.getcwd()  + "/" + str(wildcards)
-    #print("SP:" +str(sample_path))
     return sample_path
 
 
@@ -109,10 +108,25 @@ rule generate_combined_output:
 ##################################################
 # post processing: create the abundance graph
 
-
 abudance_graph = post_processing['abundance_graph']['file_name'].format(sample_mv = '{sample_mv}')
-#abudance_graph_sing = join(sing_dir, post_processing['abundance_graph']['file_name'].format(sample = '{sample}', sample_mv = '{sample_mv}'))
 
+
+def get_DB_names(wildcards):
+    mash_dist_file = "{sample_mv}/*_interleaved_reads.fq.gz.msh".format(**wildcards)
+    mash_screen_file = "{sample_mv}/*_mash_distances.tab".format(**wildcards)
+    if glob.glob(mash_dist_file):
+        DB_names = ['dist']     
+        DB_names.append(workflows['tax_class_mash_dist_workflow']['mash_db'])
+    elif glob.glob(mash_screen_file):
+        DB_names = ['mash']
+        DB_names.append(workflows['tax_class_mash_screen_workflow']['mash_db'])
+    else:
+        DB_names = ['']
+        DB_names.append('')
+    DB_names.append(workflows['tax_class_kraken2_workflow']['db'])
+    DB_names.append(workflows['tax_class_bracken_workflow']['bdb'])
+    DB_names.append(workflows['tax_class_krakenuniq_workflow']['db'])
+    return DB_names
 
 rule generate_abundance_graph:
     '''
@@ -124,7 +138,8 @@ rule generate_abundance_graph:
         abudance_graph
     params:
         input_dir = get_sample_dir,
-        post_prcoessing_dir = post_processing_dir,
+        post_processing_dir = post_processing_dir,
+        DB_names = get_DB_names,
     message: 
         '--- Generating Abundance Graph'
     script:
@@ -136,7 +151,6 @@ rule generate_abundance_graph:
 # post processing: create the HTML final report
 
 html_output_file = post_processing['move_samples_to_dir']['out_pattern']
-#print("html_output_file "+str(html_output_file))
 
 def get_sample_filenames(wildcards):
     sample_file_remove = output_dir_pattern.replace('{sample}','')
