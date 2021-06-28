@@ -2,11 +2,11 @@
 working_folder = /data/home/sjessa/metscale/scripts
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
-db_folder = /data/home/sjessa/DQT
+db_folder = /data/projects/metscale/DQT
 
 [import_locs]
 path_to_db_import_manifest = ${paths:working_folder}/doc/db_import_manifest.txt
-refseq_folder = /data/home/sjessa/DQT/refseq/catalog_taxid
+refseq_folder = /data/projects/metscale/DQT/refseq/catalog_taxid
 
 [formats]
 accn2taxid = ('\t', 2, 1)
