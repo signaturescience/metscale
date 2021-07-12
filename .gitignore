@@ -22,6 +22,7 @@ workflows/taxonomic_classification/data
 # Don't blacklist workflows/data recursively
 # Ignore everything under workflows/data
 workflows/data/*
+workflows/work
 
 
 # no big files
