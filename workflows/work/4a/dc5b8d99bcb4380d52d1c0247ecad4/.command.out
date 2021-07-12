@@ -1,0 +1,47 @@
+N E X T F L O W  ~  version 21.04.0
+Launching `/usr/local/bin/workflows/seqmapper.nf` [friendly_golick] - revision: 5c9cb8a4b2
+executor >  local (1)
+[5f/ff9582] process > Create_Working_Directories [100%] 1 of 1 ✔
+[-        ] process > Initialize                 -
+[-        ] process > bowtie2                    -
+[-        ] process > rapsearch2                 -
+[-        ] process > pfam_hmm                   -
+
+
+executor >  local (4)
+[5f/ff9582] process > Create_Working_Directories [100%] 1 of 1 ✔
+[4c/9d68a1] process > Initialize                 [100%] 1 of 1 ✔
+[b1/7b2901] process > bowtie2                    [  0%] 0 of 1
+[45/eb0a7a] process > rapsearch2                 [  0%] 0 of 1
+[-        ] process > pfam_hmm                   -
+
+ # Launching seqmapper workflow ........................ 11:47:52 2021-07-09
+
+
+executor >  local (4)
+[5f/ff9582] process > Create_Working_Directories [100%] 1 of 1 ✔
+[4c/9d68a1] process > Initialize                 [100%] 1 of 1 ✔
+[b1/7b2901] process > bowtie2                    [100%] 1 of 1 ✔
+[45/eb0a7a] process > rapsearch2                 [  0%] 0 of 1
+[-        ] process > pfam_hmm                   -
+
+
+
+
+
+executor >  local (4)
+[5f/ff9582] process > Create_Working_Directories [100%] 1 of 1 ✔
+[4c/9d68a1] process > Initialize                 [100%] 1 of 1 ✔
+[b1/7b2901] process > bowtie2                    [100%] 1 of 1 ✔
+[45/eb0a7a] process > rapsearch2                 [100%] 1 of 1 ✔
+[-        ] process > pfam_hmm                   -
+
+
+
+
+Completed at: 09-Jul-2021 19:21:39
+Duration    : 2h 33m 48s
+CPU hours   : 2.6
+Succeeded   : 4
+
+

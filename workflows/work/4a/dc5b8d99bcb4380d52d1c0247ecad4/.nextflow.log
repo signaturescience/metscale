@@ -1,0 +1,125 @@
+Jul-09 16:47:51.071 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /usr/local/bin/workflows/seqmapper.nf --fasta=/data/home/mscholz/metscale/workflows/data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation/SRR606249_subset10_1_reads_trim2_megahit.fna --databases=/data/home/mscholz/metscale/workflows/data/SeqScreenDB_21.4 --working=/tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2 --threads=1 --log /tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2/seqscreen.log
+Jul-09 16:47:51.144 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.04.0
+Jul-09 16:47:51.174 [main] INFO  nextflow.cli.CmdRun - Launching `/usr/local/bin/workflows/seqmapper.nf` [friendly_golick] - revision: 5c9cb8a4b2
+Jul-09 16:47:51.269 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/data/home/mscholz/metscale/workflows/.nextflow/plugins
+Jul-09 16:47:51.271 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-09 16:47:51.273 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins local root: .nextflow/plr/empty
+Jul-09 16:47:51.283 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-09 16:47:51.284 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-09 16:47:51.288 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-09 16:47:51.300 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-09 16:47:51.355 [main] DEBUG nextflow.Session - Session uuid: 9791983e-a380-4e3e-8f8d-e5bdcf7643ce
+Jul-09 16:47:51.356 [main] DEBUG nextflow.Session - Run name: friendly_golick
+Jul-09 16:47:51.357 [main] DEBUG nextflow.Session - Executor pool size: 72
+Jul-09 16:47:51.396 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.04.0 build 5552
+  Created: 02-05-2021 16:22 UTC (16:22 GMT)
+  System: Linux 3.10.0-1160.31.1.el7.x86_64
+  Runtime: Groovy 3.0.7 on OpenJDK 64-Bit Server VM 11.0.9.1-internal+0-adhoc..src
+  Encoding: UTF-8 (ANSI_X3.4-1968)
+  Process: 53918@capncrunch.corp.signaturescience.com [172.20.5.26]
+  CPUs: 72 - Mem: 1007.6 GB (547.7 GB) - Swap: 4 GB (4 GB)
+Jul-09 16:47:51.426 [main] DEBUG nextflow.Session - Work-dir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work [ext2/ext3]
+Jul-09 16:47:51.427 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /usr/local/bin/workflows/bin
+Jul-09 16:47:51.439 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-09 16:47:51.453 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-09 16:47:51.562 [main] DEBUG nextflow.Session - Session start invoked
+Jul-09 16:47:52.499 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-09 16:47:52.509 [main] DEBUG nextflow.Session - Workflow process names [dsl1]: Create_Working_Directories, rapsearch2, bowtie2, pfam_hmm, Initialize
+Jul-09 16:47:52.622 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-09 16:47:52.622 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:52.627 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-09 16:47:52.633 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=72; memory=1007.6 GB; capacity=72; pollInterval=100ms; dumpInterval=5m
+Jul-09 16:47:52.790 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jul-09 16:47:52.790 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:52.805 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jul-09 16:47:52.805 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:52.817 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jul-09 16:47:52.817 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:52.827 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jul-09 16:47:52.827 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:52.855 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-09 16:47:52.856 [main] DEBUG nextflow.Session - Session await
+Jul-09 16:47:52.866 [Actor Thread 3] DEBUG nextflow.util.CacheHelper - Unable to get file attributes file: /tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2/seqmapper/pfam_hmm -- Cause: java.nio.file.NoSuchFileException: /tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2/seqmapper/pfam_hmm
+Jul-09 16:47:52.926 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-09 16:47:52.932 [Task submitter] INFO  nextflow.Session - [5f/ff9582] Submitted process > Create_Working_Directories
+Jul-09 16:47:52.964 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: Create_Working_Directories; status: COMPLETED; exit: 0; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/5f/ff958223415cb91edd56980c13fcc8]
+Jul-09 16:47:52.971 [Actor Thread 1] INFO  nextflow.script.BaseScript - 
+Jul-09 16:47:52.983 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-09 16:47:52.984 [Task submitter] INFO  nextflow.Session - [4c/9d68a1] Submitted process > Initialize
+Jul-09 16:47:53.003 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: Initialize; status: COMPLETED; exit: 0; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/4c/9d68a175c6fde8a9bcba35b959f1e4]
+Jul-09 16:47:53.005 [Actor Thread 3] INFO  nextflow.script.BaseScript -  # Launching seqmapper workflow ........................ 11:47:52 2021-07-09
+
+Jul-09 16:47:53.015 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-09 16:47:53.016 [Task submitter] INFO  nextflow.Session - [45/eb0a7a] Submitted process > rapsearch2
+Jul-09 16:47:53.019 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-09 16:47:53.020 [Task submitter] INFO  nextflow.Session - [b1/7b2901] Submitted process > bowtie2
+Jul-09 16:48:59.295 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: bowtie2; status: COMPLETED; exit: 0; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/b1/7b2901b389bd97e7f3ed67f5a259d6]
+Jul-09 16:48:59.296 [Actor Thread 6] INFO  nextflow.script.BaseScript - 
+Jul-09 16:52:52.787 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 16:57:52.868 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:02:52.960 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:07:53.044 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:12:53.142 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:17:53.145 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:22:53.158 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:27:53.173 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:32:53.189 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:37:53.207 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:42:53.216 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:47:53.226 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:52:53.324 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 17:57:53.353 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:02:53.358 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:07:53.375 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:12:53.386 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:17:53.398 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:22:53.492 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:27:53.492 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:32:53.501 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:37:53.507 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:42:53.510 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:47:53.602 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:52:53.697 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 18:57:53.707 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 19:02:53.807 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 19:07:53.902 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 19:12:53.905 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 19:17:54.004 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[id: 3; name: rapsearch2; status: RUNNING; exit: -; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 19:21:39.167 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: rapsearch2; status: COMPLETED; exit: 0; error: -; workDir: /data/home/mscholz/metscale/workflows/work/4a/dc5b8d99bcb4380d52d1c0247ecad4/work/45/eb0a7a89b1d8239234ef2217496310]
+Jul-09 19:21:39.176 [Actor Thread 6] INFO  nextflow.script.BaseScript - 
+Jul-09 19:21:39.177 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-09 19:21:39.183 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-09 19:21:39.191 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=4; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=2h 34m 52s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=2; peakCpus=2; peakMemory=0; ]
+Jul-09 19:21:39.291 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-09 19:21:39.301 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

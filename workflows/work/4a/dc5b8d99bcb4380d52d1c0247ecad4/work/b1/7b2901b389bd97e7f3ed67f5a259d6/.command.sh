@@ -1,0 +1,2 @@
+#!/bin/bash -ue
+/usr/local/bin/workflows/../modules/bowtie2.sh --fasta=/data/home/mscholz/metscale/workflows/data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation/SRR606249_subset10_1_reads_trim2_megahit.fna         		  --database=/data/home/mscholz/metscale/workflows/data/SeqScreenDB_21.4/bowtie2/blacklist.seqs.nt     			  --out=/tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2/seqmapper/bowtie2/blacklist.sam     			  --threads=1

@@ -623,7 +623,7 @@ config_default = {
         "seqscreen" : {
             "use_local" : True,
             "filename" : "seqscreen_1.6.0--hdfd78af_0.sif",
-            "location" : "../container_images",
+            "location" : "../container_images/",
             "version" : "1.6.0--hdfd78af_0",
             "quayurl" : "quay.io/biocontainers/seqscreen"
         },

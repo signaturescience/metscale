@@ -1,0 +1,5 @@
+MEGAHIT v1.1.2
+--- [Fri Mar 12 14:17:35 2021] Start assembly. Number of CPU threads 72 ---
+--- [Fri Mar 12 14:17:35 2021] Available memory: 1081899057152, used: 973709151436
+--- [Fri Mar 12 14:17:35 2021] Converting reads to binaries ---
+/usr/local/bin/megahit_asm_core buildlib ./megahit_out/tmp/reads.lib ./megahit_out/tmp/reads.lib

@@ -1,0 +1,2 @@
+#!/bin/bash -ue
+/usr/local/bin/workflows/../modules/rapsearch2.sh --fasta=/data/home/mscholz/metscale/workflows/data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation/SRR606249_subset10_1_reads_trim2_megahit.fna     			     --database=/data/home/mscholz/metscale/workflows/data/SeqScreenDB_21.4/rapsearch2/blacklist.seqs.aa     			     --out=/tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2/seqmapper/rapsearch2/blacklist     			     --evalue=1e-9     			     --threads=1

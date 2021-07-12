@@ -1,0 +1,50 @@
+Jul-09 16:47:38.884 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /usr/local/bin/workflows/initialize.nf --fasta /data/home/mscholz/metscale/workflows/data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation/SRR606249_subset10_1_reads_trim2_megahit.fna --databases /data/home/mscholz/metscale/workflows/data/SeqScreenDB_21.4 --working /tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2 --sensitive --log /tmp/SRR606249_subset10_1_reads_trim2_prokka.megahit_seqscreen_seqscreen_db/reportgeneration2/seqscreen.log
+Jul-09 16:47:38.949 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.04.0
+Jul-09 16:47:38.975 [main] INFO  nextflow.cli.CmdRun - Launching `/usr/local/bin/workflows/initialize.nf` [ecstatic_kilby] - revision: ca9dcb7a94
+Jul-09 16:47:39.063 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/data/home/mscholz/metscale/workflows/.nextflow/plugins
+Jul-09 16:47:39.065 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-09 16:47:39.067 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins local root: .nextflow/plr/empty
+Jul-09 16:47:39.076 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-09 16:47:39.077 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-09 16:47:39.081 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jul-09 16:47:39.092 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-09 16:47:39.144 [main] DEBUG nextflow.Session - Session uuid: ee4883b7-8f35-466d-8848-8c5cb5d8e4e0
+Jul-09 16:47:39.145 [main] DEBUG nextflow.Session - Run name: ecstatic_kilby
+Jul-09 16:47:39.146 [main] DEBUG nextflow.Session - Executor pool size: 72
+Jul-09 16:47:39.181 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.04.0 build 5552
+  Created: 02-05-2021 16:22 UTC (16:22 GMT)
+  System: Linux 3.10.0-1160.31.1.el7.x86_64
+  Runtime: Groovy 3.0.7 on OpenJDK 64-Bit Server VM 11.0.9.1-internal+0-adhoc..src
+  Encoding: UTF-8 (ANSI_X3.4-1968)
+  Process: 53681@capncrunch.corp.signaturescience.com [172.20.5.26]
+  CPUs: 72 - Mem: 1007.6 GB (548.1 GB) - Swap: 4 GB (4 GB)
+Jul-09 16:47:39.210 [main] DEBUG nextflow.Session - Work-dir: /data/home/mscholz/metscale/workflows/work/80/a41a56474d1bc3ffa5cd1e0d428038/work [ext2/ext3]
+Jul-09 16:47:39.210 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /usr/local/bin/workflows/bin
+Jul-09 16:47:39.222 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-09 16:47:39.234 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-09 16:47:39.335 [main] DEBUG nextflow.Session - Session start invoked
+Jul-09 16:47:40.101 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-09 16:47:40.110 [main] DEBUG nextflow.Session - Workflow process names [dsl1]: Create_Working_Directories, Verify_Fasta
+Jul-09 16:47:40.194 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-09 16:47:40.194 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:40.199 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-09 16:47:40.205 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=72; memory=1007.6 GB; capacity=72; pollInterval=100ms; dumpInterval=5m
+Jul-09 16:47:40.357 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Jul-09 16:47:40.358 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-09 16:47:40.395 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jul-09 16:47:40.396 [main] DEBUG nextflow.Session - Session await
+Jul-09 16:47:40.510 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-09 16:47:40.517 [Task submitter] INFO  nextflow.Session - [94/5cffff] Submitted process > Create_Working_Directories
+Jul-09 16:47:40.544 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: Create_Working_Directories; status: COMPLETED; exit: 0; error: -; workDir: /data/home/mscholz/metscale/workflows/work/80/a41a56474d1bc3ffa5cd1e0d428038/work/94/5cffffda1715f81460ab744cba2814]
+Jul-09 16:47:40.552 [Actor Thread 1] INFO  nextflow.script.BaseScript - 
+Jul-09 16:47:40.565 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-09 16:47:40.566 [Task submitter] INFO  nextflow.Session - [c0/9336e8] Submitted process > Verify_Fasta
+Jul-09 16:47:49.565 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: Verify_Fasta; status: COMPLETED; exit: 0; error: -; workDir: /data/home/mscholz/metscale/workflows/work/80/a41a56474d1bc3ffa5cd1e0d428038/work/c0/9336e8f8197b2f2255ff107d072fb1]
+Jul-09 16:47:49.566 [Actor Thread 3] INFO  nextflow.script.BaseScript -  # Launching initialize workflow .................... 11:47:40 2021-07-09
+
+Jul-09 16:47:49.566 [main] DEBUG nextflow.Session - Session await > all process finished
+Jul-09 16:47:49.569 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-09 16:47:49.577 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=2; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=8.9s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=1; peakMemory=0; ]
+Jul-09 16:47:49.607 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jul-09 16:47:49.620 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

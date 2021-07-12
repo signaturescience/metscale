@@ -689,3 +689,48 @@ onerror:
             os.remove(file)
         except:
             pass
+            
+#####################################################################
+#
+# Functional Inference - Seqscreen
+# 
+# functional_seqscreen_complexity_workflow
+# output folder is {prefix}_{fast/sensitive}_seqscreen  May add additional suffixes for different inputs
+# Options:
+#    functional_seqscreen_complexity_workflow (fast, sensitive options)
+#    functional_seqscreen_prokka_workflow (fast, sensitive options)
+#    read_filtering_background_removal_workflow
+#    functional_seqscreen_filtered_background_workflow (fast,sensitive options)
+
+seqscreen_image = container_image_name(biocontainers,'seqscreen')
+seqscreen_output = join(data_dir, '{sample}_trim{qual}_{method}_seqscreen_{workflow}', 'reportgeneration')
+seqscreen_tmp_dir = join(sing_dir, '{sample}_trim{qual}_{method}_seqscreen_{workflow}', 'reportgeneration2')
+seqscreen_db = workflows['seqscreen_workflow']['db']
+seqscreen_prokka_megahit = join(data_dir, '{sample}_trim{qual}_megahit.prokka_annotation/{sample}_trim{qual}_megahit.fna')
+#data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation
+
+rule seqscreen_prokka:
+    input: seqscreen_prokka_megahit
+    output: seqscreen_output
+    params:
+        out_folder = sing_dir,
+        tmp_dir = seqscreen_tmp_dir,
+        seqscreen_db=seqscreen_db,
+        flags='--sensitive'
+    singularity: seqscreen_image
+    threads: 10
+    shell:
+        'export JAVA_HOME=/usr/local/ && ' 
+        'seqscreen --fasta {input} --databases {params.seqscreen_db} --working {params.tmp_dir} --report_prefix {params.flags} --thread {threads} --resume && '
+        'mv {params.tmp_dir} {params.out_folder} && '
+        'rm -rf {params.tmp_dir}'
+
+
+
+rule seqscreen_prokka_megahit_workflow:
+    input: 
+        expand(seqscreen_output, 
+            sample=sample_input_files, 
+            qual=workflows['seqscreen_workflow']['qual'],       
+            method=['prokka.megahit'], 
+            workflow=['seqscreen_db'],)
