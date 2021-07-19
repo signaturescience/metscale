@@ -4,7 +4,7 @@ config_default = {
 
     "workflows" : {
         "seqscreen_workflow" :{
-            "method":['sensitive'],
+            "method":['fast'],
             "qual" : ["2","30"],
             "db" : "data/SeqScreenDB_21.4/"
         },
