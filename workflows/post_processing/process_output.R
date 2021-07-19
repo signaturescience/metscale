@@ -18,7 +18,8 @@ process_output <- function(data_dir, out_dir) {
     "Bracken" = "._bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}",
     "Sourmash" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv",
     "Mash Screen" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_[[:print:]]{1,}_mash_screen[.]sorted[.]tab",
-    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv"
+    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv",
+    "MetaPhlAn" = "[[:print:]]{1,}_metaphlan_bugs_list.tsv"
   )
   
   # Vector for warnings
@@ -74,7 +75,7 @@ process_output <- function(data_dir, out_dir) {
 
     } # End if/else
     
-  } # End parse_kaiju
+  }
   
   # Parse Kraken report files
   parse_kraken_rept <- function(path) {
@@ -582,6 +583,53 @@ process_output <- function(data_dir, out_dir) {
     }
     
     if (exists("tmp_files")) {rm(tmp_files)}
+    
+  }
+  
+  if (any(file_list$tool == "MetaPhlAn3")) {
+    
+    tmp_files <- file_list[file_list$tool == "MetaPhlAn3", ]
+    n_files <- nrow(tmp_files)
+    
+    for (i in 1:n_files) {
+      
+      tmp_output <- read.table(file = tmp_files$path[i], header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+      colnames(tmp_output) <- c("clade_name", "ncbi_tax_id", "relative_abundance", "additional_species")
+      tmp_output <- tmp_output[grepl(pattern = "[|s__", x = tmp_output$clade_name), ]
+      n_bugs <- nrow(tmp_output)
+      
+      if (n_bugs == 0) {
+        
+        warnings <- c(warnings, paste(tmp_files$file[i], "was empty or has no species-level IDs."))
+        
+      } else {
+        
+        for (b in 1:n_bugs) {
+        
+          # Parse the species-level taxon ID
+          tax_id <- tmp_output$ncbi_tax_id[b]
+          tax_id <- unlist(x = strsplit(x = tax_id, split = "[|]"))
+          tax_id <- tax.id[length(tax_id)]
+          tax_id <- as.numeric(x = tax_id)
+          
+          tmp_var <- data.frame(
+            var_id = paste(tmp_files$out_id[i], tax.name, sep = "_"),
+            out_id = tmp_files$out_id[i],
+            species_id = tax_id,
+            var_name = "realtive abundance",
+            var_value = tmp_output$relative_abundance[b],
+            stringsAsFactors = FALSE
+          )
+          
+          variables <- rbind(variables, tmp_var)
+          
+          rm(tax_id, tmp_var)
+          
+        }
+        
+      }
+      
+    }
     
   }
   

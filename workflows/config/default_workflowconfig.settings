@@ -3,6 +3,11 @@ from snakemake.utils import update_config
 config_default = {
 
     "workflows" : {
+        "seqscreen_workflow" :{
+            "method":['fast'],
+            "qual" : ["2","30"],
+            "db" : "data/SeqScreenDB_21.4/"
+        },
 
         "samples_input_workflow" : {
             # Global parameter for the sample input to run on.

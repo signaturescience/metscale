@@ -1,0 +1,29 @@
+Notes:
+======
+(Mike Nute, 2/4/20)
+
+The data in these tables were pulled from the following files on 1/31/20:
+    - ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/assembly_summary_genbank.txt
+    - ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/assembly_summary_genbank_historical.txt
+    - ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/assembly_summary_refseq.txt
+    - ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/assembly_summary_refseq_historical.txt
+
+For each of those files, the first column is an assembly accession ID including a version 
+number. In the files without "historical" in the name (i.e. the "main" files), the 
+accession ID is unique without the version number. The ones with "historical" include 
+multiple versions. The final lookup file contains all of the accession IDs in each of the
+main files and the associated data from that file. It also contains all accession IDs from 
+the historical files that do NOT appear in the main files (for which it contains the data
+from the highest version number provided). 
+
+In the final lookup file, records that were pulled from the "historical" files are denoted
+by a 1 in the final column.
+
+
+Column Definitions:
+======
+Column 1:   Assembly Accession ID (no version)
+Column 2:   Assembly Accession ID (including version)
+Column 3:   Taxon ID
+Column 4:   Species Taxon ID
+Column 5:   Historical Indicator (see above)

@@ -58,6 +58,7 @@
     },
 
     "functional_inference" : {
+        "seqscreen_1.6.2--hdfd78af_0.sif":"docker://quay.io/biocontainers/seqscreen:1.6.2--hdfd78af_0",
         "prokka_1.14.5.sif" : "docker://staphb/prokka:1.14.5",
         "abricate_latest.sif" : "docker://thanhleviet/abricate",
         "srst2_0.2.0--py27_2.sif" : "docker://quay.io/biocontainers/srst2:0.2.0--py27_2",
@@ -70,7 +71,8 @@
         "ResFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/ResFinder.fasta",
         "PlasmidFinder.fasta" : "https://raw.githubusercontent.com/katholt/srst2/master/data/PlasmidFinder.fasta",
         "customDBabricate.tgz" : "file:///resources/customDBabricate.tgz",
-        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta"
+        "EcOH.fasta": "https://raw.githubusercontent.com/katholt/srst2/master/data/EcOH.fasta",
+        "seqscreenDB_20.9.1.mini.tar.gz":"https://obj.umiacs.umd.edu/seqscreen/seqscreenDB_20.9.1.mini.tar.gz"
     },
 
     "post_processing" : {

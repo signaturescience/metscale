@@ -1,0 +1,5 @@
+matplotlib==3.3.3
+numpy==1.19.4
+requests==2.24.0
+pandas==1.1.4
+snakemake==5.5.3
