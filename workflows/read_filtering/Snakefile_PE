@@ -1075,3 +1075,76 @@ rule read_filtering_convert_PE_to_SE_workflow:
             sample    = sample_input_files,
             qual      = workflows['read_filtering_convert_PE_to_SE_workflow']['qual']
         )
+###################################
+# Read Filtering: Low complexity filtering
+# same as post trimmed inputs
+# only used for seqscreen, so outputs not used elsewhere, yet
+
+#inputs
+lc_filter_reads_input = join(data_dir, readfilt['low_complexity_pattern_PE']['input_pattern'])
+lc_filter_reads_input_sing = join(sing_dir, readfilt['low_complexity_pattern_PE']['input_pattern'])
+
+#outputs
+lc_filter_reads_output= join(data_dir, readfilt['low_complexity_pattern_PE']['output_pattern'])
+lc_filter_reads_output_sing = join(sing_dir, readfilt['low_complexity_pattern_PE']['output_pattern'])
+
+#html and json outs
+lc_filter_html_sing = join(sing_dir, readfilt['low_complexity_pattern_PE']['html'])
+lc_filter_html = join(data_dir, readfilt['low_complexity_pattern_PE']['html'])
+
+lc_filter_json_sing = join(sing_dir, readfilt['low_complexity_pattern_PE']['json'])
+lc_filter_json = join(data_dir, readfilt['low_complexity_pattern_PE']['json'])
+
+
+
+def convert_lc_filter_input_sing(wildcards):
+    return lc_filter_reads_input_sing.format(**wildcards)
+
+def convert_lc_filter_input(wildcards):
+    return lc_filter_reads_input_sing.format(**wildcards)
+
+def convert_lc_filter_output_sing(wildcards):
+    return lc_filter_reads_output_sing.format(**wildcards)
+
+def convert_lc_filter_output(wildcards):
+    return lc_filter_reads_output_sing.format(**wildcards)
+
+#html convert
+def convert_lc_filter_html_sing(wildcards):
+    return lc_filter_html_sing.format(**wildcards)
+
+def convert_lc_filter_html(wildcards):
+    return lc_filter_html.format(**wildcards)
+
+#json convert
+def convert_lc_filter_json_sing(wildcards):
+    return lc_filter_json_sing.format(**wildcards)
+
+def convert_lc_filter_json(wildcards):
+    return lc_filter_reads_json.format(**wildcards)
+
+fastp_image = container_image_name(biocontainers,'fastp')
+
+rule read_filtering_complexity_workflow:
+    input:
+        expand( lc_filter_reads_output,
+            sample    = sample_input_files,
+            qual      = workflows['low_complexity_workflow']['qual'],
+        )
+
+
+rule lc_filter_reads:
+    input:
+        lc_filter_reads_input
+    output:
+        lc_filter_reads_output
+    params:
+        filter_input = convert_lc_filter_input_sing,
+        filter_output = convert_lc_filter_output_sing,
+        filter_html = convert_lc_filter_html_sing,
+        filter_json = convert_lc_filter_json_sing
+    singularity: 
+        fastp_image
+    shell:
+        "fastp -i {params.filter_input} -o {params.filter_output} --low_complexity_filter --complexity_threshold 20 --disable_quality_filtering --disable_adapter_trimming --thread {threads} --html {params.filter_html} --json {params.filter_json}"
+
