@@ -410,7 +410,7 @@ def convert_lc_filter_json(wildcards):
 
 fastp_image = container_image_name(biocontainers,'fastp')
 
-rule read_filtering_complexity_workflow:
+rule read_filtering_low_complexity_workflow:
     input:
         expand( lc_filter_reads_output,
             sample    = sample_input_files,
