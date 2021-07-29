@@ -279,8 +279,8 @@ rule assembly_plasmidspades:
 ###################################
 # Assembly: megahit
 
-assembly_megahit_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
-assembly_megahit_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_megahit_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_megahit_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']))
 
 assembly_megahit_input_fwd = assembly_megahit_input_pattern.format(
             direction=readfilt['direction_labels']['forward'],
