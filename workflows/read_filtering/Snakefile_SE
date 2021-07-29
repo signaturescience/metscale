@@ -282,7 +282,7 @@ fq_fwd_post_trimmed_sing = join(sing_dir, (readfilt['read_patterns']['post_trimm
                             sample='{sample}',
                             qual='{qual}'))
 
-                        
+                         
 
 post_trimming_inputs_sing = fq_fwd_post_trimmed_sing
 post_trimming_inputs = fq_fwd_post_trimmed
@@ -366,8 +366,11 @@ rule count_unique_reads:
 # only used for seqscreen, so outputs not used elsewhere, yet
 
 #inputs
-lc_filter_reads_input = join(data_dir, readfilt['low_complexity_pattern_SE']['input_pattern'])
-lc_filter_reads_input_sing = join(sing_dir, readfilt['low_complexity_pattern_SE']['input_pattern'])
+#lc_filter_reads_input = join(data_dir, readfilt['low_complexity_pattern_SE']['input_pattern'])
+#lc_filter_reads_input_sing = join(sing_dir, readfilt['low_complexity_pattern_SE']['input_pattern'])
+
+lc_filter_reads_input =  fq_fwd_post_trimmed
+lc_filter_reads_input_sing = fq_fwd_post_trimmed_sing
 
 #outputs
 lc_filter_reads_output= join(data_dir, readfilt['low_complexity_pattern_SE']['output_pattern'])
