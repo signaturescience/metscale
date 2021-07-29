@@ -97,9 +97,9 @@ if keep == 'n':
         if "," in qual_list:
             quals = qual_list.split(",")
         else:
-            quals.append(qual_list)
+            quals.extend(qual_list)
 else:
-    quals.append(default_qual)
+    quals.extend(default_qual)
 
 print("default is to use the following kmers:",default_kvalue)
 keep = get_input_required_options("accept? y/n", ['y', 'n'])

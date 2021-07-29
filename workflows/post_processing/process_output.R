@@ -18,7 +18,8 @@ process_output <- function(data_dir, out_dir) {
     "Bracken" = "._bracken_db-[[:print:]]{1,}_r-[[:digit:]]{1,}_l-[[:print:]]{1,}_t-[[:print:]]{1,}",
     "Sourmash" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_k[[:digit:]]{1,}[.]gather_output[.]csv",
     "Mash Screen" = "[[:print:]]{1,}(_S[[:digit:]]{1, }_L[[:digit:]]{1, }_R[[:digit:]]{1, }_[[:digit:]]{1, })?_trim[[:digit:]]{1,}_[[:print:]]{1,}_mash_screen[.]sorted[.]tab",
-    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv"
+    "MTSV" = "[[:print:]]{1,}_[[:digit:]]{1,}_MTSV/Summary/summary.csv",
+    "MetaPhlAn" = "[[:print:]]{1,}_metaphlan_bugs_list.tsv"
   )
   
   # Vector for warnings
@@ -32,24 +33,47 @@ process_output <- function(data_dir, out_dir) {
   parse_kaiju <- function(path) {
     
     # Read in the Kaiju .out file
-    data <- read.table(path, sep = ";", header = F, stringsAsFactors = F)
-    
-    # Parse the unclassified reads
-    u_data <- data[substr(data[, 1], 1, 1) == "U", 1]
-    u_data <- matrix(unlist(strsplit(u_data, "\t")), ncol = 3, byrow = T)
-    u_data <- data.frame(classified = u_data[, 1], name = u_data[, 2], tax_id = u_data[, 3],
-                         length = NA, match_ids = NA, accession_num = NA, match_frag = NA,
-                         stringsAsFactors = F)
-    
-    # Parse the classified reads
-    c_data <- data[substr(data[, 1], 1, 1) == "C", 1]
-    c_data <- matrix(unlist(strsplit(c_data, "\t")), ncol = 7, byrow = T)
-    c_data <- data.frame(classified = c_data[, 1], name = c_data[, 2], tax_id = c_data[, 3],
-                         length = c_data[, 4], match_ids = c_data[, 5], accession_num = c_data[, 6],
-                         match_frag = c_data[, 7], stringsAsFactors = F)
-    
-    # Return the parsed data set
-    return(rbind(u_data, c_data))
+    data <- try(expr = read.table(file = path, sep = ";", header = F, stringsAsFactors = F), silent = TRUE)
+
+     if (class(data) == "try-error") {
+        
+       # Return an error message 
+       return(paste(path, "is empty."))
+       
+     } else {
+       
+       # Parse the unclassified reads
+       u_data <- data[substr(data[, 1], 1, 1) == "U", 1]
+       u_data <- matrix(unlist(strsplit(u_data, "\t")), ncol = 3, byrow = T)
+       u_data <- data.frame(
+         classified = u_data[, 1], 
+         name = u_data[, 2], 
+         tax_id = u_data[, 3],
+         length = NA, 
+         match_ids = NA, 
+         accession_num = NA, 
+         match_frag = NA,
+         stringsAsFactors = FALSE
+       )
+       
+       # Parse the classified reads
+       c_data <- data[substr(data[, 1], 1, 1) == "C", 1]
+       c_data <- matrix(unlist(strsplit(c_data, "\t")), ncol = 7, byrow = T)
+       c_data <- data.frame(
+         classified = c_data[, 1], 
+         name = c_data[, 2], 
+         tax_id = c_data[, 3],
+         length = c_data[, 4], 
+         match_ids = c_data[, 5], 
+         accession_num = c_data[, 6],
+         match_frag = c_data[, 7], 
+         stringsAsFactors = FALSE
+       )
+       
+       # Return the parsed data set
+       return(rbind(u_data, c_data))
+
+    } # End if/else
     
   }
   
@@ -57,32 +81,49 @@ process_output <- function(data_dir, out_dir) {
   parse_kraken_rept <- function(path) {
     
     file_in <- readLines(con = path)
-    file_in <- file_in[which(grepl("^%", file_in)):length(file_in)]
     
-    var_names <- file_in[1]
-    var_names <- stringr::str_replace(string = var_names, pattern = "%", replacement = "percent")
-    var_names <- unlist(strsplit(x = var_names, split = "\t"))
+    if (length(file_in) > 0) {
+      
+      if (stringr::str_detect(string = file_in, pattern = "^%")) {
+        
+        file_in <- file_in[which(grepl("^%", file_in)):length(file_in)]
+        
+        var_names <- file_in[1]
+        var_names <- stringr::str_replace(string = var_names, pattern = "%", replacement = "percent")
+        var_names <- unlist(strsplit(x = var_names, split = "\t"))
+        
+        data <- file_in[2:length(file_in)]
+        data <- strsplit(data, split = "\t")
+        data <- do.call(rbind, data)
+        colnames(data) <- var_names
+        data <- data.frame(data, stringsAsFactors = F)
+        
+        data$percent  <- as.numeric(data$percent)
+        data$reads    <- as.numeric(data$reads)
+        data$taxReads <- as.numeric(data$taxReads)
+        data$kmers    <- as.numeric(data$kmers)
+        data$dup      <- as.numeric(data$dup)
+        data$cov      <- as.numeric(data$cov)
+        data$taxID    <- as.numeric(data$taxID)
+        data$rank     <- as.character(data$rank)
+        data$taxName  <- trimws(x = as.character(data$taxName), which = "both")
+        
+        colnames(data)[colnames(data) == "taxID"]   <- "species_id"
+        colnames(data)[colnames(data) == "taxName"] <- "species_name"
+        
+        return(data)
+        
+      } else {
+        
+        return(paste(path, "is empty.")) # Generate an error message indicating that the file is empty.
+        
+      }
+
+    } else {
+        
+      return(paste(path, "is empty.")) # Generate an error message indicating that the file is empty.
     
-    data <- file_in[2:length(file_in)]
-    data <- strsplit(data, split = "\t")
-    data <- do.call(rbind, data)
-    colnames(data) <- var_names
-    data <- data.frame(data, stringsAsFactors = F)
-    
-    data$percent  <- as.numeric(data$percent)
-    data$reads    <- as.numeric(data$reads)
-    data$taxReads <- as.numeric(data$taxReads)
-    data$kmers    <- as.numeric(data$kmers)
-    data$dup      <- as.numeric(data$dup)
-    data$cov      <- as.numeric(data$cov)
-    data$taxID    <- as.numeric(data$taxID)
-    data$rank     <- as.character(data$rank)
-    data$taxName  <- trimws(x = as.character(data$taxName), which = "both")
-    
-    colnames(data)[colnames(data) == "taxID"]   <- "species_id"
-    colnames(data)[colnames(data) == "taxName"] <- "species_name"
-    
-    return(data)
+    }
     
   }
   
@@ -90,25 +131,30 @@ process_output <- function(data_dir, out_dir) {
   parse_bracken <- function(path) {
     
     dat <- readLines(path)
-    dat <- strsplit(dat, "\t")
-    dat <- do.call(rbind, dat)
     
-    colnames(dat) <- dat[1, ]
-    
-    dat <- dat[2:nrow(dat), ]
-    dat <- data.frame(dat, stringsAsFactors = F)
-    
-    dat$name                  <- as.character(dat$name)
-    dat$taxonomy_id           <- as.numeric(dat$taxonomy_id)
-    dat$taxonomy_lvl          <- as.character(dat$taxonomy_lvl)
-    dat$kraken_assigned_reads <- as.numeric(dat$kraken_assigned_reads)
-    dat$added_reads           <- as.numeric(dat$added_reads)
-    dat$new_est_reads         <- as.numeric(dat$new_est_reads)
-    dat$fraction_total_reads  <- as.numeric(dat$fraction_total_reads)
-    
-    colnames(dat)[colnames(dat) == "taxonomy_id"]  <- "species_id"
-    colnames(dat)[colnames(dat) == "taxonomy_lvl"] <- "rank"
-    colnames(dat)[colnames(dat) == "name"]         <- "species_name"
+    if (length(dat) > 0) {
+      dat <- strsplit(dat, "\t")
+      dat <- do.call(rbind, dat)
+      
+      colnames(dat) <- dat[1, ]
+      
+      dat <- dat[2:nrow(dat), ]
+      dat <- data.frame(dat, stringsAsFactors = F)
+      
+      dat$name                  <- as.character(dat$name)
+      dat$taxonomy_id           <- as.numeric(dat$taxonomy_id)
+      dat$taxonomy_lvl          <- as.character(dat$taxonomy_lvl)
+      dat$kraken_assigned_reads <- as.numeric(dat$kraken_assigned_reads)
+      dat$added_reads           <- as.numeric(dat$added_reads)
+      dat$new_est_reads         <- as.numeric(dat$new_est_reads)
+      dat$fraction_total_reads  <- as.numeric(dat$fraction_total_reads)
+      
+      colnames(dat)[colnames(dat) == "taxonomy_id"]  <- "species_id"
+      colnames(dat)[colnames(dat) == "taxonomy_lvl"] <- "rank"
+      colnames(dat)[colnames(dat) == "name"]         <- "species_name"
+    } else {
+      dat <- paste(path, "is empty.")
+    }
     
     return(dat)
     
@@ -118,24 +164,33 @@ process_output <- function(data_dir, out_dir) {
   parse_mash_screen <- function(path) {
     
     data <- readLines(con = path)
-    data <- strsplit(x = data, split = ",")
-    data <- do.call(rbind, data)
-    data <- strsplit(x = data, split = "\t")
-    data <- do.call(rbind, data)
     
-    colnames(data) <- c("identity", "shared_hashes", "median_multiplicity", "p_value", "query_id")
-    
-    data <- as.data.frame(data, stringsAsFactors = FALSE)
-    
-    data$identity <- as.numeric(data$identity)
-    data$median_multiplicity <- as.numeric(data$median_multiplicity)
-    data$p_value <- as.numeric(data$p_value)
-    if (any(stringr::str_detect(data$query_id, "\\[[[:digit:]]{1,} seqs\\]"))) {
-      data$query_id <- trimws(stringr::str_remove(string = data$query_id, pattern = "\\[[0-9]?[0-9] seqs\\]"))
+    if (length(data) > 0) {
+      
+      data <- strsplit(x = data, split = ",")
+      data <- do.call(rbind, data)
+      data <- strsplit(x = data, split = "\t")
+      data <- do.call(rbind, data)
+      
+      colnames(data) <- c("identity", "shared_hashes", "median_multiplicity", "p_value", "query_id")
+      
+      data <- as.data.frame(data, stringsAsFactors = FALSE)
+      
+      data$identity <- as.numeric(data$identity)
+      data$median_multiplicity <- as.numeric(data$median_multiplicity)
+      data$p_value <- as.numeric(data$p_value)
+      if (any(stringr::str_detect(data$query_id, "\\[[[:digit:]]{1,} seqs\\]"))) {
+        data$query_id <- trimws(stringr::str_remove(string = data$query_id, pattern = "\\[[0-9]?[0-9] seqs\\]"))
+      }
+      data$accession = stringr::str_extract(data$query_id, "[[:alpha:]]{3}_[[:digit:]]{1,10}")
+      
+      return(data)
+      
+    } else {
+      
+      return(paste(path, "is empty."))
+      
     }
-    data$accession = stringr::str_extract(data$query_id, "[[:alpha:]]{3}_[[:digit:]]{1,10}")
-    
-    return(data)
     
   }
   
@@ -207,7 +262,6 @@ process_output <- function(data_dir, out_dir) {
   
   file_list <- data.frame(path = file_list, file = basename(file_list), tool = tool_name, 
                           stringsAsFactors = FALSE)
-  #file_list <- cbind(file_list, basename(file_list), tool_name)
   colnames(file_list) <- c("path", "file", "tool")
   file_list <- data.frame(file_list, stringsAsFactors = FALSE)
   file_list <- file_list[file_list$tool != "", ]
@@ -257,6 +311,12 @@ process_output <- function(data_dir, out_dir) {
       
       # Read in the .out file
       tmp_output <- parse_kaiju(path = tmp_files$path[i])
+
+      # Check if there was data in the file
+      if (tmp_output == paste(tmp_files$path[i], "was empty.")) {
+        warnings <- c(warnings, tmp_output)
+        next
+      }
       
       # Extract the NCBI taxon IDs
       taxon_id <- unique(tmp_output$tax_id[tmp_output$classified == "C"])
@@ -318,6 +378,11 @@ process_output <- function(data_dir, out_dir) {
       # Read in the Bracken output
       tmp_output <- parse_bracken(path = tmp_files$path[i])
       
+      if (tmp_output == paste(tmp_files$path[i], "is empty.")) {
+        warnings <- c(warnings, tmp_output)
+        next
+      }
+      
       # Convert to a long (rather than wide) format
       tmp_output %>% 
         select(species_id, kraken_assigned_reads, added_reads, new_est_reads, fraction_total_reads) %>%
@@ -349,10 +414,14 @@ process_output <- function(data_dir, out_dir) {
         next
       }
       
-      tmp_output <- read.table(file = tmp_files$path[i], sep = "\t", as.is = TRUE, header = FALSE, 
-                               quote = '"')
-      colnames(tmp_output) <- c("percent", "fragments", "tax_fragments", "rank", "species_id",
-                                "species_name")
+      tmp_output <- read.table(file = tmp_files$path[i], sep = "\t", as.is = TRUE, header = FALSE, quote = '"')
+      
+      if (nrow(tmp_output) == 0) {
+        warnings <- c(warnings, paste(tmp_files$path[i], "is empty"))
+        next
+      }
+      
+      colnames(tmp_output) <- c("percent", "fragments", "tax_fragments", "rank", "species_id", "species_name")
       
       if (any(tmp_output$rank == "S")) {
         
@@ -382,9 +451,18 @@ process_output <- function(data_dir, out_dir) {
   }
   
   if (any(file_list$tool == "KrakenUniq")) {
+    
     tmp_files <- file_list[file_list$tool == "KrakenUniq", ]
+    
     for (i in 1:nrow(tmp_files)) {
+      
       tmp_output <- parse_kraken_rept(path = tmp_files$path[i])
+      
+      if (tmp_output == paste(tmp_files$path[i], "is empty.")) {
+        warnings <- c(warnings, tmp_output)
+        next
+      }
+      
       if (any(tmp_output$rank == "species")) {
         colnames(tmp_output)[colnames(tmp_output) == "taxID"]   <- "species_id"
         colnames(tmp_output)[colnames(tmp_output) == "taxName"] <- "species_name"
@@ -415,18 +493,19 @@ process_output <- function(data_dir, out_dir) {
       
       tmp_output <- read.csv(file = tmp_files$path[i], header = TRUE, as.is = TRUE)
       
+      if (nrow(tmp_output) == 0) {
+        warnings <- c(warnings, paste(tmp_files$path[i], "is empty."))
+        next
+      }
+      
       tmp_output$genbank_id <- unlist(lapply(strsplit(tmp_output$name, " "), '[[', 1))
       tmp_output$accession  <- unlist(lapply(strsplit(tmp_output$genbank_id, '[.]'), '[[', 1))
       tmp_ncbi <- genbank2uid(tmp_output$accession)
       
       if (nrow(tmp_ncbi) > 0) {
-        
         tmp_output <- merge(tmp_output, tmp_ncbi, by = "accession", all.x = TRUE)
-        
       } else {
-        
         tmp_output$taxid <- NA
-        
       }
       
       tmp_output <- tmp_output %>%
@@ -451,6 +530,11 @@ process_output <- function(data_dir, out_dir) {
     for (i in 1:nrow(tmp_files)) {
       
       tmp_output <- parse_mash_screen(path=tmp_files$path[i])
+      
+      if (tmp_output == paste(tmp_files$path[i], "is empty.")) {
+        warnings <- c(warnings, tmp_output)
+        next
+      }
       
       tmp_ncbi <- assembly2uid(id = tmp_output$accession)
       
@@ -479,6 +563,12 @@ process_output <- function(data_dir, out_dir) {
     for (i in 1:nrow(tmp_files)){
       
       tmp_output <- read.csv(file = tmp_files$path[i], header = FALSE, as.is = TRUE, skip = 2)
+      
+      if (nrow(tmp_output) == 0) {
+        warnings <- c(warnings, paste(tmp_files$path[i], "is empty."))
+        next
+      }
+      
       colnames(tmp_output) <- c("species_id", "division", "name", "total_hits", "unique_hits", 
                                 "signature_hits", "unique_signature_hits")
       tmp_output %>%
@@ -493,6 +583,53 @@ process_output <- function(data_dir, out_dir) {
     }
     
     if (exists("tmp_files")) {rm(tmp_files)}
+    
+  }
+  
+  if (any(file_list$tool == "MetaPhlAn3")) {
+    
+    tmp_files <- file_list[file_list$tool == "MetaPhlAn3", ]
+    n_files <- nrow(tmp_files)
+    
+    for (i in 1:n_files) {
+      
+      tmp_output <- read.table(file = tmp_files$path[i], header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+      colnames(tmp_output) <- c("clade_name", "ncbi_tax_id", "relative_abundance", "additional_species")
+      tmp_output <- tmp_output[grepl(pattern = "[|s__", x = tmp_output$clade_name), ]
+      n_bugs <- nrow(tmp_output)
+      
+      if (n_bugs == 0) {
+        
+        warnings <- c(warnings, paste(tmp_files$file[i], "was empty or has no species-level IDs."))
+        
+      } else {
+        
+        for (b in 1:n_bugs) {
+        
+          # Parse the species-level taxon ID
+          tax_id <- tmp_output$ncbi_tax_id[b]
+          tax_id <- unlist(x = strsplit(x = tax_id, split = "[|]"))
+          tax_id <- tax.id[length(tax_id)]
+          tax_id <- as.numeric(x = tax_id)
+          
+          tmp_var <- data.frame(
+            var_id = paste(tmp_files$out_id[i], tax.name, sep = "_"),
+            out_id = tmp_files$out_id[i],
+            species_id = tax_id,
+            var_name = "realtive abundance",
+            var_value = tmp_output$relative_abundance[b],
+            stringsAsFactors = FALSE
+          )
+          
+          variables <- rbind(variables, tmp_var)
+          
+          rm(tax_id, tmp_var)
+          
+        }
+        
+      }
+      
+    }
     
   }
   

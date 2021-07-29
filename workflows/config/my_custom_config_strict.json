@@ -37,6 +37,12 @@
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
         },
+       "read_filtering_convert_PE_to_SE_workflow" : {
+            "qual"   : ["25"]
+        },
+        "low_complexity_workflow":{
+           "qual"       : ["2", "30"]
+        },
         "assembly_metaspades_workflow" : {
             "comment": "# the assembly workflow will run metaspades assembler only",
             "qual"      : ["2","30"]
@@ -206,7 +212,7 @@
             "comment":"these parameters determine which contig params from megahit to run prokka on",
             "qual"      : ["2","30"]
         },
-        "functional_humann2_workflow" : {
+        "functional_humann3_workflow" : {
             "qual" : ["2","30"]
         },
         "functional_prokka_with_metaspades_workflow" : {

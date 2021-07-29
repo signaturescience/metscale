@@ -24,7 +24,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     subprocess.call (["Rscript", "-e", 'install.packages("devtools", repos="https://cloud.r-project.org")'])
-    subprocess.call (["Rscript", "-e", 'library(devtools); install_github("ropensci/taxizedb")' ])
+    subprocess.call (["Rscript", "-e", 'install.packages("taxizedb", repos="https://cloud.r-project.org")' ])
     subprocess.call (["Rscript", "-e", "taxizedb::db_download_ncbi()"])
     subprocess.call (["Rscript", "db_download_genbank.R"])
     subprocess.call (["Rscript", "db_download_uniprot.R"])

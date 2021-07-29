@@ -1,17 +1,16 @@
 [paths]
-working_folder =
+working_folder = /data/home/sjessa/metscale/scripts
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 
+db_folder = /data/home/sjessa/DQT
+
 [import_locs]
-path_to_db_import_manifest = ${paths:working_folder}/db_import_manifest.txt
-refseq_folder = ${paths:working_folder}/refseq/catalog_taxid
+path_to_db_import_manifest = ${paths:working_folder}/doc/db_import_manifest.txt
+refseq_folder = /data/home/sjessa/DQT/refseq/catalog_taxid
+
 
 [formats]
-# Each of these defines a format for pulling taxon ids from a delimited text file.
-#   They must be written as a valid python string containing a tuple. The fields
-#   in each tuple are: 1) delimiter, 2) column (0-indexed), 3) # of header rows to
-#   skip.
 accn2taxid = ('\t', 2, 1)
 kraken2_inspect = ('\t', 4, 0)
 first_col = ('\t', 0, 0)
@@ -19,22 +18,19 @@ refseq = ('\t', 0, 0)
 seqid2taxid = ('\t', 1, 0)
 
 [db_source_files]
-# Each of these entries gives the name and path to a delimited-text file with a column containing all the taxon IDs
-#   in that database. The same set of names must occur in the [db_source_formats] section below with the name of a
-#   valid format.
-RefSeq =    ${paths:working_folder}/refseq/catalog_taxid
-minikraken_20171019_8GB = ${paths:working_folder}/krakenuniq/seqid2taxid.map
-minikraken2_v2_8GB_201904_UPDATE = ${paths:working_folder}/kraken/kraken2_inspect_wzerocounts.txt
-kaiju_db_nr_euk = ${paths:working_folder}/kaiju/nr_euk_2017_seqnames_fromPeter/kaiju_db_nr_euk_origUniqTaxa.txt
-NCBI_nucl_gb = ${paths:working_folder}/ncbi_taxonomy/accn2taxid_orig/nucl_gb.accession2taxid
-NCBI_nucl_wgs = ${paths:working_folder}/ncbi_taxonomy/accn2taxid_orig/nucl_wgs.accession2taxid
+refseq = ${paths:db_folder}/refseq/catalog_taxid
+minikraken_20171019_8GB = ${paths:db_folder}/krakenuniq/seqid2taxid.map
+minikraken2_v2_8GB_201904_UPDATE = ${paths:db_folder}/kraken/kraken2_inspect_wzerocounts.txt
+kaiju_db_nr_euk = ${paths:db_folder}/kaiju/nr_euk_2017_seqnames_fromPeter/kaiju_db_nr_euk_origUniqTaxa.txt
+NCBI_nucl_gb = ${paths:db_folder}/ncbi_taxonomy/nucl_gb.accession2taxid.gz
+NCBI_nucl_wgs = ${paths:db_folder}/ncbi_taxonomy/nucl_wgs.accession2taxid.gz
+MTSV_Oct-28-2019 = ${paths:db_folder}/mtsv_db/20191028_taxid_list.txt
 
 [db_source_formats]
-# This must include one of the names from the [formats] section, followed by either a 1 or 0 (assumed to be 1 if
-#   omitted). If the latter is 0, the database is skipped.
-RefSeq = refseq 1
+refseq = refseq 1
 minikraken_20171019_8GB = seqid2taxid 1
 minikraken2_v2_8GB_201904_UPDATE = kraken2_inspect 1
 kaiju_db_nr_euk = first_col 1
-NCBI_nucl_gb = accn2taxid 0
-NCBI_nucl_wgs = accn2taxid 0
+NCBI_nucl_gb = accn2taxid 1
+NCBI_nucl_wgs = accn2taxid 1
+MTSV_Oct-28-2019 = first_col 1

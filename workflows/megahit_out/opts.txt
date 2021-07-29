@@ -1,0 +1,3 @@
+-r
+data/SRR606249_subset10_1_reads_trim30.fq.gz
+MEGAHIT_TEMP_DIR: ./megahit_out/tmp/
