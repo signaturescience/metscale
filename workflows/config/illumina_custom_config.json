@@ -1,7 +1,7 @@
 {
    "read_filtering" : {
         "read_patterns" : {
-            "pre_trimming_pattern"  : "{sample}_{direction}_reads",
+            "pre_trimming_pattern"  : "{sample}_{direction}",
             "pre_trimming_glob_pattern"  : "*_S*_L*_R1_001.fastq.gz",
             "reverse_pe_pattern_search"  : "R1",
             "reverse_pe_pattern_replace" : "R2",
@@ -38,7 +38,7 @@
         "read_filtering_convert_PE_to_SE_workflow" : {
             "qual"   : ["25"]
         },
-        "low_complexity_workflow":{
+        "read_filtering_low_complexity_workflow":{
            "qual"       : ["2", "30"]
         },
         "assembly_metaspades_workflow" : {
