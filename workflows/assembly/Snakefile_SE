@@ -39,8 +39,8 @@ readfilt = config['read_filtering']
 
 # Commented out to test SE rules
 #Used for both spades and metaspades and plasmidspades rules
-assembly_all_spades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
-assembly_all_spades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_all_spades_input_pattern = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_all_spades_input_pattern_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']))
 
 assembly_all_spades_input_fwd = assembly_all_spades_input_pattern.format(
             direction=readfilt['direction_labels']['forward'],
@@ -67,9 +67,9 @@ assembly_all_spades_input_rev_sing = assembly_all_spades_input_pattern_sing.form
 
 # SE rules for input patterns
 
-assembly_all_spades_input_pattern_SE = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+assembly_all_spades_input_pattern_SE = join(data_dir, (readfilt['read_patterns']['post_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']))
 
-asssembly_all_spades_input_pattern_SE_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern']+readfilt['quality_trimming']['sample_file_ext']))
+asssembly_all_spades_input_pattern_SE_sing = join(sing_dir, (readfilt['read_patterns']['post_trimming_pattern_SE']+readfilt['quality_trimming']['sample_file_ext']))
 
 assembly_all_spades_input_SE = assembly_all_spades_input_pattern_SE.format(
             direction=readfilt['direction_labels']['SE'],
