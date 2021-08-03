@@ -30,6 +30,9 @@
         "read_filtering_khmer_split_interleaved_reads_workflow" : {
             "qual"   : ["2","30"]
         },
+        "read_filtering_convert_PE_to_SE_workflow":{
+            "qual"   : ["2","30"]
+        },
         "read_filtering_khmer_count_unique_kmers_workflow" : {
             "qual"   : ["2","30"],
             "kmers" : [21,31,51]
@@ -37,7 +40,7 @@
        "read_filtering_convert_PE_to_SE_workflow" : {
             "qual"   : ["25"]
         },
-        "low_complexity_workflow":{
+        "read_filtering_low_complexity_workflow":{
            "qual"       : ["2", "30"]
         },
         "assembly_metaspades_workflow" : {
@@ -255,5 +258,3 @@
         }
     }
 }
-
-

@@ -59,7 +59,8 @@ config_default = {
         },
         "direction_labels" : {
             "forward" : "1",
-            "reverse" : "2"
+            "reverse" : "2",
+            "SE" : "SE"
         },
         "quality_assessment" : {
             #
@@ -252,7 +253,7 @@ config_default = {
         "compare_assembly_signatures" : {
             #
             # the samples and quality variables are used in expand() to form filenames
-            "assembler" : ["megahit","metaspades"],
+            "assembler" : ["megahit"],
             #
             # csv_out is the single output file containing comparisons of all input files
             # {kvalue} is replaced with the k value used in the comparison
@@ -261,7 +262,7 @@ config_default = {
         "compare_read_assembly_signatures" : {
             #
             # the samples, quality, assembler variables are used in expand() to form filenames
-            "assembler" : ["megahit","metaspades"],
+            "assembler" : ["megahit"],
             #
             # k values are passed to sourmash compare
             "kvalues"   : [21, 31, 51],

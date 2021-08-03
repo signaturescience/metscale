@@ -1129,7 +1129,7 @@ rule read_filtering_low_complexity_workflow:
     input:
         expand( lc_filter_reads_output,
             sample    = sample_input_files,
-            qual      = workflows['low_complexity_workflow']['qual'],
+            qual      = workflows['read_filtering_low_complexity_workflow']['qual'],
         )
 
 

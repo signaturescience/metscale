@@ -505,8 +505,8 @@ metaphlan_db_tar = [join(data_dir, db) for db in metaphlan_db_tar_input]
 metaphlan_db_out = inference['humann2']['metaphlan_db']
 metaphlan_db_bt2_path = [join(data_dir, db) for db in metaphlan_db_out]
 
-print("tmp_bowtie2: "+str(tmp_bowtie2))
-print("tmp_bugs: "+str(tmp_bugs))
+#print("tmp_bowtie2: "+str(tmp_bowtie2))
+#print("tmp_bugs: "+str(tmp_bugs))
 rule install_metaphlan_db:
     input:
         metaphlan_db_tar
@@ -520,7 +520,7 @@ rule install_metaphlan_db:
         'export LC_ALL=C && '
         'metaphlan2.py --bowtie2db {params.out_folder} --install'
 
-print("humann2_output: "+str(humann2_output))
+#print("humann2_output: "+str(humann2_output))
 rule run_humann2:
     input:
         #interleave_output, metaphlan_db_bt2_path
