@@ -4,6 +4,7 @@
 * [Workflow Overview](#Workflow-Overview)
 * [Required Files](#Required-Files)
 * [Workflow Execution](#Workflow-Execution)
+* [Custom Database](#Adding-a-Custom-Database)
 * [Additional Information](#Additional-Information)
 
 ## Workflow Overview 
@@ -12,7 +13,7 @@ The Databse Query Tool is used to compare the contents of the reference database
 ![](https://github.com/signaturescience/metagenomics-wiki/blob/master/documentation/figures/DQT%20v1.png)
 
 ## Required Files
-If you have not already, you will need to clone the MetScale repository and activate your metscale environment [Install](https://github.com/signaturescience/metscale/wiki/02.-Install) before proceeding:
+If you have not already, you will need to clone the MetScale repository and activate your metscale environment (see [Install](https://github.com/signaturescience/metscale/wiki/02.-Install)) before proceeding:
 
 ```sh
 [user@localhost ~]$ source activate metscale 
@@ -72,7 +73,7 @@ The default usage of the tool is to give one or more taxon IDs and output a text
 |Kaiju|`kaiju_db_nr_euk`|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
 |GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
 |GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
-|MetaPhlAn2|`metaphlan_mpa_v20_m200`|[MetaPhlAn2 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
+|MetaPhlAn2|`metaphlan3`|[MetaPhlAn3 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
 |MTSv|`MTSV_Oct-28-2019`|[MTSv Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
 
 All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user removal or addition of databases. These features are planned to be part of future releases. 
@@ -103,28 +104,22 @@ DB Column Names:
    2: minikraken2_v2_8GB_201904_UPDATE
    3: kaiju_db_nr_euk
    4: NCBI_nucl_wgs
-   5: metaphlan_mpa_v20_m200
-   6: NCBI_nucl_gb
-   7: MTSV_Oct-28-2019
+   5: NCBI_nucl_gb
+   6: MTSV_Oct-28-2019
+   7: metaphlan3
    8: RefSeq_v98
 
-    taxid      rank 0 1 2 3 4 5 6 7
-  1251942   species - - - - - 1 - -
-  1913708   species - - 1 - - 1 - -
-   980453   species - - - - - 1 - -
-   743653   species - - - - - 1 - -
-  2196333   species - - - - - 1 - -
-   146582   species - - - - - 1 - -
+    taxid      rank 1 2 3 4 5 6 7 8
+  1251942   species - - - - 1 - - -
+  1913708   species - - 1 - 1 - - -
+   980453   species - - - - 1 - - -
+   743653   species - - - - 1 - - -
+  2196333   species - - - - 1 - - -
+   146582   species - - - - 1 - - -
   1950923   species - - - 1 - - - -
-  1420363   species - - - - - 1 - -
-  1367599   species - - - - - 1 - -
-    48959   species - - - - - 1 - -
-  1594871   species - - - - - 1 - -
-    69507     genus - - - - - - - -
-   241522 subspecies - - - - - 1 - -
-  1068967   species - - - - - 1 - -
-  1007150   species - - - - - 1 - -
-   498356   no rank - 2 1 - - 1 - -
+  1420363   species - - - - 1 - - -
+  1367599   species - - - - 1 - - -
+    48959   species - - - - 1 - - -
 
    (...truncated...)
 ```
@@ -143,29 +138,23 @@ DB Column Names:
    2: minikraken2_v2_8GB_201904_UPDATE
    3: kaiju_db_nr_euk
    4: NCBI_nucl_wgs
-   5: metaphlan_mpa_v20_m200
-   6: NCBI_nucl_gb
-   7: MTSV_Oct-28-2019
+   5: NCBI_nucl_gb
+   6: MTSV_Oct-28-2019
+   7: metaphlan3
    8: RefSeq_v98
 
-    taxid      rank 0 1 2 3 4 5 6 7
-  1251942   species - - - - - 1 - -
-  1913708   species - - 1 - - 1 - -
-   980453   species - - - - - 1 - -
-   743653   species - - - - - 1 - -
-  2196333   species - - - - - 1 - -
-   146582   species - - - - - 1 - -
+    taxid      rank 1 2 3 4 5 6 7 8
+  1251942   species - - - - 1 - - -
+  1913708   species - - 1 - 1 - - -
+   980453   species - - - - 1 - - -
+   743653   species - - - - 1 - - -
+  2196333   species - - - - 1 - - -
+   146582   species - - - - 1 - - -
   1950923   species - - - 1 - - - -
-  1420363   species - - - - - 1 - -
-  1367599   species - - - - - 1 - -
-    48959   species - - - - - 1 - -
-  1594871   species - - - - - 1 - -
-    69507     genus - - - - - - - -
-   241522 subspecies - - - - - 1 - -
-  1068967   species - - - - - 1 - -
-  1007150   species - - - - - 1 - -
-   498356   no rank - 2 1 - - 1 - -
-   
+  1420363   species - - - - 1 - - -
+  1367599   species - - - - 1 - - -
+    48959   species - - - - 1 - - -
+
    (...truncated...)
 ```
 
@@ -181,15 +170,18 @@ If only a single taxon ID is input, the DQT will output the rank of that taxon I
 (metscale) :~$ python3 query_tool.py -t 10
 Taxon ID:         10 (rank: genus)
 DB results:
-                minikraken_20171019_8GB: --
-       minikraken2_v2_8GB_201904_UPDATE: Yes
-                        kaiju_db_nr_euk: Yes
-                          NCBI_nucl_wgs: --
-                 metaphlan_mpa_v20_m200: --
-                           NCBI_nucl_gb: Yes
-                       MTSV_Oct-28-2019: --
-                             RefSeq_v98: Yes
+          minikraken_20171019_8GB: --
+ minikraken2_v2_8GB_201904_UPDATE: Yes
+                  kaiju_db_nr_euk: Yes
+                    NCBI_nucl_wgs: --
+                     NCBI_nucl_gb: Yes
+                 MTSV_Oct-28-2019: --
+                       metaphlan3: --
+                       RefSeq_v98: Yes
+
 ```
+
+## Adding a Custom Database
 
 ## Additional Information
 
