@@ -21,4 +21,4 @@ seqid2taxid = ('\t', 1, 0)
 example = ${paths:db_folder}/example_db.txt
 
 [db_source_formats]
-example = first_col 1
+example = first_col 0
