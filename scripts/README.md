@@ -188,7 +188,7 @@ If a database of interest is not currently present in the DQT you can easily add
 ### Database Format
 The database must be formatted as follows:
 * 1: A `.txt` file
-* 2: One NBCI Taxon ID per line
+* 2: One NCBI Taxon ID per line
 * 3: New-line delimited
 
 We can view this format by taking a look at `example_db.txt`:
@@ -240,7 +240,7 @@ Under `[db_source_formats]` we specify the `first_col` format which corresponds 
 Now that we have included all our information in the config file we will check to verify the DQT recognizes our new database. We will run the inspection flag `-CMO` to do this.
 ```
 (metscale) :~$ cd metscale/scripts
-(metscale) :~$ python3 query_tool.py --CMO
+(metscale) :~$ python3 query_tool.py -CMO
  Database                         | In           | In      | Action
  Name                             | Config     | Contain | to be Taken
  -------------------------------- | ------------ | ------- | ----------
@@ -353,7 +353,7 @@ Now that we have included all our information in the config file we will check t
 ```
 Here we can see all the databases currently present in the DQT and all the databases ready to be imported (NOTE: the order of the databases in this output may vary). 
 
-In the first column `In Config` we see whether or not a database has been entered into `dbqt_config`. The default Metscale databases do not need to be present in the config file. Due to the version structure of Refseq databases they do need to be included in the config (NOTEL this has already been done for the user). You should see our `example` database showing `YES (config)` in this column. 
+In the first column `In Config` we see whether or not a database has been entered into `dbqt_config`. The default Metscale databases do not need to be present in the config file. Due to the version structure of Refseq databases they do need to be included in the config (NOTE: this has already been done for the user). You should see our `example` database showing `YES (config)` in this column. 
 
 The second column `In Contain` represents if a database is already present in the DQT. This should be `YES` for every database other than our new `example` database.
 
