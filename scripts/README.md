@@ -178,7 +178,6 @@ DB results:
                  MTSV_Oct-28-2019: --
                        metaphlan3: --
                        RefSeq_v98: Yes
-
 ```
 
 ## Adding a Custom Database
