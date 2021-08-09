@@ -77,7 +77,7 @@ The default usage of the tool is to give one or more taxon IDs and output a text
 |MetaPhlAn2|`metaphlan3`|[MetaPhlAn3 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
 |MTSv|`MTSV_Oct-28-2019`|[MTSv Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
 
-All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. Currently the DQT does not support user removal or addition of databases. These features are planned to be part of future releases. 
+All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. 
 
 #### Details & Example
 
@@ -183,7 +183,7 @@ DB results:
 
 ## Adding Custom Databases
 
-If a database of interest is not currently present in the DQT you can easily add it to the pool! A mock database `example_db.txt` is included with Metscale and we will use this file to demonstrate how to add a database.
+If a database of interest is not currently present in the DQT you can easily add it to the pool! A mock database `example_db.txt` is included with MetScale and we will use this file to demonstrate how to add a database.
 
 ### Database Format
 The database must be formatted as follows:
@@ -230,7 +230,7 @@ example = ${paths:db_folder}/example_db.txt
 [db_source_formats]
 example = first_col 0
 ```
-The default path for `db_folder` is the `databases/` directory, but feel free to choose any location you like. 
+The default path for `db_folder` is the `~/metscale/scripts/databases/` directory, but feel free to choose any location you like. 
 
 Under `[db_source_format]` we point to the database file. This has already been entered for the example database, but for a real database you could either add a line below the example, or replace the example entirely. You may name your database anything you like.
 
@@ -353,13 +353,13 @@ Now that we have included all our information in the config file we will check t
 ```
 Here we can see all the databases currently present in the DQT and all the databases ready to be imported (NOTE: the order of the databases in this output may vary). 
 
-In the first column `In Config` we see whether or not a database has been entered into `dbqt_config`. The default Metscale databases do not need to be present in the config file. Due to the version structure of Refseq databases they do need to be included in the config (NOTE: this has already been done for the user). You should see our `example` database showing `YES (config)` in this column. 
+In the first column `In Config` we see whether or not a database has been entered into `dbqt_config`. The default MetScale databases do not need to be present in the config file. Due to the version structure of RefSeq databases they do need to be included in the config (NOTE: this has already been done for the user). You should see our `example` database showing `YES (config)` in this column. 
 
 The second column `In Contain` represents if a database is already present in the DQT. This should be `YES` for every database other than our new `example` database.
 
 The third column `Action to be Taken` tells us what the DQT will do during import. 
-* 1: For any database in the config file that is already present the DQT will check it's `md5` and replace the database if the `md5` differs. If it does not differ nothing will happen and we will see `(same md5, leave in)`. 
-* 2: For databases not in the config file but already present the DQT will just leave them in (`(leave in)`). 
+* 1: For any database in the config file that is already present, the DQT will check its `md5` and replace the database if the `md5` differs. If it does not differ, nothing will happen and we will see `(same md5, leave in)`. 
+* 2: For databases not in the config file but already present the DQT will just leave them in `(leave in)`. 
 * 3: For databases entered in the config file and new to the DQT we will see an output of `IMPORT`, which should be what you see for `example`. 
 
 Now that we have verified the DQT recognizes our new database we can import it! We import our database using the `-BCD` flag. 
