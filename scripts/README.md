@@ -8,12 +8,12 @@
 * [Additional Information](#Additional-Information)
 
 ## Workflow Overview 
-The Databse Query Tool is used to compare the contents of the reference databases used by various taxonomic classification tools. Specifically, since NCBI taxonomy is constantly being updated and different taxonomic classification tools use different databases, not all tools have the same reference organisms in their database. Thus, comparing outputs from one tool to another requires accounting for differences in the presence of organisms in their respective reference databases. If a taxonomic classification tool does not report an expected species in a metagenome, the DQT allows users to quickly query whether or not that species was present in the tool's reference database. The DQT allows the user to input one or more taxon IDs and output a list of the databases that contain that taxon ID or its ancestor. While taxons from any level can be queried, this tool was specifically designed to work with species-level taxons. 
+The Databse Query Tool is used to compare the contents of the reference databases used by various taxonomic classification tools. Specifically, since NCBI taxonomy is constantly being updated and different taxonomic classification tools use different databases, not all tools have the same reference organisms in their database. Thus, comparing outputs from one tool to another requires accounting for differences in the presence of organisms in their respective reference databases. If a taxonomic classification tool does not report an expected species in a metagenome, the DQT allows users to quickly query whether or not that species was present in the tool's reference database. The DQT allows the user to input one or more NCBI taxonomy IDs (taxids) and output a list of the databases that contain that taxid or its ancestor. While taxons from any level can be queried, this tool was specifically designed to work with species-level taxons. 
 
 ![](https://github.com/signaturescience/metagenomics-wiki/blob/master/documentation/figures/DQT%20v1.png)
 
 ## Required Files
-If you have not already, you will need to clone the MetScale repository and activate your metscale environment (see [Install](https://github.com/signaturescience/metscale/wiki/02.-Install)) before proceeding:
+If you have not already, you will need to clone the MetScale repository and activate your `metscale` environment (see [Install](https://github.com/signaturescience/metscale/wiki/02.-Install)) before proceeding:
 
 ```sh
 [user@localhost ~]$ source activate metscale 
@@ -28,9 +28,9 @@ If you ran the MetScale installation correctly, the following files and director
 
 | File Name | File Size | MD5 Checksum |
 | ------------- | ------------- | ------------- |
-| `query_tool.py` | `74 KB` | `6281df76ea6e5e1b3546af5f0cd6ad2b` |
+| `query_tool.py` | `74 KB` | `48cf643151dc44de063d5639152a5c6c` |
 | `testtax.txt` | `188 B` | `195cd9131bcbcfcc1bea2aa1793a5740` |
-| `containment_dict_.json.gz` | `14 MB` | `ab3dc6fe977be177554c1ab7919036c9` |
+| `containment_dict_.json.gz` | `14 MB` | `5c19fd8ee009e23d40b4744c941c2ee2` |
 | `doc/` | `4 KB` | `directory` |
 | `example_input_files/` | `4 KB` | `directory` |
 | `databases/` | `54 KB` | `directory` |
@@ -64,7 +64,7 @@ The command `--setup` first sets the value of `working_folder` in this file to b
 
 ### Taxon ID Querying
 
-The default usage of the tool is to give one or more taxon IDs and output a text-based report showing which databases contain that taxon ID. The output goes to the console by default but can optionally be directed to a file. The default queried databases include several of the tools in the MetScale Taxonomic Classification Workflow, as well as versions of the NCBI RefSeq Database. The full list of databases is below.
+The default usage of the tool is to give one or more taxids and output a text-based report showing which databases contain that taxid. The output goes to the console by default but can optionally be directed to a file. The default queried databases include several of the tools in the MetScale Taxonomic Classification Workflow, as well as versions of the NCBI RefSeq Database. The full list of databases is below.
 
 |Tool|Database Name|Source|
 |:---|:---|:---|
@@ -74,7 +74,7 @@ The default usage of the tool is to give one or more taxon IDs and output a text
 |Kaiju|`kaiju_db_nr_euk`|(corresponds to [Kaiju NCBI *nr+euk* DB](http://kaiju.binf.ku.dk/database/kaiju_db_nr_euk_2019-06-25.tgz))|
 |GenBank|`NCBI_nucl_gb`|[NCBI accn2taxid (nucl_gb)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_gb.accession2taxid.gz)|
 |GenBank (WGS/TSA)|`NCBI_nucl_wgs`|[NCBI accn2taxid (nucl_wgs)](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/nucl_wgs.accession2taxid.gz)|
-|MetaPhlAn2|`metaphlan3`|[MetaPhlAn3 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
+|MetaPhlAn3|`metaphlan3`|[MetaPhlAn3 Google Drive](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)|
 |MTSv|`MTSV_Oct-28-2019`|[MTSv Complete Genome DB](https://rcdata.nau.edu/fofanov_lab/Compressed_MTSV_database_files/complete_genome.tar.gz)|
 
 All RefSeq versions up to v98 can be included in the query by adding the flag `--all_refseq_versions`. 
@@ -89,9 +89,9 @@ python3 query_tool.py -t <taxid_source>
 
 Here, `<taxid_source>` can have one of three forms:
 
-1. A file path to a text file with a list of line-separated taxon IDs. Excluding the newline and leading or trailing whitespace, each line must readily convert to an integer or the procedure will raise an error.
+1. A file path to a text file with a list of line-separated taxids. Excluding the newline and leading or trailing whitespace, each line must readily convert to an integer or the procedure will raise an error.
 2. The string `stdin` (i.e. `python3 query_tool.py -t stdin`). In this case a line-separated list (formatted as above) is expected from standard input. When an empty or all-whitespace line is encountered, input is terminated.
-3. A single integer representing a taxon ID. The procedure will run for only this taxon. Additionally, the output report will have a slightly different format than for multiple IDs.
+3. A single integer representing a taxid. The procedure will run for only this taxon. Additionally, the output report will have a slightly different format than for multiple IDs.
 
 **Example**:
 
@@ -160,13 +160,13 @@ DB Column Names:
 ```
 
 For the numeric values present in the matrix there are 3 possible outcomes:
-* 1: Taxon ID is present in that database
-* 2: Taxon ID is not present but it's species-level ancestor is
+* 1: Taxid is present in that database
+* 2: Taxid is not present but it's species-level ancestor is
 * -: Neither is present
 
-*Note:* For taxon IDs above species level, only outcomes 1/0 are possible.
+*Note:* For taxids above species level, only outcomes 1/0 are possible.
 
-If only a single taxon ID is input, the DQT will output the rank of that taxon ID and a `Yes` or `--` (No) response for containment in each database.
+If only a single taxid is input, the DQT will output the rank of that taxon ID and a `Yes` or `--` (No) response for containment in each database.
 ```
 (metscale) :~$ python3 query_tool.py -t 10
 Taxon ID:         10 (rank: genus)
@@ -188,10 +188,10 @@ If a database of interest is not currently present in the DQT you can easily add
 ### Database Format
 The database must be formatted as follows:
 * 1: A `.txt` file
-* 2: One NCBI Taxon ID per line
+* 2: One NCBI taxid per line
 * 3: New-line delimited
 
-We can view this format by taking a look at `example_db.txt`:
+We can view this format by taking a look at `metscale/scripts/databases/example_db.txt`:
 ```
 (metscale) :~$ cd metscale/scripts/databases 
 (metscale) :~$ head example_db.txt
@@ -232,12 +232,12 @@ example = first_col 0
 ```
 The default path for `db_folder` is the `~/metscale/scripts/databases/` directory, but feel free to choose any location you like. 
 
-Under `[db_source_format]` we point to the database file. This has already been entered for the example database, but for a real database you could either add a line below the example, or replace the example entirely. You may name your database anything you like.
+Under `[db_source_format]`, we point to the database file. This has already been entered for the example database, but for a real database you could either add a line below the example, or replace the example entirely. You may name your database anything you like. Inside the the parentheses, the first position indicates that the file is tab-delimited, the second position denotes the zero-indexed column in the file that contains the taxids, and the third position reports the number of lines in the header before the rows with the taxids begin. These fields of information must be updated to correspond to your database file when adding a new database.
 
-Under `[db_source_formats]` we specify the `first_col` format which corresponds to the requirements we listed [above](#Database-Format). Then we add a binary operator `0` or `1` to determine whether or not to add the database during the import step (our next step). Go ahead and change the `0` to a `1`. When you add your own database make sure the name here matches the name under `[db_source_files]`.
+Under `[db_source_formats]`, we specify the `first_col` format which corresponds to the format requirements we listed [above](#Database-Format). This will tell the DQT what format to expect your new database file to follow. Then we add a binary operator `0` or `1` to determine whether or not to add the database during the import step (our next step). Go ahead and change the `0` to a `1`, with `1` indicating that the database should be imported and `0` meaning that it should not. When you add your own database make sure the name here matches the name under `[db_source_files]`.
 
 ### Inspection and Import
-Now that we have included all our information in the config file we will check to verify the DQT recognizes our new database. We will run the inspection flag `-CMO` to do this.
+Now that we have included all our information in the config file, we will check to verify the DQT recognizes our new database. We will run the inspection flag `-CMO` to do this.
 ```
 (metscale) :~$ cd metscale/scripts
 (metscale) :~$ python3 query_tool.py -CMO
