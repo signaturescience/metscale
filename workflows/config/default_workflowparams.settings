@@ -81,7 +81,7 @@ config_default = {
             # name and URL for the sequencer adapter file
             "name" : "adapters_combined_256_unique.fasta",
             "url"  : "https://raw.githubusercontent.com/signaturescience/metagenomics/master/resources/adapters_combined_256_unique.fasta",
-            "threads" : 4
+            "threads" : 8
         },
         "interleaving" : {
             # 

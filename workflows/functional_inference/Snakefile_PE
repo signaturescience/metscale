@@ -707,6 +707,8 @@ seqscreen_output_prokka = join(data_dir, '{sample}_trim{qual}_{method}_{assemble
 seqscreen_tmp_dir = join(sing_dir, '{sample}_trim{qual}_{method}_{assembler}.prokka_seqscreen_{method}', 'reportgeneration2')
 seqscreen_db = workflows['seqscreen_workflow']['db']
 seqscreen_prokka_input = join(data_dir, '{sample}_trim{qual}_{assembler}.prokka_annotation/{sample}_trim{qual}_{assembler}.fna')
+seqscreen_prokka_input_sing = join(sing_dir, '{sample}_trim{qual}_{assembler}.prokka_annotation/{sample}_trim{qual}_{assembler}.fna')
+
 seqscreen_prefix='{sample}_trim{qual}_{method}_seqscreen_{assembler}'
 #data/SRR606249_subset10_1_reads_trim2_megahit.prokka_annotation
 
@@ -718,7 +720,8 @@ rule seqscreen_prokka:
         tmp_dir = seqscreen_tmp_dir,
         seqscreen_db=seqscreen_db,
         flags="--{input.method}",
-        prefix=seqscreen_prefix
+        prefix=seqscreen_prefix,
+        sing_input=seqscreen_prokka_input_sing
     singularity: seqscreen_image
     threads: 10
     shell:
@@ -732,7 +735,7 @@ rule seqscreen_prokka_workflow:
         expand(seqscreen_output_prokka, 
             sample=sample_input_files, 
             qual=workflows['seqscreen_workflow']['qual'],       
-            assembler=['spades'], 
+            assembler=workflows['seqscreen_workflow']['assembler'], 
             method=workflows['seqscreen_workflow']['method'],
             workflow=seqscreen_db)
             

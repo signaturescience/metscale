@@ -6,7 +6,8 @@ config_default = {
         "seqscreen_workflow" :{
             "method":['fast'],
             "qual" : ["2","30"],
-            "db" : "data/SeqScreenDB_21.4/"
+            "db" : "data/SeqScreenDB_21.4/",
+            "assembler":["megahit"]
         },
 
         "samples_input_workflow" : {
