@@ -1,3 +1,5 @@
 work/
 .nextflow*
+.cache/
+.parallel/
 
