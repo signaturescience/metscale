@@ -951,11 +951,11 @@ def containment_dict_show_build_plan(source_file_tuples, contain, hide_older_ref
         import_list_file_tuples = source_file_tuples
     else:
         #compare the sources and the containment_dict
-	sort_all_db_names_1 = list(filter(lambda x: x.lower()[0:6] != "refseq", all_db_names))
-	sort_all_db_names_1.sort(key=lambda x: x.lower())
-	sort_all_db_names_2 = list(filter(lambda x: x.lower()[0:6] == "refseq", all_db_names))
-	sort_all_db_names_2 = sorted(sort_all_db_names_2, key=lambda x: int(x.lower().replace("refseq_v", "")), reverse=True)
-	sort_all_db_names = sort_all_db_names_1 + sort_all_db_names_2
+        sort_all_db_names_1 = list(filter(lambda x: x.lower()[0:6] != "refseq", all_db_names))
+        sort_all_db_names_1.sort(key=lambda x: x.lower())
+        sort_all_db_names_2 = list(filter(lambda x: x.lower()[0:6] == "refseq", all_db_names))
+        sort_all_db_names_2 = sorted(sort_all_db_names_2, key=lambda x: int(x.lower().replace("refseq_v", "")), reverse=True)
+        sort_all_db_names = sort_all_db_names_1 + sort_all_db_names_2
 	
         for nm in all_db_names:
             rpt_nm = nm; rpt_incon = ''; rpt_insrc = ''; rpt_status = '';
