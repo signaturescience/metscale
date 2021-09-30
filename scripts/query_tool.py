@@ -939,7 +939,7 @@ def containment_dict_show_build_plan(source_file_tuples, contain, hide_older_ref
     if not clobber_old:
         print('Comparison of containment_dict and source files to be added:\n\n')
         print(makeline('Database', 'In', 'In', 'Action'))
-        print(makeline('Name', 'Manifest', 'Contain', 'to be Taken'))
+        print(makeline('Name', 'Config', 'Contain', 'to be Taken'))
         print(makeline('-'*name_width, '-'*insources_width, '-'*incontain_width, '-'*status_width))
     else:
         print('No comparison to be done, \'--clobber\' was specified...')
