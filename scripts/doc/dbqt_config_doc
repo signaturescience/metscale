@@ -7,7 +7,7 @@ db_folder = ${working_folder}/databases/
 
 [import_locs]
 path_to_db_import_manifest = ${paths:working_folder}/doc/db_import_manifest.txt
-refseq_folder = ${db_folder}/refseq/catalog_taxid
+refseq_folder = ${paths:working_folder}/databases/refseq/catalog_taxid
 
 
 [formats]
