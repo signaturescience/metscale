@@ -1,5 +1,5 @@
 [paths]
-working_folder = /data/home/sjessa/metscale/scripts
+working_folder = ~/metscale/scripts
 path_to_containment_file = ${working_folder}/containment_dict.json
 path_to_ncbi_taxonomy_nodes = ${working_folder}/ncbi_taxonomy/nodes.dmp
 
@@ -7,7 +7,7 @@ db_folder = ${working_folder}/databases/
 
 [import_locs]
 path_to_db_import_manifest = ${paths:working_folder}/doc/db_import_manifest.txt
-refseq_folder = ${paths:working_folder}/databases/refseq/catalog_taxid
+refseq_folder = ${paths:db_folder}/refseq/catalog_taxid
 
 
 [formats]
