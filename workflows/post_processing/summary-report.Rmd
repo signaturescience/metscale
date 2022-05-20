@@ -350,6 +350,7 @@ bx_png <- basename(x_png)
 x_png_full <- file.path(getwd(), x_png)
 glue::glue("- **[{x_png}]({bx_png})**") %>% 
   cat(sep="\n")
+```
 
 ```{r, results='asis'}
 x_png <- list.files(pattern="_bracken.report$", recursive=TRUE)
