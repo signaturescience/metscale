@@ -84,7 +84,7 @@ process_output <- function(data_dir, out_dir) {
     
     if (length(file_in) > 0) {
       
-      if (stringr::str_detect(string = file_in, pattern = "^%")) {
+      if (which(stringr::str_detect(string = file_in, pattern = "^%"))) {
         
         file_in <- file_in[which(grepl("^%", file_in)):length(file_in)]
         
@@ -313,7 +313,8 @@ process_output <- function(data_dir, out_dir) {
       tmp_output <- parse_kaiju(path = tmp_files$path[i])
 
       # Check if there was data in the file
-      if (tmp_output == paste(tmp_files$path[i], "was empty.")) {
+      #if (tmp_output == paste(tmp_files$path[i], "was empty.")) {
+      if ("was empty" %in% tmp_output) {
         warnings <- c(warnings, tmp_output)
         next
       }
