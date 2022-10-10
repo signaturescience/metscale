@@ -1,98 +1,21 @@
 #! usr/bin/python3
-import pickle, copy, datetime, shutil, argparse, configparser
-import os, logging, sys
-# import glob
-# import json
-# # from dictionary_maker_parameters import *
-
-# purpose of this script
-"""
-This script will be used to store the information of the databases, allowing
-a quick assesment of what databases contain what organisms. Overall, this will
-give insights into why a certain database may not be able to classify an organism
-of interest. In addition, it should allow for reasoning the pitfalls of certain 
-public databases.
-"""
-
-# logging.info("*** DICTIONARY MAKER v3 ***")
-# dbqt_config = configparser.ConfigParser()
-dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
-dbqt_config.optionxform = lambda option: option
-
-# define some global variables
-class Opts:
-    working_folder = None
-    refseq_folder = None
-    containment_metadata_json_path = None
-    fpath_ncbi_tax_nodes = None
-    db_import_manifest = None
-    # The following is deprecated, but I don't have time to test it if I delete it (MN 5/15/20)
-    cfg_parameter_short_ids = {  # this variable is for storing argument requirements more easily later
-        1: 'refseq_folder',
-        2: 'containment_metadata_json_path',
-        3: 'fpath_ncbi_tax_nodes',
-        4: 'db_import_manifest'
-        # 5: 'output',
-        # 6: 'taxids',
-        # 7: 'num_taxa'
-    }
-    source_working_folder = None
-    source_containment = None
-    source_ncbitax = None
-    source_refseq = None
-    source_db_import_manifest = None
-    delimited_format_parse_specs = {
-        # 'accn2taxid':       ('\t', 2, 1),
-        # 'kraken2_inspect':  ('\t', 4, 0),
-        # 'first_col':        ('\t', 0, 0),
-        # 'refseq':           ('\t', 0, 0),
-        # 'seqid2taxid':      ('\t', 1, 0)
-    }
-    MY_DEBUG = False
-    parser_store = None
-    command_arg_parameter_reqs = {}
-    command_arg_selected = None
-
-options = Opts()
+import shutil, argparse, configparser, gzip, os, logging, sys, urllib.request, zipfile, time, textwrap
 
 
 # Specifies how to parse file types that are just delimited text. Each entry is:
 #   ( <Delimiter>, <Taxon ID Column>, <# Header Rows to Skip> )
 #   NOTE: moved to the config file.
-
-
 taxid_dict = {}
-ncbi_tax_levels = ['no rank', 'superkingdom', 'kingdom', 'subkingdom', 'superphylum', 'phylum', 'subphylum',
-                   'superclass', 'class', 'subclass', 'infraclass', 'cohort', 'subcohort', 'superorder', 'order',
-                   'suborder', 'infraorder', 'parvorder', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe',
-                   'genus', 'subgenus', 'section', 'subsection', 'series', 'species group', 'species subgroup',
-                   'species', 'subspecies', 'varietas', 'forma','strain', 'clade']
 hidden_args_help_strings = {}
 
-#
-# Utility Functions First:
-#
-rank2index = lambda x: ncbi_tax_levels.index(x)
 
-# def config_check_exists_else_copy():
-#     '''
-#     Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
-#     packaged in the 'doc' folder (considered a default).
-#     :return:
-#     '''
-#     scripts_fold = os.path.split(os.path.abspath(__file__))[0]
-#     dbqt_config_path = os.path.join(scripts_fold, 'dbqt_config')
-#     dbqt_config_doc_path = os.path.join(scripts_fold, 'doc', 'dbqt_config_doc')
-#     if not os.path.isfile(dbqt_config_path):
-#         shutil.copy(dbqt_config_doc_path, dbqt_config_path)
-
-def set_config_workingfolder_to_thisone():
+def set_config_workingfolder_to_thisone(options=None):
     '''
     Changes the value of the working_folder field of the dbqt_config to be the current folder
     :return:
     '''
 
-    def config_check_exists_else_copy():
+    def config_check_exists_else_copy(options=None):
         '''
         Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
         packaged in the 'doc' folder (considered a default).
@@ -104,7 +27,7 @@ def set_config_workingfolder_to_thisone():
         if not os.path.isfile(dbqt_config_path):
             shutil.copy(dbqt_config_doc_path, dbqt_config_path)
 
-    config_check_exists_else_copy()
+    config_check_exists_else_copy(options)
     scripts_fold = os.path.split(os.path.abspath(__file__))[0]
     logging.debug('Updating working_folder in dbqt_config to be %s' % scripts_fold)
     cfggen = configparser.ConfigParser()
@@ -120,7 +43,6 @@ def command_args_parse():
     the very end.
     :return:
     '''
-    global options
     p = argparse.ArgumentParser()
 #description='Module to build and manipulate the Taxon ID metadata and the database'
 #                                            ' containment_dict.json')
@@ -261,7 +183,7 @@ def command_args_parse():
         sys.exit(1)
 """
 
-def define_command_argument_requirements():
+def define_command_argument_requirements(options=None):
     '''
     populates the dictionary of arguments required for each algorithm, where:
         1: 'refseq_folder',
@@ -295,7 +217,7 @@ def define_command_argument_requirements():
                             'function \'define_command_argument_requirements()\'')
             options.command_arg_parameter_reqs[c] = []
 
-def verify_algorithm_argument(print_cmd_list=False, return_cmd_list=False):
+def verify_algorithm_argument(print_cmd_list=False, return_cmd_list=False, options=None):
     '''
     Goes through the option list to make sure at most one procedure argument was given. Sets default if omitted.
     NOTE: in order for this function to work, command arguments in long form MUST start with 'cmd_'
@@ -310,7 +232,7 @@ def verify_algorithm_argument(print_cmd_list=False, return_cmd_list=False):
     if return_cmd_list:
         return cmds
 
-def command_args_postprocess():
+def command_args_postprocess(options=None, dbqt_config=None):
     '''
     This is a routine to take certain logical actions based on the command line arguments. It is called ONLY by
     the parsing function (above), but is intended to separate out the logic from the definitions. It does several
@@ -321,49 +243,11 @@ def command_args_postprocess():
         3) Identifies which routine to run based on the 'cmd' flag
     '''
 
-    # def command_args_postprocess_db_import():
-    #     '''
-    #     Looks at the values for the manifest file given at the command line and/or in the config file for
-    #     the db_import_manifest and refseq_folder paths. Assesses if they are valid paths and prints warnings
-    #     accordingly.
-    #     :return:
-    #     '''
-    #     # Source File List: (first try CFG, over-write if in CMD, default to being in working dir)
-    #     global options
-    #     if options.db_import_manifest_cfg is not None:
-    #         if os.path.isfile(options.db_import_manifest_cfg):
-    #             options.db_import_manifest = options.db_import_manifest_cfg
-    #             options.source_db_import_manifest = 'config'
-    #         else:
-    #             logging.warning(
-    #                 'Config parameter path_to_db_import_manifest is not a valid file path: %s' % options.db_import_manifest_cfg)
-    #     if options.db_import_manifest is not None:
-    #         if os.path.isfile(options.db_import_manifest):
-    #             options.db_import_manifest = options.db_import_manifest
-    #             options.source_db_import_manifest = 'cmd_line'
-    #         else:
-    #             logging.warning(
-    #                 'Command-line parameter --db_import_manifest is not a valid file path: %s' % options.db_import_manifest)
-    #     if options.db_import_manifest is None:
-    #         db_import_manifest_wd = os.path.join(options.working_folder, 'db_import_manifest.txt')
-    #         if os.path.isfile(db_import_manifest_wd):
-    #             options.db_import_manifest = db_import_manifest_wd
-    #             options.source_db_import_manifest = '(default)'
-    #             # logging.info('Found a valid DB source file list file at: %s' % db_import_manifest)
-    #     # RefSeq folder
-    #     if options.refseq_folder_cfg is not None:
-    #         if os.path.isdir(options.refseq_folder_cfg):
-    #             options.refseq_folder = options.refseq_folder_cfg
-    #             options.source_refseq = 'config'
-    #         else:
-    #             options.refseq_folder = None
-    #             logging.warning('Config parameter refseq_folder is not a valid folder: %s' % options.refseq_folder_cfg)
-
     # READ GLOBAL VARIABLES FROM CONFIG FILE
     # global working_folder, refseq_folder, containment_metadata_json_path, fpath_ncbi_tax_nodes, db_import_manifest
 
-    global options
-    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated()
+    # global options
+    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated(options=options)
     options.db_import_manifest_cfg = db_import_manifest_cfg
     options.refseq_folder_cfg = refseq_folder_cfg
 
@@ -395,7 +279,7 @@ def command_args_postprocess():
         if options.logfile is not None:
             logging.error('--logfile %s encountered a file error when I tried to open it' % options.logfile)
 
-    verify_algorithm_argument()
+    verify_algorithm_argument(options=options)
 
     #
     # OVERRIDE GLOBAL VALUES IF GIVEN IN COMMAND LINE
@@ -436,7 +320,6 @@ def command_args_postprocess():
         options.containment_metadata_json_path = os.path.join(options.working_folder, 'containment_dict.json')
         options.source_containment = '(default)'
 
-    # command_args_postprocess_db_import()
 
     # NCBI nodes file
     if fpath_ncbi_tax_nodes_cfg is not None:
@@ -460,14 +343,14 @@ def command_args_postprocess():
         # logging.debug('fmt is now: %s' % str(fmt))
         options.delimited_format_parse_specs[k]=fmt
 
-def parse_dbqt_config_interpolated():
+def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
     '''
     Parses the dbqt_config file using interpolition. If a config file is specified at the command line, options
     specified therein will override the default dbqt_config where duplicated.
     :return:
     '''
 
-    def config_check_exists_else_copy():
+    def config_check_exists_else_copy(options=None):
         '''
         Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
         packaged in the 'doc' folder (considered a default).
@@ -486,7 +369,7 @@ def parse_dbqt_config_interpolated():
                         'case, please run the DQT with the `--setup` option first, or perform the equivalent steps manually.')
         logging.warning('Making a copy of the config found in the `doc` subfolder and using the query_tool.py folder '
                         'as the working_folder.')
-        config_check_exists_else_copy()
+        config_check_exists_else_copy(options=options)
         dbqt_config.read('dbqt_config')
 
     # set default working_folder to be the current one if missing
@@ -517,7 +400,7 @@ def parse_dbqt_config_interpolated():
     db_import_manifest_cfg = EUorNone(db_import_manifest_cfg)
     return containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg
 
-def verify_alg_params_present(custom_list = None, from_print_argparse = False):
+def verify_alg_params_present(custom_list = None, from_print_argparse = False, options=None):
     '''
     Checks to make sure all the necessary parameters for a given algorithm are provided.
     :return:
@@ -544,7 +427,7 @@ def verify_alg_params_present(custom_list = None, from_print_argparse = False):
         if options.MY_DEBUG:
             logging.debug('requirement = %s, value = %s' % (reqname, reqval))
 
-def run_print_argparse_results(config_params=True, alg_params=False):
+def run_print_argparse_results(config_params=True, alg_params=False, options=None):
     '''
     This is mostly a debugging function. This has some weird reciprocal calls to verify_alg_params_present() so
     the arguments are mostly control-flow measures to avoid errors.
@@ -570,12 +453,12 @@ def run_print_argparse_results(config_params=True, alg_params=False):
         verify_algorithm_argument(print_cmd_list=True)
         verify_alg_params_present(custom_list=[2,3,4], from_print_argparse=True)
 
-def run_initial_setup():
+def run_initial_setup(options=None):
     '''
     :return:
     '''
 
-    def ncbi_taxonomy_download_taxdmp():
+    def ncbi_taxonomy_download_taxdmp(options=None):
         '''
         This is a utility function to download and extract the required nodes.dmp file with the relevant
         details of the NCBI taxonomy, if that has not already been done. If the containing folder of the
@@ -605,7 +488,6 @@ def run_initial_setup():
         taxdmp_dest_path = os.path.join(ncbi_fold, 'taxdmp.zip')
         logging.debug('taxdmp_dest_path = %s' % taxdmp_dest_path)
 
-        import urllib.request, zipfile, time
         if options.MY_DEBUG and os.path.isfile(taxdmp_dest_path) and os.stat(taxdmp_dest_path).st_size == 51998231:
             print('(...skipping the re-download during debug...)')
         else:
@@ -644,7 +526,6 @@ def run_initial_setup():
 
     # Set the first config value to be the scripts folder
     set_config_workingfolder_to_thisone()
-    import time
     time.sleep(1)
     endmsg = endmsg + 'Changing working_folder done...\n'
 
@@ -664,7 +545,6 @@ def run_initial_setup():
     print(endmsg)
 
     # Extract gzipped JSON file:
-    import gzip
     if os.path.isfile(options.containment_metadata_json_path) and (options.clobber is False):
         print('...skipping containment_dict.json.gz extraction because the given path already exists. To ')
         print('    force a re-extraction of the packaged containment file, use the option \'--clobber\'.')
@@ -673,3 +553,18 @@ def run_initial_setup():
             with open(options.containment_metadata_json_path, 'wb') as cd:
                 bct=cd.write(gzip.decompress(cdgz.read()))
     sys.exit(1)
+
+def command_args_print_hidden_args_help():
+    '''
+    Several arguments are available at the command line for debugging but are not included in the default help menu.
+    This function prints a special help menu for the hidden options. None of these are especially interesting.
+    :return:
+    '''
+    print('\nHelp menu for hidden (debugging only) arguments:\n\n', end='')
+
+    for k in hidden_args_help_strings:
+        print('  --%s')
+        hstr = textwrap.wrap(hidden_args_help_strings[k], 55)
+        for ln in hstr:
+            print(' '*25, end='')
+            print(ln)
