@@ -39,6 +39,8 @@ If you are missing any of these files, you should re-clone the MetScale reposito
 
  
 ## Workflow Execution
+![](https://github.com/signaturescience/metscale/blob/master/scripts/DQT%20(Hackathon%202022).png)
+
 ### Quick Start:
 After cloning the MetScale repository, some configuration is necessary before use. It can be done automatically using default settings by running the command:
 ```
