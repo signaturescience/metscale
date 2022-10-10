@@ -64,7 +64,7 @@ def main():
     options = Opts()
 
     # read the config file
-    command_args_parse()
+    command_args_parse(options=options)
     if options.cmd_setup:
         ncbi_taxonomy_download_taxdmp(options=options)
         return

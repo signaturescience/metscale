@@ -37,7 +37,7 @@ def set_config_workingfolder_to_thisone(options=None):
     with open('dbqt_config','w') as dc:
         cfggen.write(dc)
 
-def command_args_parse():
+def command_args_parse(options=None):
     '''
     Separate function set up to create the argument parser and define all the arguments. Also executes parse_args at
     the very end.
@@ -164,7 +164,7 @@ def command_args_parse():
 #    hidden_args_help_strings['cmd_parseargs_report'] = 'Parses config and commandline arguments and reports some of the ' \
 #                                                       'values, then closes.' \
 #
-"""
+
     # TODO: delete me
     commandgroup.add_argument('--show_args_only', action='store_true', default=False, help=argparse.SUPPRESS)
 
@@ -173,15 +173,15 @@ def command_args_parse():
     #   3) post-process the arguments and config, 4) verify that the command argument has what's needed
     p.parse_args(namespace=options)         # (1)
     # This will terminate after the setup if that is called for  # (2)
-    run_initial_setup() if options.cmd_setup else define_command_argument_requirements()
+    run_initial_setup(options=options) if options.cmd_setup else define_command_argument_requirements(options=options)
 
     options.parser_store = p
-    command_args_postprocess()              # (3)
-    verify_alg_params_present()             # (4)`
+    command_args_postprocess(options=options)              # (3)
+    verify_alg_params_present(options=options)             # (4)`
     if options.show_args_only:
-        run_print_argparse_results()
+        run_print_argparse_results(options=options)
         sys.exit(1)
-"""
+
 
 def define_command_argument_requirements(options=None):
     '''
