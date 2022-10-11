@@ -251,7 +251,7 @@ def command_args_postprocess(options=None, dbqt_config=None):
     # global working_folder, refseq_folder, containment_metadata_json_path, fpath_ncbi_tax_nodes, db_import_manifest
 
     # global options
-    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated(options=options)
+    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated(options=options, dbqt_config=dbqt_config)
     options.db_import_manifest_cfg = db_import_manifest_cfg
     options.refseq_folder_cfg = refseq_folder_cfg
 
@@ -355,7 +355,7 @@ def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
     :return:
     '''
 
-    def config_check_exists_else_copy(options=None, dbqt_config=None):
+    def config_check_exists_else_copy():
         '''
         Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
         packaged in the 'doc' folder (considered a default).
@@ -367,8 +367,8 @@ def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
         if not os.path.isfile(dbqt_config_path):
             shutil.copy(dbqt_config_doc_path, dbqt_config_path)
 
-    dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
-    dbqt_config.optionxform = lambda option: option
+    # dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+    # dbqt_config.optionxform = lambda option: option
 
     if os.path.isfile('dbqt_config'):
         dbqt_config.read('dbqt_config')
@@ -548,7 +548,7 @@ def run_initial_setup(options=None, dbqt_config=None):
         print('...skipping NCBI download, file already there. To force a re-download, use the argument ')
         print('    --download_ncbi_taxonomy.')
     else:
-        ncbi_taxonomy_download_taxdmp()
+        ncbi_taxonomy_download_taxdmp(options=options)
     endmsg = endmsg + 'Downloading/Extracting NCBI Taxonomy done....\n'
     print(endmsg)
 
