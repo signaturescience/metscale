@@ -405,7 +405,6 @@ def command_args_postprocess():
         # logging.debug('fmt is now: %s' % str(fmt))
         options.delimited_format_parse_specs[k]=fmt
 
-
 def command_args_postprocess_db_import():
     '''
     Looks at the values for the manifest file given at the command line and/or in the config file for
@@ -487,7 +486,6 @@ def parse_dbqt_config_interpolated():
     fpath_ncbi_tax_nodes_cfg = EUorNone(fpath_ncbi_tax_nodes_cfg)
     db_import_manifest_cfg = EUorNone(db_import_manifest_cfg)
     return containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg
-
 
 def run_print_argparse_results(config_params=True, alg_params=False):
     '''
@@ -575,6 +573,8 @@ def util_filter_out_main_dbnames(db_iterable):
             out.append(nm)
     out.append(latest_refseq_name)
     return out
+
+### db_import.py (+ Task 1)
 
 def db_import_manifest_read(skip_refseq = False, from_config = True, from_file_if_exists = True):
     '''
@@ -832,6 +832,8 @@ def parse_generic_file_by_format(file_path, format):
     taxcol = spec[1]
     headskip = spec[2]
     return parse_delimited_text_general(file_path, delim, taxcol, headskip, result_as_set=True)
+
+### containment.py (+ Task 2)
 
 def containment_dict_build(source_file_tuples, clobber_old = False, save_replaced = True, save_backup = False):
     '''
@@ -1150,6 +1152,8 @@ def containment_dict_read_previous(as_json=True):
             cf_tmp['metadata'][k]['taxid_set'] = set(cf_tmp['taxid_lists'][k])
         return cf_tmp['metadata']
 
+### ncbi_taxonomy.py (+ Task 2)
+
 def ncbi_taxonomy_parse_file():
     '''
     Opens the NCBI nodes.dmp file from the taxdump FTP site. Parses it into a dictionary with
@@ -1275,6 +1279,7 @@ def ncbi_taxonomy_download_taxdmp():
         logging.warning('      path in config file: %s' % options.fpath_ncbi_tax_nodes)
         # options.fpath_ncbi_tax_nodes = td_norm_path
 
+### utils.py
 
 def run_inspect_previous_containment_dict():
     '''
@@ -1533,6 +1538,7 @@ def verify_algorithm_argument(print_cmd_list=False, return_cmd_list=False):
         options.cmd_query_taxids = True
         options.command_arg_selected = 'cmd_query_taxids'
 
+### 
 
 def main():
     command_args_parse()

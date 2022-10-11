@@ -271,6 +271,7 @@ def command_args_postprocess(options=None, dbqt_config=None):
 
     # global options
     containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated(options=options, dbqt_config=dbqt_config)
+
     # options.db_import_manifest_cfg = db_import_manifest_cfg
     # options.refseq_folder_cfg = refseq_folder_cfg
 
