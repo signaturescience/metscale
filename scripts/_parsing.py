@@ -37,12 +37,16 @@ def set_config_workingfolder_to_thisone(options=None):
     with open('dbqt_config','w') as dc:
         cfggen.write(dc)
 
-def command_args_parse(options=None):
+def command_args_parse(options=None, dbqt_config=None):
     '''
     Separate function set up to create the argument parser and define all the arguments. Also executes parse_args at
     the very end.
     :return:
     '''
+
+    dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+    dbqt_config.optionxform = lambda option: option
+
     p = argparse.ArgumentParser()
 #description='Module to build and manipulate the Taxon ID metadata and the database'
 #                                            ' containment_dict.json')
@@ -173,10 +177,10 @@ def command_args_parse(options=None):
     #   3) post-process the arguments and config, 4) verify that the command argument has what's needed
     p.parse_args(namespace=options)         # (1)
     # This will terminate after the setup if that is called for  # (2)
-    run_initial_setup(options=options) if options.cmd_setup else define_command_argument_requirements(options=options)
+    run_initial_setup(options=options, dbqt_config=dbqt_config) if options.cmd_setup else define_command_argument_requirements(options=options)
 
     options.parser_store = p
-    command_args_postprocess(options=options)              # (3)
+    command_args_postprocess(options=options, dbqt_config=dbqt_config)              # (3)
     verify_alg_params_present(options=options)             # (4)`
     if options.show_args_only:
         run_print_argparse_results(options=options)
@@ -336,6 +340,7 @@ def command_args_postprocess(options=None, dbqt_config=None):
             logging.warning('   -> fpath_ncbi_tax_nodes from config: %s' % fpath_ncbi_tax_nodes_cfg)
 
     # READ THE FORMAT LIST INTO A DICT:
+    print(dbqt_config)
     for k in dbqt_config['formats'].keys():
         fmt = None
         # logging.debug('format %8s\t%s' % (k, dbqt_config.get('formats',k)))
@@ -350,7 +355,7 @@ def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
     :return:
     '''
 
-    def config_check_exists_else_copy(options=None):
+    def config_check_exists_else_copy(options=None, dbqt_config=None):
         '''
         Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
         packaged in the 'doc' folder (considered a default).
@@ -361,6 +366,9 @@ def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
         dbqt_config_doc_path = os.path.join(scripts_fold, 'doc', 'dbqt_config_doc')
         if not os.path.isfile(dbqt_config_path):
             shutil.copy(dbqt_config_doc_path, dbqt_config_path)
+
+    dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+    dbqt_config.optionxform = lambda option: option
 
     if os.path.isfile('dbqt_config'):
         dbqt_config.read('dbqt_config')
@@ -453,7 +461,7 @@ def run_print_argparse_results(config_params=True, alg_params=False, options=Non
         verify_algorithm_argument(print_cmd_list=True)
         verify_alg_params_present(custom_list=[2,3,4], from_print_argparse=True)
 
-def run_initial_setup(options=None):
+def run_initial_setup(options=None, dbqt_config=None):
     '''
     :return:
     '''
@@ -530,7 +538,7 @@ def run_initial_setup(options=None):
     endmsg = endmsg + 'Changing working_folder done...\n'
 
     # Parse the config for real
-    c_json, fpathncbi, refseq_fo, sfl, workfold = parse_dbqt_config_interpolated()
+    c_json, fpathncbi, refseq_fo, sfl, workfold = parse_dbqt_config_interpolated(options=options, dbqt_config=dbqt_config)
     options.working_folder = workfold
     options.containment_metadata_json_path = c_json
     options.fpath_ncbi_tax_nodes = fpathncbi

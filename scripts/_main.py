@@ -54,9 +54,11 @@ class Opts:
     command_arg_selected = None
 
 
+
 def main():
     # logging.info("*** DICTIONARY MAKER v3 ***")
     # dbqt_config = configparser.ConfigParser()
+
     dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
     dbqt_config.optionxform = lambda option: option
 
@@ -64,7 +66,7 @@ def main():
     options = Opts()
 
     # read the config file
-    command_args_parse(options=options)
+    command_args_parse(options=options, dbqt_config=dbqt_config)
     if options.cmd_setup:
         ncbi_taxonomy_download_taxdmp(options=options)
         return
