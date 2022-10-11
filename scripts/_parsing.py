@@ -175,8 +175,6 @@ def command_args_parse(options=None, dbqt_config=None):
     # Go in the following order:
     #   1) parse the command line arguments, 2) run sub below to define required config settings,
     #   3) post-process the arguments and config, 4) verify that the command argument has what's needed
-    print(p)
-    print(dbqt_config)
     p.parse_args(namespace=options)         # (1)
     # This will terminate after the setup if that is called for  # (2)
     run_initial_setup(options=options, dbqt_config=dbqt_config) if options.cmd_setup else define_command_argument_requirements(options=options)
@@ -432,8 +430,6 @@ def verify_alg_params_present(custom_list = None, from_print_argparse = False, o
     Checks to make sure all the necessary parameters for a given algorithm are provided.
     :return:
     '''
-    print(options)
-    print(options.command_arg_selected, options.working_folder)
     if options.command_arg_selected is None:
         logging.error('Command argument not identified...this shouldn\'t happen')
         sys.exit(1)
