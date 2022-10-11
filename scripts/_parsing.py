@@ -44,8 +44,8 @@ def command_args_parse(options=None, dbqt_config=None):
     :return:
     '''
 
-    dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
-    dbqt_config.optionxform = lambda option: option
+    # dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+    # dbqt_config.optionxform = lambda option: option
 
     p = argparse.ArgumentParser()
 #description='Module to build and manipulate the Taxon ID metadata and the database'
@@ -175,12 +175,18 @@ def command_args_parse(options=None, dbqt_config=None):
     # Go in the following order:
     #   1) parse the command line arguments, 2) run sub below to define required config settings,
     #   3) post-process the arguments and config, 4) verify that the command argument has what's needed
+    print(p)
+    print(dbqt_config)
     p.parse_args(namespace=options)         # (1)
     # This will terminate after the setup if that is called for  # (2)
     run_initial_setup(options=options, dbqt_config=dbqt_config) if options.cmd_setup else define_command_argument_requirements(options=options)
 
     options.parser_store = p
+    #dh1 maybe there is a problem with global options class as there is no options.cmd_query_taxids,
+    # which is defined by parsing step. It also could be that in command_args_postprocess there is a problem...
+    # One more option is a problem with dbqt_config, as parser won't find some data, that should be assigned.
     command_args_postprocess(options=options, dbqt_config=dbqt_config)              # (3)
+    #dh1 in verify_alg_params_present code breaks as there is no options.cmd_query_taxids
     verify_alg_params_present(options=options)             # (4)`
     if options.show_args_only:
         run_print_argparse_results(options=options)
@@ -236,6 +242,19 @@ def verify_algorithm_argument(print_cmd_list=False, return_cmd_list=False, optio
     if return_cmd_list:
         return cmds
 
+    cmd_ct = 0
+    for c in cmds:
+        if vars(options)[c]:
+            cmd_ct += 1
+            options.command_arg_selected = c
+    if cmd_ct > 1:
+        options.parser_store.print_help()
+        sys.exit(1)
+    elif cmd_ct == 0:
+        options.cmd_query_taxids = True
+        options.command_arg_selected = 'cmd_query_taxids'
+
+
 def command_args_postprocess(options=None, dbqt_config=None):
     '''
     This is a routine to take certain logical actions based on the command line arguments. It is called ONLY by
@@ -251,9 +270,9 @@ def command_args_postprocess(options=None, dbqt_config=None):
     # global working_folder, refseq_folder, containment_metadata_json_path, fpath_ncbi_tax_nodes, db_import_manifest
 
     # global options
-    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated(options=options)
-    options.db_import_manifest_cfg = db_import_manifest_cfg
-    options.refseq_folder_cfg = refseq_folder_cfg
+    containment_metadata_json_path_cfg, fpath_ncbi_tax_nodes_cfg, refseq_folder_cfg, db_import_manifest_cfg, working_folder_cfg = parse_dbqt_config_interpolated(options=options, dbqt_config=dbqt_config)
+    # options.db_import_manifest_cfg = db_import_manifest_cfg
+    # options.refseq_folder_cfg = refseq_folder_cfg
 
     # CONFIGURE THE LOGGER
     mylvl = logging.INFO
@@ -340,7 +359,6 @@ def command_args_postprocess(options=None, dbqt_config=None):
             logging.warning('   -> fpath_ncbi_tax_nodes from config: %s' % fpath_ncbi_tax_nodes_cfg)
 
     # READ THE FORMAT LIST INTO A DICT:
-    print(dbqt_config)
     for k in dbqt_config['formats'].keys():
         fmt = None
         # logging.debug('format %8s\t%s' % (k, dbqt_config.get('formats',k)))
@@ -355,7 +373,7 @@ def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
     :return:
     '''
 
-    def config_check_exists_else_copy(options=None, dbqt_config=None):
+    def config_check_exists_else_copy():
         '''
         Checks whether the file 'dbqt_config' exists in the \scripts folder. If not, makes a copy of the version
         packaged in the 'doc' folder (considered a default).
@@ -367,8 +385,8 @@ def parse_dbqt_config_interpolated(options=None, dbqt_config=None):
         if not os.path.isfile(dbqt_config_path):
             shutil.copy(dbqt_config_doc_path, dbqt_config_path)
 
-    dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
-    dbqt_config.optionxform = lambda option: option
+    # dbqt_config = configparser.ConfigParser(interpolation=configparser.ExtendedInterpolation())
+    # dbqt_config.optionxform = lambda option: option
 
     if os.path.isfile('dbqt_config'):
         dbqt_config.read('dbqt_config')
@@ -413,6 +431,8 @@ def verify_alg_params_present(custom_list = None, from_print_argparse = False, o
     Checks to make sure all the necessary parameters for a given algorithm are provided.
     :return:
     '''
+    print(options)
+    print(options.command_arg_selected, options.working_folder)
     if options.command_arg_selected is None:
         logging.error('Command argument not identified...this shouldn\'t happen')
         sys.exit(1)
@@ -430,7 +450,7 @@ def verify_alg_params_present(custom_list = None, from_print_argparse = False, o
         if reqval is None:
             logging.error('Command argument \'%s\' requires that %s be set, but it is currently None. Printing config diagnostics:' % (mycmd, reqval))
             if not from_print_argparse:
-                run_print_argparse_results()
+                run_print_argparse_results(options=options)
             sys.exit(1)
         if options.MY_DEBUG:
             logging.debug('requirement = %s, value = %s' % (reqname, reqval))
@@ -458,8 +478,8 @@ def run_print_argparse_results(config_params=True, alg_params=False, options=Non
 
     if alg_params:
         print('VERIFYING ALGORITHM ARGUMENT:')
-        verify_algorithm_argument(print_cmd_list=True)
-        verify_alg_params_present(custom_list=[2,3,4], from_print_argparse=True)
+        verify_algorithm_argument(print_cmd_list=True, options=options)
+        verify_alg_params_present(custom_list=[2,3,4], from_print_argparse=True, options=options)
 
 def run_initial_setup(options=None, dbqt_config=None):
     '''
@@ -548,7 +568,7 @@ def run_initial_setup(options=None, dbqt_config=None):
         print('...skipping NCBI download, file already there. To force a re-download, use the argument ')
         print('    --download_ncbi_taxonomy.')
     else:
-        ncbi_taxonomy_download_taxdmp()
+        ncbi_taxonomy_download_taxdmp(options=options)
     endmsg = endmsg + 'Downloading/Extracting NCBI Taxonomy done....\n'
     print(endmsg)
 
