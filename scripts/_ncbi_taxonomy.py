@@ -47,14 +47,22 @@ def ncbi_taxonid_to_lineage_vector(taxid, ncbi_dict):
     '''
     lineage = [-1,]*len(ncbi_tax_levels)
 
-    tdata = ncbi_dict[taxid]
+    try:
+        tdata = ncbi_dict[taxid]
+    except KeyError:
+                        #<taxon_id>: (<parent_taxon_id>, <level>, <assigned_at_species>),
+
+        #ncbi_dict[taxid] = [-1,'no rank', -1]
+        tdata = [-1,'no rank', -1]
+        ### warning not found
+
     lineage[rank2index(tdata[1])] = taxid
-    next = tdata[0]
+    nxt = tdata[0]
     level_ct = 1
-    while next > 1:
-        tdata = ncbi_dict[next]
-        lineage[rank2index(tdata[1])] = next
-        next = tdata[0]
+    while nxt > 1:
+        tdata = ncbi_dict[nxt]
+        lineage[rank2index(tdata[1])] = nxt
+        nxt = tdata[0]
         level_ct += 1
         if level_ct > 100:
             print ("taxid %s has a lineage that is supposedly 100+ levels")

@@ -179,7 +179,11 @@ def run_query_taxids_against_containment(options=None):
     # RUN THE CHECKS:
     for taxid in taxids:
         taxid_spec = ncbi_taxonid_to_lineage_vector(taxid, ncbi_d)[30] #will be -1 if taxid is above species, but that's fine
-        results[taxid] = tuple([taxid, ncbi_d[taxid][1],] + util_query_taxid_in_contain(taxid, contain, main_keys, taxid_spec))
+        try:
+            results[taxid] = tuple([taxid, ncbi_d[taxid][1],] + util_query_taxid_in_contain(taxid, contain, main_keys, taxid_spec))
+        except KeyError:
+            print ('warning: taxid ' + str(taxid) + ' not found in ncbi dictionary')
+            pass
 
     results = list(results.values())
     if len(results)==1:
