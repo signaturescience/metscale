@@ -841,6 +841,8 @@ rule quality_trimming:
         quality_log
     shell:
         'trimmomatic PE '
+        '-trimlog {params.quality_log_wc} '
+        '-threads {threads} '
         '{params.quality_input_wc} '
         '{params.quality_output_wc} '
         'ILLUMINACLIP:/{adapter_file_sing}:2:30:15:1:true '
@@ -848,8 +850,7 @@ rule quality_trimming:
         'TRAILING:{params.qual} '
         'SLIDINGWINDOW:4:{params.qual} '
         'MINLEN:25 '
-        '-trimlog {params.quality_log_wc} '
-        '-threads {threads}'
+
 
 
 ###################################

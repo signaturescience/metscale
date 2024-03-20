@@ -5,44 +5,44 @@
     },
 
     "read_filtering": {
-        "fastqc_0.11.7--pl5.22.0_2.sif" : "docker://quay.io/biocontainers/fastqc:0.11.7--pl5.22.0_2",
-        "trimmomatic_0.36--5.sif" : "docker://quay.io/biocontainers/trimmomatic:0.36--5",
+        "fastqc_0.12.1--hdfd78af_0.sif" : "docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0",
+        "trimmomatic_0.32--hdfd78af_4.sif" : "docker://quay.io/biocontainers/trimmomatic:0.32--hdfd78af_4",
         "adapters_combined_256_unique.fasta": "file:///resources/adapters_combined_256_unique.fasta",
-        "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
-        "khmer_2.1--py35_0.sif" : "docker://quay.io/biocontainers/khmer:2.1--py35_0",
-        "flash_1.2.11--hed695b0_5.sif": "docker://quay.io/biocontainers/flash:1.2.11--hed695b0_5",
-        "fastp_0.20.1--h8b12597_0.sif": "docker://quay.io/biocontainers/fastp:0.20.1--h8b12597_0"
+        "multiqc_1.21--pyhdfd78af_0.sif" : "docker://quay.io/biocontainers/multiqc:1.21--pyhdfd78af_0",
+        "khmer_3.0.0a3--py38h94ffb2d_3.sif" : "docker://quay.io/biocontainers/khmer:3.0.0a3--py38h94ffb2d_3",
+        "flash_1.2.11--h5bf99c6_6.sif": "docker://quay.io/biocontainers/flash:1.2.11--h5bf99c6_6",
+        "fastp_0.23.4--hadf994f_2.sif": "docker://quay.io/biocontainers/fastp:0.23.4--hadf994f_2"
     },
 
     "assembly": {
-        "megahit_1.1.2--py35_0.sif" : "docker://quay.io/biocontainers/megahit:1.1.2--py35_0",
-        "spades_3.14.0--h2d02072_0.sif" : "docker://quay.io/biocontainers/spades:3.14.0--h2d02072_0",
-        "quast_5.0.2--py27pl526ha92aebf_0.sif": "docker://quay.io/biocontainers/quast:5.0.2--py27pl526ha92aebf_0",
-        "multiqc_1.4--py35_0.sif" : "docker://quay.io/biocontainers/multiqc:1.4--py35_0",
+        "megahit_1.2.9--h43eeafb_4.sif" : "docker://quay.io/biocontainers/megahit:1.2.9--h43eeafb_4",
+        "spades_3.15.5--h95f258a_1.sif" : "docker://quay.io/biocontainers/spades:3.15.5--h95f258a_1",
+        "quast_5.2.0--py39pl5321h4e691d4_3.sif": "docker://quay.io/biocontainers/quast:5.2.0--py39pl5321h4e691d4_3",
+        "multiqc_1.21--pyhdfd78af_0.sif" : "docker://quay.io/biocontainers/multiqc:1.21--pyhdfd78af_0",
         "GCF_000008565.1_ASM856v1_genomic.fna.gz" : "file:///resources/GCF_000008565.1_ASM856v1_genomic.fna.gz",
         "Shakya_Refs" : "dir:///resources/Shakya_Refs"
     },
 
     "comparison": {
-    	 "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0"
+    	 "sourmash_4.8.6--hdfd78af_0.sif" : "docker://quay.io/biocontainers/sourmash:4.8.6--hdfd78af_0"
     },
 
     "taxonomic_classification": {
-        "bracken_2.2--py27h2d50403_1.sif" : "docker://quay.io/biocontainers/bracken:2.2--py27h2d50403_1",
-        "kaiju_1.6.1--pl5.22.0_0.sif" : "docker://quay.io/biocontainers/kaiju:1.6.1--pl5.22.0_0",
-        "krona_2.7--pl5.22.0_1.sif" : "docker://quay.io/biocontainers/krona:2.7--pl5.22.0_1",
-        "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
-        "kraken2_2.0.8_beta--pl526h6bb024c_0.sif" : "docker://quay.io/biocontainers/kraken2:2.0.8_beta--pl526h6bb024c_0",
-        "krakenuniq_0.5.8--pl526he860b03_0.sif" : "docker://quay.io/biocontainers/krakenuniq:0.5.8--pl526he860b03_0",
-        "mtsv_1.0.6--py36hc9558a2_1.sif" : "docker://quay.io/biocontainers/mtsv:1.0.6--py36hc9558a2_1",
-        "mash_2.2--h3d38be6_0.sif" : "docker://quay.io/biocontainers/mash:2.2--h3d38be6_0",
+        "bracken_2.9--py39h1f90b4d_0.sif" : "docker://quay.io/biocontainers/bracken:2.9--py39h1f90b4d_0",
+        "kaiju_1.10.1--h43eeafb_0.sif" : "docker://quay.io/biocontainers/kaiju:1.10.1--h43eeafb_0",
+        "krona_2.8.1--pl5321hdfd78af_1.sif" : "docker://quay.io/biocontainers/krona:2.8.1--pl5321hdfd78af_1",
+        "sourmash_4.8.6--hdfd78af_0.sif" : "docker://quay.io/biocontainers/sourmash:4.8.6--hdfd78af_0",
+        "kraken2_2.1.3--pl5321hdcf5f25_0.sif" : "docker://quay.io/biocontainers/kraken2:2.1.3--pl5321hdcf5f25_0",
+        "krakenuniq_1.0.4--pl5321h6dccd9a_1.sif" : "docker://quay.io/biocontainers/krakenuniq:1.0.4--pl5321h6dccd9a_1",
+        "mtsv_1.0.6--py36hf1ae8f4_2.sif" : "docker://quay.io/biocontainers/mtsv:1.0.6--py36hf1ae8f4_2",
+        "mash_2.3--hd3113c8_6.sif" : "docker://quay.io/biocontainers/mash:2.3--hd3113c8_6",
         "minikraken_8GB_202003.tgz":  "ftp://ftp.ccb.jhu.edu/pub/data/kraken2_dbs/minikraken_8GB_202003.tgz",
         "minikraken_20171019_8GB.tgz": "https://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_8GB.tgz",
         "RefSeq_10K_Sketches.msh.gz": "https://obj.umiacs.umd.edu/diamond/RefSeq_10K_Sketches.msh.gz"
     },
 
     "sourmash_db" : {
-        "sourmash_2.1.0--py27he1b5a44_0.sif" : "docker://quay.io/biocontainers/sourmash:2.1.0--py27he1b5a44_0",
+        "sourmash_4.8.6--hdfd78af_0.sif" : "docker://quay.io/biocontainers/sourmash:4.8.6--hdfd78af_0",
         "sbturl"  : "s3-us-west-1.amazonaws.com/spacegraphcats.ucdavis.edu",
         "sbttar"  : "microbe-{database}-sbt-k{kvalue}-2017.05.09.tar.gz",
         "databases" : ["genbank","refseq"],
@@ -58,10 +58,10 @@
     },
 
     "functional_inference" : {
-        "seqscreen_1.6.2--hdfd78af_0.sif":"docker://quay.io/biocontainers/seqscreen:1.6.2--hdfd78af_0",
+        "seqscreen_4.3--hdfd78af_0.sif":"docker://quay.io/biocontainers/seqscreen:4.3--hdfd78af_0",
         "prokka_1.14.5.sif" : "docker://staphb/prokka:1.14.5",
         "abricate_latest.sif" : "docker://thanhleviet/abricate",
-        "srst2_0.2.0--py27_2.sif" : "docker://quay.io/biocontainers/srst2:0.2.0--py27_2",
+        "srst2_0.1.4.6.sif" : "docker://quay.io/biocontainers/srst2:0.1.4.6",
         "humann_3.0.0.a.4.sif" :"docker://biobakery/humann:3.0.0.a.4",
 	"full_chocophlan.v296_201901.tar.gz":"http://huttenhower.sph.harvard.edu/humann2_data/chocophlan/full_chocophlan.v296_201901.tar.gz",
 	"uniref90_annotated_v201901.tar.gz":"http://huttenhower.sph.harvard.edu/humann2_data/uniprot/uniref_annotated/uniref90_annotated_v201901.tar.gz",

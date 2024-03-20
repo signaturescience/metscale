@@ -481,108 +481,108 @@ config_default = {
         },
         "trimmomatic" : {
             "use_local" : True,
-            "filename" : "trimmomatic_0.36--5.sif",
+            "filename" : "trimmomatic_0.32--hdfd78af_4.sif",
             "quayurl" : "quay.io/biocontainers/trimmomatic",
             "location" : "../container_images/",
-            "version" : "0.36--5"
+            "version" : "0.32--hdfd78af_4"
         },
         "fastqc" : {
             "use_local" : True,
-            "filename" : "fastqc_0.11.7--pl5.22.0_2.sif",
+            "filename" : "fastqc_0.12.1--hdfd78af_0.sif",
             "quayurl" : "quay.io/biocontainers/fastqc",
             "location" : "../container_images/",
-            "version" : "0.11.7--pl5.22.0_2"
+            "version" : "0.12.1--hdfd78af_0"
         },
         "multiqc" : {
             "use_local" : True,
-            "filename" : "multiqc_1.4--py35_0.sif",
+            "filename" : "multiqc_1.21--pyhdfd78af_0.sif",
             "quayurl" : "quay.io/biocontainers/multiqc",
             "location" : "../container_images/",
-            "version" : "1.4--py35_0"
+            "version" : "1.21--pyhdfd78af_0"
         },
         "khmer" : {
             "use_local" : True,
-            "filename" : "khmer_2.1--py35_0.sif",
+            "filename" : "khmer_3.0.0a3--py38h94ffb2d_3.sif",
             "quayurl" : "quay.io/biocontainers/khmer",
             "location" : "../container_images/",
-            "version" : "2.1--py35_0"
+            "version" : "3.0.0a3--py38h94ffb2d_3"
         },
         "flash" : {
             "use_local" : True,
-            "filename" : "flash_1.2.11--hed695b0_5.sif",
+            "filename" : "flash_1.2.11--h5bf99c6_6.sif",
             "quayurl" : "quay.io/biocontainers/flash",
             "location" : "../container_images/",
-            "version" : "1.2.11--hed695b0_5"
+            "version" : "1.2.11--h5bf99c6_6"
         },
         "megahit" : {
             "use_local" : True,
-            "filename" : "megahit_1.1.2--py35_0.sif",
+            "filename" : "megahit_1.2.9--h43eeafb_4.sif",
             "quayurl" : "quay.io/biocontainers/megahit",
             "location" : "../container_images/",
-            "version" : "1.1.2--py35_0"
+            "version" : "1.2.9--h43eeafb_4"
         },
         "spades" : {
             "use_local" : True,
-            "filename" : "spades_3.14.0--h2d02072_0.sif",
+            "filename" : "spades_3.15.5--h95f258a_1.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/spades",
-            "version" : "3.14.0--h2d02072_0"
+            "version" : "3.15.5--h95f258a_1"
         },
         "quast" : {
             "use_local" : True,
-            "filename" : "quast_5.0.2--py27pl526ha92aebf_0.sif",
+            "filename" : "quast_5.2.0--py39pl5321h4e691d4_3.sif",
             "quayurl" : "quay.io/biocontainers/quast",
             "location" : "../container_images/",
-            "version" : "py27pl526ha92aebf_0"
+            "version" : "5.2.0--py39pl5321h4e691d4_3"
         },
         "sourmash" : {
             "use_local" : True,
-            "filename" : "sourmash_2.1.0--py27he1b5a44_0.sif",
+            "filename" : "sourmash_4.8.6--hdfd78af_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
-            "version" : "2.1.0--py27he1b5a44_0"
+            "version" : "4.8.6--hdfd78af_0"
         },
         "sourmash_compare" : {
             "use_local" : True,
-            "filename" : "sourmash_2.1.0--py27he1b5a44_0.sif",
+            "filename" : "sourmash_4.8.6--hdfd78af_0.sif",
             "quayurl" : "quay.io/biocontainers/sourmash",
             "location" : "../container_images/",
-            "version" : "2.1.0--py27he1b5a44_0"
+            "version" : "4.8.6--hdfd78af_0"
         },
         "kaiju" : {
             "use_local" : True,
-            "filename" : "kaiju_1.6.1--pl5.22.0_0.sif",
+            "filename" : "kaiju_1.10.1--h43eeafb_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/kaiju",
-            "version" : "1.6.1--pl5.22.0_0"
+            "version" : "1.10.1--h43eeafb_0"
         },
         "krona" : {
             "use_local" : True,
-            "filename" : "krona_2.7--pl5.22.0_1.sif",
+            "filename" : "krona_2.8.1--pl5321hdfd78af_1.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krona",
-            "version" : "2.7--pl5.22.0_1"
+            "version" : "2.8.1--pl5321hdfd78af_1"
         },
         "kraken2" : {
             "use_local" : True,
-            "filename" : "kraken2_2.0.8_beta--pl526h6bb024c_0.sif",
+            "filename" : "kraken2_2.1.3--pl5321hdcf5f25_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/kraken2",
-            "version" : "2.0.8_beta--pl526h6bb024c_0"
+            "version" : "2.1.3--pl5321hdcf5f25_0"
         },
         "bracken" : {
             "use_local" : True,
-            "filename" : "bracken_2.2--py27h2d50403_1.sif",
+            "filename" : "bracken_2.9--py39h1f90b4d_0.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/bracken",
-            "version" : "2.2--py27h2d50403_1"        
+            "version" : "2.9--py39h1f90b4d_0"        
         },
         "krakenuniq" : {
             "use_local" : True,
-            "filename" : "krakenuniq_0.5.8--pl526he860b03_0.sif",
+            "filename" : "krakenuniq_1.0.4--pl5321h6dccd9a_1.sif",
             "location" : "../container_images/",
             "quayurl" : "quay.io/biocontainers/krakenuniq",
-            "version" : "0.5.8--pl526he860b03_0"
+            "version" : "1.0.4--pl5321h6dccd9a_1"
         },
         "prokka" : {
             "use_local" : True,
@@ -607,9 +607,9 @@ config_default = {
         },
         "srst2" : {
             "use_local" : True,
-            "filename" : "srst2_0.2.0--py27_2.sif",
+            "filename" : "srst2_0.1.4.6.sif",
             "location" : "../container_images/",
-            "version" : "0.2.0--py27_2",
+            "version" : "0.1.4.6",
             "quayurl" : "quay.io/biocontainers/srst2"
         },
         "humann3" : {
@@ -628,23 +628,23 @@ config_default = {
         },
         "mtsv" : {
             "use_local" : True,
-            "filename" : "mtsv_1.0.6--py36hc9558a2_1.sif",
+            "filename" : "mtsv_1.0.6--py36hf1ae8f4_2.sif",
             "location" : "../container_images/",
-            "version" : "1.0.6--py36hc9558a2_1",
+            "version" : "1.0.6--py36hf1ae8f4_2",
             "quayurl" : "quay.io/biocontainers/mtsv"
         },
         "seqscreen" : {
             "use_local" : True,
-            "filename" : "seqscreen_1.6.2--hdfd78af_0.sif",
+            "filename" : "seqscreen_4.3--hdfd78af_0.sif",
             "location" : "../container_images/",
-            "version" : "1.6.2--hdfd78af_0",
+            "version" : "4.3--hdfd78af_0",
             "quayurl" : "quay.io/biocontainers/seqscreen"
         },
         "fastp" :{
 	    "use_local" : True,
-            "filename" : "fastp_0.20.1--h8b12597_0.sif",
+            "filename" : "fastp_0.23.4--hadf994f_2.sif",
             "location" : "../container_images/",
-            "version"  :  "0.20.1--h8b12597_0",
+            "version"  :  "0.23.4--hadf994f_2",
             "quayurl"  :  "quay.io/biocontainers/fastp",
        }
 

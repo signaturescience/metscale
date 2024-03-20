@@ -12,6 +12,8 @@ import argparse
 import time
 from socket import error as SocketError
 from snakemake.io import expand
+import ssl
+
 
 
 workflows=['read_filtering', 'test_files', 'assembly', 'comparison', 'sourmash_db', 'kaiju_db', 'taxonomic_classification', 'functional_inference', 'mtsv_db', 'all']  #keep all at the end of the list
@@ -73,7 +75,15 @@ def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_str
     if not os.path.isdir(os.path.join(install_dir, install_sub_dir)):
         print("\nDownloading " + file_name)
         try:
-            urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
+            context = ssl._create_unverified_context()
+            writefile = open(install_dir+ "/"+ file_name, 'wb')
+            page = urllib.request.urlopen(url_string, context=context).read()
+            writefile.write(page)
+            writefile.close()
+            #urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
+            #r = requests(url_string, allow_redirects=True)
+            #open(install_dir+ "/"+ file_name,'wb').write(r.content)
+            
             mkdir_command = "mkdir " + install_dir + "/" +  install_sub_dir
             subprocess.run([mkdir_command], shell =True)
             gunzip_command = "gunzip " + install_dir + "/" + file_name
@@ -82,7 +92,7 @@ def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_str
             untar_command =  "tar -xvf " + install_dir + "/" + file_name + " -C " + install_dir + "/" +  install_sub_dir
             subprocess.run([untar_command], shell =True)
         except SocketError as e:
-            print("Error downloading/extracting file " + file_name + "Retry script.")
+            print("Error downloading/extracting file " + file_name + " Retry script.")
             print(e)
         try:
             os.remove(install_dir+ "/"+file_name)
