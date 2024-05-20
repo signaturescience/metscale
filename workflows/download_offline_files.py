@@ -70,16 +70,21 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, duration))
     sys.stdout.flush()
 
-#certain files want special attention Needs to be installed in certain subdir inside data folder
-def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_string):
-    if not os.path.isdir(os.path.join(install_dir, install_sub_dir)):
-        print("\nDownloading " + file_name)
-        try:
+
+def download_mechanism(install_dir, file_name, url_string):
             context = ssl._create_unverified_context()
             writefile = open(install_dir+ "/"+ file_name, 'wb')
             page = urllib.request.urlopen(url_string, context=context).read()
             writefile.write(page)
             writefile.close()
+
+
+#certain files want special attention Needs to be installed in certain subdir inside data folder
+def download_extract_targz_file(file_name, install_sub_dir, install_dir, url_string):
+    if not os.path.isdir(os.path.join(install_dir, install_sub_dir)):
+        print("\nDownloading " + file_name)
+        try:
+            download_mechanism(install_dir, file_name, url_string)
             #urllib.request.urlretrieve(url_string, install_dir+ "/"+ file_name, reporthook)
             #r = requests(url_string, allow_redirects=True)
             #open(install_dir+ "/"+ file_name,'wb').write(r.content)
