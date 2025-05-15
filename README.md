@@ -1,3 +1,12 @@
+# MetScale IS NOT CURRENTLY UNDER ACTIVE DEVELOPMENT
+
+We are always interested in additional teaming opportunities, or new feature requests, however at this time, we are not actively developing MetScale.  
+
+If you have inquires about metscale, please submit issues, or contact SigSci directly.
+
+
+
+
 
 ![](https://github.com/signaturescience/metagenomics/blob/master/documentation/figures/MetScale_Logo.png)
 
